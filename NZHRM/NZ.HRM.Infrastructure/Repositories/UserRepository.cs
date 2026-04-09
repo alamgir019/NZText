@@ -38,6 +38,11 @@ public class UserRepository : IUserRepository
         await Task.CompletedTask;
     }
 
+    public async Task<User?> FindByUsernameAsync(string username)
+    {
+        return await _db.Users.FirstOrDefaultAsync(u => u.Username == username);
+    }
+
     public async Task SaveChangesAsync()
     {
         await _db.SaveChangesAsync();

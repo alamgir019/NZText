@@ -47,4 +47,14 @@ public class UserCommandHandler
         await _repo.RemoveAsync(user);
         await _repo.SaveChangesAsync();
     }
+
+    public async Task<User?> Handle(LoginUserCommand cmd)
+    {
+        var user = await _repo.FindByUsernameAsync(cmd.Username);
+        if (user == null) return null;
+        // In production, use hashed and salted password comparison!
+        if (user.Password != cmd.Password) return null;
+        return user;
+    }
+
 }
