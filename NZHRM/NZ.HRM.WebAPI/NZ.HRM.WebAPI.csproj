@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NZ.HRM.Application\NZ.HRM.Application.csproj" />
     <ProjectReference Include="..\NZ.HRM.Infrastructure\NZ.HRM.Infrastructure.csproj" />
   </ItemGroup>
 

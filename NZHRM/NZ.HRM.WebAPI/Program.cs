@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using NZ.HRM.Infrastructure.Persistence;
+using NZ.HRM.Application.DependencyInjection;
+using NZ.HRM.Infrastructure.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 // Connection String in appsettings.json
@@ -14,6 +16,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddHandlerServices();
+builder.Services.AddRepositories();
 
 var app = builder.Build();
 

@@ -1,12 +1,5 @@
-﻿using NZ.HRM.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using NZ.HRM.Domain.Entities;
 
 namespace NZ.HRM.Infrastructure.Persistence
 {
@@ -14,11 +7,13 @@ namespace NZ.HRM.Infrastructure.Persistence
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        public DbSet<Employee> Employees => Set<Employee>();
+        public DbSet<User> Users => Set<User>();
+        public DbSet<Role> Roles => Set<Role>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Employee>().ToTable("Employees");
+            modelBuilder.Entity<User>().ToTable("Users");
+            modelBuilder.Entity<Role>().ToTable("Roles");
             base.OnModelCreating(modelBuilder);
         }
     }
