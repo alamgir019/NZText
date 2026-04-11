@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using NZ.HRM.Infrastructure.Persistence;
+using NZ.HRM.Application.DependencyInjection;
+using NZ.HRM.Infrastructure.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 // Connection String in appsettings.json
@@ -15,6 +17,17 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHandlerServices();
+builder.Services.AddRepositories();
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,5 +42,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseSession();
+
 
 app.Run();
