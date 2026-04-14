@@ -13,8 +13,8 @@ namespace NZ.HRM.Domain.Common
         public BaseEntity()
         {
             this.Id = IdentityGenerator.Next();
-            //this.CreatedOn = DateTime.UtcNow;
-            //this.UpdatedOn = DateTime.UtcNow;
+            this.CreatedOn = DateTime.UtcNow;
+            this.UpdatedOn = DateTime.UtcNow;
             this.IsActive = true;
 
             // Initialize non-nullable properties with default values
@@ -34,7 +34,7 @@ namespace NZ.HRM.Domain.Common
         /// <summary>
         /// Gets or sets createdOn.
         /// </summary>
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreatedOn { get; set; }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace NZ.HRM.Domain.Common
         /// <summary>
         /// Gets or sets updatedOn.
         /// </summary>
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime UpdatedOn { get; set; }
 
         /// <summary>

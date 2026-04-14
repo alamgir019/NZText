@@ -1329,6 +1329,29 @@ Total_Employees	INT	4200
 Present	INT	3980
 Absent	INT	220
 */
+
+/*
+ Model: Menu
+Fields: 
+Id, Name, ParentId, Url, Icon, Order, IsActive
+
+    1. create a class with the proper in the NZ.HRM.Domain project.
+    2. follow 'User' model's structure.
+    3. filed list: menuid, roleid, userid, permissions, visibility.
+    4. use appropriate data types for each property.
+    5. ensure that the class is properly encapsulated and follows best practices for object-oriented programming.
+    6. add necessary constraints.
+
+
+1. Modle name: Requisition
+2. inherit base entity class.
+3. filed list: PostId, DesignationId, companyId, salary range, TermsAndCondition, jobtype, requisition date, circulationMedia.
+4. use appropriate data types for each property.
+5. ensure that the class is properly encapsulated and follows best practices for object-oriented programming.
+6. add necessary foreign key relationship.
+
+
+ */
 public class Class1
 {
 
