@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using NZ.HRM.Infrastructure.Persistence;
 using NZ.HRM.Application.DependencyInjection;
 using NZ.HRM.Infrastructure.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 // Connection String in appsettings.json
@@ -29,7 +30,7 @@ builder.Services.AddSession(options =>
 });
 
 var app = builder.Build();
-
+app.UseCors();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
