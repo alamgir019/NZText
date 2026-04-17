@@ -1350,6 +1350,58 @@ Id, Name, ParentId, Url, Icon, Order, IsActive
 5. ensure that the class is properly encapsulated and follows best practices for object-oriented programming.
 6. add necessary foreign key relationship.
 
+1. Modle name: ApplicationTracking
+2. inherit base entity class.
+3. filed list: RequisitionId, ApplicantName, DateOfBirth, FatherName, Mobile, Qualification, CvPath, circulationMedia.
+4. use appropriate data types for each property.
+5. ensure that the class is properly encapsulated and follows best practices for object-oriented programming.
+6. add necessary foreign key relationship.
+
+Date: 25 February 2026
+Ref : NZTGTEX/HRD/APT 0065/2026
+Name : Riyadh Md Adnan
+Father's Name : Md. Afzal Hoossain
+Address : 42/2, Road No# 7, Block# B
+Banasree, Dhaka
+Mobile : 01674-967540
+Subject : Letter of Appointment
+
+
+Md. Afzal Hoossain
+42/2, Road No# 7, Block# B
+Banasree, Dhaka
+01674-967540
+Letter of Appointment
+Dear Mr. Riyadh Md Adnan
+xz
+NZ TEX GROUP
+Date: 25 February 2026
+In consideration of your Bio Data and subsequent interview with the Company Management, we would like to
+appoint you as Sr. Assistant General Manager (Process Improvement and Production Engineering) NZ Fabrics
+Ltd, NZ Tex Group under the following terms & Conditions:-
+1. Your Joining date will be 25th February 2026
+2. You will be under probation for a period of 6 (six) months. Your job will be confirmed finally on
+successful completion of your probation period depending upon your satisfactory performance.
+3. Your monthly consolidated salary will be Tk. 1,95,000/- (One Lac Ninety Five Thousand ) only per
+month. Tax accruable from salary, if applicable, be deducted as source tax as per income tax rules.
+You will be entitled to festival bonus only after 6 months of service with the company.
+4. You will be entitled to all other service / financial benefits as per company rules in force.
+5. Your job station will be at Factory Complex, Golakandail, Vulta, Rupgonj, Narayangonj.
+6. During the continuance of your employment you shall not directly or indirectly be interested in any
+business, trade or profession and should strictly observe the employment code of conduct.
+7. If you are found guilty of any misconduct, irregularities against company rules and regulation, your
+service is liable to termination without any notice.
+8. The authority will retain the right to terminate your service without showing any reason by giving you
+two months notice.
+9. If you want to leave the job you will have to notify to the management at least two months in
+advance.
+10. If the above terms and conditions are acceptable to you, please sign the duplicate copy of this letter
+as a mark of your acceptance and return the same to us for our records.
+�-:
+(Md. Amin Tarique)
+Chief Executive Officer
+NZ Tex Group
+( ) innovation 
 
  */
 public class Class1

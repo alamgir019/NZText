@@ -16,6 +16,8 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<Location> Locations => Set<Location>();
         public DbSet<Company> Companies => Set<Company>();
         public DbSet<Requisition> Requisitions => Set<Requisition>();
+        public DbSet<ApplicationTracking> ApplicationTrackings => Set<ApplicationTracking>();
+        public DbSet<OfferLetter> OfferLetters => Set<OfferLetter>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -23,6 +25,8 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<Role>().ToTable("Roles");
             modelBuilder.Entity<Menu>().ToTable("Menus");
             modelBuilder.Entity<MenuPermission>().ToTable("MenuPermissions");
+            modelBuilder.Entity<ApplicationTracking>().ToTable("ApplicationTrackings");
+            modelBuilder.Entity<OfferLetter>().ToTable("OfferLetters");
             base.OnModelCreating(modelBuilder);
         }
     }

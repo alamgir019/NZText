@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NZ.HRM.Infrastructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NZ.HRM.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260417034439_AddedRequisition")]
+    partial class AddedRequisition
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,68 +24,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("NZ.HRM.Domain.Entities.ApplicationTracking", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("CHAR(26)")
-                        .HasColumnName("Id");
-
-                    b.Property<string>("ApplicantName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ApplicationTrackingRequisitionId")
-                        .HasColumnType("CHAR(26)");
-
-                    b.Property<string>("CirculationMedia")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("CvPath")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("FatherName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Mobile")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Qualification")
-                        .HasColumnType("text");
-
-                    b.Property<string>("RequisitionId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationTrackingRequisitionId");
-
-                    b.ToTable("ApplicationTrackings", (string)null);
-                });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.Company", b =>
                 {
@@ -302,120 +243,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.ToTable("MenuPermissions", (string)null);
                 });
 
-            modelBuilder.Entity("NZ.HRM.Domain.Entities.OfferLetter", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("CHAR(26)")
-                        .HasColumnName("Id");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<string>("ApplicationTrackingId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("CandidateName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("CompanyGroup")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("CompanyName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Designation")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("FatherName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("JobStation")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<DateTime>("JoiningDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Mobile")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("NotificationPeriod")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("OfferLetterApplicationTrackingId")
-                        .HasColumnType("CHAR(26)");
-
-                    b.Property<string>("Post")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("ProbationPeriod")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("ReferenceNo")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Salary")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("SignatoryName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OfferLetterApplicationTrackingId");
-
-                    b.ToTable("OfferLetters", (string)null);
-                });
-
             modelBuilder.Entity("NZ.HRM.Domain.Entities.Post", b =>
                 {
                     b.Property<string>("Id")
@@ -589,15 +416,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("NZ.HRM.Domain.Entities.ApplicationTracking", b =>
-                {
-                    b.HasOne("NZ.HRM.Domain.Entities.Requisition", "Requisition")
-                        .WithMany()
-                        .HasForeignKey("ApplicationTrackingRequisitionId");
-
-                    b.Navigation("Requisition");
-                });
-
             modelBuilder.Entity("NZ.HRM.Domain.Entities.Company", b =>
                 {
                     b.HasOne("NZ.HRM.Domain.Entities.Location", "Location")
@@ -632,15 +450,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("NZ.HRM.Domain.Entities.OfferLetter", b =>
-                {
-                    b.HasOne("NZ.HRM.Domain.Entities.ApplicationTracking", "ApplicationTracking")
-                        .WithMany()
-                        .HasForeignKey("OfferLetterApplicationTrackingId");
-
-                    b.Navigation("ApplicationTracking");
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.Requisition", b =>

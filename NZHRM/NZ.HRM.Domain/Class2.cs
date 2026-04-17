@@ -9,12 +9,11 @@ namespace NZ.HRM.Domain
 
 
     /*
-1. Modle name: ApplicationTracking
-2. inherit base entity class.
-3. filed list: RequisitionId, ApplicantName, DateOfBirth, FatherName, Mobile, Qualification, CvPath, circulationMedia.
-4. use appropriate data types for each property.
-5. ensure that the class is properly encapsulated and follows best practices for object-oriented programming.
-6. add necessary foreign key relationship.
+1.create controller, handlers and other files for menurpermission.
+    2. a menu can be assigned to multiple roles. in this case user will be null.
+    3. a menu can be assigned to multiple users.
+    4. if assigned a menu, visibility will be true, otherwise false.
+    5. permissions can be in json format like "Read: true,Write: true,Delete: true" or any combination of these. by default ""Read: true,Write: true,Delete: true"".
 */
     class Class2
     {
