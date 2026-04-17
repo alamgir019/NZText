@@ -13,6 +13,7 @@ namespace NZ.HRM.Application.DependencyInjection
             services.AddScoped<MenuCommandHandler>();
             services.AddScoped<MenuQueryHandler>();
             services.AddScoped<MenuPermissionCommandHandler>();
+            services.AddScoped<MenuPermissionQueryHandler>();
             return services;
         }
     }

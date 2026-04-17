@@ -5,17 +5,27 @@ using System.Threading.Tasks;
 [Route("api/[controller]")]
 public class MenuPermissionController : ControllerBase
 {
-    private readonly MenuPermissionCommandHandler _handler;
+    private readonly MenuPermissionCommandHandler _commandHandler;
+    private readonly MenuPermissionQueryHandler _queryHandler;
 
-    public MenuPermissionController(MenuPermissionCommandHandler handler)
+    public MenuPermissionController(MenuPermissionCommandHandler commandHandler, MenuPermissionQueryHandler queryHandler)
     {
-        _handler = handler;
+        _commandHandler = commandHandler;
+        _queryHandler = queryHandler;
     }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateMenuPermissionCommand cmd)
     {
-        var id = await _handler.Handle(cmd);
+        var id = await _commandHandler.Handle(cmd);
         return Ok(new { Id = id });
+    }
+
+
+    [HttpGet("menus/{userId}")]
+    public async Task<IActionResult> GetMenusByUserId(string userId)
+    {
+        var menus = await _queryHandler.GetMenusByUserIdAsync(userId);
+        return Ok(menus);
     }
 }

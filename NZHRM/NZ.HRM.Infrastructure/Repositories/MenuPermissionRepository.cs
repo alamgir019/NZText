@@ -26,4 +26,20 @@ public class MenuPermissionRepository : IMenuPermissionRepository
     public async Task<List<MenuPermission>> GetAllAsync() => await _db.MenuPermissions.ToListAsync();
 
     public async Task SaveChangesAsync() => await _db.SaveChangesAsync();
+
+    public async Task<List<MenuPermission>> GetByUserIdAsync(string userId)
+    {
+        return await _db.MenuPermissions
+            .Include(m => m.Menu)
+            .Where(mp => mp.UserId == userId && mp.Visibility)
+            .ToListAsync();
+    }
+
+    public async Task<List<MenuPermission>> GetByRoleIdAsync(string roleId)
+    {
+        return await _db.MenuPermissions
+            .Where(mp => mp.RoleId == roleId && mp.UserId == null && mp.Visibility)
+            .ToListAsync();
+    }
+
 }

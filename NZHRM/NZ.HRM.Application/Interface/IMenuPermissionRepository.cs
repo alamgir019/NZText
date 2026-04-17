@@ -10,4 +10,7 @@ public interface IMenuPermissionRepository
     Task UpdateAsync(MenuPermission menuPermission);
     Task<List<MenuPermission>> GetAllAsync();
     Task SaveChangesAsync();
+    Task<List<MenuPermission>> GetByUserIdAsync(string userId);
+    Task<List<MenuPermission>> GetByRoleIdAsync(string roleId);
+
 }
