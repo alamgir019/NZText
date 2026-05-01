@@ -6,6 +6,7 @@ using NZ.HRM.Application.Grades.Handlers;
 using NZ.HRM.Application.Sections.Handlers;
 using NZ.HRM.Application.EmployeeMasters.Handlers;
 using NZ.HRM.Application.EmployeePersonals.Handlers;
+using NZ.HRM.Application.Employees.Handlers;
 
 namespace NZ.HRM.Application.DependencyInjection
 {
@@ -48,6 +49,10 @@ namespace NZ.HRM.Application.DependencyInjection
             // Register EmployeePersonal Handlers
             services.AddScoped<EmployeePersonalCommandHandler>();
             services.AddScoped<EmployeePersonalQueryHandler>();
+
+            // Register Complete Employee Handlers
+            services.AddScoped<CreateCompleteEmployeeCommandHandler>();
+            services.AddScoped<GetCompleteEmployeeQueryHandler>();
 
             return services;
         }
