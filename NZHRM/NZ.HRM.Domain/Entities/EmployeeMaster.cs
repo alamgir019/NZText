@@ -1,23 +1,67 @@
+using NZ.HRM.Domain.Common;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using NZ.HRM.Utility.Enum;
+
 namespace NZ.HRM.Domain.Entities
 {
-    public class EmployeeMaster
+    public class EmployeeMaster : BaseEntity
     {
-        public int EmployeeId { get; set; }
+        [Required]
+        [MaxLength(50)]
         public string EmployeeCode { get; set; } = string.Empty;
-        public int CompanyId { get; set; }
-        public int UnitId { get; set; }
-        public int DepartmentId { get; set; }
-        public int SectionId { get; set; }
-        public int DesignationId { get; set; }
-        public int GradeId { get; set; }
-        public DateOnly JoiningDate { get; set; }
-        public string Status { get; set; } = string.Empty;
 
+        [Required]
+        [MaxLength(100)]
+        public string EmployeeNameEnglish { get; set; } = string.Empty;
+
+        [MaxLength(100)]
+        public string? EmployeeNameBangla { get; set; }
+
+        [Required]
+        public string CompanyId { get; set; } = string.Empty;
+        [ForeignKey(nameof(CompanyId))]
         public Company? Company { get; set; }
-        public Unit? Unit { get; set; }
+
+        [Required]
+        public string DepartmentId { get; set; } = string.Empty;
+        [ForeignKey(nameof(DepartmentId))]
         public Department? Department { get; set; }
+
+        [Required]
+        public string SectionId { get; set; } = string.Empty;
+        [ForeignKey(nameof(SectionId))]
         public Section? Section { get; set; }
-        public Designation? Designation { get; set; }
+
+        [Required]
+        public string GradeId { get; set; } = string.Empty;
+        [ForeignKey(nameof(GradeId))]
         public Grade? Grade { get; set; }
+
+        [Required]
+        public EmployeeType EmployeeType { get; set; }
+
+        [Required]
+        public string ShiftId { get; set; } = string.Empty;
+        [ForeignKey(nameof(ShiftId))]
+        public Shift? Shift { get; set; }
+
+        [Required]
+        public EmployeeNature EmployeeNature { get; set; }
+
+        public string? HolidayId { get; set; }
+        [ForeignKey(nameof(HolidayId))]
+        public Holiday? Holiday { get; set; }
+
+        [Required]
+        public DateTime JoiningDate { get; set; }
+
+        public DateTime? ConfirmationDate { get; set; }
+
+        [Required]
+        public EmployeeStatus Status { get; set; } = EmployeeStatus.Draft;
+
+        // Navigation property
+        public EmployeePersonal? PersonalInfo { get; set; }
     }
 }

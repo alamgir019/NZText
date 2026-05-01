@@ -1,8 +1,9 @@
+using NZ.HRM.Domain.Common;
+
 namespace NZ.HRM.Domain.Entities
 {
-    public class Shift
+    public class Shift : BaseEntity
     {
-        public int ShiftId { get; set; }
         public string ShiftName { get; set; } = string.Empty;
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }

@@ -20,6 +20,13 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<ApplicationTracking> ApplicationTrackings => Set<ApplicationTracking>();
         public DbSet<OfferLetter> OfferLetters => Set<OfferLetter>();
         public DbSet<District> Districts => Set<District>();
+        public DbSet<Department> Departments => Set<Department>();
+        public DbSet<Grade> Grades => Set<Grade>();
+        public DbSet<Section> Sections => Set<Section>();
+        public DbSet<EmployeeMaster> EmployeeMasters => Set<EmployeeMaster>();
+        public DbSet<EmployeePersonal> EmployeePersonals => Set<EmployeePersonal>();
+        public DbSet<Shift> Shifts => Set<Shift>();
+        public DbSet<Holiday> Holidays => Set<Holiday>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,6 +38,14 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<OfferLetter>().ToTable("OfferLetters");
             modelBuilder.Entity<District>().ToTable("Districts");
             modelBuilder.Entity<Location>().ToTable("Locations");
+            modelBuilder.Entity<Department>().ToTable("Departments");
+            modelBuilder.Entity<Grade>().ToTable("Grades");
+            modelBuilder.Entity<Section>().ToTable("Sections");
+            modelBuilder.Entity<EmployeeMaster>().ToTable("EmployeeMasters");
+            modelBuilder.Entity<EmployeePersonal>().ToTable("EmployeePersonals");
+            modelBuilder.Entity<Shift>().ToTable("Shifts");
+            modelBuilder.Entity<Holiday>().ToTable("Holidays");
+
 
             // Apply to all entities that have CreatedOn and UpdatedOn properties
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())

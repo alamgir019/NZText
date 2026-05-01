@@ -1,4 +1,4 @@
-﻿namespace NZ.HRM.Domain.Enum
+﻿namespace NZ.HRM.Utility.Enum
 {
     public enum JobType
     {

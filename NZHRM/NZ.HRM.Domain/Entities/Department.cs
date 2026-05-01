@@ -1,8 +1,9 @@
+using NZ.HRM.Domain.Common;
+
 namespace NZ.HRM.Domain.Entities
 {
-    public class Department
+    public class Department : BaseEntity
     {
-        public int DepartmentId { get; set; }
         public string DepartmentName { get; set; } = string.Empty;
         public string DepartmentCode { get; set; } = string.Empty;
     }
