@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NZ.HRM.Infrastructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NZ.HRM.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260420181529_SeedBangladeshDistricts")]
+    partial class SeedBangladeshDistricts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -115,11 +118,10 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("IsCompliant")
-                        .HasColumnType("boolean");
+                    b.Property<int>("LocationId")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("LocationId")
-                        .IsRequired()
+                    b.Property<string>("LocationId1")
                         .HasColumnType("CHAR(26)");
 
                     b.Property<string>("UpdatedBy")
@@ -133,7 +135,7 @@ namespace NZ.HRM.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LocationId");
+                    b.HasIndex("LocationId1");
 
                     b.ToTable("Companies");
                 });
@@ -164,10 +166,6 @@ namespace NZ.HRM.Infrastructure.Migrations
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
-
-                    b.Property<string>("ParentId")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
@@ -690,9 +688,7 @@ namespace NZ.HRM.Infrastructure.Migrations
                 {
                     b.HasOne("NZ.HRM.Domain.Entities.Location", "Location")
                         .WithMany("Companies")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("LocationId1");
 
                     b.Navigation("Location");
                 });

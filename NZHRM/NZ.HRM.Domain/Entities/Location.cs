@@ -6,7 +6,7 @@ namespace NZ.HRM.Domain.Entities
     {
         public string LocationName { get; set; } = string.Empty;
         public string DistrictId { get; set; } = string.Empty;
-
+        public District? District { get; set; }
         public ICollection<Company>? Companies { get; set; }
     }
 }

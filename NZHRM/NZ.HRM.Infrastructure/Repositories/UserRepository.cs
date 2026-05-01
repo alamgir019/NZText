@@ -2,49 +2,52 @@ using NZ.HRM.Domain.Entities;
 using NZ.HRM.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-public class UserRepository : IUserRepository
+namespace NZ.HRM.Infrastructure.Repositories
 {
-    private readonly ApplicationDbContext _db;
-
-    public UserRepository(ApplicationDbContext db)
+    public class UserRepository : IUserRepository
     {
-        _db = db;
-    }
+        private readonly ApplicationDbContext _db;
 
-    public async Task<User?> FindByIdAsync(string id)
-    {
-        return await _db.Users.FindAsync(id);
-    }
+        public UserRepository(ApplicationDbContext db)
+        {
+            _db = db;
+        }
 
-    public async Task<List<User>> GetAllAsync()
-    {
-        return await _db.Users.ToListAsync();
-    }
+        public async Task<User?> FindByIdAsync(string id)
+        {
+            return await _db.Users.FindAsync(id);
+        }
 
-    public async Task AddAsync(User user)
-    {
-        await _db.Users.AddAsync(user);
-    }
+        public async Task<List<User>> GetAllAsync()
+        {
+            return await _db.Users.ToListAsync();
+        }
 
-    public async Task RemoveAsync(User user)
-    {
-        _db.Users.Remove(user);
-        await Task.CompletedTask;
-    }
+        public async Task AddAsync(User user)
+        {
+            await _db.Users.AddAsync(user);
+        }
 
-    public async Task UpdateAsync(User user)
-    {
-        _db.Users.Update(user);
-        await Task.CompletedTask;
-    }
+        public async Task RemoveAsync(User user)
+        {
+            _db.Users.Remove(user);
+            await Task.CompletedTask;
+        }
 
-    public async Task<User?> FindByUsernameAsync(string username)
-    {
-        return await _db.Users.FirstOrDefaultAsync(u => u.Username == username);
-    }
+        public async Task UpdateAsync(User user)
+        {
+            _db.Users.Update(user);
+            await Task.CompletedTask;
+        }
 
-    public async Task SaveChangesAsync()
-    {
-        await _db.SaveChangesAsync();
+        public async Task<User?> FindByUsernameAsync(string username)
+        {
+            return await _db.Users.FirstOrDefaultAsync(u => u.Username == username);
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _db.SaveChangesAsync();
+        }
     }
 }

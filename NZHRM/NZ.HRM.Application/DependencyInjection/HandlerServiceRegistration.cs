@@ -1,4 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
+using NZ.HRM.Application.Companies.Handlers;
+using NZ.HRM.Application.Locations.Handlers;
 
 namespace NZ.HRM.Application.DependencyInjection
 {
@@ -14,6 +16,13 @@ namespace NZ.HRM.Application.DependencyInjection
             services.AddScoped<MenuQueryHandler>();
             services.AddScoped<MenuPermissionCommandHandler>();
             services.AddScoped<MenuPermissionQueryHandler>();
+            services.AddScoped<LocationCommandHandler>();
+            services.AddScoped<LocationQueryHandler>();
+            // Add this in your service configuration
+            // Register Command Handlers
+            services.AddScoped<CompaniesCommandHandler>();
+            // Register Query Handlers
+            services.AddScoped<CompaniesQueryHandler>();
             return services;
         }
     }

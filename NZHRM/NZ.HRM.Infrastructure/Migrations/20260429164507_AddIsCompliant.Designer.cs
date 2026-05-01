@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NZ.HRM.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260417035814_AddedOfferLetter")]
-    partial class AddedOfferLetter
+    [Migration("20260429164507_AddIsCompliant")]
+    partial class AddIsCompliant
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,7 +47,9 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("CvPath")
                         .HasColumnType("text");
@@ -78,7 +80,9 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.HasKey("Id");
 
@@ -107,15 +111,18 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("LocationId")
-                        .HasColumnType("integer");
+                    b.Property<bool>("IsCompliant")
+                        .HasColumnType("boolean");
 
-                    b.Property<string>("LocationId1")
+                    b.Property<string>("LocationId")
+                        .IsRequired()
                         .HasColumnType("CHAR(26)");
 
                     b.Property<string>("UpdatedBy")
@@ -123,11 +130,13 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LocationId1");
+                    b.HasIndex("LocationId");
 
                     b.ToTable("Companies");
                 });
@@ -144,7 +153,9 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("DesignationCode")
                         .IsRequired()
@@ -157,16 +168,59 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("ParentId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.HasKey("Id");
 
                     b.ToTable("Designations");
+                });
+
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.District", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("CHAR(26)")
+                        .HasColumnName("Id");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("DistrictName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Districts", (string)null);
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.Location", b =>
@@ -181,11 +235,13 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("DistrictId")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("CHAR(26)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -199,11 +255,15 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locations");
+                    b.HasIndex("DistrictId");
+
+                    b.ToTable("Locations", (string)null);
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.Menu", b =>
@@ -218,7 +278,9 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("Icon")
                         .HasColumnType("text");
@@ -241,7 +303,9 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("Url")
                         .HasColumnType("text");
@@ -263,7 +327,9 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -285,7 +351,9 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -341,7 +409,9 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
@@ -410,7 +480,9 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.HasKey("Id");
 
@@ -431,7 +503,9 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -445,7 +519,9 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.HasKey("Id");
 
@@ -471,7 +547,9 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("DesignationId")
                         .IsRequired()
@@ -503,7 +581,9 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.HasKey("Id");
 
@@ -528,7 +608,9 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -542,7 +624,9 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.HasKey("Id");
 
@@ -561,7 +645,9 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -579,7 +665,9 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -605,9 +693,22 @@ namespace NZ.HRM.Infrastructure.Migrations
                 {
                     b.HasOne("NZ.HRM.Domain.Entities.Location", "Location")
                         .WithMany("Companies")
-                        .HasForeignKey("LocationId1");
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.Location", b =>
+                {
+                    b.HasOne("NZ.HRM.Domain.Entities.District", "District")
+                        .WithMany("Locations")
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("District");
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.MenuPermission", b =>
@@ -692,6 +793,11 @@ namespace NZ.HRM.Infrastructure.Migrations
             modelBuilder.Entity("NZ.HRM.Domain.Entities.Designation", b =>
                 {
                     b.Navigation("Requisitions");
+                });
+
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.District", b =>
+                {
+                    b.Navigation("Locations");
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.Location", b =>
