@@ -60,6 +60,17 @@ public class EmployeePersonalCommandHandler
             SpouseMobile = command.SpouseMobile,
             TinNumber = command.TinNumber,
             EmployeeReference = command.EmployeeReference,
+            ReferencePersonId = command.ReferencePersonId,
+            PermanentVillageAreaRoad = command.PermanentVillageAreaRoad,
+            PermanentPostOffice = command.PermanentPostOffice,
+            PermanentThana = command.PermanentThana,
+            PermanentDistrict = command.PermanentDistrict,
+            PermanentDivision = command.PermanentDivision,
+            PresentVillageAreaRoad = command.PresentVillageAreaRoad,
+            PresentPostOffice = command.PresentPostOffice,
+            PresentThana = command.PresentThana,
+            PresentDistrict = command.PresentDistrict,
+            PresentDivision = command.PresentDivision,
             IsActive = true
         };
 
@@ -99,6 +110,17 @@ public class EmployeePersonalCommandHandler
         employeePersonal.SpouseMobile = command.SpouseMobile;
         employeePersonal.TinNumber = command.TinNumber;
         employeePersonal.EmployeeReference = command.EmployeeReference;
+        employeePersonal.ReferencePersonId = command.ReferencePersonId;
+        employeePersonal.PermanentVillageAreaRoad = command.PermanentVillageAreaRoad;
+        employeePersonal.PermanentPostOffice = command.PermanentPostOffice;
+        employeePersonal.PermanentThana = command.PermanentThana;
+        employeePersonal.PermanentDistrict = command.PermanentDistrict;
+        employeePersonal.PermanentDivision = command.PermanentDivision;
+        employeePersonal.PresentVillageAreaRoad = command.PresentVillageAreaRoad;
+        employeePersonal.PresentPostOffice = command.PresentPostOffice;
+        employeePersonal.PresentThana = command.PresentThana;
+        employeePersonal.PresentDistrict = command.PresentDistrict;
+        employeePersonal.PresentDivision = command.PresentDivision;
 
         await _employeePersonalRepository.UpdateAsync(employeePersonal, cancellationToken);
     }

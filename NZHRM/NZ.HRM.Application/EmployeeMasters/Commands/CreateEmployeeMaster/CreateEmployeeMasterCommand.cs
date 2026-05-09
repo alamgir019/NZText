@@ -31,13 +31,16 @@ public class CreateEmployeeMasterCommand
     [Required(ErrorMessage = "Employee type is required")]
     public EmployeeType EmployeeType { get; set; }
 
-    [Required(ErrorMessage = "Shift ID is required")]
-    public string ShiftId { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Shift is required")]
+    public Shift Shift { get; set; }
 
     [Required(ErrorMessage = "Employee nature is required")]
     public EmployeeNature EmployeeNature { get; set; }
 
-    public string? HolidayId { get; set; }
+    [Required(ErrorMessage = "Holiday is required")]
+    public Holiday Holiday { get; set; }
+
+    public decimal? ProposedMonthlySalary { get; set; }
 
     [Required(ErrorMessage = "Joining date is required")]
     public DateTime JoiningDate { get; set; }

@@ -34,13 +34,15 @@ public class CreateCompleteEmployeeCommand
     [Required(ErrorMessage = "Employee type is required")]
     public EmployeeType EmployeeType { get; set; }
 
-    [Required(ErrorMessage = "Shift ID is required")]
-    public string ShiftId { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Shift is required")]
+    public Shift Shift { get; set; }
 
     [Required(ErrorMessage = "Employee nature is required")]
     public EmployeeNature EmployeeNature { get; set; }
 
-    public string? HolidayId { get; set; }
+    public Holiday Holiday { get; set; }
+
+    public decimal? ProposedMonthlySalary { get; set; }
 
     [Required(ErrorMessage = "Joining date is required")]
     public DateTime JoiningDate { get; set; }
@@ -108,4 +110,54 @@ public class CreateCompleteEmployeeCommand
 
     [MaxLength(100, ErrorMessage = "Employee reference must not exceed 100 characters")]
     public string? EmployeeReference { get; set; }
+
+    [MaxLength(50, ErrorMessage = "Reference person ID must not exceed 50 characters")]
+    public string? ReferencePersonId { get; set; }
+
+    // Address Information
+    [MaxLength(200, ErrorMessage = "Permanent village/area/road must not exceed 200 characters")]
+    public string? PermanentVillageAreaRoad { get; set; }
+
+    [MaxLength(100, ErrorMessage = "Permanent post office must not exceed 100 characters")]
+    public string? PermanentPostOffice { get; set; }
+
+    [MaxLength(100, ErrorMessage = "Permanent thana must not exceed 100 characters")]
+    public string? PermanentThana { get; set; }
+
+    [MaxLength(100, ErrorMessage = "Permanent district must not exceed 100 characters")]
+    public string? PermanentDistrict { get; set; }
+
+    [MaxLength(100, ErrorMessage = "Permanent division must not exceed 100 characters")]
+    public string? PermanentDivision { get; set; }
+
+    [MaxLength(200, ErrorMessage = "Present village/area/road must not exceed 200 characters")]
+    public string? PresentVillageAreaRoad { get; set; }
+
+    [MaxLength(100, ErrorMessage = "Present post office must not exceed 100 characters")]
+    public string? PresentPostOffice { get; set; }
+
+    [MaxLength(100, ErrorMessage = "Present thana must not exceed 100 characters")]
+    public string? PresentThana { get; set; }
+
+    [MaxLength(100, ErrorMessage = "Present district must not exceed 100 characters")]
+    public string? PresentDistrict { get; set; }
+
+    [MaxLength(100, ErrorMessage = "Present division must not exceed 100 characters")]
+    public string? PresentDivision { get; set; }
+
+    // Verification Information
+    [MaxLength(100, ErrorMessage = "Security clearance by must not exceed 100 characters")]
+    public string? SecurityClearanceBy { get; set; }
+
+    public DateTime? SecurityClearanceDate { get; set; }
+
+    [MaxLength(100, ErrorMessage = "Enrolled by must not exceed 100 characters")]
+    public string? EnrolledBy { get; set; }
+
+    public DateTime? EnrolledDate { get; set; }
+
+    [MaxLength(100, ErrorMessage = "Biometric enrolled by must not exceed 100 characters")]
+    public string? BiometricEnrolledBy { get; set; }
+
+    public DateTime? BiometricEnrolledDate { get; set; }
 }

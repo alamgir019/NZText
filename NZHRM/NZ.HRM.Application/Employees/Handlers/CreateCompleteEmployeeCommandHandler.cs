@@ -9,6 +9,7 @@ public class CreateCompleteEmployeeCommandHandler
 {
     private readonly IEmployeeMasterRepository _employeeMasterRepository;
     private readonly IEmployeePersonalRepository _employeePersonalRepository;
+    private readonly IEmployeeVerificationRepository _employeeVerificationRepository;
     private readonly ICompanyRepository _companyRepository;
     private readonly IDepartmentRepository _departmentRepository;
     private readonly ISectionRepository _sectionRepository;
@@ -17,6 +18,7 @@ public class CreateCompleteEmployeeCommandHandler
     public CreateCompleteEmployeeCommandHandler(
         IEmployeeMasterRepository employeeMasterRepository,
         IEmployeePersonalRepository employeePersonalRepository,
+        IEmployeeVerificationRepository employeeVerificationRepository,
         ICompanyRepository companyRepository,
         IDepartmentRepository departmentRepository,
         ISectionRepository sectionRepository,
@@ -24,6 +26,7 @@ public class CreateCompleteEmployeeCommandHandler
     {
         _employeeMasterRepository = employeeMasterRepository;
         _employeePersonalRepository = employeePersonalRepository;
+        _employeeVerificationRepository = employeeVerificationRepository;
         _companyRepository = companyRepository;
         _departmentRepository = departmentRepository;
         _sectionRepository = sectionRepository;
@@ -58,9 +61,10 @@ public class CreateCompleteEmployeeCommandHandler
             SectionId = command.SectionId,
             GradeId = command.GradeId,
             EmployeeType = command.EmployeeType,
-            ShiftId = command.ShiftId,
+            Shift = command.Shift,
             EmployeeNature = command.EmployeeNature,
-            HolidayId = command.HolidayId,
+            Holiday = command.Holiday,
+            ProposedMonthlySalary = command.ProposedMonthlySalary,
             JoiningDate = command.JoiningDate,
             ConfirmationDate = command.ConfirmationDate,
             Status = EmployeeStatus.Draft,
@@ -93,11 +97,36 @@ public class CreateCompleteEmployeeCommandHandler
             SpouseMobile = command.SpouseMobile,
             TinNumber = command.TinNumber,
             EmployeeReference = command.EmployeeReference,
+            ReferencePersonId = command.ReferencePersonId,
+            PermanentVillageAreaRoad = command.PermanentVillageAreaRoad,
+            PermanentPostOffice = command.PermanentPostOffice,
+            PermanentThana = command.PermanentThana,
+            PermanentDistrict = command.PermanentDistrict,
+            PermanentDivision = command.PermanentDivision,
+            PresentVillageAreaRoad = command.PresentVillageAreaRoad,
+            PresentPostOffice = command.PresentPostOffice,
+            PresentThana = command.PresentThana,
+            PresentDistrict = command.PresentDistrict,
+            PresentDivision = command.PresentDivision,
             IsActive = true
         };
 
         // Save EmployeePersonal
         await _employeePersonalRepository.AddAsync(employeePersonal, cancellationToken);
+
+        var employeeVerification = new EmployeeVerification
+        {
+            EmployeeId = employeeId,
+            SecurityClearanceBy = command.SecurityClearanceBy,
+            SecurityClearanceDate = command.SecurityClearanceDate,
+            EnrolledBy = command.EnrolledBy,
+            EnrolledDate = command.EnrolledDate,
+            BiometricEnrolledBy = command.BiometricEnrolledBy,
+            BiometricEnrolledDate = command.BiometricEnrolledDate,
+            IsActive = true
+        };
+
+        await _employeeVerificationRepository.AddAsync(employeeVerification, cancellationToken);
 
         return employeeId;
     }

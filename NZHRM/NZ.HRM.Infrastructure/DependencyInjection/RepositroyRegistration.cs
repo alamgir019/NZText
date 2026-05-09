@@ -18,8 +18,10 @@ namespace NZ.HRM.Infrastructure.DependencyInjection
             services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             services.AddScoped<IGradeRepository, GradeRepository>();
             services.AddScoped<ISectionRepository, SectionRepository>();
+            services.AddScoped<ICellRepository, CellRepository>();
             services.AddScoped<IEmployeeMasterRepository, EmployeeMasterRepository>();
             services.AddScoped<IEmployeePersonalRepository, EmployeePersonalRepository>();
+            services.AddScoped<IEmployeeVerificationRepository, EmployeeVerificationRepository>();
             return services;
         }
     }

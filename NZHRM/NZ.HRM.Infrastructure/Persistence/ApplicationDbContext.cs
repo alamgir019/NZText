@@ -23,8 +23,10 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<Department> Departments => Set<Department>();
         public DbSet<Grade> Grades => Set<Grade>();
         public DbSet<Section> Sections => Set<Section>();
+        public DbSet<Cell> Cells => Set<Cell>();
         public DbSet<EmployeeMaster> EmployeeMasters => Set<EmployeeMaster>();
         public DbSet<EmployeePersonal> EmployeePersonals => Set<EmployeePersonal>();
+        public DbSet<EmployeeVerification> EmployeeVerifications => Set<EmployeeVerification>();
         public DbSet<Shift> Shifts => Set<Shift>();
         public DbSet<Holiday> Holidays => Set<Holiday>();
 
@@ -41,8 +43,10 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<Department>().ToTable("Departments");
             modelBuilder.Entity<Grade>().ToTable("Grades");
             modelBuilder.Entity<Section>().ToTable("Sections");
+            modelBuilder.Entity<Cell>().ToTable("Cells");
             modelBuilder.Entity<EmployeeMaster>().ToTable("EmployeeMasters");
             modelBuilder.Entity<EmployeePersonal>().ToTable("EmployeePersonals");
+            modelBuilder.Entity<EmployeeVerification>().ToTable("EmployeeVerifications");
             modelBuilder.Entity<Shift>().ToTable("Shifts");
             modelBuilder.Entity<Holiday>().ToTable("Holidays");
 

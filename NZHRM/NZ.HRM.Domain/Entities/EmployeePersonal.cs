@@ -73,6 +73,39 @@ namespace NZ.HRM.Domain.Entities
         [MaxLength(100)]
         public string? EmployeeReference { get; set; }
 
+        [MaxLength(50)]
+        public string? ReferencePersonId { get; set; }
+
+        [MaxLength(200)]
+        public string? PermanentVillageAreaRoad { get; set; }
+
+        [MaxLength(100)]
+        public string? PermanentPostOffice { get; set; }
+
+        [MaxLength(100)]
+        public string? PermanentThana { get; set; }
+
+        [MaxLength(100)]
+        public string? PermanentDistrict { get; set; }
+
+        [MaxLength(100)]
+        public string? PermanentDivision { get; set; }
+
+        [MaxLength(200)]
+        public string? PresentVillageAreaRoad { get; set; }
+
+        [MaxLength(100)]
+        public string? PresentPostOffice { get; set; }
+
+        [MaxLength(100)]
+        public string? PresentThana { get; set; }
+
+        [MaxLength(100)]
+        public string? PresentDistrict { get; set; }
+
+        [MaxLength(100)]
+        public string? PresentDivision { get; set; }
+
         // Navigation property
         public EmployeeMaster? Employee { get; set; }
     }

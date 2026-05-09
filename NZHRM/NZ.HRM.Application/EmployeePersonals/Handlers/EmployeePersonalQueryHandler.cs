@@ -50,7 +50,18 @@ public class EmployeePersonalQueryHandler
             SpouseName = ep.SpouseName,
             SpouseMobile = ep.SpouseMobile,
             TinNumber = ep.TinNumber,
-            EmployeeReference = ep.EmployeeReference
+            EmployeeReference = ep.EmployeeReference,
+            ReferencePersonId = ep.ReferencePersonId,
+            PermanentVillageAreaRoad = ep.PermanentVillageAreaRoad,
+            PermanentPostOffice = ep.PermanentPostOffice,
+            PermanentThana = ep.PermanentThana,
+            PermanentDistrict = ep.PermanentDistrict,
+            PermanentDivision = ep.PermanentDivision,
+            PresentVillageAreaRoad = ep.PresentVillageAreaRoad,
+            PresentPostOffice = ep.PresentPostOffice,
+            PresentThana = ep.PresentThana,
+            PresentDistrict = ep.PresentDistrict,
+            PresentDivision = ep.PresentDivision
         }).ToList();
     }
 
@@ -85,6 +96,17 @@ public class EmployeePersonalQueryHandler
             SpouseMobile = employeePersonal.SpouseMobile,
             TinNumber = employeePersonal.TinNumber,
             EmployeeReference = employeePersonal.EmployeeReference,
+            ReferencePersonId = employeePersonal.ReferencePersonId,
+            PermanentVillageAreaRoad = employeePersonal.PermanentVillageAreaRoad,
+            PermanentPostOffice = employeePersonal.PermanentPostOffice,
+            PermanentThana = employeePersonal.PermanentThana,
+            PermanentDistrict = employeePersonal.PermanentDistrict,
+            PermanentDivision = employeePersonal.PermanentDivision,
+            PresentVillageAreaRoad = employeePersonal.PresentVillageAreaRoad,
+            PresentPostOffice = employeePersonal.PresentPostOffice,
+            PresentThana = employeePersonal.PresentThana,
+            PresentDistrict = employeePersonal.PresentDistrict,
+            PresentDivision = employeePersonal.PresentDivision,
             CreatedOn = employeePersonal.CreatedOn,
             CreatedBy = employeePersonal.CreatedBy,
             UpdatedOn = employeePersonal.UpdatedOn,

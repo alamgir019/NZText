@@ -26,4 +26,15 @@ public class EmployeePersonalDto
     public string? SpouseMobile { get; set; }
     public string? TinNumber { get; set; }
     public string? EmployeeReference { get; set; }
+    public string? ReferencePersonId { get; set; }
+    public string? PermanentVillageAreaRoad { get; set; }
+    public string? PermanentPostOffice { get; set; }
+    public string? PermanentThana { get; set; }
+    public string? PermanentDistrict { get; set; }
+    public string? PermanentDivision { get; set; }
+    public string? PresentVillageAreaRoad { get; set; }
+    public string? PresentPostOffice { get; set; }
+    public string? PresentThana { get; set; }
+    public string? PresentDistrict { get; set; }
+    public string? PresentDivision { get; set; }
 }

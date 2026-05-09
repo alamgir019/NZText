@@ -42,16 +42,14 @@ namespace NZ.HRM.Domain.Entities
         public EmployeeType EmployeeType { get; set; }
 
         [Required]
-        public string ShiftId { get; set; } = string.Empty;
-        [ForeignKey(nameof(ShiftId))]
-        public Shift? Shift { get; set; }
+        public Utility.Enum.Shift Shift { get; set; }
 
         [Required]
         public EmployeeNature EmployeeNature { get; set; }
 
-        public string? HolidayId { get; set; }
-        [ForeignKey(nameof(HolidayId))]
-        public Holiday? Holiday { get; set; }
+        public Utility.Enum.Holiday Holiday { get; set; }
+
+        public decimal? ProposedMonthlySalary { get; set; }
 
         [Required]
         public DateTime JoiningDate { get; set; }
@@ -63,5 +61,6 @@ namespace NZ.HRM.Domain.Entities
 
         // Navigation property
         public EmployeePersonal? PersonalInfo { get; set; }
+        public EmployeeVerification? VerificationInfo { get; set; }
     }
 }

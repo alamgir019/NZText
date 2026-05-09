@@ -36,11 +36,10 @@ public class GetCompleteEmployeeQueryHandler
             GradeId = employee.GradeId,
             GradeName = employee.Grade?.GradeName ?? string.Empty,
             EmployeeType = employee.EmployeeType,
-            ShiftId = employee.ShiftId,
-            ShiftName = employee.Shift?.ShiftName ?? string.Empty,
+            Shift = employee.Shift,
             EmployeeNature = employee.EmployeeNature,
-            HolidayId = employee.HolidayId,
-            HolidayName = employee.Holiday?.HolidayName,
+            Holiday = employee.Holiday,
+            ProposedMonthlySalary = employee.ProposedMonthlySalary,
             JoiningDate = employee.JoiningDate,
             ConfirmationDate = employee.ConfirmationDate,
             Status = employee.Status,
@@ -69,7 +68,27 @@ public class GetCompleteEmployeeQueryHandler
             SpouseName = employee.PersonalInfo?.SpouseName,
             SpouseMobile = employee.PersonalInfo?.SpouseMobile,
             TinNumber = employee.PersonalInfo?.TinNumber,
-            EmployeeReference = employee.PersonalInfo?.EmployeeReference
+            EmployeeReference = employee.PersonalInfo?.EmployeeReference,
+            ReferencePersonId = employee.PersonalInfo?.ReferencePersonId,
+            PermanentVillageAreaRoad = employee.PersonalInfo?.PermanentVillageAreaRoad,
+            PermanentPostOffice = employee.PersonalInfo?.PermanentPostOffice,
+            PermanentThana = employee.PersonalInfo?.PermanentThana,
+            PermanentDistrict = employee.PersonalInfo?.PermanentDistrict,
+            PermanentDivision = employee.PersonalInfo?.PermanentDivision,
+            PresentVillageAreaRoad = employee.PersonalInfo?.PresentVillageAreaRoad,
+            PresentPostOffice = employee.PersonalInfo?.PresentPostOffice,
+            PresentThana = employee.PersonalInfo?.PresentThana,
+            PresentDistrict = employee.PersonalInfo?.PresentDistrict,
+            PresentDivision = employee.PersonalInfo?.PresentDivision,
+
+            // From EmployeeVerification
+            VerificationInfoId = employee.VerificationInfo?.Id,
+            SecurityClearanceBy = employee.VerificationInfo?.SecurityClearanceBy,
+            SecurityClearanceDate = employee.VerificationInfo?.SecurityClearanceDate,
+            EnrolledBy = employee.VerificationInfo?.EnrolledBy,
+            EnrolledDate = employee.VerificationInfo?.EnrolledDate,
+            BiometricEnrolledBy = employee.VerificationInfo?.BiometricEnrolledBy,
+            BiometricEnrolledDate = employee.VerificationInfo?.BiometricEnrolledDate
         };
     }
 }

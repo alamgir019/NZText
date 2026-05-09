@@ -22,11 +22,10 @@ public class EmployeeCompleteDto
 
     // From EmployeeMaster - Employment Details
     public EmployeeType EmployeeType { get; set; }
-    public string ShiftId { get; set; } = string.Empty;
-    public string ShiftName { get; set; } = string.Empty;
+    public Shift Shift { get; set; }
     public EmployeeNature EmployeeNature { get; set; }
-    public string? HolidayId { get; set; }
-    public string? HolidayName { get; set; }
+    public Holiday? Holiday { get; set; }
+    public decimal? ProposedMonthlySalary { get; set; }
     public DateTime JoiningDate { get; set; }
     public DateTime? ConfirmationDate { get; set; }
     public EmployeeStatus Status { get; set; }
@@ -55,6 +54,28 @@ public class EmployeeCompleteDto
     // From EmployeePersonal - Additional Information
     public string? TinNumber { get; set; }
     public string? EmployeeReference { get; set; }
+    public string? ReferencePersonId { get; set; }
+
+    // From EmployeePersonal - Address Information
+    public string? PermanentVillageAreaRoad { get; set; }
+    public string? PermanentPostOffice { get; set; }
+    public string? PermanentThana { get; set; }
+    public string? PermanentDistrict { get; set; }
+    public string? PermanentDivision { get; set; }
+    public string? PresentVillageAreaRoad { get; set; }
+    public string? PresentPostOffice { get; set; }
+    public string? PresentThana { get; set; }
+    public string? PresentDistrict { get; set; }
+    public string? PresentDivision { get; set; }
+
+    // From EmployeeVerification
+    public string? VerificationInfoId { get; set; }
+    public string? SecurityClearanceBy { get; set; }
+    public DateTime? SecurityClearanceDate { get; set; }
+    public string? EnrolledBy { get; set; }
+    public DateTime? EnrolledDate { get; set; }
+    public string? BiometricEnrolledBy { get; set; }
+    public DateTime? BiometricEnrolledDate { get; set; }
 
     // Audit Fields
     public DateTime CreatedOn { get; set; }

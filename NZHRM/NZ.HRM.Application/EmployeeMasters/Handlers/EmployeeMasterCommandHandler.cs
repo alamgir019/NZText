@@ -51,9 +51,10 @@ public class EmployeeMasterCommandHandler
             SectionId = command.SectionId,
             GradeId = command.GradeId,
             EmployeeType = command.EmployeeType,
-            ShiftId = command.ShiftId,
+            Shift = command.Shift,
             EmployeeNature = command.EmployeeNature,
-            HolidayId = command.HolidayId,
+            Holiday = command.Holiday,
+            ProposedMonthlySalary = command.ProposedMonthlySalary,
             JoiningDate = command.JoiningDate,
             ConfirmationDate = command.ConfirmationDate,
             Status = EmployeeStatus.Draft,
@@ -88,9 +89,10 @@ public class EmployeeMasterCommandHandler
         employeeMaster.SectionId = command.SectionId;
         employeeMaster.GradeId = command.GradeId;
         employeeMaster.EmployeeType = command.EmployeeType;
-        employeeMaster.ShiftId = command.ShiftId;
+        employeeMaster.Shift = command.Shift;
         employeeMaster.EmployeeNature = command.EmployeeNature;
-        employeeMaster.HolidayId = command.HolidayId;
+        employeeMaster.Holiday = command.Holiday;
+        employeeMaster.ProposedMonthlySalary = command.ProposedMonthlySalary;
         employeeMaster.JoiningDate = command.JoiningDate;
         employeeMaster.ConfirmationDate = command.ConfirmationDate;
         employeeMaster.Status = command.Status;

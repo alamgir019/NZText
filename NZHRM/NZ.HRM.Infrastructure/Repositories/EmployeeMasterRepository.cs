@@ -23,6 +23,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Grade)
             .Include(e => e.Shift)
             .Include(e => e.Holiday)
+            .Include(e => e.VerificationInfo)
             .AsQueryable();
 
         if (!includeInactive)
@@ -45,6 +46,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Shift)
             .Include(e => e.Holiday)
             .Include(e => e.PersonalInfo)
+            .Include(e => e.VerificationInfo)
             .FirstOrDefaultAsync(e => e.Id == id && e.IsActive, cancellationToken);
     }
 
