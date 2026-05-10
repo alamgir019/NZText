@@ -38,4 +38,4 @@ jobs:
         run: dotnet build NZHRM.sln -c Release --no-restore
 
       - name: Publish (verify)
-        run: dotnet publish NZ.HRM.WebAPI/NZ.HRM.WebAPI.csproj -c Release -o publish --no-build
+        run: dotnet publish NZ.HRM.WebAPI/NZ.HRM.WebAPI.csproj -c Release -o out --no-build
