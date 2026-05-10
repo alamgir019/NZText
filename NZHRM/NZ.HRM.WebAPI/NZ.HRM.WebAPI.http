@@ -1,0 +1,6 @@
+@NZ.HRM.WebAPI_HostAddress = http://localhost:5250
+
+GET {{NZ.HRM.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
