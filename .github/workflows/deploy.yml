@@ -28,6 +28,19 @@ jobs:
         working-directory: NZHRM
         run: dotnet publish NZ.HRM.WebAPI/NZ.HRM.WebAPI.csproj -c Release -o out
 
+      - name: Clean staging dir on server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: 22
+          script: |
+            set -e
+            rm -rf /tmp/nzhrm-deploy
+            mkdir -p /tmp/nzhrm-deploy
+            echo "Staging cleaned at $(date -u +%FT%TZ)"
+
       - name: Upload publish folder to server
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -47,7 +60,10 @@ jobs:
           port: 22
           script: |
             set -e
-            DLL_PATH=$(find /tmp/nzhrm-deploy -maxdepth 6 -type f -name 'NZ.HRM.WebAPI.dll' 2>/dev/null | head -n 1)
+            echo "Deploying commit ${{ github.sha }}"
+            echo "BEFORE: /var/www/nzhrm/NZ.HRM.WebAPI.dll"
+            ls -la /var/www/nzhrm/NZ.HRM.WebAPI.dll 2>/dev/null || echo "(not present yet)"
+            DLL_PATH=$(find /tmp/nzhrm-deploy -maxdepth 6 -type f -name 'NZ.HRM.WebAPI.dll' -printf '%T@ %p\n' 2>/dev/null | sort -nr | head -n 1 | cut -d' ' -f2-)
             if [ -z "$DLL_PATH" ]; then
               echo "Could not find NZ.HRM.WebAPI.dll under /tmp/nzhrm-deploy"
               echo "Listing what was uploaded:"
@@ -56,11 +72,16 @@ jobs:
             fi
             STAGE=$(dirname "$DLL_PATH")
             echo "Using STAGE=$STAGE"
+            ls -la "$DLL_PATH"
             sudo rsync -a --delete \
               --exclude 'appsettings.json' \
               --exclude 'appsettings.Development.json' \
               --exclude 'appsettings.Production.json' \
               "$STAGE/" /var/www/nzhrm/
             sudo chown -R nzhrm:nzhrm /var/www/nzhrm
+            echo "AFTER: /var/www/nzhrm/NZ.HRM.WebAPI.dll"
+            ls -la /var/www/nzhrm/NZ.HRM.WebAPI.dll
             sudo systemctl restart nzhrm
+            sleep 2
             sudo systemctl is-active nzhrm
+            sudo journalctl -u nzhrm -n 20 --no-pager || true
