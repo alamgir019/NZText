@@ -1,9 +1,12 @@
+using NZ.HRM.Domain.Common;
+
 namespace NZ.HRM.Domain.Entities
 {
-    public class Designation
+    public class Designation: BaseEntity
     {
-        public int DesignationId { get; set; }
         public string DesignationName { get; set; } = string.Empty;
-        public int Level { get; set; }
+        public string DesignationCode { get; set; } = string.Empty;
+        public string ParentId { get; set; } = string.Empty;
+        public ICollection<Requisition>? Requisitions { get; set; }
     }
 }

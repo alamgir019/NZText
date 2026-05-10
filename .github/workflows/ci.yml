@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, develop]
+    paths:
+      - "NZHRM/**"
+      - ".github/workflows/ci.yml"
+  pull_request:
+    branches: [main, master, develop]
+    paths:
+      - "NZHRM/**"
+      - ".github/workflows/ci.yml"
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: NZHRM
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Restore
+        run: dotnet restore NZHRM.sln
+
+      - name: Build
+        run: dotnet build NZHRM.sln -c Release --no-restore
+
+      - name: Publish (verify)
+        run: dotnet publish NZ.HRM.WebAPI/NZ.HRM.WebAPI.csproj -c Release -o publish --no-build

@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{0AA01C53-E102-4513-B64C-3C7BBD6783E1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NZ.HRM.Utility", "NZ.HRM.Utility\NZ.HRM.Utility.csproj", "{8D06793C-2039-459A-9373-0F716E5CF630}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{47CB15A2-F595-01A5-FD7C-AE490D47416F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47CB15A2-F595-01A5-FD7C-AE490D47416F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47CB15A2-F595-01A5-FD7C-AE490D47416F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D06793C-2039-459A-9373-0F716E5CF630}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D06793C-2039-459A-9373-0F716E5CF630}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D06793C-2039-459A-9373-0F716E5CF630}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D06793C-2039-459A-9373-0F716E5CF630}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +56,7 @@ Global
 		{D7902E73-8613-EE72-022A-3C13CD2B6A84} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{D494F9DB-8CA9-E737-4E59-99B95B16B32E} = {F0F896F9-3C86-41BC-9EA3-9ABF24D271F0}
 		{47CB15A2-F595-01A5-FD7C-AE490D47416F} = {EB7F4FBC-E526-41BF-B8E6-8BCF2B2A3730}
+		{8D06793C-2039-459A-9373-0F716E5CF630} = {F0F896F9-3C86-41BC-9EA3-9ABF24D271F0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {59F9C752-056B-4947-8CAB-297D37823FA3}

@@ -13,8 +13,8 @@ namespace NZ.HRM.Domain.Common
         public BaseEntity()
         {
             this.Id = IdentityGenerator.Next();
-            //this.CreatedOn = DateTime.UtcNow;
-            //this.UpdatedOn = DateTime.UtcNow;
+            this.CreatedOn = DateTime.UtcNow;
+            this.UpdatedOn = DateTime.UtcNow;
             this.IsActive = true;
 
             // Initialize non-nullable properties with default values

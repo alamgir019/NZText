@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using NZ.HRM.Infrastructure.Persistence;
 using NZ.HRM.Application.DependencyInjection;
 using NZ.HRM.Infrastructure.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 // Connection String in appsettings.json
@@ -27,9 +28,17 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 var app = builder.Build();
-
+app.UseCors("AllowAll");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

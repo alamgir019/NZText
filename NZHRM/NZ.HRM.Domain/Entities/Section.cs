@@ -1,11 +1,14 @@
+using NZ.HRM.Domain.Common;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace NZ.HRM.Domain.Entities
 {
-    public class Section
+    public class Section : BaseEntity
     {
-        public int SectionId { get; set; }
-        public int DepartmentId { get; set; }
-        public string SectionName { get; set; } = string.Empty;
-
+        public string DepartmentId { get; set; } = string.Empty;
+        [ForeignKey(nameof(DepartmentId))]
         public Department? Department { get; set; }
+
+        public string SectionName { get; set; } = string.Empty;
     }
 }
