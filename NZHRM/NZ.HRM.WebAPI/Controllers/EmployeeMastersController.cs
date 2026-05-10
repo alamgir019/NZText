@@ -152,7 +152,7 @@ public class EmployeeMastersController : ControllerBase
             Today = DateTime.UtcNow
         };
         var enrollmentId = await _getEnrollmentIdHandler.Handle(query, cancellationToken: default);
-        enrollmentId = "I am ok";
+        enrollmentId = "I am not ok";
         return Ok(new { enrollmentId });
     }
 }
