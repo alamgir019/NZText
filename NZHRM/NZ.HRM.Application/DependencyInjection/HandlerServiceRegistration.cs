@@ -50,6 +50,7 @@ namespace NZ.HRM.Application.DependencyInjection
             // Register EmployeeMaster Handlers
             services.AddScoped<EmployeeMasterCommandHandler>();
             services.AddScoped<EmployeeMasterQueryHandler>();
+            services.AddScoped<GetEnrollmentIdQueryHandler>();
 
             // Register EmployeePersonal Handlers
             services.AddScoped<EmployeePersonalCommandHandler>();

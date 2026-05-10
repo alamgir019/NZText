@@ -10,6 +10,9 @@ namespace NZ.HRM.Domain.Entities
         [Required]
         [MaxLength(50)]
         public string EmployeeCode { get; set; } = string.Empty;
+        
+        [MaxLength(50)]
+        public string EnrollmentId { get; set; } = string.Empty;
 
         [Required]
         [MaxLength(100)]

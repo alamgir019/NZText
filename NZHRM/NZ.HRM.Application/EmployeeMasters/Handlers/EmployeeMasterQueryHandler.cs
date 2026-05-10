@@ -27,7 +27,7 @@ public class EmployeeMasterQueryHandler
         }
         else
         {
-            employees = await _employeeMasterRepository.GetAllAsync(query.IncludeInactive, cancellationToken);
+            employees = await _employeeMasterRepository.GetAllAsync(onDate: null, includeInactive: query.IncludeInactive, cancellationToken: cancellationToken);
         }
 
         return employees.Select(e => new EmployeeMasterDto

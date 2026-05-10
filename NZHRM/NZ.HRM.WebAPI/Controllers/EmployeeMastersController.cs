@@ -14,13 +14,16 @@ public class EmployeeMastersController : ControllerBase
 {
     private readonly EmployeeMasterQueryHandler _queryHandler;
     private readonly EmployeeMasterCommandHandler _commandHandler;
+    private readonly NZ.HRM.Application.EmployeeMasters.Handlers.GetEnrollmentIdQueryHandler _getEnrollmentIdHandler;
 
     public EmployeeMastersController(
         EmployeeMasterQueryHandler queryHandler,
-        EmployeeMasterCommandHandler commandHandler)
+        EmployeeMasterCommandHandler commandHandler,
+        GetEnrollmentIdQueryHandler getEnrollmentIdHandler)
     {
         _queryHandler = queryHandler;
         _commandHandler = commandHandler;
+        _getEnrollmentIdHandler = getEnrollmentIdHandler;
     }
 
     /// <summary>
@@ -135,5 +138,20 @@ public class EmployeeMastersController : ControllerBase
         {
             return NotFound(new { message = ex.Message });
         }
+    }
+
+    /// <summary>
+    /// Generate a new enrollment id in format {ddMMyy}{NNN}
+    /// </summary>
+    [HttpGet("enrollment-id")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetEnrollmentId()
+    {
+        var query = new NZ.HRM.Application.EmployeeMasters.Queries.GetEnrollmentId.GetEnrollmentIdQuery
+        {
+            Today = DateTime.UtcNow
+        };
+        var enrollmentId = await _getEnrollmentIdHandler.Handle(query, cancellationToken: default);
+        return Ok(new { enrollmentId });
     }
 }

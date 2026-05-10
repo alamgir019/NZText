@@ -4,7 +4,8 @@ namespace NZ.HRM.Application.Interfaces.Repositories;
 
 public interface IEmployeeMasterRepository
 {
-    Task<List<EmployeeMaster>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default);
+    // If onDate is provided, returns employees relevant to that date (e.g., created on that date). If null returns all.
+    Task<List<EmployeeMaster>> GetAllAsync(DateTime? onDate = null, bool includeInactive = false, CancellationToken cancellationToken = default);
     Task<EmployeeMaster?> GetByIdAsync(string id, CancellationToken cancellationToken = default);
     Task<EmployeeMaster?> GetByEmployeeCodeAsync(string employeeCode, CancellationToken cancellationToken = default);
     Task<List<EmployeeMaster>> GetByCompanyIdAsync(string companyId, CancellationToken cancellationToken = default);

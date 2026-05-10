@@ -14,7 +14,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
         _context = context;
     }
 
-    public async Task<List<EmployeeMaster>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
+    public async Task<List<EmployeeMaster>> GetAllAsync(DateTime? onDate = null, bool includeInactive = false, CancellationToken cancellationToken = default)
     {
         var query = _context.EmployeeMasters
             .Include(e => e.Company)
@@ -25,10 +25,15 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Holiday)
             .Include(e => e.VerificationInfo)
             .AsQueryable();
-
         if (!includeInactive)
         {
             query = query.Where(e => e.IsActive);
+        }
+
+        if (onDate.HasValue)
+        {
+            var d = onDate.Value.Date;
+            query = query.Where(e => e.CreatedOn.ToUniversalTime().Date == d);
         }
 
         return await query
