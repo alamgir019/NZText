@@ -47,15 +47,15 @@ jobs:
           port: 22
           script: |
             set -e
-            if [ -f /tmp/nzhrm-deploy/NZ.HRM.WebAPI.dll ]; then
-              STAGE=/tmp/nzhrm-deploy
-            elif [ -f /tmp/nzhrm-deploy/publish/NZ.HRM.WebAPI.dll ]; then
-              STAGE=/tmp/nzhrm-deploy/publish
-            else
-              echo "Could not find publish output under /tmp/nzhrm-deploy"
-              find /tmp/nzhrm-deploy -maxdepth 3 -type f -name "*.dll" 2>/dev/null || true
+            DLL_PATH=$(find /tmp/nzhrm-deploy -maxdepth 6 -type f -name 'NZ.HRM.WebAPI.dll' 2>/dev/null | head -n 1)
+            if [ -z "$DLL_PATH" ]; then
+              echo "Could not find NZ.HRM.WebAPI.dll under /tmp/nzhrm-deploy"
+              echo "Listing what was uploaded:"
+              find /tmp/nzhrm-deploy -maxdepth 6 -type f 2>/dev/null | head -n 50 || true
               exit 1
             fi
+            STAGE=$(dirname "$DLL_PATH")
+            echo "Using STAGE=$STAGE"
             sudo rsync -a --delete \
               --exclude 'appsettings.json' \
               --exclude 'appsettings.Development.json' \
