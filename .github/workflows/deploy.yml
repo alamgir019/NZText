@@ -1,0 +1,66 @@
+name: Deploy NZ HRM
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "NZHRM/**"
+      - ".github/workflows/deploy.yml"
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Publish Web API
+        working-directory: NZHRM
+        run: dotnet publish NZ.HRM.WebAPI/NZ.HRM.WebAPI.csproj -c Release -o publish
+
+      - name: Upload publish folder to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: 22
+          source: "NZHRM/publish/"
+          target: "/tmp/nzhrm-deploy"
+
+      - name: Sync to app folder and restart service
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: 22
+          script: |
+            set -e
+            if [ -f /tmp/nzhrm-deploy/NZ.HRM.WebAPI.dll ]; then
+              STAGE=/tmp/nzhrm-deploy
+            elif [ -f /tmp/nzhrm-deploy/publish/NZ.HRM.WebAPI.dll ]; then
+              STAGE=/tmp/nzhrm-deploy/publish
+            else
+              echo "Could not find publish output under /tmp/nzhrm-deploy"
+              find /tmp/nzhrm-deploy -maxdepth 3 -type f -name "*.dll" 2>/dev/null || true
+              exit 1
+            fi
+            sudo rsync -a --delete \
+              --exclude 'appsettings.json' \
+              --exclude 'appsettings.Development.json' \
+              --exclude 'appsettings.Production.json' \
+              "$STAGE/" /var/www/nzhrm/
+            sudo chown -R nzhrm:nzhrm /var/www/nzhrm
+            sudo systemctl restart nzhrm
+            sudo systemctl is-active nzhrm
