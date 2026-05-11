@@ -12,9 +12,8 @@ namespace NZ.HRM.Domain.Entities
         public string EmployeeCode { get; set; } = string.Empty;
         
         [MaxLength(50)]
-        public string EnrollmentId { get; set; } = string.Empty;
+        public string? EnrollmentId { get; set; } = string.Empty;
 
-        [Required]
         [MaxLength(100)]
         public string EmployeeNameEnglish { get; set; } = string.Empty;
 
@@ -22,45 +21,43 @@ namespace NZ.HRM.Domain.Entities
         public string? EmployeeNameBangla { get; set; }
 
         [Required]
-        public string CompanyId { get; set; } = string.Empty;
+        public string CompanyId { get; set; }
         [ForeignKey(nameof(CompanyId))]
         public Company? Company { get; set; }
 
         [Required]
-        public string DepartmentId { get; set; } = string.Empty;
+        public string DepartmentId { get; set; }
         [ForeignKey(nameof(DepartmentId))]
         public Department? Department { get; set; }
 
         [Required]
-        public string SectionId { get; set; } = string.Empty;
+        public string? SectionId { get; set; }
         [ForeignKey(nameof(SectionId))]
         public Section? Section { get; set; }
 
-        [Required]
-        public string GradeId { get; set; } = string.Empty;
+        public string? GradeId { get; set; }
         [ForeignKey(nameof(GradeId))]
         public Grade? Grade { get; set; }
 
-        [Required]
-        public EmployeeType EmployeeType { get; set; }
+        public string? CellId { get; set; }
+        [ForeignKey(nameof(CellId))]
+        public Cell? Cell { get; set; }
 
-        [Required]
-        public Utility.Enum.Shift Shift { get; set; }
+        public EmployeeType? EmployeeType { get; set; }
 
-        [Required]
-        public EmployeeNature EmployeeNature { get; set; }
+        public Utility.Enum.Shift? Shift { get; set; }
 
-        public Utility.Enum.Holiday Holiday { get; set; }
+        public EmployeeNature? EmployeeNature { get; set; }
+
+        public Utility.Enum.Holiday? Holiday { get; set; }
 
         public decimal? ProposedMonthlySalary { get; set; }
 
-        [Required]
-        public DateTime JoiningDate { get; set; }
+        public DateTime? JoiningDate { get; set; }
 
         public DateTime? ConfirmationDate { get; set; }
 
-        [Required]
-        public EmployeeStatus Status { get; set; } = EmployeeStatus.Draft;
+        public EmployeeStatus? Status { get; set; } = EmployeeStatus.Draft;
 
         // Navigation property
         public EmployeePersonal? PersonalInfo { get; set; }

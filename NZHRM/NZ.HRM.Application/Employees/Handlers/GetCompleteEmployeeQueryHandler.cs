@@ -67,7 +67,7 @@ public class GetCompleteEmployeeQueryHandler
             MotherNameBangla = employee.PersonalInfo?.MotherNameBangla,
             SpouseName = employee.PersonalInfo?.SpouseName,
             SpouseMobile = employee.PersonalInfo?.SpouseMobile,
-            TinNumber = employee.PersonalInfo?.TinNumber,
+            TinNumber = employee.PersonalInfo?.IDNumber,
             EmployeeReference = employee.PersonalInfo?.EmployeeReference,
             ReferencePersonId = employee.PersonalInfo?.ReferencePersonId,
             PermanentVillageAreaRoad = employee.PersonalInfo?.PermanentVillageAreaRoad,

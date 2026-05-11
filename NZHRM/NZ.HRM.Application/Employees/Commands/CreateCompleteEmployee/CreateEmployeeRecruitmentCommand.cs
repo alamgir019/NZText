@@ -3,19 +3,19 @@ using NZ.HRM.Utility.Enum;
 
 namespace NZ.HRM.Application.Employees.Commands.CreateCompleteEmployee;
 
-public class CreateCompleteEmployeeCommand
+public class CreateEmployeeRecruitmentCommand
 {
     // Basic Employment Information
-    [Required(ErrorMessage = "Employee code is required")]
-    [MaxLength(50, ErrorMessage = "Employee code must not exceed 50 characters")]
-    public string EmployeeCode { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "Employee name (English) is required")]
-    [MaxLength(100, ErrorMessage = "Employee name must not exceed 100 characters")]
-    public string EmployeeNameEnglish { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Employee enrollment ID is required")]
+    [MaxLength(50, ErrorMessage = "Employee enrollment ID must not exceed 50 characters")]
+    public string EmployeeEnrollmentId { get; set; } = string.Empty;
 
     [MaxLength(100, ErrorMessage = "Employee name (Bangla) must not exceed 100 characters")]
     public string? EmployeeNameBangla { get; set; }
+
+    // Employment Details
+    [Required(ErrorMessage = "Employee type is required")]
+    public EmployeeType EmployeeType { get; set; }
 
     // Company & Organization
     [Required(ErrorMessage = "Company ID is required")]
@@ -24,22 +24,13 @@ public class CreateCompleteEmployeeCommand
     [Required(ErrorMessage = "Department ID is required")]
     public string DepartmentId { get; set; } = string.Empty;
 
+    [Required(ErrorMessage = "Location ID is required")]
+    public string LocationId { get; set; } = string.Empty;
+
     [Required(ErrorMessage = "Section ID is required")]
     public string SectionId { get; set; } = string.Empty;
 
-    public string GradeId { get; set; } = string.Empty;
-
-    // Employment Details
-    [Required(ErrorMessage = "Employee type is required")]
-    public EmployeeType EmployeeType { get; set; }
-
-    [Required(ErrorMessage = "Shift is required")]
-    public Shift Shift { get; set; }
-
-    [Required(ErrorMessage = "Employee nature is required")]
-    public EmployeeNature EmployeeNature { get; set; }
-
-    public Holiday Holiday { get; set; }
+    public string CellId { get; set; } = string.Empty;
 
     public decimal? ProposedMonthlySalary { get; set; }
 
@@ -55,62 +46,26 @@ public class CreateCompleteEmployeeCommand
     [Required(ErrorMessage = "Gender is required")]
     public Gender Gender { get; set; }
 
-    [Required(ErrorMessage = "Marital status is required")]
-    public MaritalStatus MaritalStatus { get; set; }
-
-    [Required(ErrorMessage = "Mobile number is required")]
-    [MaxLength(20, ErrorMessage = "Mobile number must not exceed 20 characters")]
-    public string MobileNumber { get; set; } = string.Empty;
-
-    [MaxLength(100, ErrorMessage = "Email must not exceed 100 characters")]
-    [EmailAddress(ErrorMessage = "Invalid email format")]
-    public string? EmailAddress { get; set; }
-
-    [Required(ErrorMessage = "Document type is required")]
-    public DocumentType DocumentType { get; set; }
-
-    [Required(ErrorMessage = "Document number is required")]
-    [MaxLength(50, ErrorMessage = "Document number must not exceed 50 characters")]
-    public string DocumentNumber { get; set; } = string.Empty;
-
     public BloodGroup? BloodGroup { get; set; }
+    public IDType IDType { get; set; }
+    public string IDNumber { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Religion is required")]
-    public Religion Religion { get; set; }
 
-    [Required(ErrorMessage = "Nationality is required")]
-    public Nationality Nationality { get; set; }
 
     // Family Information
-    [Required(ErrorMessage = "Father's name (English) is required")]
-    [MaxLength(100, ErrorMessage = "Father's name must not exceed 100 characters")]
-    public string FatherNameEnglish { get; set; } = string.Empty;
-
-    [MaxLength(100, ErrorMessage = "Father's name (Bangla) must not exceed 100 characters")]
-    public string? FatherNameBangla { get; set; }
-
-    [Required(ErrorMessage = "Mother's name (English) is required")]
-    [MaxLength(100, ErrorMessage = "Mother's name must not exceed 100 characters")]
-    public string MotherNameEnglish { get; set; } = string.Empty;
+    public GuardianType GuardianType { get; set; }
+    [MaxLength(100, ErrorMessage = "Guardian's name (Bangla) must not exceed 100 characters")]
+    public string GuardianName { get; set; } = string.Empty;
 
     [MaxLength(100, ErrorMessage = "Mother's name (Bangla) must not exceed 100 characters")]
     public string? MotherNameBangla { get; set; }
-
-    [MaxLength(100, ErrorMessage = "Spouse name must not exceed 100 characters")]
-    public string? SpouseName { get; set; }
-
-    [MaxLength(20, ErrorMessage = "Spouse mobile must not exceed 20 characters")]
-    public string? SpouseMobile { get; set; }
-
-    // Additional Information
-    [MaxLength(50, ErrorMessage = "TIN number must not exceed 50 characters")]
-    public string? TinNumber { get; set; }
 
     [MaxLength(100, ErrorMessage = "Employee reference must not exceed 100 characters")]
     public string? EmployeeReference { get; set; }
 
     [MaxLength(50, ErrorMessage = "Reference person ID must not exceed 50 characters")]
     public string? ReferencePersonId { get; set; }
+
 
     // Address Information
     [MaxLength(200, ErrorMessage = "Permanent village/area/road must not exceed 200 characters")]
@@ -127,6 +82,7 @@ public class CreateCompleteEmployeeCommand
 
     [MaxLength(100, ErrorMessage = "Permanent division must not exceed 100 characters")]
     public string? PermanentDivision { get; set; }
+
 
     [MaxLength(200, ErrorMessage = "Present village/area/road must not exceed 200 characters")]
     public string? PresentVillageAreaRoad { get; set; }

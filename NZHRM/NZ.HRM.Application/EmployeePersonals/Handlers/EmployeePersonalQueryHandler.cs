@@ -31,7 +31,6 @@ public class EmployeePersonalQueryHandler
         {
             Id = ep.Id,
             EmployeeId = ep.EmployeeId,
-            EmployeeCode = ep.EmployeeCode,
             EmployeeNameEnglish = ep.Employee?.EmployeeNameEnglish ?? string.Empty,
             DateOfBirth = ep.DateOfBirth,
             Gender = ep.Gender,
@@ -49,7 +48,7 @@ public class EmployeePersonalQueryHandler
             MotherNameBangla = ep.MotherNameBangla,
             SpouseName = ep.SpouseName,
             SpouseMobile = ep.SpouseMobile,
-            TinNumber = ep.TinNumber,
+            TinNumber = ep.IDNumber,
             EmployeeReference = ep.EmployeeReference,
             ReferencePersonId = ep.ReferencePersonId,
             PermanentVillageAreaRoad = ep.PermanentVillageAreaRoad,
@@ -76,7 +75,6 @@ public class EmployeePersonalQueryHandler
         {
             Id = employeePersonal.Id,
             EmployeeId = employeePersonal.EmployeeId,
-            EmployeeCode = employeePersonal.EmployeeCode,
             EmployeeNameEnglish = employeePersonal.Employee?.EmployeeNameEnglish ?? string.Empty,
             DateOfBirth = employeePersonal.DateOfBirth,
             Gender = employeePersonal.Gender,
@@ -94,7 +92,7 @@ public class EmployeePersonalQueryHandler
             MotherNameBangla = employeePersonal.MotherNameBangla,
             SpouseName = employeePersonal.SpouseName,
             SpouseMobile = employeePersonal.SpouseMobile,
-            TinNumber = employeePersonal.TinNumber,
+            TinNumber = employeePersonal.IDNumber,
             EmployeeReference = employeePersonal.EmployeeReference,
             ReferencePersonId = employeePersonal.ReferencePersonId,
             PermanentVillageAreaRoad = employeePersonal.PermanentVillageAreaRoad,

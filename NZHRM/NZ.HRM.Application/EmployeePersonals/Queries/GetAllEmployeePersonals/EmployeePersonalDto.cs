@@ -8,16 +8,16 @@ public class EmployeePersonalDto
     public string EmployeeId { get; set; } = string.Empty;
     public string EmployeeCode { get; set; } = string.Empty;
     public string EmployeeNameEnglish { get; set; } = string.Empty;
-    public DateTime DateOfBirth { get; set; }
+    public DateTime? DateOfBirth { get; set; }
     public Gender Gender { get; set; }
-    public MaritalStatus MaritalStatus { get; set; }
+    public MaritalStatus? MaritalStatus { get; set; }
     public string MobileNumber { get; set; } = string.Empty;
     public string? EmailAddress { get; set; }
-    public DocumentType DocumentType { get; set; }
+    public DocumentType? DocumentType { get; set; }
     public string DocumentNumber { get; set; } = string.Empty;
     public BloodGroup? BloodGroup { get; set; }
-    public Religion Religion { get; set; }
-    public Nationality Nationality { get; set; }
+    public Religion? Religion { get; set; }
+    public Nationality? Nationality { get; set; }
     public string FatherNameEnglish { get; set; } = string.Empty;
     public string? FatherNameBangla { get; set; }
     public string MotherNameEnglish { get; set; } = string.Empty;

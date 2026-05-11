@@ -16,14 +16,14 @@ public class EmployeeMasterDto
     public string SectionName { get; set; } = string.Empty;
     public string GradeId { get; set; } = string.Empty;
     public string GradeName { get; set; } = string.Empty;
-    public EmployeeType EmployeeType { get; set; }
-    public Shift Shift { get; set; }
-    public EmployeeNature EmployeeNature { get; set; }
-    public Holiday Holiday { get; set; }
+    public EmployeeType? EmployeeType { get; set; }
+    public  Shift? Shift { get; set; }
+    public EmployeeNature? EmployeeNature { get; set; }
+    public Holiday? Holiday { get; set; }
     public decimal? ProposedMonthlySalary { get; set; }
-    public DateTime JoiningDate { get; set; }
+    public DateTime? JoiningDate { get; set; }
     public DateTime? ConfirmationDate { get; set; }
-    public EmployeeStatus Status { get; set; }
+    public EmployeeStatus? Status { get; set; }
     public DateTime CreatedOn { get; set; }
     public string CreatedBy { get; set; } = string.Empty;
     public DateTime UpdatedOn { get; set; }

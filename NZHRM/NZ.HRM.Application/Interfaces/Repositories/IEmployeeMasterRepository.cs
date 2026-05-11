@@ -16,4 +16,5 @@ public interface IEmployeeMasterRepository
     Task DeleteAsync(EmployeeMaster employeeMaster, CancellationToken cancellationToken = default);
     Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default);
     Task<bool> EmployeeCodeExistsAsync(string employeeCode, CancellationToken cancellationToken = default);
+    Task<bool> EnrollmentCodeExistsAsync(string enrollmentCode, CancellationToken cancellationToken = default);
 }

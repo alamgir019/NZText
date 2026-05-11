@@ -86,8 +86,6 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Department)
             .Include(e => e.Section)
             .Include(e => e.Grade)
-            .Include(e => e.Shift)
-            .Include(e => e.Holiday)
             .Include(e => e.PersonalInfo)
             .Include(e => e.VerificationInfo)
             .FirstOrDefaultAsync(e => e.Id == id && e.IsActive, cancellationToken);
@@ -160,5 +158,11 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
     {
         return await _context.EmployeeMasters
             .AnyAsync(e => e.EmployeeCode == employeeCode, cancellationToken);
+    }
+
+    public async Task<bool> EnrollmentCodeExistsAsync(string enrollmentCode , CancellationToken cancellationToken = default)
+    {
+        return await _context.EmployeeMasters
+            .AnyAsync(e => e.EnrollmentId == enrollmentCode, cancellationToken);
     }
 }

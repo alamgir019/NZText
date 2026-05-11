@@ -21,14 +21,14 @@ public class EmployeeCompleteDto
     public string GradeName { get; set; } = string.Empty;
 
     // From EmployeeMaster - Employment Details
-    public EmployeeType EmployeeType { get; set; }
-    public Shift Shift { get; set; }
-    public EmployeeNature EmployeeNature { get; set; }
+    public EmployeeType? EmployeeType { get; set; }
+    public Shift? Shift { get; set; }
+    public EmployeeNature? EmployeeNature { get; set; }
     public Holiday? Holiday { get; set; }
     public decimal? ProposedMonthlySalary { get; set; }
-    public DateTime JoiningDate { get; set; }
+    public DateTime? JoiningDate { get; set; }
     public DateTime? ConfirmationDate { get; set; }
-    public EmployeeStatus Status { get; set; }
+    public EmployeeStatus? Status { get; set; }
 
     // From EmployeePersonal - Personal Information
     public string? PersonalInfoId { get; set; }

@@ -5,7 +5,7 @@ using NZ.HRM.Utility.Enum;
 
 namespace NZ.HRM.Application.Employees.Handlers;
 
-public class CreateCompleteEmployeeCommandHandler
+public class CompleteEmployeeCommandHandler
 {
     private readonly IEmployeeMasterRepository _employeeMasterRepository;
     private readonly IEmployeePersonalRepository _employeePersonalRepository;
@@ -15,7 +15,7 @@ public class CreateCompleteEmployeeCommandHandler
     private readonly ISectionRepository _sectionRepository;
     private readonly IGradeRepository _gradeRepository;
 
-    public CreateCompleteEmployeeCommandHandler(
+    public CompleteEmployeeCommandHandler(
         IEmployeeMasterRepository employeeMasterRepository,
         IEmployeePersonalRepository employeePersonalRepository,
         IEmployeeVerificationRepository employeeVerificationRepository,
@@ -47,7 +47,7 @@ public class CreateCompleteEmployeeCommandHandler
             command.CompanyId, 
             command.DepartmentId, 
             command.SectionId, 
-            command.GradeId, 
+            //command.GradeId, 
             cancellationToken);
 
         // Create EmployeeMaster
@@ -78,7 +78,6 @@ public class CreateCompleteEmployeeCommandHandler
         var employeePersonal = new EmployeePersonal
         {
             EmployeeId = employeeId,
-            EmployeeCode = command.EmployeeCode,
             DateOfBirth = command.DateOfBirth,
             Gender = command.Gender,
             MaritalStatus = command.MaritalStatus,
@@ -95,7 +94,91 @@ public class CreateCompleteEmployeeCommandHandler
             MotherNameBangla = command.MotherNameBangla,
             SpouseName = command.SpouseName,
             SpouseMobile = command.SpouseMobile,
-            TinNumber = command.TinNumber,
+            IDNumber = command.TinNumber,
+            EmployeeReference = command.EmployeeReference,
+            ReferencePersonId = command.ReferencePersonId,
+            PermanentVillageAreaRoad = command.PermanentVillageAreaRoad,
+            PermanentPostOffice = command.PermanentPostOffice,
+            PermanentThana = command.PermanentThana,
+            PermanentDistrict = command.PermanentDistrict,
+            PermanentDivision = command.PermanentDivision,
+            PresentVillageAreaRoad = command.PresentVillageAreaRoad,
+            PresentPostOffice = command.PresentPostOffice,
+            PresentThana = command.PresentThana,
+            PresentDistrict = command.PresentDistrict,
+            PresentDivision = command.PresentDivision,
+            IsActive = true
+        };
+
+        // Save EmployeePersonal
+        await _employeePersonalRepository.AddAsync(employeePersonal, cancellationToken);
+
+        var employeeVerification = new EmployeeVerification
+        {
+            EmployeeId = employeeId,
+            SecurityClearanceBy = command.SecurityClearanceBy,
+            SecurityClearanceDate = command.SecurityClearanceDate,
+            EnrolledBy = command.EnrolledBy,
+            EnrolledDate = command.EnrolledDate,
+            BiometricEnrolledBy = command.BiometricEnrolledBy,
+            BiometricEnrolledDate = command.BiometricEnrolledDate,
+            IsActive = true
+        };
+
+        await _employeeVerificationRepository.AddAsync(employeeVerification, cancellationToken);
+
+        return employeeId;
+    }
+
+
+    public async Task<string> Handle(CreateEmployeeRecruitmentCommand command, CancellationToken cancellationToken = default)
+    {
+        // Validate employee enrollment ID uniqueness
+        var enrollmentExists = await _employeeMasterRepository.EnrollmentCodeExistsAsync(command.EmployeeEnrollmentId, cancellationToken);
+        if (enrollmentExists)
+        {
+            throw new ArgumentException($"Employee enrollment ID '{command.EmployeeEnrollmentId}' already exists");
+        }
+
+        // Validate related entities exist
+        await ValidateRelatedEntities(
+            command.CompanyId,
+            command.DepartmentId,
+            command.SectionId,
+            //command.LocationId,
+            cancellationToken);
+
+        // Create EmployeeMaster
+        var employeeMaster = new EmployeeMaster
+        {
+            EnrollmentId = command.EmployeeEnrollmentId,
+            EmployeeNameBangla = command.EmployeeNameBangla,
+            CompanyId = command.CompanyId,
+            DepartmentId = command.DepartmentId,
+            SectionId = command.SectionId,
+            CellId = command.CellId,
+            EmployeeType = command.EmployeeType,
+            ProposedMonthlySalary = command.ProposedMonthlySalary,
+            JoiningDate = command.JoiningDate,
+            Status = EmployeeStatus.Draft,
+            IsActive = true
+        };
+
+        // Save EmployeeMaster first
+        var employeeId = await _employeeMasterRepository.AddAsync(employeeMaster, cancellationToken);
+
+        // Create EmployeePersonal
+        var employeePersonal = new EmployeePersonal
+        {
+            EmployeeId = employeeId,            
+            DateOfBirth = command.DateOfBirth,
+            Gender = command.Gender,
+            BloodGroup = command.BloodGroup,
+            GuardianType = command.GuardianType,
+            GuardianName = command.GuardianName,
+            MotherNameBangla = command.MotherNameBangla,
+            IdType = command.IDType,
+            IDNumber = command.IDNumber,
             EmployeeReference = command.EmployeeReference,
             ReferencePersonId = command.ReferencePersonId,
             PermanentVillageAreaRoad = command.PermanentVillageAreaRoad,
@@ -135,7 +218,7 @@ public class CreateCompleteEmployeeCommandHandler
         string companyId, 
         string departmentId, 
         string sectionId, 
-        string gradeId, 
+        //string locationId, 
         CancellationToken cancellationToken)
     {
         var companyExists = await _companyRepository.ExistsAsync(companyId, cancellationToken);
@@ -150,8 +233,8 @@ public class CreateCompleteEmployeeCommandHandler
         if (!sectionExists)
             throw new KeyNotFoundException($"Section with ID {sectionId} not found");
 
-        var gradeExists = await _gradeRepository.ExistsAsync(gradeId, cancellationToken);
-        if (!gradeExists)
-            throw new KeyNotFoundException($"Grade with ID {gradeId} not found");
+        //var locationExists = await _locationRepository.ExistsAsync(locationId, cancellationToken);
+        //if (!locationExists)
+        //    throw new KeyNotFoundException($"Location with ID {locationId} not found");
     }
 }

@@ -10,11 +10,11 @@ namespace NZ.HRM.WebAPI.Controllers;
 [Route("api/[controller]")]
 public class EmployeesController : ControllerBase
 {
-    private readonly CreateCompleteEmployeeCommandHandler _createCompleteEmployeeHandler;
+    private readonly CompleteEmployeeCommandHandler _createCompleteEmployeeHandler;
     private readonly GetCompleteEmployeeQueryHandler _getCompleteEmployeeHandler;
 
     public EmployeesController(
-        CreateCompleteEmployeeCommandHandler createCompleteEmployeeHandler,
+        CompleteEmployeeCommandHandler createCompleteEmployeeHandler,
         GetCompleteEmployeeQueryHandler getCompleteEmployeeHandler)
     {
         _createCompleteEmployeeHandler = createCompleteEmployeeHandler;
@@ -66,8 +66,8 @@ public class EmployeesController : ControllerBase
         {
             var employeeId = await _createCompleteEmployeeHandler.Handle(command, cancellationToken: default);
             return CreatedAtAction(
-                nameof(GetCompleteEmployee), 
-                new { id = employeeId }, 
+                nameof(GetCompleteEmployee),
+                new { id = employeeId },
                 new { id = employeeId, message = "Employee created successfully with personal information" });
         }
         catch (ArgumentException ex)
@@ -83,6 +83,37 @@ public class EmployeesController : ControllerBase
             return StatusCode(500, new { message = "An error occurred while creating the employee", details = ex.Message });
         }
     }
+
+    [HttpPost("recruitment")]
+    [ProducesResponseType(typeof(object), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> CreateEmployeeRecruitment([FromBody] CreateEmployeeRecruitmentCommand command)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        try
+        {
+            var employeeId = await _createCompleteEmployeeHandler.Handle(command, cancellationToken: default);
+            return CreatedAtAction(
+                nameof(GetCompleteEmployee),
+                new { id = employeeId },
+                new { id = employeeId, message = "Employee created successfully with personal information" });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An error occurred while creating the employee", details = ex.Message });
+        }
+    }
+
 
     /// <summary>
     /// Get complete employee information (master + personal)

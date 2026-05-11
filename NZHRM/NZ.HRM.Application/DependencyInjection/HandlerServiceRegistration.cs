@@ -57,7 +57,7 @@ namespace NZ.HRM.Application.DependencyInjection
             services.AddScoped<EmployeePersonalQueryHandler>();
 
             // Register Complete Employee Handlers
-            services.AddScoped<CreateCompleteEmployeeCommandHandler>();
+            services.AddScoped<CompleteEmployeeCommandHandler>();
             services.AddScoped<GetCompleteEmployeeQueryHandler>();
 
             return services;

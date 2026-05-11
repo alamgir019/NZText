@@ -18,7 +18,6 @@ public class EmployeePersonalRepository : IEmployeePersonalRepository
     {
         return await _context.EmployeePersonals
             .Include(ep => ep.Employee)
-            .OrderBy(ep => ep.EmployeeCode)
             .ToListAsync(cancellationToken);
     }
 

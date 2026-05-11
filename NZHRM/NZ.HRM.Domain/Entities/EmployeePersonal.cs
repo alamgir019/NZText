@@ -7,44 +7,32 @@ namespace NZ.HRM.Domain.Entities
 {
     public class EmployeePersonal : BaseEntity
     {
+
         [ForeignKey(nameof(Employee))]
         public string EmployeeId { get; set; } = string.Empty;
 
-        [Required]
-        [MaxLength(50)]
-        public string EmployeeCode { get; set; } = string.Empty;
-
-        // Personal Information
-        [Required]
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
         [Required]
         public Gender Gender { get; set; }
 
-        [Required]
-        public MaritalStatus MaritalStatus { get; set; }
+        public MaritalStatus? MaritalStatus { get; set; }
 
-        [Required]
         [MaxLength(20)]
-        public string MobileNumber { get; set; } = string.Empty;
+        public string? MobileNumber { get; set; } = string.Empty;
 
         [MaxLength(100)]
         public string? EmailAddress { get; set; }
 
-        [Required]
-        public DocumentType DocumentType { get; set; }
+        public DocumentType? DocumentType { get; set; }
 
-        [Required]
         [MaxLength(50)]
-        public string DocumentNumber { get; set; } = string.Empty;
-
+        public string? DocumentNumber { get; set; } = string.Empty;
         public BloodGroup? BloodGroup { get; set; }
 
-        [Required]
-        public Religion Religion { get; set; }
+        public Religion? Religion { get; set; }
 
-        [Required]
-        public Nationality Nationality { get; set; }
+        public Nationality? Nationality { get; set; }
 
         // Additional Information
         [Required]
@@ -67,8 +55,15 @@ namespace NZ.HRM.Domain.Entities
         [MaxLength(20)]
         public string? SpouseMobile { get; set; }
 
+        public IDType? IdType { get; set; }
+
         [MaxLength(50)]
-        public string? TinNumber { get; set; } // 12-digit TIN (Optional)
+        public string? IDNumber { get; set; } // 12-digit TIN (Optional)
+
+        public GuardianType? GuardianType { get; set; }
+
+        [MaxLength(100)]
+        public string? GuardianName { get; set; }
 
         [MaxLength(100)]
         public string? EmployeeReference { get; set; }

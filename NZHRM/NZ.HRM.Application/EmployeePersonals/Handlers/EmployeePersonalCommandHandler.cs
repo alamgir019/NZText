@@ -41,7 +41,6 @@ public class EmployeePersonalCommandHandler
         var employeePersonal = new EmployeePersonal
         {
             EmployeeId = command.EmployeeId,
-            EmployeeCode = employee?.EmployeeCode ?? string.Empty,
             DateOfBirth = command.DateOfBirth,
             Gender = command.Gender,
             MaritalStatus = command.MaritalStatus,
@@ -58,7 +57,7 @@ public class EmployeePersonalCommandHandler
             MotherNameBangla = command.MotherNameBangla,
             SpouseName = command.SpouseName,
             SpouseMobile = command.SpouseMobile,
-            TinNumber = command.TinNumber,
+            IDNumber = command.TinNumber,
             EmployeeReference = command.EmployeeReference,
             ReferencePersonId = command.ReferencePersonId,
             PermanentVillageAreaRoad = command.PermanentVillageAreaRoad,
@@ -108,7 +107,7 @@ public class EmployeePersonalCommandHandler
         employeePersonal.MotherNameBangla = command.MotherNameBangla;
         employeePersonal.SpouseName = command.SpouseName;
         employeePersonal.SpouseMobile = command.SpouseMobile;
-        employeePersonal.TinNumber = command.TinNumber;
+        employeePersonal.IDNumber = command.TinNumber;
         employeePersonal.EmployeeReference = command.EmployeeReference;
         employeePersonal.ReferencePersonId = command.ReferencePersonId;
         employeePersonal.PermanentVillageAreaRoad = command.PermanentVillageAreaRoad;
