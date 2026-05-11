@@ -41,6 +41,44 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<List<EmployeeMaster>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
+    {
+        var query = _context.EmployeeMasters
+            .Include(e => e.Company)
+            .Include(e => e.Department)
+            .Include(e => e.Section)
+            .Include(e => e.Grade)
+            .Include(e => e.Shift)
+            .Include(e => e.Holiday)
+            .Include(e => e.VerificationInfo)
+            .AsQueryable();
+        if (!includeInactive)
+        {
+            query = query.Where(e => e.IsActive);
+        }
+
+        return await query
+            .OrderBy(e => e.EmployeeCode)
+            .ToListAsync(cancellationToken);
+    }
+
+
+    public async Task<List<EmployeeMaster>> GetByDateAsync(DateTime onDate, bool includeInactive = false, CancellationToken cancellationToken = default)
+    {
+        var query = _context.EmployeeMasters
+            .AsQueryable();
+        if (!includeInactive)
+        {
+            query = query.Where(e => e.IsActive);
+        }
+
+        query = query.Where(e => e.CreatedOn.ToUniversalTime().Date == onDate.Date);
+
+        return await query
+            .OrderBy(e => e.EnrollmentId)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<EmployeeMaster?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
         return await _context.EmployeeMasters

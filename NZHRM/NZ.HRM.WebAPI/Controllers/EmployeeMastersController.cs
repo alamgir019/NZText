@@ -147,12 +147,11 @@ public class EmployeeMastersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetEnrollmentId()
     {
-        //var query = new NZ.HRM.Application.EmployeeMasters.Queries.GetEnrollmentId.GetEnrollmentIdQuery
-        //{
-        //    Today = DateTime.UtcNow
-        //};
-        //var enrollmentId = await _getEnrollmentIdHandler.Handle(query, cancellationToken: default);
-        var enrollmentId = "I am not ok";
+        var query = new Application.EmployeeMasters.Queries.GetEnrollmentId.GetEnrollmentIdQuery
+        {
+            Today = DateTime.UtcNow
+        };
+        var enrollmentId = await _getEnrollmentIdHandler.Handle(query, cancellationToken: default);
         return Ok(new { enrollmentId });
     }
 }
