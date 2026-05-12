@@ -19,7 +19,9 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<Requisition> Requisitions => Set<Requisition>();
         public DbSet<ApplicationTracking> ApplicationTrackings => Set<ApplicationTracking>();
         public DbSet<OfferLetter> OfferLetters => Set<OfferLetter>();
+        public DbSet<Division> Divisions => Set<Division>();
         public DbSet<District> Districts => Set<District>();
+        public DbSet<Thana> Thanas => Set<Thana>();
         public DbSet<Department> Departments => Set<Department>();
         public DbSet<Grade> Grades => Set<Grade>();
         public DbSet<Section> Sections => Set<Section>();
@@ -38,6 +40,9 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<MenuPermission>().ToTable("MenuPermissions");
             modelBuilder.Entity<ApplicationTracking>().ToTable("ApplicationTrackings");
             modelBuilder.Entity<OfferLetter>().ToTable("OfferLetters");
+            modelBuilder.Entity<Division>().ToTable("Divisions");
+            modelBuilder.Entity<District>().ToTable("Districts");
+            modelBuilder.Entity<Thana>().ToTable("Thanas");
             modelBuilder.Entity<District>().ToTable("Districts");
             modelBuilder.Entity<Location>().ToTable("Locations");
             modelBuilder.Entity<Department>().ToTable("Departments");

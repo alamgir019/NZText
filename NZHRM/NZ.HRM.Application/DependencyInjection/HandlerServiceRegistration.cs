@@ -8,6 +8,9 @@ using NZ.HRM.Application.Cells.Handlers;
 using NZ.HRM.Application.EmployeeMasters.Handlers;
 using NZ.HRM.Application.EmployeePersonals.Handlers;
 using NZ.HRM.Application.Employees.Handlers;
+using NZ.HRM.Application.Divisions.Handlers;
+using NZ.HRM.Application.Districts.Handlers;
+using NZ.HRM.Application.Thanas.Handlers;
 
 namespace NZ.HRM.Application.DependencyInjection
 {
@@ -59,6 +62,11 @@ namespace NZ.HRM.Application.DependencyInjection
             // Register Complete Employee Handlers
             services.AddScoped<CompleteEmployeeCommandHandler>();
             services.AddScoped<GetCompleteEmployeeQueryHandler>();
+
+            // Register Geo Handlers
+            services.AddScoped<DivisionQueryHandler>();
+            services.AddScoped<DistrictQueryHandler>();
+            services.AddScoped<ThanaQueryHandler>();
 
             return services;
         }
