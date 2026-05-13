@@ -30,7 +30,7 @@ public class CreateEmployeeRecruitmentCommand
     [Required(ErrorMessage = "Section ID is required")]
     public string SectionId { get; set; } = string.Empty;
 
-    public string CellId { get; set; } = string.Empty;
+    public string? CellId { get; set; }
 
     public decimal? ProposedMonthlySalary { get; set; }
 
