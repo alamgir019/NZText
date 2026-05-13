@@ -68,7 +68,7 @@ public class EmployeesController : ControllerBase
             return CreatedAtAction(
                 nameof(GetCompleteEmployee),
                 new { id = employeeId },
-                new { id = employeeId, message = "Employee created successfully with personal information" });
+                new { id = employeeId, message = "Personal Information Saved Successfully" });
         }
         catch (ArgumentException ex)
         {
