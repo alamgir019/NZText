@@ -88,6 +88,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Grade)
             .Include(e => e.PersonalInfo)
             .Include(e => e.VerificationInfo)
+            .Include(e => e.Designation)
             .FirstOrDefaultAsync(e => e.Id == id && e.IsActive, cancellationToken);
     }
 

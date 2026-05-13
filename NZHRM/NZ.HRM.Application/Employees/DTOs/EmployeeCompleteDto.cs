@@ -19,6 +19,8 @@ public class EmployeeCompleteDto
     public string SectionName { get; set; } = string.Empty;
     public string GradeId { get; set; } = string.Empty;
     public string GradeName { get; set; } = string.Empty;
+    public string DesignationId { get; set; } = string.Empty;
+    public string DesignationName { get; set; } = string.Empty;
 
     // From EmployeeMaster - Employment Details
     public EmployeeType? EmployeeType { get; set; }

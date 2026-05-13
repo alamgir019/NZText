@@ -4,11 +4,11 @@ using NZ.HRM.Application.Interfaces.Repositories;
 
 namespace NZ.HRM.Application.Employees.Handlers;
 
-public class GetCompleteEmployeeQueryHandler
+public class CompleteEmployeeQueryHandler
 {
     private readonly IEmployeeMasterRepository _employeeMasterRepository;
 
-    public GetCompleteEmployeeQueryHandler(IEmployeeMasterRepository employeeMasterRepository)
+    public CompleteEmployeeQueryHandler(IEmployeeMasterRepository employeeMasterRepository)
     {
         _employeeMasterRepository = employeeMasterRepository;
     }
@@ -35,6 +35,8 @@ public class GetCompleteEmployeeQueryHandler
             SectionName = employee.Section?.SectionName ?? string.Empty,
             GradeId = employee.GradeId,
             GradeName = employee.Grade?.GradeName ?? string.Empty,
+            DesignationId = employee.DesignationId,
+            DesignationName = employee.Designation?.DesignationName ?? string.Empty,
             EmployeeType = employee.EmployeeType,
             Shift = employee.Shift,
             EmployeeNature = employee.EmployeeNature,

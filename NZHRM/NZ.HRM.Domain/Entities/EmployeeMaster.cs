@@ -43,6 +43,10 @@ namespace NZ.HRM.Domain.Entities
         [ForeignKey(nameof(CellId))]
         public Cell? Cell { get; set; }
 
+        public string? DesignationId { get; set; }
+        [ForeignKey(nameof(DesignationId))]
+        public Designation? Designation { get; set; }
+
         public EmployeeType? EmployeeType { get; set; }
 
         public Utility.Enum.Shift? Shift { get; set; }

@@ -5,6 +5,7 @@ using NZ.HRM.Application.Departments.Handlers;
 using NZ.HRM.Application.Grades.Handlers;
 using NZ.HRM.Application.Sections.Handlers;
 using NZ.HRM.Application.Cells.Handlers;
+using NZ.HRM.Application.Designations.Handlers;
 using NZ.HRM.Application.EmployeeMasters.Handlers;
 using NZ.HRM.Application.EmployeePersonals.Handlers;
 using NZ.HRM.Application.Employees.Handlers;
@@ -42,6 +43,10 @@ namespace NZ.HRM.Application.DependencyInjection
             services.AddScoped<GradeCommandHandler>();
             services.AddScoped<GradeQueryHandler>();
 
+            // Register Designation Handlers
+            services.AddScoped<DesignationCommandHandler>();
+            services.AddScoped<DesignationQueryHandler>();
+
             // Register Section Handlers
             services.AddScoped<SectionCommandHandler>();
             services.AddScoped<SectionQueryHandler>();
@@ -61,7 +66,7 @@ namespace NZ.HRM.Application.DependencyInjection
 
             // Register Complete Employee Handlers
             services.AddScoped<CompleteEmployeeCommandHandler>();
-            services.AddScoped<GetCompleteEmployeeQueryHandler>();
+            services.AddScoped<CompleteEmployeeQueryHandler>();
 
             // Register Geo Handlers
             services.AddScoped<DivisionQueryHandler>();

@@ -60,6 +60,7 @@ public class CompleteEmployeeCommandHandler
             DepartmentId = command.DepartmentId,
             SectionId = command.SectionId,
             GradeId = command.GradeId,
+            DesignationId = command.DesignationId,
             EmployeeType = command.EmployeeType,
             Shift = command.Shift,
             EmployeeNature = command.EmployeeNature,
