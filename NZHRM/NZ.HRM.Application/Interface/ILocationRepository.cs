@@ -1,6 +1,4 @@
 using NZ.HRM.Domain.Entities;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace NZ.HRM.Application.Interface
 {
@@ -8,6 +6,7 @@ namespace NZ.HRM.Application.Interface
     {
         Task<Location?> FindByIdAsync(string id);
         Task<List<Location>> GetAllAsync();
+        Task<List<Location>> GetByCompanyIdAsync(string companyId);
         Task AddAsync(Location location);
         Task RemoveAsync(Location location);
         Task UpdateAsync(Location location);

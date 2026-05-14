@@ -33,6 +33,13 @@ namespace NZ.HRM.WebAPI.Controllers
             return Ok(locations);
         }
 
+        [HttpGet("company/{companyId}")]
+        public async Task<IActionResult> GetByCompany(string companyId)
+        {
+            var locations = await _queryHandler.Handle(new GetLocationsByCompanyIdQuery(companyId));
+            return Ok(locations);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateLocationCommand cmd)
         {

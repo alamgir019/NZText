@@ -12,8 +12,7 @@ public class CreateCompanyCommand
     [MaxLength(100, ErrorMessage = "Company name must not exceed 100 characters")]
     public string CompanyName { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Location ID is required")]
-    public string LocationId { get; set; } = string.Empty;
+    // Location association is handled via CompanyLocation mapping entity
 
     public bool IsCompliant { get; set; } = false;
 }

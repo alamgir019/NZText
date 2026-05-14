@@ -15,6 +15,7 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<Post> Posts => Set<Post>();
         public DbSet<Designation> Designations => Set<Designation>();
         public DbSet<Location> Locations => Set<Location>();
+        public DbSet<CompanyLocation> CompanyLocations => Set<CompanyLocation>();
         public DbSet<Company> Companies => Set<Company>();
         public DbSet<Requisition> Requisitions => Set<Requisition>();
         public DbSet<ApplicationTracking> ApplicationTrackings => Set<ApplicationTracking>();

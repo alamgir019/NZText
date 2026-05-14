@@ -1,4 +1,5 @@
 using NZ.HRM.Application.Companies.Commands.CreateCompany;
+using NZ.HRM.Application.Companies.Commands.CreateCompany;
 using NZ.HRM.Application.Companies.Commands.DeleteCompany;
 using NZ.HRM.Application.Companies.Commands.UpdateCompany;
 using NZ.HRM.Application.Interfaces.Repositories;
@@ -39,7 +40,6 @@ public class CompaniesCommandHandler
 
         company.CompanyCode = command.CompanyCode;
         company.CompanyName = command.CompanyName;
-        company.LocationId = command.LocationId;
         company.IsCompliant = command.IsCompliant;
 
         await _companyRepository.UpdateAsync(company, cancellationToken);
@@ -51,7 +51,6 @@ public class CompaniesCommandHandler
         {
             CompanyCode = command.CompanyCode,
             CompanyName = command.CompanyName,
-            LocationId = command.LocationId,
             IsCompliant = command.IsCompliant,
             IsActive = true
         };
