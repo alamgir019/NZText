@@ -68,12 +68,10 @@ public class CreateCompleteEmployeeCommand
     [EmailAddress(ErrorMessage = "Invalid email format")]
     public string? EmailAddress { get; set; }
 
-    [Required(ErrorMessage = "Document type is required")]
-    public DocumentType DocumentType { get; set; }
+    public DocumentType? DocumentType { get; set; }
 
-    [Required(ErrorMessage = "Document number is required")]
     [MaxLength(50, ErrorMessage = "Document number must not exceed 50 characters")]
-    public string DocumentNumber { get; set; } = string.Empty;
+    public string? DocumentNumber { get; set; }
 
     public BloodGroup? BloodGroup { get; set; }
 
