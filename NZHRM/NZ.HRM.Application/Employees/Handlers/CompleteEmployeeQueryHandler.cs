@@ -50,6 +50,7 @@ public class CompleteEmployeeQueryHandler
             UpdatedOn = employee.UpdatedOn,
             UpdatedBy = employee.UpdatedBy,
             IsActive = employee.IsActive,
+            
 
             // From EmployeePersonal
             PersonalInfoId = employee.PersonalInfo?.Id,
@@ -60,6 +61,8 @@ public class CompleteEmployeeQueryHandler
             EmailAddress = employee.PersonalInfo?.EmailAddress,
             DocumentType = employee.PersonalInfo?.DocumentType,
             DocumentNumber = employee.PersonalInfo?.DocumentNumber,
+            IdType = employee.PersonalInfo?.IdType,
+            IdNumber = employee.PersonalInfo?.IDNumber,
             BloodGroup = employee.PersonalInfo?.BloodGroup,
             Religion = employee.PersonalInfo?.Religion,
             Nationality = employee.PersonalInfo?.Nationality,

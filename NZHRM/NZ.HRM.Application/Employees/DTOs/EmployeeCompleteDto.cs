@@ -85,4 +85,6 @@ public class EmployeeCompleteDto
     public DateTime UpdatedOn { get; set; }
     public string UpdatedBy { get; set; } = string.Empty;
     public bool IsActive { get; set; }
+    public IDType? IdType { get; set; }
+    public string? IdNumber { get; set; }
 }
