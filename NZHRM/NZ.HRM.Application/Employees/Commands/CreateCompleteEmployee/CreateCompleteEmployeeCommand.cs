@@ -27,8 +27,7 @@ public class CreateCompleteEmployeeCommand
     [Required(ErrorMessage = "Section ID is required")]
     public string SectionId { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Designation ID is required")]
-    public string DesignationId { get; set; } = string.Empty;
+    public string? DesignationId { get; set; }
 
     public string? GradeId { get; set; }
 
