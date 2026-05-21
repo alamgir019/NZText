@@ -1,10 +1,9 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using NZ.HRM.Domain.Common;
 
 namespace NZ.HRM.Domain.Entities
 {
-    public class Cell : BaseEntity
+    public class Cell : BaseEntityWithSortOrder
     {
         [Required]
         [MaxLength(100)]
@@ -13,10 +12,6 @@ namespace NZ.HRM.Domain.Entities
         [MaxLength(100)]
         public string? NameBangla { get; set; }
 
-        [Required]
-        public string SectionId { get; set; } = string.Empty;
-
-        [ForeignKey(nameof(SectionId))]
-        public Section? Section { get; set; }
+        public ICollection<SectionCell>? SectionCells { get; set; }
     }
 }

@@ -16,9 +16,7 @@ public class SectionRepository : ISectionRepository
 
     public async Task<List<Section>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
     {
-        var query = _context.Sections
-            .Include(s => s.Department)
-            .AsQueryable();
+        var query = _context.Sections.AsQueryable();
 
         if (!includeInactive)
         {
@@ -30,19 +28,28 @@ public class SectionRepository : ISectionRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<List<Section>> GetByDepartmentIdAsync(string departmentId, bool includeInactive = false, CancellationToken cancellationToken = default)
+    {
+        var query = _context.DepartmentSections
+            .Where(ds => ds.DepartmentId == departmentId)
+            .Select(ds => ds.Section!)
+            .AsQueryable();
+
+        if (!includeInactive)
+        {
+            query = query.Where(s => s.IsActive);
+        }
+
+        return await query
+            .OrderBy(s => s.SectionName)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<Section?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
         return await _context.Sections
-            .Include(s => s.Department)
             .FirstOrDefaultAsync(s => s.Id == id && s.IsActive, cancellationToken);
-    }
-
-    public async Task<List<Section>> GetByDepartmentIdAsync(string departmentId, CancellationToken cancellationToken = default)
-    {
-        return await _context.Sections
-            .Where(s => s.DepartmentId == departmentId && s.IsActive)
-            .OrderBy(s => s.SectionName)
-            .ToListAsync(cancellationToken);
     }
 
     public async Task<string> AddAsync(Section section, CancellationToken cancellationToken = default)

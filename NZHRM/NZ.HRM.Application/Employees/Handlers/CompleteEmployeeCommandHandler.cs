@@ -1,6 +1,7 @@
-using NZ.HRM.Application.Employees.Commands.CreateCompleteEmployee;
 using NZ.HRM.Application.Interfaces.Repositories;
+using NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
 using NZ.HRM.Domain.Entities;
+using NZ.HRM.Mapping.Employees;
 using NZ.HRM.Utility.Enum;
 
 namespace NZ.HRM.Application.Employees.Handlers;
@@ -51,65 +52,13 @@ public class CompleteEmployeeCommandHandler
             cancellationToken);
 
         // Create EmployeeMaster
-        var employeeMaster = new EmployeeMaster
-        {
-            EmployeeCode = command.EmployeeCode,
-            EmployeeNameEnglish = command.EmployeeNameEnglish,
-            EmployeeNameBangla = command.EmployeeNameBangla,
-            CompanyId = command.CompanyId,
-            DepartmentId = command.DepartmentId,
-            SectionId = command.SectionId,
-            GradeId = command.GradeId,
-            DesignationId = command.DesignationId,
-            EmployeeType = command.EmployeeType,
-            Shift = command.Shift,
-            EmployeeNature = command.EmployeeNature,
-            Holiday = command.Holiday,
-            ProposedMonthlySalary = command.ProposedMonthlySalary,
-            JoiningDate = command.JoiningDate,
-            ConfirmationDate = command.ConfirmationDate,
-            Status = EmployeeStatus.Draft,
-            IsActive = true
-        };
+        var employeeMaster = EmployeeMapper.CreateCompleteEmployeeCommandToMaster(command);
 
         // Save EmployeeMaster first
         var employeeId = await _employeeMasterRepository.AddAsync(employeeMaster, cancellationToken);
 
         // Create EmployeePersonal
-        var employeePersonal = new EmployeePersonal
-        {
-            EmployeeId = employeeId,
-            DateOfBirth = command.DateOfBirth,
-            Gender = command.Gender,
-            MaritalStatus = command.MaritalStatus,
-            MobileNumber = command.MobileNumber,
-            EmailAddress = command.EmailAddress,
-            DocumentType = command.DocumentType,
-            DocumentNumber = command.DocumentNumber,
-            BloodGroup = command.BloodGroup,
-            Religion = command.Religion,
-            Nationality = command.Nationality,
-            FatherNameEnglish = command.FatherNameEnglish,
-            FatherNameBangla = command.FatherNameBangla,
-            MotherNameEnglish = command.MotherNameEnglish,
-            MotherNameBangla = command.MotherNameBangla,
-            SpouseName = command.SpouseName,
-            SpouseMobile = command.SpouseMobile,
-            IDNumber = command.TinNumber,
-            EmployeeReference = command.EmployeeReference,
-            ReferencePersonId = command.ReferencePersonId,
-            PermanentVillageAreaRoad = command.PermanentVillageAreaRoad,
-            PermanentPostOffice = command.PermanentPostOffice,
-            PermanentThana = command.PermanentThana,
-            PermanentDistrict = command.PermanentDistrict,
-            PermanentDivision = command.PermanentDivision,
-            PresentVillageAreaRoad = command.PresentVillageAreaRoad,
-            PresentPostOffice = command.PresentPostOffice,
-            PresentThana = command.PresentThana,
-            PresentDistrict = command.PresentDistrict,
-            PresentDivision = command.PresentDivision,
-            IsActive = true
-        };
+        var employeePersonal = EmployeeMapper.CreateCompleteEmployeeCommandToPersonal(command, employeeId);
 
         // Save EmployeePersonal
         await _employeePersonalRepository.AddAsync(employeePersonal, cancellationToken);
@@ -238,4 +187,5 @@ public class CompleteEmployeeCommandHandler
         //if (!locationExists)
         //    throw new KeyNotFoundException($"Location with ID {locationId} not found");
     }
+
 }

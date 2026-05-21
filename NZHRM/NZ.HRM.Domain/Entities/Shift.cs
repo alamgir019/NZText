@@ -2,7 +2,7 @@ using NZ.HRM.Domain.Common;
 
 namespace NZ.HRM.Domain.Entities
 {
-    public class Shift : BaseEntity
+    public class Shift : BaseEntityWithSortOrder
     {
         public string ShiftName { get; set; } = string.Empty;
         public TimeOnly StartTime { get; set; }

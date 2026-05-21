@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using NZ.HRM.Utility.Enum;
 
-namespace NZ.HRM.Application.Employees.Commands.CreateCompleteEmployee;
+namespace NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
 
 public class CreateCompleteEmployeeCommand
 {

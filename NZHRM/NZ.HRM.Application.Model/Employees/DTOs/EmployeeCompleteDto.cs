@@ -1,6 +1,6 @@
 using NZ.HRM.Utility.Enum;
 
-namespace NZ.HRM.Application.Employees.DTOs;
+namespace NZ.HRM.Application.Model.Employees.DTOs;
 
 public class EmployeeCompleteDto
 {

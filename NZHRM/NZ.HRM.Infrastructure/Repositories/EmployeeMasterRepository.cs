@@ -130,6 +130,27 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<List<EmployeeMaster>> SearchAsync(string searchText, CancellationToken cancellationToken = default)
+    {
+        var searchTerm = searchText.Trim();
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            return new List<EmployeeMaster>();
+        }
+
+        var searchPattern = $"%{searchTerm}%";
+
+        return await _context.EmployeeMasters
+            .Include(e => e.PersonalInfo)
+            .Where(e => e.IsActive &&
+                       (EF.Functions.Like(e.EnrollmentId ?? string.Empty, searchPattern)
+                        || EF.Functions.Like(e.EmployeeNameEnglish, searchPattern)
+                        || EF.Functions.Like(e.EmployeeNameBangla, searchPattern)
+                        || (e.PersonalInfo != null && EF.Functions.Like(e.PersonalInfo.MobileNumber ?? string.Empty, searchPattern))))
+            .OrderBy(e => e.EmployeeNameEnglish)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<string> AddAsync(EmployeeMaster employeeMaster, CancellationToken cancellationToken = default)
     {
         _context.EmployeeMasters.Add(employeeMaster);

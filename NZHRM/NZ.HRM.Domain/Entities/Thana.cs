@@ -3,7 +3,7 @@ using NZ.HRM.Domain.Common;
 
 namespace NZ.HRM.Domain.Entities
 {
-    public class Thana : BaseEntity
+    public class Thana : BaseEntityWithSortOrder
     {
         public string ThanaName { get; set; } = string.Empty;
 

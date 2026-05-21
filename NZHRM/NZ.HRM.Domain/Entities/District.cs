@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NZ.HRM.Domain.Entities
 {
-    public class District : BaseEntity
+    public class District : BaseEntityWithSortOrder
     {
         public string DistrictName { get; set; } = string.Empty;
 

@@ -10,32 +10,38 @@ public class SectionCommandHandler
 {
     private readonly ISectionRepository _sectionRepository;
     private readonly IDepartmentRepository _departmentRepository;
+    private readonly IDepartmentSectionRepository _departmentSectionRepository;
 
     public SectionCommandHandler(
         ISectionRepository sectionRepository,
-        IDepartmentRepository departmentRepository)
+        IDepartmentRepository departmentRepository,
+        IDepartmentSectionRepository departmentSectionRepository)
     {
         _sectionRepository = sectionRepository;
         _departmentRepository = departmentRepository;
+        _departmentSectionRepository = departmentSectionRepository;
     }
 
     public async Task<string> Handle(CreateSectionCommand command, CancellationToken cancellationToken = default)
     {
-        // Validate that department exists
         var departmentExists = await _departmentRepository.ExistsAsync(command.DepartmentId, cancellationToken);
         if (!departmentExists)
-        {
             throw new KeyNotFoundException($"Department with ID {command.DepartmentId} not found");
-        }
 
         var section = new Section
         {
-            DepartmentId = command.DepartmentId,
             SectionName = command.SectionName,
             IsActive = true
         };
 
-        return await _sectionRepository.AddAsync(section, cancellationToken);
+        var sectionId = await _sectionRepository.AddAsync(section, cancellationToken);
+
+        await _departmentSectionRepository.SetDepartmentForSectionAsync(
+            sectionId,
+            command.DepartmentId,
+            cancellationToken);
+
+        return sectionId;
     }
 
     public async Task Handle(UpdateSectionCommand command, CancellationToken cancellationToken = default)
@@ -45,17 +51,18 @@ public class SectionCommandHandler
         if (section == null)
             throw new KeyNotFoundException($"Section with ID {command.Id} not found");
 
-        // Validate that department exists
         var departmentExists = await _departmentRepository.ExistsAsync(command.DepartmentId, cancellationToken);
         if (!departmentExists)
-        {
             throw new KeyNotFoundException($"Department with ID {command.DepartmentId} not found");
-        }
 
-        section.DepartmentId = command.DepartmentId;
         section.SectionName = command.SectionName;
 
         await _sectionRepository.UpdateAsync(section, cancellationToken);
+
+        await _departmentSectionRepository.SetDepartmentForSectionAsync(
+            section.Id,
+            command.DepartmentId,
+            cancellationToken);
     }
 
     public async Task Handle(DeleteSectionCommand command, CancellationToken cancellationToken = default)

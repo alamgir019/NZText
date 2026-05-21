@@ -11,6 +11,8 @@ using NZ.HRM.Application.EmployeePersonals.Handlers;
 using NZ.HRM.Application.Employees.Handlers;
 using NZ.HRM.Application.Divisions.Handlers;
 using NZ.HRM.Application.Districts.Handlers;
+using NZ.HRM.Application.MedicalFitnessChecks.Handlers;
+using NZ.HRM.Application.PhysicalExaminationSettings.Handlers;
 using NZ.HRM.Application.Thanas.Handlers;
 
 namespace NZ.HRM.Application.DependencyInjection
@@ -72,6 +74,14 @@ namespace NZ.HRM.Application.DependencyInjection
             services.AddScoped<DivisionQueryHandler>();
             services.AddScoped<DistrictQueryHandler>();
             services.AddScoped<ThanaQueryHandler>();
+
+            // Register Physical Examination Settings Handlers
+            services.AddScoped<PhysicalExaminationSettingCommandHandler>();
+            services.AddScoped<PhysicalExaminationSettingQueryHandler>();
+
+            // Register Medical Fitness Check Handlers
+            services.AddScoped<MedicalFitnessCheckCommandHandler>();
+            services.AddScoped<MedicalFitnessCheckQueryHandler>();
 
             return services;
         }

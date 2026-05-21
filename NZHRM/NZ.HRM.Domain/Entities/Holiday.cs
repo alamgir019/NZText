@@ -2,7 +2,7 @@ using NZ.HRM.Domain.Common;
 
 namespace NZ.HRM.Domain.Entities
 {
-    public class Holiday : BaseEntity
+    public class Holiday : BaseEntityWithSortOrder
     {
         public string HolidayName { get; set; } = string.Empty;
         public DateOnly Date { get; set; }

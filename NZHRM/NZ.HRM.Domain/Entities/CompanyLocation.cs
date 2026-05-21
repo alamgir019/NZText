@@ -1,6 +1,6 @@
 namespace NZ.HRM.Domain.Entities
 {
-    public class CompanyLocation : NZ.HRM.Domain.Common.BaseEntity
+    public class CompanyLocation : Common.BaseEntity
     {
         public string CompanyId { get; set; } = string.Empty;
         public Company? Company { get; set; }

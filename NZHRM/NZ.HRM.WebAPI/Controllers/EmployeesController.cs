@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using NZ.HRM.Application.Employees.Commands.CreateCompleteEmployee;
-using NZ.HRM.Application.Employees.DTOs;
 using NZ.HRM.Application.Employees.Handlers;
 using NZ.HRM.Application.Employees.Queries.GetCompleteEmployee;
+using NZ.HRM.Application.Employees.Queries.SearchEmployees;
+using NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
+using NZ.HRM.Application.Model.Employees.DTOs;
 
 namespace NZ.HRM.WebAPI.Controllers;
 
@@ -131,4 +132,20 @@ public class EmployeesController : ControllerBase
 
         return Ok(employee);
     }
+
+    [HttpGet("search")]
+    [ProducesResponseType(typeof(List<EmployeeCompleteDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> SearchEmployees([FromQuery] string searchText)
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+            return BadRequest(new { message = "searchText is required" });
+
+        var query = new SearchEmployeesQuery { SearchText = searchText };
+        var employees = await _getCompleteEmployeeHandler.Handle(query, cancellationToken: default);
+
+        return Ok(employees);
+    }
+
+    
 }

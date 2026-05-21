@@ -66,5 +66,6 @@ namespace NZ.HRM.Domain.Entities
         // Navigation property
         public EmployeePersonal? PersonalInfo { get; set; }
         public EmployeeVerification? VerificationInfo { get; set; }
+
     }
 }

@@ -2,7 +2,7 @@ using NZ.HRM.Domain.Common;
 
 namespace NZ.HRM.Domain.Entities
 {
-    public class Company: BaseEntity
+    public class Company: BaseEntityWithSortOrder
     {
         public string CompanyCode { get; set; } = string.Empty;
         public string CompanyName { get; set; } = string.Empty;

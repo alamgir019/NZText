@@ -10,11 +10,16 @@ public class CellCommandHandler
 {
     private readonly ICellRepository _cellRepository;
     private readonly ISectionRepository _sectionRepository;
+    private readonly ISectionCellRepository _sectionCellRepository;
 
-    public CellCommandHandler(ICellRepository cellRepository, ISectionRepository sectionRepository)
+    public CellCommandHandler(
+        ICellRepository cellRepository,
+        ISectionRepository sectionRepository,
+        ISectionCellRepository sectionCellRepository)
     {
         _cellRepository = cellRepository;
         _sectionRepository = sectionRepository;
+        _sectionCellRepository = sectionCellRepository;
     }
 
     public async Task<string> Handle(CreateCellCommand command, CancellationToken cancellationToken = default)
@@ -28,11 +33,17 @@ public class CellCommandHandler
         {
             NameEnglish = command.NameEnglish,
             NameBangla = command.NameBangla,
-            SectionId = command.SectionId,
             IsActive = true
         };
 
-        return await _cellRepository.AddAsync(cell, cancellationToken);
+        var cellId = await _cellRepository.AddAsync(cell, cancellationToken);
+
+        await _sectionCellRepository.SetSectionForCellAsync(
+            cellId,
+            command.SectionId,
+            cancellationToken);
+
+        return cellId;
     }
 
     public async Task Handle(UpdateCellCommand command, CancellationToken cancellationToken = default)
@@ -47,9 +58,13 @@ public class CellCommandHandler
 
         cell.NameEnglish = command.NameEnglish;
         cell.NameBangla = command.NameBangla;
-        cell.SectionId = command.SectionId;
 
         await _cellRepository.UpdateAsync(cell, cancellationToken);
+
+        await _sectionCellRepository.SetSectionForCellAsync(
+            cell.Id,
+            command.SectionId,
+            cancellationToken);
     }
 
     public async Task Handle(DeleteCellCommand command, CancellationToken cancellationToken = default)

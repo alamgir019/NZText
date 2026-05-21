@@ -24,12 +24,16 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<District> Districts => Set<District>();
         public DbSet<Thana> Thanas => Set<Thana>();
         public DbSet<Department> Departments => Set<Department>();
+        public DbSet<DepartmentSection> DepartmentSections => Set<DepartmentSection>();
         public DbSet<Grade> Grades => Set<Grade>();
         public DbSet<Section> Sections => Set<Section>();
+        public DbSet<SectionCell> SectionCells => Set<SectionCell>();
         public DbSet<Cell> Cells => Set<Cell>();
         public DbSet<EmployeeMaster> EmployeeMasters => Set<EmployeeMaster>();
         public DbSet<EmployeePersonal> EmployeePersonals => Set<EmployeePersonal>();
         public DbSet<EmployeeVerification> EmployeeVerifications => Set<EmployeeVerification>();
+        public DbSet<MedicalFitnessCheck> MedicalFitnessChecks => Set<MedicalFitnessCheck>();
+        public DbSet<PhysicalExaminationSetting> PhysicalExaminationSettings => Set<PhysicalExaminationSetting>();
         public DbSet<Shift> Shifts => Set<Shift>();
         public DbSet<Holiday> Holidays => Set<Holiday>();
 
@@ -53,6 +57,8 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<EmployeeMaster>().ToTable("EmployeeMasters");
             modelBuilder.Entity<EmployeePersonal>().ToTable("EmployeePersonals");
             modelBuilder.Entity<EmployeeVerification>().ToTable("EmployeeVerifications");
+            modelBuilder.Entity<MedicalFitnessCheck>().ToTable("MedicalFitnessChecks");
+            modelBuilder.Entity<PhysicalExaminationSetting>().ToTable("PhysicalExaminationSettings");
             modelBuilder.Entity<Shift>().ToTable("Shifts");
             modelBuilder.Entity<Holiday>().ToTable("Holidays");
 
