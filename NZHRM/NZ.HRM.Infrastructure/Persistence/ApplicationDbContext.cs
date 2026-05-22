@@ -50,6 +50,7 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<Thana>().ToTable("Thanas");
             modelBuilder.Entity<District>().ToTable("Districts");
             modelBuilder.Entity<Location>().ToTable("Locations");
+            modelBuilder.Entity<CompanyLocation>().ToTable("CompanyLocations");
             modelBuilder.Entity<Department>().ToTable("Departments");
             modelBuilder.Entity<Grade>().ToTable("Grades");
             modelBuilder.Entity<Section>().ToTable("Sections");

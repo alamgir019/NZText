@@ -14,6 +14,36 @@ public class DepartmentSectionRepository : IDepartmentSectionRepository
         _context = context;
     }
 
+    public async Task<List<DepartmentSection>> GetAllAsync(bool includeInactive = false, string? departmentId = null, string? sectionId = null, CancellationToken cancellationToken = default)
+    {
+        var query = _context.DepartmentSections
+            .Include(ds => ds.Department)
+            .Include(ds => ds.Section)
+            .AsQueryable();
+
+        if (!includeInactive)
+            query = query.Where(ds => ds.IsActive);
+
+        if (!string.IsNullOrWhiteSpace(departmentId))
+            query = query.Where(ds => ds.DepartmentId == departmentId);
+
+        if (!string.IsNullOrWhiteSpace(sectionId))
+            query = query.Where(ds => ds.SectionId == sectionId);
+
+        return await query
+            .OrderBy(ds => ds.Department != null ? ds.Department.DepartmentName : string.Empty)
+            .ThenBy(ds => ds.Section != null ? ds.Section.SectionName : string.Empty)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<DepartmentSection?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    {
+        return await _context.DepartmentSections
+            .Include(ds => ds.Department)
+            .Include(ds => ds.Section)
+            .FirstOrDefaultAsync(ds => ds.Id == id && ds.IsActive, cancellationToken);
+    }
+
     public async Task<string?> GetDepartmentIdBySectionIdAsync(string sectionId, CancellationToken cancellationToken = default)
     {
         return await _context.DepartmentSections
@@ -49,5 +79,30 @@ public class DepartmentSectionRepository : IDepartmentSectionRepository
         });
 
         await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<string> AddAsync(DepartmentSection departmentSection, CancellationToken cancellationToken = default)
+    {
+        _context.DepartmentSections.Add(departmentSection);
+        await _context.SaveChangesAsync(cancellationToken);
+        return departmentSection.Id;
+    }
+
+    public async Task UpdateAsync(DepartmentSection departmentSection, CancellationToken cancellationToken = default)
+    {
+        _context.DepartmentSections.Update(departmentSection);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task DeleteAsync(DepartmentSection departmentSection, CancellationToken cancellationToken = default)
+    {
+        _context.DepartmentSections.Remove(departmentSection);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default)
+    {
+        return await _context.DepartmentSections
+            .AnyAsync(ds => ds.Id == id, cancellationToken);
     }
 }
