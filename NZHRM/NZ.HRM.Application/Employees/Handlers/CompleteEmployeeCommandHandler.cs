@@ -15,6 +15,7 @@ public class CompleteEmployeeCommandHandler
     private readonly IDepartmentRepository _departmentRepository;
     private readonly ISectionRepository _sectionRepository;
     private readonly IGradeRepository _gradeRepository;
+    private readonly IShiftRepository _shiftRepository;
 
     public CompleteEmployeeCommandHandler(
         IEmployeeMasterRepository employeeMasterRepository,
@@ -23,7 +24,8 @@ public class CompleteEmployeeCommandHandler
         ICompanyRepository companyRepository,
         IDepartmentRepository departmentRepository,
         ISectionRepository sectionRepository,
-        IGradeRepository gradeRepository)
+        IGradeRepository gradeRepository,
+        IShiftRepository shiftRepository)
     {
         _employeeMasterRepository = employeeMasterRepository;
         _employeePersonalRepository = employeePersonalRepository;
@@ -32,6 +34,7 @@ public class CompleteEmployeeCommandHandler
         _departmentRepository = departmentRepository;
         _sectionRepository = sectionRepository;
         _gradeRepository = gradeRepository;
+        _shiftRepository = shiftRepository;
     }
 
     public async Task<string> Handle(CreateCompleteEmployeeCommand command, CancellationToken cancellationToken = default)

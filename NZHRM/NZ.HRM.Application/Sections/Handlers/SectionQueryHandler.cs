@@ -19,15 +19,16 @@ public class SectionQueryHandler
 
     public async Task<List<SectionDto>> Handle(GetAllSectionsQuery query, CancellationToken cancellationToken = default)
     {
-        List<NZ.HRM.Domain.Entities.Section> sections;
-
+        var sections = await _sectionRepository.GetAllAsync(query.IncludeInactive, cancellationToken);
+        //List<Domain.Entities.Section> sections = new List<Domain.Entities.Section>();
+        var overAll = "Overall";
         if (!string.IsNullOrWhiteSpace(query.DepartmentId))
         {
-            sections = await _sectionRepository.GetByDepartmentIdAsync(query.DepartmentId, query.IncludeInactive, cancellationToken);
-        }
-        else
-        {
-            sections = await _sectionRepository.GetAllAsync(query.IncludeInactive, cancellationToken);
+            var filteredSections = await _sectionRepository.GetByDepartmentIdAsync(query.DepartmentId, query.IncludeInactive, cancellationToken);
+            if(filteredSections.Any(x => x.SectionName.Equals(overAll, StringComparison.OrdinalIgnoreCase)))
+            {
+                sections = filteredSections;
+            }
         }
 
         var result = new List<SectionDto>(sections.Count);

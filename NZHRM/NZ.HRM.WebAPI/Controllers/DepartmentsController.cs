@@ -4,6 +4,7 @@ using NZ.HRM.Application.Departments.Commands.DeleteDepartment;
 using NZ.HRM.Application.Departments.Commands.UpdateDepartment;
 using NZ.HRM.Application.Departments.Handlers;
 using NZ.HRM.Application.Departments.Queries.GetAllDepartments;
+using NZ.HRM.Application.Departments.Queries.GetDepartmentsByLocation;
 using NZ.HRM.Application.Departments.Queries.GetDepartmentById;
 
 namespace NZ.HRM.WebAPI.Controllers;
@@ -31,6 +32,23 @@ public class DepartmentsController : ControllerBase
     public async Task<IActionResult> GetAll([FromQuery] bool includeInactive = false)
     {
         var query = new GetAllDepartmentsQuery { IncludeInactive = includeInactive };
+        var departments = await _queryHandler.Handle(query);
+        return Ok(departments);
+    }
+
+    /// <summary>
+    /// Get departments by location with Head Office specific rules
+    /// </summary>
+    [HttpGet("by-location/{locationId}")]
+    [ProducesResponseType(typeof(List<DepartmentDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetByLocation(string locationId, [FromQuery] bool includeInactive = false)
+    {
+        var query = new GetDepartmentsByLocationQuery
+        {
+            LocationId = locationId,
+            IncludeInactive = includeInactive
+        };
+
         var departments = await _queryHandler.Handle(query);
         return Ok(departments);
     }

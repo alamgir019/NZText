@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NZ.HRM.Application.Employees.Handlers;
 using NZ.HRM.Application.Employees.Queries.GetCompleteEmployee;
+using NZ.HRM.Application.Employees.Queries.GetEmployeeConfirmationDate;
 using NZ.HRM.Application.Employees.Queries.SearchEmployees;
 using NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
 using NZ.HRM.Application.Model.Employees.DTOs;
@@ -145,6 +146,24 @@ public class EmployeesController : ControllerBase
         var employees = await _getCompleteEmployeeHandler.Handle(query, cancellationToken: default);
 
         return Ok(employees);
+    }
+
+    [HttpGet("confirmation-date")]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetConfirmationDate([FromQuery] string employeeId, [FromQuery] DateTime joiningDate)
+    {
+        var query = new GetEmployeeConfirmationDateQuery
+        {
+            EmployeeId = employeeId,
+            JoiningDate = joiningDate
+        };
+
+        var confirmationDate = await _getCompleteEmployeeHandler.Handle(query, cancellationToken: default);
+        if (confirmationDate == null)
+            return NotFound(new { message = $"Employee with ID {employeeId} not found" });
+
+        return Ok(new { confirmationDate = confirmationDate.Value.ToString("yyyy-MM-dd") });
     }
 
     

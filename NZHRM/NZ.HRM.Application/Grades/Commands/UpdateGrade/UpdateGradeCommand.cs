@@ -17,4 +17,7 @@ public class UpdateGradeCommand
     [Required(ErrorMessage = "Maximum salary is required")]
     [Range(0, double.MaxValue, ErrorMessage = "Maximum salary must be greater than or equal to 0")]
     public decimal MaxSalary { get; set; }
+
+    [MaxLength(50, ErrorMessage = "Employee type must not exceed 50 characters")]
+    public string EmployeeType { get; set; } = string.Empty;
 }

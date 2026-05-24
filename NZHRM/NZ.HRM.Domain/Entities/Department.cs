@@ -7,5 +7,6 @@ namespace NZ.HRM.Domain.Entities
         public string DepartmentName { get; set; } = string.Empty;
         public string DepartmentCode { get; set; } = string.Empty;
         public ICollection<DepartmentSection>? DepartmentSections { get; set; }
+        public ICollection<LocationDepartment>? LocationDepartments { get; set; }
     }
 }

@@ -14,19 +14,22 @@ public class EmployeeMasterCommandHandler
     private readonly IDepartmentRepository _departmentRepository;
     private readonly ISectionRepository _sectionRepository;
     private readonly IGradeRepository _gradeRepository;
+    private readonly IShiftRepository _shiftRepository;
 
     public EmployeeMasterCommandHandler(
         IEmployeeMasterRepository employeeMasterRepository,
         ICompanyRepository companyRepository,
         IDepartmentRepository departmentRepository,
         ISectionRepository sectionRepository,
-        IGradeRepository gradeRepository)
+        IGradeRepository gradeRepository,
+        IShiftRepository shiftRepository)
     {
         _employeeMasterRepository = employeeMasterRepository;
         _companyRepository = companyRepository;
         _departmentRepository = departmentRepository;
         _sectionRepository = sectionRepository;
         _gradeRepository = gradeRepository;
+        _shiftRepository = shiftRepository;
     }
 
     public async Task<string> Handle(CreateEmployeeMasterCommand command, CancellationToken cancellationToken = default)
@@ -39,7 +42,7 @@ public class EmployeeMasterCommandHandler
         }
 
         // Validate related entities exist
-        await ValidateRelatedEntities(command.CompanyId, command.DepartmentId, command.SectionId, command.GradeId, cancellationToken);
+        await ValidateRelatedEntities(command.CompanyId, command.DepartmentId, command.SectionId, command.GradeId, command.ShiftId, cancellationToken);
 
         var employeeMaster = new EmployeeMaster
         {
@@ -51,7 +54,7 @@ public class EmployeeMasterCommandHandler
             SectionId = command.SectionId,
             GradeId = command.GradeId,
             EmployeeType = command.EmployeeType,
-            Shift = command.Shift,
+            ShiftId = command.ShiftId,
             EmployeeNature = command.EmployeeNature,
             Holiday = command.Holiday,
             ProposedMonthlySalary = command.ProposedMonthlySalary,
@@ -79,7 +82,7 @@ public class EmployeeMasterCommandHandler
         }
 
         // Validate related entities exist
-        await ValidateRelatedEntities(command.CompanyId, command.DepartmentId, command.SectionId, command.GradeId, cancellationToken);
+        await ValidateRelatedEntities(command.CompanyId, command.DepartmentId, command.SectionId, command.GradeId, command.ShiftId, cancellationToken);
 
         employeeMaster.EmployeeCode = command.EmployeeCode;
         employeeMaster.EmployeeNameEnglish = command.EmployeeNameEnglish;
@@ -89,7 +92,7 @@ public class EmployeeMasterCommandHandler
         employeeMaster.SectionId = command.SectionId;
         employeeMaster.GradeId = command.GradeId;
         employeeMaster.EmployeeType = command.EmployeeType;
-        employeeMaster.Shift = command.Shift;
+        employeeMaster.ShiftId = command.ShiftId;
         employeeMaster.EmployeeNature = command.EmployeeNature;
         employeeMaster.Holiday = command.Holiday;
         employeeMaster.ProposedMonthlySalary = command.ProposedMonthlySalary;
@@ -116,7 +119,7 @@ public class EmployeeMasterCommandHandler
         // await _employeeMasterRepository.DeleteAsync(employeeMaster, cancellationToken);
     }
 
-    private async Task ValidateRelatedEntities(string companyId, string departmentId, string sectionId, string gradeId, CancellationToken cancellationToken)
+    private async Task ValidateRelatedEntities(string companyId, string departmentId, string sectionId, string gradeId, string shiftId, CancellationToken cancellationToken)
     {
         var companyExists = await _companyRepository.ExistsAsync(companyId, cancellationToken);
         if (!companyExists)
@@ -133,5 +136,9 @@ public class EmployeeMasterCommandHandler
         var gradeExists = await _gradeRepository.ExistsAsync(gradeId, cancellationToken);
         if (!gradeExists)
             throw new KeyNotFoundException($"Grade with ID {gradeId} not found");
+
+        var shiftExists = await _shiftRepository.ExistsAsync(shiftId, cancellationToken);
+        if (!shiftExists)
+            throw new KeyNotFoundException($"Shift with ID {shiftId} not found");
     }
 }

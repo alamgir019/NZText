@@ -1,10 +1,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using NZ.HRM.Application.Companies.Handlers;
 using NZ.HRM.Application.CompanyLocations.Handlers;
+using NZ.HRM.Application.LocationDepartments.Handlers;
 using NZ.HRM.Application.Locations.Handlers;
 using NZ.HRM.Application.Departments.Handlers;
 using NZ.HRM.Application.DepartmentSections.Handlers;
 using NZ.HRM.Application.Grades.Handlers;
+using NZ.HRM.Application.Shifts.Handlers;
 using NZ.HRM.Application.Sections.Handlers;
 using NZ.HRM.Application.SectionCells.Handlers;
 using NZ.HRM.Application.Cells.Handlers;
@@ -44,6 +46,10 @@ namespace NZ.HRM.Application.DependencyInjection
             services.AddScoped<CompanyLocationCommandHandler>();
             services.AddScoped<CompanyLocationQueryHandler>();
 
+            // Register LocationDepartment Handlers
+            services.AddScoped<LocationDepartmentCommandHandler>();
+            services.AddScoped<LocationDepartmentQueryHandler>();
+
             // Register Department Handlers
             services.AddScoped<DepartmentCommandHandler>();
             services.AddScoped<DepartmentQueryHandler>();
@@ -53,6 +59,10 @@ namespace NZ.HRM.Application.DependencyInjection
             // Register Grade Handlers
             services.AddScoped<GradeCommandHandler>();
             services.AddScoped<GradeQueryHandler>();
+
+            // Register Shift Handlers
+            services.AddScoped<ShiftCommandHandler>();
+            services.AddScoped<ShiftQueryHandler>();
 
             // Register Designation Handlers
             services.AddScoped<DesignationCommandHandler>();

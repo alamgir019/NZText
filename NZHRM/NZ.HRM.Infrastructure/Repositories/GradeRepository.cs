@@ -14,13 +14,18 @@ public class GradeRepository : IGradeRepository
         _context = context;
     }
 
-    public async Task<List<Grade>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
+    public async Task<List<Grade>> GetAllAsync(bool includeInactive = false, string? employeeType = null, CancellationToken cancellationToken = default)
     {
         var query = _context.Grades.AsQueryable();
 
         if (!includeInactive)
         {
             query = query.Where(g => g.IsActive);
+        }
+
+        if (!string.IsNullOrWhiteSpace(employeeType))
+        {
+            query = query.Where(g => g.EmployeeType == employeeType);
         }
 
         return await query

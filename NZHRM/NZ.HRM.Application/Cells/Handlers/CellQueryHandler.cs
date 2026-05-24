@@ -19,7 +19,7 @@ public class CellQueryHandler
 
     public async Task<List<CellDto>> Handle(GetAllCellsQuery query, CancellationToken cancellationToken = default)
     {
-        List<NZ.HRM.Domain.Entities.Cell> cells;
+        List<Domain.Entities.Cell> cells;
 
         if (!string.IsNullOrEmpty(query.SectionId))
         {

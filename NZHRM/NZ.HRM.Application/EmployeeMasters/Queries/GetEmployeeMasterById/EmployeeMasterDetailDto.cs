@@ -17,7 +17,8 @@ public class EmployeeMasterDetailDto
     public string GradeId { get; set; } = string.Empty;
     public string GradeName { get; set; } = string.Empty;
     public EmployeeType? EmployeeType { get; set; }
-    public Shift? Shift { get; set; }
+    public string? ShiftId { get; set; }
+    public string ShiftName { get; set; } = string.Empty;
     public EmployeeNature? EmployeeNature { get; set; }
     public Holiday? Holiday { get; set; }
     public decimal? ProposedMonthlySalary { get; set; }

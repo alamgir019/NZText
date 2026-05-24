@@ -34,7 +34,7 @@ public class UpdateEmployeeMasterCommand
     public EmployeeType EmployeeType { get; set; }
 
     [Required(ErrorMessage = "Shift is required")]
-    public Shift Shift { get; set; }
+    public string ShiftId { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Employee nature is required")]
     public EmployeeNature EmployeeNature { get; set; }

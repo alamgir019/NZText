@@ -9,5 +9,6 @@ namespace NZ.HRM.Domain.Entities
         public District? District { get; set; }
         // Relationship through mapping entity
         public ICollection<CompanyLocation>? CompanyLocations { get; set; }
+        public ICollection<LocationDepartment>? LocationDepartments { get; set; }
     }
 }

@@ -222,7 +222,7 @@ namespace NZ.HRM.Infrastructure.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.ToTable("CompanyLocations");
+                    b.ToTable("CompanyLocations", (string)null);
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.Department", b =>
@@ -524,8 +524,8 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("CHAR(26)");
 
-                    b.Property<int?>("Shift")
-                        .HasColumnType("integer");
+                    b.Property<string>("ShiftId")
+                        .HasColumnType("CHAR(26)");
 
                     b.Property<int?>("Status")
                         .HasColumnType("integer");
@@ -552,6 +552,8 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.HasIndex("GradeId");
 
                     b.HasIndex("SectionId");
+
+                    b.HasIndex("ShiftId");
 
                     b.ToTable("EmployeeMasters", (string)null);
                 });
@@ -794,6 +796,10 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW()");
 
+                    b.Property<string>("EmployeeType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("GradeName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -914,6 +920,51 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.HasIndex("DistrictId");
 
                     b.ToTable("Locations", (string)null);
+                });
+
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.LocationDepartment", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("CHAR(26)")
+                        .HasColumnName("Id");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("DepartmentId")
+                        .IsRequired()
+                        .HasColumnType("CHAR(26)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LocationId")
+                        .IsRequired()
+                        .HasColumnType("CHAR(26)");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("LocationId");
+
+                    b.ToTable("LocationDepartments", (string)null);
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.MedicalFitnessCheck", b =>
@@ -1726,6 +1777,10 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("NZ.HRM.Domain.Entities.Shift", "Shift")
+                        .WithMany()
+                        .HasForeignKey("ShiftId");
+
                     b.Navigation("Cell");
 
                     b.Navigation("Company");
@@ -1737,6 +1792,8 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.Navigation("Grade");
 
                     b.Navigation("Section");
+
+                    b.Navigation("Shift");
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.EmployeePersonal", b =>
@@ -1770,6 +1827,25 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("District");
+                });
+
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.LocationDepartment", b =>
+                {
+                    b.HasOne("NZ.HRM.Domain.Entities.Department", "Department")
+                        .WithMany("LocationDepartments")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("NZ.HRM.Domain.Entities.Location", "Location")
+                        .WithMany("LocationDepartments")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+
+                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.MedicalFitnessCheck", b =>
@@ -1902,6 +1978,8 @@ namespace NZ.HRM.Infrastructure.Migrations
             modelBuilder.Entity("NZ.HRM.Domain.Entities.Department", b =>
                 {
                     b.Navigation("DepartmentSections");
+
+                    b.Navigation("LocationDepartments");
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.Designation", b =>
@@ -1931,6 +2009,8 @@ namespace NZ.HRM.Infrastructure.Migrations
             modelBuilder.Entity("NZ.HRM.Domain.Entities.Location", b =>
                 {
                     b.Navigation("CompanyLocations");
+
+                    b.Navigation("LocationDepartments");
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.Post", b =>

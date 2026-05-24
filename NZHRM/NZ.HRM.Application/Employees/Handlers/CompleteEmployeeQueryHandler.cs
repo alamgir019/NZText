@@ -1,7 +1,10 @@
 using NZ.HRM.Application.Employees.Queries.GetCompleteEmployee;
+using NZ.HRM.Application.Employees.Queries.GetCompleteEmployee;
+using NZ.HRM.Application.Employees.Queries.GetEmployeeConfirmationDate;
 using NZ.HRM.Application.Employees.Queries.SearchEmployees;
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Application.Model.Employees.DTOs;
+using NZ.HRM.Utility.Enum;
 using NZ.HRM.Mapping.Employees;
 
 namespace NZ.HRM.Application.Employees.Handlers;
@@ -37,5 +40,15 @@ public class CompleteEmployeeQueryHandler
             EnrollmentId = x.EnrollmentId,
             MobileNumber = x.PersonalInfo?.MobileNumber,
         }).ToList();
+    }
+
+    public async Task<DateTime?> Handle(GetEmployeeConfirmationDateQuery query, CancellationToken cancellationToken = default)
+    {
+        var employee = await _employeeMasterRepository.GetByIdAsync(query.EmployeeId, cancellationToken);
+        if (employee == null)
+            return null;
+
+        var probationMonths = employee.EmployeeType == EmployeeType.Worker ? 3 : 6;
+        return query.JoiningDate.AddMonths(probationMonths).Date;
     }
 }

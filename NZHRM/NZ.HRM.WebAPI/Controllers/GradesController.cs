@@ -28,9 +28,9 @@ public class GradesController : ControllerBase
     /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(List<GradeDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAll([FromQuery] bool includeInactive = false)
+    public async Task<IActionResult> GetAll([FromQuery] bool includeInactive = false, [FromQuery] string? employeeType = null)
     {
-        var query = new GetAllGradesQuery { IncludeInactive = includeInactive };
+        var query = new GetAllGradesQuery { IncludeInactive = includeInactive, EmployeeType = employeeType };
         var grades = await _queryHandler.Handle(query);
         return Ok(grades);
     }

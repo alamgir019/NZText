@@ -49,7 +49,9 @@ namespace NZ.HRM.Domain.Entities
 
         public EmployeeType? EmployeeType { get; set; }
 
-        public Utility.Enum.Shift? Shift { get; set; }
+        public string? ShiftId { get; set; }
+        [ForeignKey(nameof(ShiftId))]
+        public Shift? Shift { get; set; }
 
         public EmployeeNature? EmployeeNature { get; set; }
 

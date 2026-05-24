@@ -24,6 +24,7 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<District> Districts => Set<District>();
         public DbSet<Thana> Thanas => Set<Thana>();
         public DbSet<Department> Departments => Set<Department>();
+        public DbSet<LocationDepartment> LocationDepartments => Set<LocationDepartment>();
         public DbSet<DepartmentSection> DepartmentSections => Set<DepartmentSection>();
         public DbSet<Grade> Grades => Set<Grade>();
         public DbSet<Section> Sections => Set<Section>();
@@ -52,6 +53,7 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<Location>().ToTable("Locations");
             modelBuilder.Entity<CompanyLocation>().ToTable("CompanyLocations");
             modelBuilder.Entity<Department>().ToTable("Departments");
+            modelBuilder.Entity<LocationDepartment>().ToTable("LocationDepartments");
             modelBuilder.Entity<Grade>().ToTable("Grades");
             modelBuilder.Entity<Section>().ToTable("Sections");
             modelBuilder.Entity<Cell>().ToTable("Cells");
