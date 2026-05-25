@@ -19,7 +19,8 @@ public class EmployeeMasterDto
     public EmployeeType? EmployeeType { get; set; }
     public string? ShiftId { get; set; }
     public string ShiftName { get; set; } = string.Empty;
-    public EmployeeNature? EmployeeNature { get; set; }
+    public string? EmployeeNatureId { get; set; }
+    public string EmployeeNatureName { get; set; } = string.Empty;
     public Holiday? Holiday { get; set; }
     public decimal? ProposedMonthlySalary { get; set; }
     public DateTime? JoiningDate { get; set; }

@@ -26,6 +26,7 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<Department> Departments => Set<Department>();
         public DbSet<LocationDepartment> LocationDepartments => Set<LocationDepartment>();
         public DbSet<DepartmentSection> DepartmentSections => Set<DepartmentSection>();
+        public DbSet<EmployeeNature> EmployeeNatures => Set<EmployeeNature>();
         public DbSet<Grade> Grades => Set<Grade>();
         public DbSet<Section> Sections => Set<Section>();
         public DbSet<SectionCell> SectionCells => Set<SectionCell>();
@@ -55,6 +56,7 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<Department>().ToTable("Departments");
             modelBuilder.Entity<LocationDepartment>().ToTable("LocationDepartments");
             modelBuilder.Entity<Grade>().ToTable("Grades");
+            modelBuilder.Entity<EmployeeNature>().ToTable("EmployeeNatures");
             modelBuilder.Entity<Section>().ToTable("Sections");
             modelBuilder.Entity<Cell>().ToTable("Cells");
             modelBuilder.Entity<EmployeeMaster>().ToTable("EmployeeMasters");

@@ -53,6 +53,8 @@ namespace NZ.HRM.Domain.Entities
         [ForeignKey(nameof(ShiftId))]
         public Shift? Shift { get; set; }
 
+        public string? EmployeeNatureId { get; set; }
+        [ForeignKey(nameof(EmployeeNatureId))]
         public EmployeeNature? EmployeeNature { get; set; }
 
         public Utility.Enum.Holiday? Holiday { get; set; }

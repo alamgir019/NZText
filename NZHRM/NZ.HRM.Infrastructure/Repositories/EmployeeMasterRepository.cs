@@ -22,6 +22,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Section)
             .Include(e => e.Grade)
             .Include(e => e.Shift)
+            .Include(e => e.EmployeeNature)
             .Include(e => e.Holiday)
             .Include(e => e.VerificationInfo)
             .AsQueryable();
@@ -49,6 +50,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Section)
             .Include(e => e.Grade)
             .Include(e => e.Shift)
+            .Include(e => e.EmployeeNature)
             .Include(e => e.Holiday)
             .Include(e => e.VerificationInfo)
             .AsQueryable();
@@ -89,6 +91,8 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.PersonalInfo)
             .Include(e => e.VerificationInfo)
             .Include(e => e.Designation)
+            .Include(e => e.Shift)
+            .Include(e => e.EmployeeNature)
             .FirstOrDefaultAsync(e => e.Id == id && e.IsActive, cancellationToken);
     }
 
@@ -100,6 +104,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Section)
             .Include(e => e.Grade)
             .Include(e => e.Shift)
+            .Include(e => e.EmployeeNature)
             .Include(e => e.Holiday)
             .FirstOrDefaultAsync(e => e.EmployeeCode == employeeCode && e.IsActive, cancellationToken);
     }
@@ -111,6 +116,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Section)
             .Include(e => e.Grade)
             .Include(e => e.Shift)
+            .Include(e => e.EmployeeNature)
             .Include(e => e.Holiday)
             .Where(e => e.CompanyId == companyId && e.IsActive)
             .OrderBy(e => e.EmployeeCode)
@@ -124,6 +130,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Section)
             .Include(e => e.Grade)
             .Include(e => e.Shift)
+            .Include(e => e.EmployeeNature)
             .Include(e => e.Holiday)
             .Where(e => e.DepartmentId == departmentId && e.IsActive)
             .OrderBy(e => e.EmployeeCode)

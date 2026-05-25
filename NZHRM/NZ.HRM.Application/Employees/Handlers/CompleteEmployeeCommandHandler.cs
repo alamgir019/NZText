@@ -16,6 +16,7 @@ public class CompleteEmployeeCommandHandler
     private readonly ISectionRepository _sectionRepository;
     private readonly IGradeRepository _gradeRepository;
     private readonly IShiftRepository _shiftRepository;
+    private readonly IEmployeeNatureRepository _employeeNatureRepository;
 
     public CompleteEmployeeCommandHandler(
         IEmployeeMasterRepository employeeMasterRepository,
@@ -25,7 +26,8 @@ public class CompleteEmployeeCommandHandler
         IDepartmentRepository departmentRepository,
         ISectionRepository sectionRepository,
         IGradeRepository gradeRepository,
-        IShiftRepository shiftRepository)
+        IShiftRepository shiftRepository,
+        IEmployeeNatureRepository employeeNatureRepository)
     {
         _employeeMasterRepository = employeeMasterRepository;
         _employeePersonalRepository = employeePersonalRepository;
@@ -35,6 +37,7 @@ public class CompleteEmployeeCommandHandler
         _sectionRepository = sectionRepository;
         _gradeRepository = gradeRepository;
         _shiftRepository = shiftRepository;
+        _employeeNatureRepository = employeeNatureRepository;
     }
 
     public async Task<string> Handle(CreateCompleteEmployeeCommand command, CancellationToken cancellationToken = default)
@@ -51,6 +54,8 @@ public class CompleteEmployeeCommandHandler
             command.CompanyId, 
             command.DepartmentId, 
             command.SectionId, 
+            command.ShiftId,
+            command.EmployeeNatureId,
             //command.GradeId, 
             cancellationToken);
 
@@ -98,6 +103,8 @@ public class CompleteEmployeeCommandHandler
             command.CompanyId,
             command.DepartmentId,
             command.SectionId,
+            null,
+            null,
             //command.LocationId,
             cancellationToken);
 
@@ -171,6 +178,8 @@ public class CompleteEmployeeCommandHandler
         string companyId, 
         string departmentId, 
         string sectionId, 
+        string? shiftId,
+        string? employeeNatureId,
         //string locationId, 
         CancellationToken cancellationToken)
     {
@@ -185,6 +194,20 @@ public class CompleteEmployeeCommandHandler
         var sectionExists = await _sectionRepository.ExistsAsync(sectionId, cancellationToken);
         if (!sectionExists)
             throw new KeyNotFoundException($"Section with ID {sectionId} not found");
+
+        if (!string.IsNullOrWhiteSpace(shiftId))
+        {
+            var shiftExists = await _shiftRepository.ExistsAsync(shiftId, cancellationToken);
+            if (!shiftExists)
+                throw new KeyNotFoundException($"Shift with ID {shiftId} not found");
+        }
+
+        if (!string.IsNullOrWhiteSpace(employeeNatureId))
+        {
+            var employeeNatureExists = await _employeeNatureRepository.ExistsAsync(employeeNatureId, cancellationToken);
+            if (!employeeNatureExists)
+                throw new KeyNotFoundException($"Employee nature with ID {employeeNatureId} not found");
+        }
 
         //var locationExists = await _locationRepository.ExistsAsync(locationId, cancellationToken);
         //if (!locationExists)

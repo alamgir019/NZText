@@ -39,7 +39,7 @@ public class CreateCompleteEmployeeCommand
     public string ShiftId { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Employee nature is required")]
-    public EmployeeNature EmployeeNature { get; set; }
+    public string EmployeeNatureId { get; set; } = string.Empty;
 
     public Holiday Holiday { get; set; }
 
