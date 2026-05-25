@@ -6,6 +6,7 @@ public class EmployeeCompleteDto
 {
     // From EmployeeMaster - Basic Info
     public string Id { get; set; } = string.Empty;
+    public string EnrollmentId { get; set; } = string.Empty;
     public string EmployeeCode { get; set; } = string.Empty;
     public string EmployeeNameEnglish { get; set; } = string.Empty;
     public string? EmployeeNameBangla { get; set; }

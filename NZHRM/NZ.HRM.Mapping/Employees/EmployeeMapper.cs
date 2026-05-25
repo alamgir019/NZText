@@ -74,6 +74,7 @@ public static class EmployeeMapper
         {
             // From EmployeeMaster
             Id = employee.Id,
+            EnrollmentId = employee.EnrollmentId ?? string.Empty,
             EmployeeCode = employee.EmployeeCode,
             EmployeeNameEnglish = employee.EmployeeNameEnglish,
             EmployeeNameBangla = employee.EmployeeNameBangla,
