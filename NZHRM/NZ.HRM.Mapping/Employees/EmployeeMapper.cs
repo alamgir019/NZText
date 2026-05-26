@@ -67,7 +67,6 @@ public static class EmployeeMapper
             IsActive = true
         };
     }
-
     public static EmployeeCompleteDto MapToEmployeeCompleteDto(this EmployeeMaster employee)
     {
         return new EmployeeCompleteDto
