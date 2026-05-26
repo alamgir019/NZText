@@ -1,4 +1,5 @@
 using NZ.HRM.Domain.Common;
+using NZ.HRM.Utility.Enum;
 using System.ComponentModel.DataAnnotations;
 
 namespace NZ.HRM.Domain.Entities;
@@ -11,7 +12,8 @@ public class PhysicalExaminationSetting : BaseEntity
 
     public int DisplayOrder { get; set; }
 
-    public bool IsBinaryCheck { get; set; } = true;
+    public PhysicalExaminationFieldType FieldType { get; set; } = PhysicalExaminationFieldType.Binary;
 
-    public bool AllowRemarks { get; set; } = false;
+    [MaxLength(2000)]
+    public string? OptionValuesJson { get; set; }
 }

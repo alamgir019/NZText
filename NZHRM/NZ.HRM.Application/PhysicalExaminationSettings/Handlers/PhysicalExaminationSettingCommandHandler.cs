@@ -3,6 +3,7 @@ using NZ.HRM.Application.PhysicalExaminationSettings.Commands.CreatePhysicalExam
 using NZ.HRM.Application.PhysicalExaminationSettings.Commands.DeletePhysicalExaminationSetting;
 using NZ.HRM.Application.PhysicalExaminationSettings.Commands.UpdatePhysicalExaminationSetting;
 using NZ.HRM.Domain.Entities;
+using NZ.HRM.Utility.Enum;
 
 namespace NZ.HRM.Application.PhysicalExaminationSettings.Handlers;
 
@@ -17,12 +18,14 @@ public class PhysicalExaminationSettingCommandHandler
 
     public async Task<string> Handle(CreatePhysicalExaminationSettingCommand command, CancellationToken cancellationToken = default)
     {
+        var optionValuesJson = command.FieldType == PhysicalExaminationFieldType.Option ? command.OptionValuesJson : null;
+
         var setting = new PhysicalExaminationSetting
         {
             FieldName = command.FieldName,
             DisplayOrder = command.DisplayOrder,
-            IsBinaryCheck = command.IsBinaryCheck,
-            AllowRemarks = command.AllowRemarks,
+            FieldType = command.FieldType,
+            OptionValuesJson = optionValuesJson,
             IsActive = true
         };
 
@@ -35,10 +38,12 @@ public class PhysicalExaminationSettingCommandHandler
         if (setting == null)
             throw new KeyNotFoundException($"Physical examination setting with ID {command.Id} not found");
 
+        var optionValuesJson = command.FieldType == PhysicalExaminationFieldType.Option ? command.OptionValuesJson : null;
+
         setting.FieldName = command.FieldName;
         setting.DisplayOrder = command.DisplayOrder;
-        setting.IsBinaryCheck = command.IsBinaryCheck;
-        setting.AllowRemarks = command.AllowRemarks;
+        setting.FieldType = command.FieldType;
+        setting.OptionValuesJson = optionValuesJson;
 
         await _repository.UpdateAsync(setting, cancellationToken);
     }
