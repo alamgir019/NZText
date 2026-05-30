@@ -34,6 +34,7 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<EmployeeMaster> EmployeeMasters => Set<EmployeeMaster>();
         public DbSet<EmployeePersonal> EmployeePersonals => Set<EmployeePersonal>();
         public DbSet<EmployeeVerification> EmployeeVerifications => Set<EmployeeVerification>();
+        public DbSet<FinancialDetail> FinancialDetails => Set<FinancialDetail>();
         public DbSet<MedicalFitnessCheck> MedicalFitnessChecks => Set<MedicalFitnessCheck>();
         public DbSet<PhysicalExaminationSetting> PhysicalExaminationSettings => Set<PhysicalExaminationSetting>();
         public DbSet<Shift> Shifts => Set<Shift>();
@@ -62,6 +63,7 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<EmployeeMaster>().ToTable("EmployeeMasters");
             modelBuilder.Entity<EmployeePersonal>().ToTable("EmployeePersonals");
             modelBuilder.Entity<EmployeeVerification>().ToTable("EmployeeVerifications");
+            modelBuilder.Entity<FinancialDetail>().ToTable("FinancialDetails");
             modelBuilder.Entity<MedicalFitnessCheck>().ToTable("MedicalFitnessChecks");
             modelBuilder.Entity<PhysicalExaminationSetting>().ToTable("PhysicalExaminationSettings");
             modelBuilder.Entity<Shift>().ToTable("Shifts");

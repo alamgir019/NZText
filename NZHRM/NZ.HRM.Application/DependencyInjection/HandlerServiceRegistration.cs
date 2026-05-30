@@ -18,6 +18,7 @@ using NZ.HRM.Application.Employees.Handlers;
 using NZ.HRM.Application.Divisions.Handlers;
 using NZ.HRM.Application.Districts.Handlers;
 using NZ.HRM.Application.MedicalFitnessChecks.Handlers;
+using NZ.HRM.Application.FinancialDetails.Handlers;
 using NZ.HRM.Application.PhysicalExaminationSettings.Handlers;
 using NZ.HRM.Application.Thanas.Handlers;
 
@@ -108,6 +109,10 @@ namespace NZ.HRM.Application.DependencyInjection
             // Register Medical Fitness Check Handlers
             services.AddScoped<MedicalFitnessCheckCommandHandler>();
             services.AddScoped<MedicalFitnessCheckQueryHandler>();
+
+            // Register Financial Detail Handlers
+            services.AddScoped<FinancialDetailCommandHandler>();
+            services.AddScoped<FinancialDetailQueryHandler>();
 
             return services;
         }
