@@ -38,6 +38,27 @@ namespace NZ.HRM.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<Location>> GetByEmployeeIdAsync(string employeeId)
+        {
+            var companyId = await _db.EmployeeMasters
+                .Where(e => e.Id == employeeId && e.IsActive)
+                .Select(e => e.CompanyId)
+                .FirstOrDefaultAsync();
+
+            if (string.IsNullOrWhiteSpace(companyId))
+            {
+                return new List<Location>();
+            }
+
+            return await _db.CompanyLocations
+                .Where(cl => cl.CompanyId == companyId && cl.IsActive)
+                .Include(cl => cl.Location)
+                .Where(cl => cl.Location != null && cl.Location.IsActive)
+                .Select(cl => cl.Location!)
+                .Distinct()
+                .ToListAsync();
+        }
+
         public async Task SaveChangesAsync() => await _db.SaveChangesAsync();
     }
 }

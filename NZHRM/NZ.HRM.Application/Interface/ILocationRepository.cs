@@ -7,6 +7,7 @@ namespace NZ.HRM.Application.Interface
         Task<Location?> FindByIdAsync(string id);
         Task<List<Location>> GetAllAsync();
         Task<List<Location>> GetByCompanyIdAsync(string companyId);
+        Task<List<Location>> GetByEmployeeIdAsync(string employeeId);
         Task AddAsync(Location location);
         Task RemoveAsync(Location location);
         Task UpdateAsync(Location location);
