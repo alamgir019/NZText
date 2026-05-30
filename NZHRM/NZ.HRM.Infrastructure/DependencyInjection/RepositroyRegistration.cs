@@ -34,6 +34,8 @@ namespace NZ.HRM.Infrastructure.DependencyInjection
             services.AddScoped<IThanaRepository, ThanaRepository>();
             services.AddScoped<IMedicalFitnessCheckRepository, MedicalFitnessCheckRepository>();
             services.AddScoped<IPhysicalExaminationSettingRepository, PhysicalExaminationSettingRepository>();
+            services.AddScoped<IRawPunchRepository, RawPunchRepository>();
+            services.AddScoped<IProcessedPunchRepository, ProcessedPunchRepository>();
             return services;
         }
     }

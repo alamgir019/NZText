@@ -19,6 +19,7 @@ using NZ.HRM.Application.Divisions.Handlers;
 using NZ.HRM.Application.Districts.Handlers;
 using NZ.HRM.Application.MedicalFitnessChecks.Handlers;
 using NZ.HRM.Application.PhysicalExaminationSettings.Handlers;
+using NZ.HRM.Application.RawPunches.Handlers;
 using NZ.HRM.Application.Thanas.Handlers;
 
 namespace NZ.HRM.Application.DependencyInjection
@@ -108,6 +109,10 @@ namespace NZ.HRM.Application.DependencyInjection
             // Register Medical Fitness Check Handlers
             services.AddScoped<MedicalFitnessCheckCommandHandler>();
             services.AddScoped<MedicalFitnessCheckQueryHandler>();
+
+            // Register RawPunch Handlers
+            services.AddScoped<RawPunchCommandHandler>();
+            services.AddScoped<NZ.HRM.Domain.Services.PunchProcessingService>();
 
             return services;
         }

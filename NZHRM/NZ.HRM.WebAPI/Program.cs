@@ -3,6 +3,7 @@ using NZ.HRM.Infrastructure.Persistence;
 using NZ.HRM.Application.DependencyInjection;
 using NZ.HRM.Infrastructure.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
+using NZ.HRM.WebAPI.Services.PunchPolling;
 
 var builder = WebApplication.CreateBuilder(args);
 // Connection String in appsettings.json
@@ -20,6 +21,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddHandlerServices();
 builder.Services.AddRepositories();
+builder.Services.Configure<PunchPollingOptions>(builder.Configuration.GetSection("PunchPolling"));
+builder.Services.AddSingleton<IDevicePunchSource, SimulatedDevicePunchSource>();
+builder.Services.AddHostedService<PunchPollingBackgroundService>();
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>

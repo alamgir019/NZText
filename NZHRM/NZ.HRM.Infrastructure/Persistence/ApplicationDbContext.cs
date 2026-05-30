@@ -38,6 +38,8 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<PhysicalExaminationSetting> PhysicalExaminationSettings => Set<PhysicalExaminationSetting>();
         public DbSet<Shift> Shifts => Set<Shift>();
         public DbSet<Holiday> Holidays => Set<Holiday>();
+        public DbSet<RawPunch> RawPunches => Set<RawPunch>();
+        public DbSet<ProcessedPunch> ProcessedPunches => Set<ProcessedPunch>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -66,6 +68,8 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<PhysicalExaminationSetting>().ToTable("PhysicalExaminationSettings");
             modelBuilder.Entity<Shift>().ToTable("Shifts");
             modelBuilder.Entity<Holiday>().ToTable("Holidays");
+            modelBuilder.Entity<RawPunch>().ToTable("RawPunches");
+            modelBuilder.Entity<ProcessedPunch>().ToTable("ProcessedPunches");
 
 
             // Apply to all entities that have CreatedOn and UpdatedOn properties
