@@ -5,7 +5,7 @@ public class CompanyDto
     public string Id { get; set; } = string.Empty;
     public string CompanyCode { get; set; } = string.Empty;
     public string CompanyName { get; set; } = string.Empty;
-    public string LocationId { get; set; } = string.Empty;
+    // Locations are available via CompanyLocation mapping
     public DateTime CreatedOn { get; set; }
     public string CreatedBy { get; set; } = string.Empty;
     public DateTime UpdatedOn { get; set; }

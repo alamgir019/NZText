@@ -14,19 +14,25 @@ public class EmployeeMasterCommandHandler
     private readonly IDepartmentRepository _departmentRepository;
     private readonly ISectionRepository _sectionRepository;
     private readonly IGradeRepository _gradeRepository;
+    private readonly IShiftRepository _shiftRepository;
+    private readonly IEmployeeNatureRepository _employeeNatureRepository;
 
     public EmployeeMasterCommandHandler(
         IEmployeeMasterRepository employeeMasterRepository,
         ICompanyRepository companyRepository,
         IDepartmentRepository departmentRepository,
         ISectionRepository sectionRepository,
-        IGradeRepository gradeRepository)
+        IGradeRepository gradeRepository,
+        IShiftRepository shiftRepository,
+        IEmployeeNatureRepository employeeNatureRepository)
     {
         _employeeMasterRepository = employeeMasterRepository;
         _companyRepository = companyRepository;
         _departmentRepository = departmentRepository;
         _sectionRepository = sectionRepository;
         _gradeRepository = gradeRepository;
+        _shiftRepository = shiftRepository;
+        _employeeNatureRepository = employeeNatureRepository;
     }
 
     public async Task<string> Handle(CreateEmployeeMasterCommand command, CancellationToken cancellationToken = default)
@@ -39,7 +45,7 @@ public class EmployeeMasterCommandHandler
         }
 
         // Validate related entities exist
-        await ValidateRelatedEntities(command.CompanyId, command.DepartmentId, command.SectionId, command.GradeId, cancellationToken);
+        await ValidateRelatedEntities(command.CompanyId, command.DepartmentId, command.SectionId, command.GradeId, command.ShiftId, command.EmployeeNatureId, cancellationToken);
 
         var employeeMaster = new EmployeeMaster
         {
@@ -51,8 +57,8 @@ public class EmployeeMasterCommandHandler
             SectionId = command.SectionId,
             GradeId = command.GradeId,
             EmployeeType = command.EmployeeType,
-            Shift = command.Shift,
-            EmployeeNature = command.EmployeeNature,
+            ShiftId = command.ShiftId,
+            EmployeeNatureId = command.EmployeeNatureId,
             Holiday = command.Holiday,
             ProposedMonthlySalary = command.ProposedMonthlySalary,
             JoiningDate = command.JoiningDate,
@@ -79,7 +85,7 @@ public class EmployeeMasterCommandHandler
         }
 
         // Validate related entities exist
-        await ValidateRelatedEntities(command.CompanyId, command.DepartmentId, command.SectionId, command.GradeId, cancellationToken);
+        await ValidateRelatedEntities(command.CompanyId, command.DepartmentId, command.SectionId, command.GradeId, command.ShiftId, command.EmployeeNatureId, cancellationToken);
 
         employeeMaster.EmployeeCode = command.EmployeeCode;
         employeeMaster.EmployeeNameEnglish = command.EmployeeNameEnglish;
@@ -89,8 +95,8 @@ public class EmployeeMasterCommandHandler
         employeeMaster.SectionId = command.SectionId;
         employeeMaster.GradeId = command.GradeId;
         employeeMaster.EmployeeType = command.EmployeeType;
-        employeeMaster.Shift = command.Shift;
-        employeeMaster.EmployeeNature = command.EmployeeNature;
+        employeeMaster.ShiftId = command.ShiftId;
+        employeeMaster.EmployeeNatureId = command.EmployeeNatureId;
         employeeMaster.Holiday = command.Holiday;
         employeeMaster.ProposedMonthlySalary = command.ProposedMonthlySalary;
         employeeMaster.JoiningDate = command.JoiningDate;
@@ -116,7 +122,7 @@ public class EmployeeMasterCommandHandler
         // await _employeeMasterRepository.DeleteAsync(employeeMaster, cancellationToken);
     }
 
-    private async Task ValidateRelatedEntities(string companyId, string departmentId, string sectionId, string gradeId, CancellationToken cancellationToken)
+    private async Task ValidateRelatedEntities(string companyId, string departmentId, string sectionId, string gradeId, string shiftId, string employeeNatureId, CancellationToken cancellationToken)
     {
         var companyExists = await _companyRepository.ExistsAsync(companyId, cancellationToken);
         if (!companyExists)
@@ -133,5 +139,13 @@ public class EmployeeMasterCommandHandler
         var gradeExists = await _gradeRepository.ExistsAsync(gradeId, cancellationToken);
         if (!gradeExists)
             throw new KeyNotFoundException($"Grade with ID {gradeId} not found");
+
+        var shiftExists = await _shiftRepository.ExistsAsync(shiftId, cancellationToken);
+        if (!shiftExists)
+            throw new KeyNotFoundException($"Shift with ID {shiftId} not found");
+
+        var employeeNatureExists = await _employeeNatureRepository.ExistsAsync(employeeNatureId, cancellationToken);
+        if (!employeeNatureExists)
+            throw new KeyNotFoundException($"Employee nature with ID {employeeNatureId} not found");
     }
 }

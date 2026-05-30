@@ -22,6 +22,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Section)
             .Include(e => e.Grade)
             .Include(e => e.Shift)
+            .Include(e => e.EmployeeNature)
             .Include(e => e.Holiday)
             .Include(e => e.VerificationInfo)
             .AsQueryable();
@@ -49,6 +50,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Section)
             .Include(e => e.Grade)
             .Include(e => e.Shift)
+            .Include(e => e.EmployeeNature)
             .Include(e => e.Holiday)
             .Include(e => e.VerificationInfo)
             .AsQueryable();
@@ -88,6 +90,9 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Grade)
             .Include(e => e.PersonalInfo)
             .Include(e => e.VerificationInfo)
+            .Include(e => e.Designation)
+            .Include(e => e.Shift)
+            .Include(e => e.EmployeeNature)
             .FirstOrDefaultAsync(e => e.Id == id && e.IsActive, cancellationToken);
     }
 
@@ -99,6 +104,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Section)
             .Include(e => e.Grade)
             .Include(e => e.Shift)
+            .Include(e => e.EmployeeNature)
             .Include(e => e.Holiday)
             .FirstOrDefaultAsync(e => e.EmployeeCode == employeeCode && e.IsActive, cancellationToken);
     }
@@ -110,6 +116,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Section)
             .Include(e => e.Grade)
             .Include(e => e.Shift)
+            .Include(e => e.EmployeeNature)
             .Include(e => e.Holiday)
             .Where(e => e.CompanyId == companyId && e.IsActive)
             .OrderBy(e => e.EmployeeCode)
@@ -123,9 +130,31 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Section)
             .Include(e => e.Grade)
             .Include(e => e.Shift)
+            .Include(e => e.EmployeeNature)
             .Include(e => e.Holiday)
             .Where(e => e.DepartmentId == departmentId && e.IsActive)
             .OrderBy(e => e.EmployeeCode)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<EmployeeMaster>> SearchAsync(string searchText, CancellationToken cancellationToken = default)
+    {
+        var searchTerm = searchText.Trim();
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            return new List<EmployeeMaster>();
+        }
+
+        var searchPattern = $"%{searchTerm}%";
+
+        return await _context.EmployeeMasters
+            .Include(e => e.PersonalInfo)
+            .Where(e => e.IsActive &&
+                       (EF.Functions.Like(e.EnrollmentId ?? string.Empty, searchPattern)
+                        || EF.Functions.ILike(e.EmployeeNameEnglish, searchPattern)
+                        || (e.EmployeeNameBangla != null) && EF.Functions.ILike(e.EmployeeNameBangla, searchPattern)
+                        || (e.PersonalInfo != null && EF.Functions.Like(e.PersonalInfo.MobileNumber, searchPattern))))
+            .OrderBy(e => e.EmployeeNameEnglish)
             .ToListAsync(cancellationToken);
     }
 

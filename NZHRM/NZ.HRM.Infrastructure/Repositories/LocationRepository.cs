@@ -28,6 +28,16 @@ namespace NZ.HRM.Infrastructure.Repositories
 
         public async Task<List<Location>> GetAllAsync() => await _db.Locations.ToListAsync();
 
+        public async Task<List<Location>> GetByCompanyIdAsync(string companyId)
+        {
+            return await _db.CompanyLocations
+                .Where(cl => cl.CompanyId == companyId)
+                .Include(cl => cl.Location)
+                .Select(cl => cl.Location!)
+                .Distinct()
+                .ToListAsync();
+        }
+
         public async Task SaveChangesAsync() => await _db.SaveChangesAsync();
     }
 }

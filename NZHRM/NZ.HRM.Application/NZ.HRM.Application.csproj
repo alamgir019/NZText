@@ -6,7 +6,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NZ.HRM.Application.Model\NZ.HRM.Application.Model.csproj" />
     <ProjectReference Include="..\NZ.HRM.Domain\NZ.HRM.Domain.csproj" />
+    <ProjectReference Include="..\NZ.HRM.Mapping\NZ.HRM.Mapping.csproj" />
   </ItemGroup>
 
   <ItemGroup>

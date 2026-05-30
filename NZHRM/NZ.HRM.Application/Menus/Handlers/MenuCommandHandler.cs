@@ -16,7 +16,7 @@ public class MenuCommandHandler //: IRequestHandler<CreateMenuCommand, string>
             ParentId = request.ParentId,
             Url = request.Url,
             Icon = request.Icon,
-            Order = request.Order,
+            SortOrder = request.Order,
             IsActive = true
         };
         await _repo.AddAsync(menu);
@@ -44,7 +44,7 @@ public class MenuCommandHandler //: IRequestHandler<CreateMenuCommand, string>
         menu.ParentId = request.ParentId;
         menu.Url = request.Url;
         menu.Icon = request.Icon;
-        menu.Order = request.Order;
+        menu.SortOrder = request.Order;
 
         await _repo.SaveChangesAsync();
         return MediatR.Unit.Value;

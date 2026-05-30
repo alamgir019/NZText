@@ -15,6 +15,7 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<Post> Posts => Set<Post>();
         public DbSet<Designation> Designations => Set<Designation>();
         public DbSet<Location> Locations => Set<Location>();
+        public DbSet<CompanyLocation> CompanyLocations => Set<CompanyLocation>();
         public DbSet<Company> Companies => Set<Company>();
         public DbSet<Requisition> Requisitions => Set<Requisition>();
         public DbSet<ApplicationTracking> ApplicationTrackings => Set<ApplicationTracking>();
@@ -23,12 +24,18 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<District> Districts => Set<District>();
         public DbSet<Thana> Thanas => Set<Thana>();
         public DbSet<Department> Departments => Set<Department>();
+        public DbSet<LocationDepartment> LocationDepartments => Set<LocationDepartment>();
+        public DbSet<DepartmentSection> DepartmentSections => Set<DepartmentSection>();
+        public DbSet<EmployeeNature> EmployeeNatures => Set<EmployeeNature>();
         public DbSet<Grade> Grades => Set<Grade>();
         public DbSet<Section> Sections => Set<Section>();
+        public DbSet<SectionCell> SectionCells => Set<SectionCell>();
         public DbSet<Cell> Cells => Set<Cell>();
         public DbSet<EmployeeMaster> EmployeeMasters => Set<EmployeeMaster>();
         public DbSet<EmployeePersonal> EmployeePersonals => Set<EmployeePersonal>();
         public DbSet<EmployeeVerification> EmployeeVerifications => Set<EmployeeVerification>();
+        public DbSet<MedicalFitnessCheck> MedicalFitnessChecks => Set<MedicalFitnessCheck>();
+        public DbSet<PhysicalExaminationSetting> PhysicalExaminationSettings => Set<PhysicalExaminationSetting>();
         public DbSet<Shift> Shifts => Set<Shift>();
         public DbSet<Holiday> Holidays => Set<Holiday>();
 
@@ -45,13 +52,18 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<Thana>().ToTable("Thanas");
             modelBuilder.Entity<District>().ToTable("Districts");
             modelBuilder.Entity<Location>().ToTable("Locations");
+            modelBuilder.Entity<CompanyLocation>().ToTable("CompanyLocations");
             modelBuilder.Entity<Department>().ToTable("Departments");
+            modelBuilder.Entity<LocationDepartment>().ToTable("LocationDepartments");
             modelBuilder.Entity<Grade>().ToTable("Grades");
+            modelBuilder.Entity<EmployeeNature>().ToTable("EmployeeNatures");
             modelBuilder.Entity<Section>().ToTable("Sections");
             modelBuilder.Entity<Cell>().ToTable("Cells");
             modelBuilder.Entity<EmployeeMaster>().ToTable("EmployeeMasters");
             modelBuilder.Entity<EmployeePersonal>().ToTable("EmployeePersonals");
             modelBuilder.Entity<EmployeeVerification>().ToTable("EmployeeVerifications");
+            modelBuilder.Entity<MedicalFitnessCheck>().ToTable("MedicalFitnessChecks");
+            modelBuilder.Entity<PhysicalExaminationSetting>().ToTable("PhysicalExaminationSettings");
             modelBuilder.Entity<Shift>().ToTable("Shifts");
             modelBuilder.Entity<Holiday>().ToTable("Holidays");
 

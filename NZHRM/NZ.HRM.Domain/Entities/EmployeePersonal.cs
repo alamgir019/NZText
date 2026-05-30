@@ -27,7 +27,7 @@ namespace NZ.HRM.Domain.Entities
         public DocumentType? DocumentType { get; set; }
 
         [MaxLength(50)]
-        public string? DocumentNumber { get; set; } = string.Empty;
+        public string? DocumentNumber { get; set; }
         public BloodGroup? BloodGroup { get; set; }
 
         public Religion? Religion { get; set; }

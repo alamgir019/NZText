@@ -15,7 +15,7 @@ public class GradeQueryHandler
 
     public async Task<List<GradeDto>> Handle(GetAllGradesQuery query, CancellationToken cancellationToken = default)
     {
-        var grades = await _gradeRepository.GetAllAsync(query.IncludeInactive, cancellationToken);
+        var grades = await _gradeRepository.GetAllAsync(query.IncludeInactive, query.EmployeeType, cancellationToken);
 
         return grades.Select(g => new GradeDto
         {
@@ -23,6 +23,7 @@ public class GradeQueryHandler
             GradeName = g.GradeName,
             MinSalary = g.MinSalary,
             MaxSalary = g.MaxSalary,
+            EmployeeType = g.EmployeeType,
             CreatedOn = g.CreatedOn,
             CreatedBy = g.CreatedBy,
             UpdatedOn = g.UpdatedOn,
@@ -44,6 +45,7 @@ public class GradeQueryHandler
             GradeName = grade.GradeName,
             MinSalary = grade.MinSalary,
             MaxSalary = grade.MaxSalary,
+            EmployeeType = grade.EmployeeType,
             CreatedOn = grade.CreatedOn,
             CreatedBy = grade.CreatedBy,
             UpdatedOn = grade.UpdatedOn,

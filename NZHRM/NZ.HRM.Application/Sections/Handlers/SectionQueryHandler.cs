@@ -7,37 +7,51 @@ namespace NZ.HRM.Application.Sections.Handlers;
 public class SectionQueryHandler
 {
     private readonly ISectionRepository _sectionRepository;
+    private readonly IDepartmentSectionRepository _departmentSectionRepository;
 
-    public SectionQueryHandler(ISectionRepository sectionRepository)
+    public SectionQueryHandler(
+        ISectionRepository sectionRepository,
+        IDepartmentSectionRepository departmentSectionRepository)
     {
         _sectionRepository = sectionRepository;
+        _departmentSectionRepository = departmentSectionRepository;
     }
 
     public async Task<List<SectionDto>> Handle(GetAllSectionsQuery query, CancellationToken cancellationToken = default)
     {
-        List<NZ.HRM.Domain.Entities.Section> sections;
-
-        if (!string.IsNullOrEmpty(query.DepartmentId))
+        var sections = await _sectionRepository.GetAllAsync(query.IncludeInactive, cancellationToken);
+        //List<Domain.Entities.Section> sections = new List<Domain.Entities.Section>();
+        var overAll = "Overall";
+        if (!string.IsNullOrWhiteSpace(query.DepartmentId))
         {
-            sections = await _sectionRepository.GetByDepartmentIdAsync(query.DepartmentId, cancellationToken);
+            var filteredSections = await _sectionRepository.GetByDepartmentIdAsync(query.DepartmentId, query.IncludeInactive, cancellationToken);
+            if(filteredSections.Any(x => x.SectionName.Equals(overAll, StringComparison.OrdinalIgnoreCase)))
+            {
+                sections = filteredSections;
+            }
         }
-        else
+
+        var result = new List<SectionDto>(sections.Count);
+        foreach (var section in sections)
         {
-            sections = await _sectionRepository.GetAllAsync(query.IncludeInactive, cancellationToken);
+            var departmentId = await _departmentSectionRepository.GetDepartmentIdBySectionIdAsync(section.Id, cancellationToken) ?? string.Empty;
+            var departmentName = await _departmentSectionRepository.GetDepartmentNameBySectionIdAsync(section.Id, cancellationToken) ?? string.Empty;
+
+            result.Add(new SectionDto
+            {
+                Id = section.Id,
+                DepartmentId = departmentId,
+                DepartmentName = departmentName,
+                SectionName = section.SectionName,
+                CreatedOn = section.CreatedOn,
+                CreatedBy = section.CreatedBy,
+                UpdatedOn = section.UpdatedOn,
+                UpdatedBy = section.UpdatedBy,
+                IsActive = section.IsActive
+            });
         }
 
-        return sections.Select(s => new SectionDto
-        {
-            Id = s.Id,
-            DepartmentId = s.DepartmentId,
-            DepartmentName = s.Department?.DepartmentName ?? string.Empty,
-            SectionName = s.SectionName,
-            CreatedOn = s.CreatedOn,
-            CreatedBy = s.CreatedBy,
-            UpdatedOn = s.UpdatedOn,
-            UpdatedBy = s.UpdatedBy,
-            IsActive = s.IsActive
-        }).ToList();
+        return result;
     }
 
     public async Task<SectionDetailDto?> Handle(GetSectionByIdQuery query, CancellationToken cancellationToken = default)
@@ -47,11 +61,14 @@ public class SectionQueryHandler
         if (section == null)
             return null;
 
+        var mappedDepartmentId = await _departmentSectionRepository.GetDepartmentIdBySectionIdAsync(section.Id, cancellationToken) ?? string.Empty;
+        var mappedDepartmentName = await _departmentSectionRepository.GetDepartmentNameBySectionIdAsync(section.Id, cancellationToken) ?? string.Empty;
+
         return new SectionDetailDto
         {
             Id = section.Id,
-            DepartmentId = section.DepartmentId,
-            DepartmentName = section.Department?.DepartmentName ?? string.Empty,
+            DepartmentId = mappedDepartmentId,
+            DepartmentName = mappedDepartmentName,
             SectionName = section.SectionName,
             CreatedOn = section.CreatedOn,
             CreatedBy = section.CreatedBy,

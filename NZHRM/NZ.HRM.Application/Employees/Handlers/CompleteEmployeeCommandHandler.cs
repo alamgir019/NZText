@@ -1,6 +1,7 @@
-using NZ.HRM.Application.Employees.Commands.CreateCompleteEmployee;
 using NZ.HRM.Application.Interfaces.Repositories;
+using NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
 using NZ.HRM.Domain.Entities;
+using NZ.HRM.Mapping.Employees;
 using NZ.HRM.Utility.Enum;
 
 namespace NZ.HRM.Application.Employees.Handlers;
@@ -14,6 +15,8 @@ public class CompleteEmployeeCommandHandler
     private readonly IDepartmentRepository _departmentRepository;
     private readonly ISectionRepository _sectionRepository;
     private readonly IGradeRepository _gradeRepository;
+    private readonly IShiftRepository _shiftRepository;
+    private readonly IEmployeeNatureRepository _employeeNatureRepository;
 
     public CompleteEmployeeCommandHandler(
         IEmployeeMasterRepository employeeMasterRepository,
@@ -22,7 +25,9 @@ public class CompleteEmployeeCommandHandler
         ICompanyRepository companyRepository,
         IDepartmentRepository departmentRepository,
         ISectionRepository sectionRepository,
-        IGradeRepository gradeRepository)
+        IGradeRepository gradeRepository,
+        IShiftRepository shiftRepository,
+        IEmployeeNatureRepository employeeNatureRepository)
     {
         _employeeMasterRepository = employeeMasterRepository;
         _employeePersonalRepository = employeePersonalRepository;
@@ -31,6 +36,8 @@ public class CompleteEmployeeCommandHandler
         _departmentRepository = departmentRepository;
         _sectionRepository = sectionRepository;
         _gradeRepository = gradeRepository;
+        _shiftRepository = shiftRepository;
+        _employeeNatureRepository = employeeNatureRepository;
     }
 
     public async Task<string> Handle(CreateCompleteEmployeeCommand command, CancellationToken cancellationToken = default)
@@ -47,68 +54,19 @@ public class CompleteEmployeeCommandHandler
             command.CompanyId, 
             command.DepartmentId, 
             command.SectionId, 
+            command.ShiftId,
+            command.EmployeeNatureId,
             //command.GradeId, 
             cancellationToken);
 
         // Create EmployeeMaster
-        var employeeMaster = new EmployeeMaster
-        {
-            EmployeeCode = command.EmployeeCode,
-            EmployeeNameEnglish = command.EmployeeNameEnglish,
-            EmployeeNameBangla = command.EmployeeNameBangla,
-            CompanyId = command.CompanyId,
-            DepartmentId = command.DepartmentId,
-            SectionId = command.SectionId,
-            GradeId = command.GradeId,
-            EmployeeType = command.EmployeeType,
-            Shift = command.Shift,
-            EmployeeNature = command.EmployeeNature,
-            Holiday = command.Holiday,
-            ProposedMonthlySalary = command.ProposedMonthlySalary,
-            JoiningDate = command.JoiningDate,
-            ConfirmationDate = command.ConfirmationDate,
-            Status = EmployeeStatus.Draft,
-            IsActive = true
-        };
+        var employeeMaster = EmployeeMapper.CreateCompleteEmployeeCommandToMaster(command);
 
         // Save EmployeeMaster first
         var employeeId = await _employeeMasterRepository.AddAsync(employeeMaster, cancellationToken);
 
         // Create EmployeePersonal
-        var employeePersonal = new EmployeePersonal
-        {
-            EmployeeId = employeeId,
-            DateOfBirth = command.DateOfBirth,
-            Gender = command.Gender,
-            MaritalStatus = command.MaritalStatus,
-            MobileNumber = command.MobileNumber,
-            EmailAddress = command.EmailAddress,
-            DocumentType = command.DocumentType,
-            DocumentNumber = command.DocumentNumber,
-            BloodGroup = command.BloodGroup,
-            Religion = command.Religion,
-            Nationality = command.Nationality,
-            FatherNameEnglish = command.FatherNameEnglish,
-            FatherNameBangla = command.FatherNameBangla,
-            MotherNameEnglish = command.MotherNameEnglish,
-            MotherNameBangla = command.MotherNameBangla,
-            SpouseName = command.SpouseName,
-            SpouseMobile = command.SpouseMobile,
-            IDNumber = command.TinNumber,
-            EmployeeReference = command.EmployeeReference,
-            ReferencePersonId = command.ReferencePersonId,
-            PermanentVillageAreaRoad = command.PermanentVillageAreaRoad,
-            PermanentPostOffice = command.PermanentPostOffice,
-            PermanentThana = command.PermanentThana,
-            PermanentDistrict = command.PermanentDistrict,
-            PermanentDivision = command.PermanentDivision,
-            PresentVillageAreaRoad = command.PresentVillageAreaRoad,
-            PresentPostOffice = command.PresentPostOffice,
-            PresentThana = command.PresentThana,
-            PresentDistrict = command.PresentDistrict,
-            PresentDivision = command.PresentDivision,
-            IsActive = true
-        };
+        var employeePersonal = EmployeeMapper.CreateCompleteEmployeeCommandToPersonal(command, employeeId);
 
         // Save EmployeePersonal
         await _employeePersonalRepository.AddAsync(employeePersonal, cancellationToken);
@@ -145,6 +103,8 @@ public class CompleteEmployeeCommandHandler
             command.CompanyId,
             command.DepartmentId,
             command.SectionId,
+            null,
+            null,
             //command.LocationId,
             cancellationToken);
 
@@ -218,6 +178,8 @@ public class CompleteEmployeeCommandHandler
         string companyId, 
         string departmentId, 
         string sectionId, 
+        string? shiftId,
+        string? employeeNatureId,
         //string locationId, 
         CancellationToken cancellationToken)
     {
@@ -233,8 +195,23 @@ public class CompleteEmployeeCommandHandler
         if (!sectionExists)
             throw new KeyNotFoundException($"Section with ID {sectionId} not found");
 
+        if (!string.IsNullOrWhiteSpace(shiftId))
+        {
+            var shiftExists = await _shiftRepository.ExistsAsync(shiftId, cancellationToken);
+            if (!shiftExists)
+                throw new KeyNotFoundException($"Shift with ID {shiftId} not found");
+        }
+
+        if (!string.IsNullOrWhiteSpace(employeeNatureId))
+        {
+            var employeeNatureExists = await _employeeNatureRepository.ExistsAsync(employeeNatureId, cancellationToken);
+            if (!employeeNatureExists)
+                throw new KeyNotFoundException($"Employee nature with ID {employeeNatureId} not found");
+        }
+
         //var locationExists = await _locationRepository.ExistsAsync(locationId, cancellationToken);
         //if (!locationExists)
         //    throw new KeyNotFoundException($"Location with ID {locationId} not found");
     }
+
 }

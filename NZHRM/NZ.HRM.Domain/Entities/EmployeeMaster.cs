@@ -43,10 +43,18 @@ namespace NZ.HRM.Domain.Entities
         [ForeignKey(nameof(CellId))]
         public Cell? Cell { get; set; }
 
+        public string? DesignationId { get; set; }
+        [ForeignKey(nameof(DesignationId))]
+        public Designation? Designation { get; set; }
+
         public EmployeeType? EmployeeType { get; set; }
 
-        public Utility.Enum.Shift? Shift { get; set; }
+        public string? ShiftId { get; set; }
+        [ForeignKey(nameof(ShiftId))]
+        public Shift? Shift { get; set; }
 
+        public string? EmployeeNatureId { get; set; }
+        [ForeignKey(nameof(EmployeeNatureId))]
         public EmployeeNature? EmployeeNature { get; set; }
 
         public Utility.Enum.Holiday? Holiday { get; set; }
@@ -62,5 +70,6 @@ namespace NZ.HRM.Domain.Entities
         // Navigation property
         public EmployeePersonal? PersonalInfo { get; set; }
         public EmployeeVerification? VerificationInfo { get; set; }
+
     }
 }

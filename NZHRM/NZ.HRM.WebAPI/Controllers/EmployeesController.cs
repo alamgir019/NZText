@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using NZ.HRM.Application.Employees.Commands.CreateCompleteEmployee;
-using NZ.HRM.Application.Employees.DTOs;
 using NZ.HRM.Application.Employees.Handlers;
 using NZ.HRM.Application.Employees.Queries.GetCompleteEmployee;
+using NZ.HRM.Application.Employees.Queries.GetEmployeeConfirmationDate;
+using NZ.HRM.Application.Employees.Queries.SearchEmployees;
+using NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
+using NZ.HRM.Application.Model.Employees.DTOs;
 
 namespace NZ.HRM.WebAPI.Controllers;
 
@@ -11,11 +13,11 @@ namespace NZ.HRM.WebAPI.Controllers;
 public class EmployeesController : ControllerBase
 {
     private readonly CompleteEmployeeCommandHandler _createCompleteEmployeeHandler;
-    private readonly GetCompleteEmployeeQueryHandler _getCompleteEmployeeHandler;
+    private readonly CompleteEmployeeQueryHandler _getCompleteEmployeeHandler;
 
     public EmployeesController(
         CompleteEmployeeCommandHandler createCompleteEmployeeHandler,
-        GetCompleteEmployeeQueryHandler getCompleteEmployeeHandler)
+        CompleteEmployeeQueryHandler getCompleteEmployeeHandler)
     {
         _createCompleteEmployeeHandler = createCompleteEmployeeHandler;
         _getCompleteEmployeeHandler = getCompleteEmployeeHandler;
@@ -131,4 +133,38 @@ public class EmployeesController : ControllerBase
 
         return Ok(employee);
     }
+
+    [HttpGet("search")]
+    [ProducesResponseType(typeof(List<EmployeeCompleteDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> SearchEmployees([FromQuery] string searchText)
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+            return BadRequest(new { message = "searchText is required" });
+
+        var query = new SearchEmployeesQuery { SearchText = searchText };
+        var employees = await _getCompleteEmployeeHandler.Handle(query, cancellationToken: default);
+
+        return Ok(employees);
+    }
+
+    [HttpGet("confirmation-date")]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetConfirmationDate([FromQuery] string employeeId, [FromQuery] DateTime joiningDate)
+    {
+        var query = new GetEmployeeConfirmationDateQuery
+        {
+            EmployeeId = employeeId,
+            JoiningDate = joiningDate
+        };
+
+        var confirmationDate = await _getCompleteEmployeeHandler.Handle(query, cancellationToken: default);
+        if (confirmationDate == null)
+            return NotFound(new { message = $"Employee with ID {employeeId} not found" });
+
+        return Ok(new { confirmationDate = confirmationDate.Value.ToString("yyyy-MM-dd") });
+    }
+
+    
 }

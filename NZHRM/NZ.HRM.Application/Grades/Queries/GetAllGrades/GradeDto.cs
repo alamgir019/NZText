@@ -6,6 +6,7 @@ public class GradeDto
     public string GradeName { get; set; } = string.Empty;
     public decimal MinSalary { get; set; }
     public decimal MaxSalary { get; set; }
+    public string EmployeeType { get; set; } = string.Empty;
     public DateTime CreatedOn { get; set; }
     public string CreatedBy { get; set; } = string.Empty;
     public DateTime UpdatedOn { get; set; }

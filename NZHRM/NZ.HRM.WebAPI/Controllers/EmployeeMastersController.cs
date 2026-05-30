@@ -14,7 +14,7 @@ public class EmployeeMastersController : ControllerBase
 {
     private readonly EmployeeMasterQueryHandler _queryHandler;
     private readonly EmployeeMasterCommandHandler _commandHandler;
-    private readonly NZ.HRM.Application.EmployeeMasters.Handlers.GetEnrollmentIdQueryHandler _getEnrollmentIdHandler;
+    private readonly GetEnrollmentIdQueryHandler _getEnrollmentIdHandler;
 
     public EmployeeMastersController(
         EmployeeMasterQueryHandler queryHandler,

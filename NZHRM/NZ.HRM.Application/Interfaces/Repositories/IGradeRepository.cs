@@ -4,7 +4,7 @@ namespace NZ.HRM.Application.Interfaces.Repositories;
 
 public interface IGradeRepository
 {
-    Task<List<Grade>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default);
+    Task<List<Grade>> GetAllAsync(bool includeInactive = false, string? employeeType = null, CancellationToken cancellationToken = default);
     Task<Grade?> GetByIdAsync(string id, CancellationToken cancellationToken = default);
     Task<string> AddAsync(Grade grade, CancellationToken cancellationToken = default);
     Task UpdateAsync(Grade grade, CancellationToken cancellationToken = default);

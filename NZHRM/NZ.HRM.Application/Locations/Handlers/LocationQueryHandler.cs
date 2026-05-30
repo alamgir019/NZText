@@ -14,5 +14,8 @@ namespace NZ.HRM.Application.Locations.Handlers
 
         public async Task<List<Location>> Handle(GetAllLocationsQuery query)
             => await _repo.GetAllAsync();
+
+        public async Task<List<Location>> Handle(GetLocationsByCompanyIdQuery query)
+            => await _repo.GetByCompanyIdAsync(query.CompanyId);
     }
 }

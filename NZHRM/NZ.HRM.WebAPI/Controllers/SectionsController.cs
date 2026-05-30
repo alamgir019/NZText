@@ -30,8 +30,8 @@ public class SectionsController : ControllerBase
     [ProducesResponseType(typeof(List<SectionDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll([FromQuery] bool includeInactive = false, [FromQuery] string? departmentId = null)
     {
-        var query = new GetAllSectionsQuery 
-        { 
+        var query = new GetAllSectionsQuery
+        {
             IncludeInactive = includeInactive,
             DepartmentId = departmentId
         };

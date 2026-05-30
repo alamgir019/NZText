@@ -4,10 +4,7 @@ namespace NZ.HRM.Utility.Enum
     {
         Worker,
         Staff,
-        Officer,
-        Manager,
+        Management,
         Supervisor,
-        Operator,
-        Helper
     }
 }
