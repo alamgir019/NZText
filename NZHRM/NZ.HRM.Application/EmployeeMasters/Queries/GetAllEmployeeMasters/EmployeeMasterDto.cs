@@ -14,6 +14,8 @@ public class EmployeeMasterDto
     public string DepartmentName { get; set; } = string.Empty;
     public string SectionId { get; set; } = string.Empty;
     public string SectionName { get; set; } = string.Empty;
+    public string? LocationId { get; set; }
+    public string LocationName { get; set; } = string.Empty;
     public string GradeId { get; set; } = string.Empty;
     public string GradeName { get; set; } = string.Empty;
     public EmployeeType? EmployeeType { get; set; }

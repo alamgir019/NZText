@@ -1,4 +1,5 @@
 using NZ.HRM.Application.Interfaces.Repositories;
+using NZ.HRM.Application.Interface;
 using NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
 using NZ.HRM.Domain.Entities;
 using NZ.HRM.Mapping.Employees;
@@ -14,6 +15,7 @@ public class CompleteEmployeeCommandHandler
     private readonly ICompanyRepository _companyRepository;
     private readonly IDepartmentRepository _departmentRepository;
     private readonly ISectionRepository _sectionRepository;
+    private readonly ILocationRepository _locationRepository;
     private readonly IGradeRepository _gradeRepository;
     private readonly IShiftRepository _shiftRepository;
     private readonly IEmployeeNatureRepository _employeeNatureRepository;
@@ -25,6 +27,7 @@ public class CompleteEmployeeCommandHandler
         ICompanyRepository companyRepository,
         IDepartmentRepository departmentRepository,
         ISectionRepository sectionRepository,
+        ILocationRepository locationRepository,
         IGradeRepository gradeRepository,
         IShiftRepository shiftRepository,
         IEmployeeNatureRepository employeeNatureRepository)
@@ -35,6 +38,7 @@ public class CompleteEmployeeCommandHandler
         _companyRepository = companyRepository;
         _departmentRepository = departmentRepository;
         _sectionRepository = sectionRepository;
+        _locationRepository = locationRepository;
         _gradeRepository = gradeRepository;
         _shiftRepository = shiftRepository;
         _employeeNatureRepository = employeeNatureRepository;
@@ -54,6 +58,7 @@ public class CompleteEmployeeCommandHandler
             command.CompanyId, 
             command.DepartmentId, 
             command.SectionId, 
+            command.LocationId,
             command.ShiftId,
             command.EmployeeNatureId,
             //command.GradeId, 
@@ -103,6 +108,7 @@ public class CompleteEmployeeCommandHandler
             command.CompanyId,
             command.DepartmentId,
             command.SectionId,
+            command.LocationId,
             null,
             null,
             //command.LocationId,
@@ -116,6 +122,7 @@ public class CompleteEmployeeCommandHandler
             CompanyId = command.CompanyId,
             DepartmentId = command.DepartmentId,
             SectionId = command.SectionId,
+            LocationId = command.LocationId,
             CellId = command.CellId,
             EmployeeType = command.EmployeeType,
             ProposedMonthlySalary = command.ProposedMonthlySalary,
@@ -178,6 +185,7 @@ public class CompleteEmployeeCommandHandler
         string companyId, 
         string departmentId, 
         string sectionId, 
+        string locationId,
         string? shiftId,
         string? employeeNatureId,
         //string locationId, 
@@ -194,6 +202,10 @@ public class CompleteEmployeeCommandHandler
         var sectionExists = await _sectionRepository.ExistsAsync(sectionId, cancellationToken);
         if (!sectionExists)
             throw new KeyNotFoundException($"Section with ID {sectionId} not found");
+
+        var location = await _locationRepository.FindByIdAsync(locationId);
+        if (location == null || !location.IsActive)
+            throw new KeyNotFoundException($"Location with ID {locationId} not found");
 
         if (!string.IsNullOrWhiteSpace(shiftId))
         {

@@ -47,6 +47,10 @@ namespace NZ.HRM.Domain.Entities
         [ForeignKey(nameof(DesignationId))]
         public Designation? Designation { get; set; }
 
+        public string? LocationId { get; set; }
+        [ForeignKey(nameof(LocationId))]
+        public Location? Location { get; set; }
+
         public EmployeeType? EmployeeType { get; set; }
 
         public string? ShiftId { get; set; }
