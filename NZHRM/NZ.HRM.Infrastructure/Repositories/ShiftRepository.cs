@@ -14,9 +14,9 @@ public class ShiftRepository : IShiftRepository
         _context = context;
     }
 
-    public async Task<List<Shift>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
+    public async Task<List<MstShift>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
     {
-        var query = _context.Shifts.AsQueryable();
+        var query = _context.MstShifts.AsQueryable();
 
         if (!includeInactive)
             query = query.Where(s => s.IsActive);
@@ -27,34 +27,34 @@ public class ShiftRepository : IShiftRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<Shift?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<MstShift?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.Shifts
+        return await _context.MstShifts
             .FirstOrDefaultAsync(s => s.Id == id && s.IsActive, cancellationToken);
     }
 
-    public async Task<string> AddAsync(Shift shift, CancellationToken cancellationToken = default)
+    public async Task<string> AddAsync(MstShift shift, CancellationToken cancellationToken = default)
     {
-        _context.Shifts.Add(shift);
+        _context.MstShifts.Add(shift);
         await _context.SaveChangesAsync(cancellationToken);
         return shift.Id;
     }
 
-    public async Task UpdateAsync(Shift shift, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(MstShift shift, CancellationToken cancellationToken = default)
     {
-        _context.Shifts.Update(shift);
+        _context.MstShifts.Update(shift);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(Shift shift, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(MstShift shift, CancellationToken cancellationToken = default)
     {
-        _context.Shifts.Remove(shift);
+        _context.MstShifts.Remove(shift);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.Shifts
+        return await _context.MstShifts
             .AnyAsync(s => s.Id == id, cancellationToken);
     }
 }

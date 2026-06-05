@@ -1,5 +1,4 @@
 using NZ.HRM.Application.Interfaces.Repositories;
-using NZ.HRM.Application.Interface;
 using NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
 using NZ.HRM.Domain.Entities;
 using NZ.HRM.Mapping.Employees;
@@ -15,7 +14,6 @@ public class CompleteEmployeeCommandHandler
     private readonly ICompanyRepository _companyRepository;
     private readonly IDepartmentRepository _departmentRepository;
     private readonly ISectionRepository _sectionRepository;
-    private readonly ILocationRepository _locationRepository;
     private readonly IGradeRepository _gradeRepository;
     private readonly IShiftRepository _shiftRepository;
     private readonly IEmployeeNatureRepository _employeeNatureRepository;
@@ -27,7 +25,6 @@ public class CompleteEmployeeCommandHandler
         ICompanyRepository companyRepository,
         IDepartmentRepository departmentRepository,
         ISectionRepository sectionRepository,
-        ILocationRepository locationRepository,
         IGradeRepository gradeRepository,
         IShiftRepository shiftRepository,
         IEmployeeNatureRepository employeeNatureRepository)
@@ -38,7 +35,6 @@ public class CompleteEmployeeCommandHandler
         _companyRepository = companyRepository;
         _departmentRepository = departmentRepository;
         _sectionRepository = sectionRepository;
-        _locationRepository = locationRepository;
         _gradeRepository = gradeRepository;
         _shiftRepository = shiftRepository;
         _employeeNatureRepository = employeeNatureRepository;
@@ -58,7 +54,6 @@ public class CompleteEmployeeCommandHandler
             command.CompanyId, 
             command.DepartmentId, 
             command.SectionId, 
-            command.LocationId,
             command.ShiftId,
             command.EmployeeNatureId,
             //command.GradeId, 
@@ -76,7 +71,7 @@ public class CompleteEmployeeCommandHandler
         // Save EmployeePersonal
         await _employeePersonalRepository.AddAsync(employeePersonal, cancellationToken);
 
-        var employeeVerification = new EmployeeVerification
+        var employeeVerification = new HrmEmployeeVerification
         {
             EmployeeId = employeeId,
             SecurityClearanceBy = command.SecurityClearanceBy,
@@ -108,26 +103,24 @@ public class CompleteEmployeeCommandHandler
             command.CompanyId,
             command.DepartmentId,
             command.SectionId,
-            command.LocationId,
             null,
             null,
             //command.LocationId,
             cancellationToken);
 
         // Create EmployeeMaster
-        var employeeMaster = new EmployeeMaster
+        var employeeMaster = new HrmEmployeeMaster
         {
             EnrollmentId = command.EmployeeEnrollmentId,
             EmployeeNameBangla = command.EmployeeNameBangla,
-            CompanyId = command.CompanyId,
-            DepartmentId = command.DepartmentId,
-            SectionId = command.SectionId,
-            LocationId = command.LocationId,
-            CellId = command.CellId,
-            EmployeeType = command.EmployeeType,
-            ProposedMonthlySalary = command.ProposedMonthlySalary,
-            JoiningDate = command.JoiningDate,
-            Status = EmployeeStatus.Draft,
+            //CompanyId = command.CompanyId,
+            //DepartmentId = command.DepartmentId,
+            //SectionId = command.SectionId,
+            //CellId = command.CellId,
+            //EmployeeType = command.EmployeeType,
+            //ProposedMonthlySalary = command.ProposedMonthlySalary,
+            //JoiningDate = command.JoiningDate,
+            //Status = EmployeeStatus.Draft,
             IsActive = true
         };
 
@@ -135,36 +128,36 @@ public class CompleteEmployeeCommandHandler
         var employeeId = await _employeeMasterRepository.AddAsync(employeeMaster, cancellationToken);
 
         // Create EmployeePersonal
-        var employeePersonal = new EmployeePersonal
+        var employeePersonal = new HrmEmployeePersonal
         {
             EmployeeId = employeeId,            
-            DateOfBirth = command.DateOfBirth,
-            Gender = command.Gender,
-            BloodGroup = command.BloodGroup,
-            GuardianType = command.GuardianType,
-            GuardianName = command.GuardianName,
-            MotherNameBangla = command.MotherNameBangla,
-            IdType = command.IDType,
-            IDNumber = command.IDNumber,
-            EmployeeReference = command.EmployeeReference,
-            ReferencePersonId = command.ReferencePersonId,
-            PermanentVillageAreaRoad = command.PermanentVillageAreaRoad,
-            PermanentPostOffice = command.PermanentPostOffice,
-            PermanentThana = command.PermanentThana,
-            PermanentDistrict = command.PermanentDistrict,
-            PermanentDivision = command.PermanentDivision,
-            PresentVillageAreaRoad = command.PresentVillageAreaRoad,
-            PresentPostOffice = command.PresentPostOffice,
-            PresentThana = command.PresentThana,
-            PresentDistrict = command.PresentDistrict,
-            PresentDivision = command.PresentDivision,
+            //DateOfBirth = command.DateOfBirth,
+            //Gender = command.Gender,
+            //BloodGroup = command.BloodGroup,
+            //GuardianType = command.GuardianType,
+            //GuardianName = command.GuardianName,
+            //MotherNameBangla = command.MotherNameBangla,
+            //IdType = command.IDType,
+            //IDNumber = command.IDNumber,
+            //EmployeeReference = command.EmployeeReference,
+            //ReferencePersonId = command.ReferencePersonId,
+            //PermanentVillageAreaRoad = command.PermanentVillageAreaRoad,
+            //PermanentPostOffice = command.PermanentPostOffice,
+            //PermanentThana = command.PermanentThana,
+            //PermanentDistrict = command.PermanentDistrict,
+            //PermanentDivision = command.PermanentDivision,
+            //PresentVillageAreaRoad = command.PresentVillageAreaRoad,
+            //PresentPostOffice = command.PresentPostOffice,
+            //PresentThana = command.PresentThana,
+            //PresentDistrict = command.PresentDistrict,
+            //PresentDivision = command.PresentDivision,
             IsActive = true
         };
 
         // Save EmployeePersonal
         await _employeePersonalRepository.AddAsync(employeePersonal, cancellationToken);
 
-        var employeeVerification = new EmployeeVerification
+        var employeeVerification = new HrmEmployeeVerification
         {
             EmployeeId = employeeId,
             SecurityClearanceBy = command.SecurityClearanceBy,
@@ -185,7 +178,6 @@ public class CompleteEmployeeCommandHandler
         string companyId, 
         string departmentId, 
         string sectionId, 
-        string locationId,
         string? shiftId,
         string? employeeNatureId,
         //string locationId, 
@@ -202,10 +194,6 @@ public class CompleteEmployeeCommandHandler
         var sectionExists = await _sectionRepository.ExistsAsync(sectionId, cancellationToken);
         if (!sectionExists)
             throw new KeyNotFoundException($"Section with ID {sectionId} not found");
-
-        var location = await _locationRepository.FindByIdAsync(locationId);
-        if (location == null || !location.IsActive)
-            throw new KeyNotFoundException($"Location with ID {locationId} not found");
 
         if (!string.IsNullOrWhiteSpace(shiftId))
         {

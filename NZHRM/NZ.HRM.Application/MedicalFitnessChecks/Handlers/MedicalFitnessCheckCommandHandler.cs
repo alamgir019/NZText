@@ -26,11 +26,11 @@ public class MedicalFitnessCheckCommandHandler
         if (!employeeExists)
             throw new KeyNotFoundException($"Employee with ID {command.EmployeeId} not found");
 
-        var medicalFitnessCheck = new MedicalFitnessCheck
+        var medicalFitnessCheck = new HrmMedicalFitnessCheck
         {
             EmployeeId = command.EmployeeId,
             EnrollmentId = command.EnrollmentId,
-            BloodGroup = command.BloodGroup,
+            //BloodGroup = command.BloodGroup,
             HeightCm = command.HeightCm,
             WeightKg = command.WeightKg,
             PhysicalExaminationDataJson = command.PhysicalExaminationDataJson,
@@ -50,11 +50,11 @@ public class MedicalFitnessCheckCommandHandler
         if (!employeeExists)
             throw new KeyNotFoundException($"Employee with ID {command.EmployeeId} not found");
 
-        var newVersion = new MedicalFitnessCheck
+        var newVersion = new HrmMedicalFitnessCheck
         {
             EmployeeId = command.EmployeeId,
             EnrollmentId = command.EnrollmentId,
-            BloodGroup = command.BloodGroup,
+            //BloodGroup = command.BloodGroup,
             HeightCm = command.HeightCm,
             WeightKg = command.WeightKg,
             PhysicalExaminationDataJson = command.PhysicalExaminationDataJson,

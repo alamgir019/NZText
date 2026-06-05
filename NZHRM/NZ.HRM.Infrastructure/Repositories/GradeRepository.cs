@@ -14,9 +14,9 @@ public class GradeRepository : IGradeRepository
         _context = context;
     }
 
-    public async Task<List<Grade>> GetAllAsync(bool includeInactive = false, string? employeeType = null, CancellationToken cancellationToken = default)
+    public async Task<List<MstGrade>> GetAllAsync(bool includeInactive = false, string? employeeType = null, CancellationToken cancellationToken = default)
     {
-        var query = _context.Grades.AsQueryable();
+        var query = _context.MstGrades.AsQueryable();
 
         if (!includeInactive)
         {
@@ -33,34 +33,34 @@ public class GradeRepository : IGradeRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<Grade?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<MstGrade?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.Grades
+        return await _context.MstGrades
             .FirstOrDefaultAsync(g => g.Id == id && g.IsActive, cancellationToken);
     }
 
-    public async Task<string> AddAsync(Grade grade, CancellationToken cancellationToken = default)
+    public async Task<string> AddAsync(MstGrade grade, CancellationToken cancellationToken = default)
     {
-        _context.Grades.Add(grade);
+        _context.MstGrades.Add(grade);
         await _context.SaveChangesAsync(cancellationToken);
         return grade.Id;
     }
 
-    public async Task UpdateAsync(Grade grade, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(MstGrade grade, CancellationToken cancellationToken = default)
     {
-        _context.Grades.Update(grade);
+        _context.MstGrades.Update(grade);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(Grade grade, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(MstGrade grade, CancellationToken cancellationToken = default)
     {
-        _context.Grades.Remove(grade);
+        _context.MstGrades.Remove(grade);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.Grades
+        return await _context.MstGrades
             .AnyAsync(g => g.Id == id, cancellationToken);
     }
 }

@@ -33,43 +33,44 @@ public class CompanyLocationCommandHandler
         if (location == null)
             throw new KeyNotFoundException($"Location with ID {command.LocationId} not found");
 
-        var companyLocation = new CompanyLocation
-        {
-            CompanyId = command.CompanyId,
-            LocationId = command.LocationId,
-            IsActive = true
-        };
+        //var companyLocation = new CompanyLocation
+        //{
+        //    CompanyId = command.CompanyId,
+        //    LocationId = command.LocationId,
+        //    IsActive = true
+        //};
 
-        return await _companyLocationRepository.AddAsync(companyLocation, cancellationToken);
+        //return await _companyLocationRepository.AddAsync(companyLocation, cancellationToken);
+        return string.Empty;
     }
 
     public async Task Handle(UpdateCompanyLocationCommand command, CancellationToken cancellationToken = default)
     {
-        var companyLocation = await _companyLocationRepository.GetByIdAsync(command.Id, cancellationToken);
-        if (companyLocation == null)
-            throw new KeyNotFoundException($"CompanyLocation with ID {command.Id} not found");
+        //var companyLocation = await _companyLocationRepository.GetByIdAsync(command.Id, cancellationToken);
+        //if (companyLocation == null)
+        //    throw new KeyNotFoundException($"CompanyLocation with ID {command.Id} not found");
 
-        var companyExists = await _companyRepository.ExistsAsync(command.CompanyId, cancellationToken);
-        if (!companyExists)
-            throw new KeyNotFoundException($"Company with ID {command.CompanyId} not found");
+        //var companyExists = await _companyRepository.ExistsAsync(command.CompanyId, cancellationToken);
+        //if (!companyExists)
+        //    throw new KeyNotFoundException($"Company with ID {command.CompanyId} not found");
 
-        var location = await _locationRepository.FindByIdAsync(command.LocationId);
-        if (location == null)
-            throw new KeyNotFoundException($"Location with ID {command.LocationId} not found");
+        //var location = await _locationRepository.FindByIdAsync(command.LocationId);
+        //if (location == null)
+        //    throw new KeyNotFoundException($"Location with ID {command.LocationId} not found");
 
-        companyLocation.CompanyId = command.CompanyId;
-        companyLocation.LocationId = command.LocationId;
+        //companyLocation.CompanyId = command.CompanyId;
+        //companyLocation.LocationId = command.LocationId;
 
-        await _companyLocationRepository.UpdateAsync(companyLocation, cancellationToken);
+        //await _companyLocationRepository.UpdateAsync(companyLocation, cancellationToken);
     }
 
     public async Task Handle(DeleteCompanyLocationCommand command, CancellationToken cancellationToken = default)
     {
-        var companyLocation = await _companyLocationRepository.GetByIdAsync(command.Id, cancellationToken);
-        if (companyLocation == null)
-            throw new KeyNotFoundException($"CompanyLocation with ID {command.Id} not found");
+        //var companyLocation = await _companyLocationRepository.GetByIdAsync(command.Id, cancellationToken);
+        //if (companyLocation == null)
+        //    throw new KeyNotFoundException($"CompanyLocation with ID {command.Id} not found");
 
-        companyLocation.IsActive = false;
-        await _companyLocationRepository.UpdateAsync(companyLocation, cancellationToken);
+        //companyLocation.IsActive = false;
+        //await _companyLocationRepository.UpdateAsync(companyLocation, cancellationToken);
     }
 }

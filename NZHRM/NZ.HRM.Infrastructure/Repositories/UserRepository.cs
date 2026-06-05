@@ -13,36 +13,36 @@ namespace NZ.HRM.Infrastructure.Repositories
             _db = db;
         }
 
-        public async Task<User?> FindByIdAsync(string id)
+        public async Task<SecUser?> FindByIdAsync(string id)
         {
-            return await _db.Users.FindAsync(id);
+            return await _db.SecUsers.FindAsync(id);
         }
 
-        public async Task<List<User>> GetAllAsync()
+        public async Task<List<SecUser>> GetAllAsync()
         {
-            return await _db.Users.ToListAsync();
+            return await _db.SecUsers.ToListAsync();
         }
 
-        public async Task AddAsync(User user)
+        public async Task AddAsync(SecUser user)
         {
-            await _db.Users.AddAsync(user);
+            await _db.SecUsers.AddAsync(user);
         }
 
-        public async Task RemoveAsync(User user)
+        public async Task RemoveAsync(SecUser user)
         {
-            _db.Users.Remove(user);
+            _db.SecUsers.Remove(user);
             await Task.CompletedTask;
         }
 
-        public async Task UpdateAsync(User user)
+        public async Task UpdateAsync(SecUser user)
         {
-            _db.Users.Update(user);
+            _db.SecUsers.Update(user);
             await Task.CompletedTask;
         }
 
-        public async Task<User?> FindByUsernameAsync(string username)
+        public async Task<SecUser?> FindByUsernameAsync(string username)
         {
-            return await _db.Users.FirstOrDefaultAsync(u => u.Username == username);
+            return await _db.SecUsers.FirstOrDefaultAsync(u => u.UserName == username);
         }
 
         public async Task SaveChangesAsync()

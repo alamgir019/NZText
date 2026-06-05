@@ -10,43 +10,44 @@ public class MenuCommandHandler //: IRequestHandler<CreateMenuCommand, string>
 
     public async Task<string> Handle(CreateMenuCommand request)
     {
-        var menu = new Menu
-        {
-            Name = request.Name,
-            ParentId = request.ParentId,
-            Url = request.Url,
-            Icon = request.Icon,
-            SortOrder = request.Order,
-            IsActive = true
-        };
-        await _repo.AddAsync(menu);
-        await _repo.SaveChangesAsync();
-        return menu.Id;
+        //var menu = new Menu
+        //{
+        //    Name = request.Name,
+        //    ParentId = request.ParentId,
+        //    Url = request.Url,
+        //    Icon = request.Icon,
+        //    SortOrder = request.Order,
+        //    IsActive = true
+        //};
+        //await _repo.AddAsync(menu);
+        //await _repo.SaveChangesAsync();
+        //return menu.Id;
+        return string.Empty;
     }
 
-    public async Task<MediatR.Unit> Handle(DeleteMenuCommand request)
+    public async Task<Unit> Handle(DeleteMenuCommand request)
     {
-        var menu = await _repo.FindByIdAsync(request.Id);
-        if (menu == null) throw new KeyNotFoundException("Menu not found");
+        //var menu = await _repo.FindByIdAsync(request.Id);
+        //if (menu == null) throw new KeyNotFoundException("Menu not found");
 
-        await _repo.RemoveAsync(menu);
-        await _repo.SaveChangesAsync();
-        return MediatR.Unit.Value;
+        //await _repo.RemoveAsync(menu);
+        //await _repo.SaveChangesAsync();
+        return Unit.Value;
     }
 
 
-    public async Task<MediatR.Unit> Handle(UpdateMenuCommand request)
+    public async Task<Unit> Handle(UpdateMenuCommand request)
     {
-        var menu = await _repo.FindByIdAsync(request.Id);
-        if (menu == null) throw new KeyNotFoundException("Menu not found");
+        //var menu = await _repo.FindByIdAsync(request.Id);
+        //if (menu == null) throw new KeyNotFoundException("Menu not found");
 
-        menu.Name = request.Name;
-        menu.ParentId = request.ParentId;
-        menu.Url = request.Url;
-        menu.Icon = request.Icon;
-        menu.SortOrder = request.Order;
+        //menu.Name = request.Name;
+        //menu.ParentId = request.ParentId;
+        //menu.Url = request.Url;
+        //menu.Icon = request.Icon;
+        //menu.SortOrder = request.Order;
 
-        await _repo.SaveChangesAsync();
-        return MediatR.Unit.Value;
+        //await _repo.SaveChangesAsync();
+        return Unit.Value;
     }
 }

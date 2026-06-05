@@ -22,10 +22,10 @@ public class MenuPermissionController : ControllerBase
     }
 
 
-    [HttpGet("menus/{userId}")]
-    public async Task<IActionResult> GetMenusByUserId(string userId)
-    {
-        var menus = await _queryHandler.GetMenusByUserIdAsync(userId);
-        return Ok(menus);
-    }
+    //[HttpGet("menus/{userId}")]
+    //public async Task<IActionResult> GetMenusByUserId(string userId)
+    //{
+    //    var menus = await _queryHandler.GetMenusByUserIdAsync(userId);
+    //    return Ok(menus);
+    //}
 }

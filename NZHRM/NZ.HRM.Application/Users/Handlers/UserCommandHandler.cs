@@ -8,12 +8,12 @@ public class UserCommandHandler
 
     public async Task<string> Handle(CreateUserCommand cmd)
     {
-        var user = new User
+        var user = new SecUser
         {
             Id = IdentityGenerator.Next(),
-            Username = cmd.Username,
-            Password = cmd.Password, // Hash in production!
-            RoleId = cmd.RoleId,
+            //Username = cmd.Username,
+            //Password = cmd.Password, // Hash in production!
+            //RoleId = cmd.RoleId,
             CreatedOn = DateTime.UtcNow,
             CreatedBy = cmd.CreatedBy,
             UpdatedOn = DateTime.UtcNow,
@@ -30,9 +30,9 @@ public class UserCommandHandler
     {
         var user = await _repo.FindByIdAsync(cmd.Id);
         if (user is null) throw new Exception("User not found");
-        user.Username = cmd.Username;
-        user.Password = cmd.Password; // Hash in production!
-        user.RoleId = cmd.RoleId;
+        //user.Username = cmd.Username;
+        //user.Password = cmd.Password; // Hash in production!
+        //user.RoleId = cmd.RoleId;
         user.UpdatedOn = DateTime.UtcNow;
         user.UpdatedBy = cmd.UpdatedBy;
         user.IsActive = cmd.IsActive;
@@ -48,13 +48,13 @@ public class UserCommandHandler
         await _repo.SaveChangesAsync();
     }
 
-    public async Task<User?> Handle(LoginUserCommand cmd)
-    {
-        var user = await _repo.FindByUsernameAsync(cmd.Username);
-        if (user == null) return null;
-        // In production, use hashed and salted password comparison!
-        if (user.Password != cmd.Password) return null;
-        return user;
-    }
+    //public async Task<User?> Handle(LoginUserCommand cmd)
+    //{
+    //    var user = await _repo.FindByUsernameAsync(cmd.Username);
+    //    if (user == null) return null;
+    //    // In production, use hashed and salted password comparison!
+    //    if (user.Password != cmd.Password) return null;
+    //    return user;
+    //}
 
 }

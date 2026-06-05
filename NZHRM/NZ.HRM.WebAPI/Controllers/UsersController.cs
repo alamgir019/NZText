@@ -13,13 +13,13 @@ public class UsersController : ControllerBase
         _queryHandler = queryHandler;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll() =>
-        Ok(await _queryHandler.Handle(new GetAllUsersQuery()));
+    //[HttpGet]
+    //public async Task<IActionResult> GetAll() =>
+    //    Ok(await _queryHandler.Handle(new GetAllUsersQuery()));
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(string id) =>
-        Ok(await _queryHandler.Handle(new GetUserByIdQuery(id)));
+    //[HttpGet("{id}")]
+    //public async Task<IActionResult> GetById(string id) =>
+    //    Ok(await _queryHandler.Handle(new GetUserByIdQuery(id)));
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateUserCommand cmd) =>

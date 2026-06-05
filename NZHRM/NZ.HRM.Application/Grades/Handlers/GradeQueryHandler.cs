@@ -21,8 +21,8 @@ public class GradeQueryHandler
         {
             Id = g.Id,
             GradeName = g.GradeName,
-            MinSalary = g.MinSalary,
-            MaxSalary = g.MaxSalary,
+            //MinSalary = g.MinSalary,
+            //MaxSalary = g.MaxSalary,
             EmployeeType = g.EmployeeType,
             CreatedOn = g.CreatedOn,
             CreatedBy = g.CreatedBy,
@@ -43,8 +43,8 @@ public class GradeQueryHandler
         {
             Id = grade.Id,
             GradeName = grade.GradeName,
-            MinSalary = grade.MinSalary,
-            MaxSalary = grade.MaxSalary,
+            //MinSalary = grade.MinSalary,
+            //MaxSalary = grade.MaxSalary,
             EmployeeType = grade.EmployeeType,
             CreatedOn = grade.CreatedOn,
             CreatedBy = grade.CreatedBy,

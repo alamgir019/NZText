@@ -14,9 +14,9 @@ public class CompanyRepository : ICompanyRepository
         _context = context;
     }
 
-    public async Task<List<Company>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
+    public async Task<List<MstUnit>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
     {
-        var query = _context.Companies.AsQueryable();
+        var query = _context.MstUnits.AsQueryable();
 
         if (!includeInactive)
         {
@@ -24,38 +24,38 @@ public class CompanyRepository : ICompanyRepository
         }
 
         return await query
-            .OrderBy(c => c.CompanyName)
+            .OrderBy(c => c.UnitName)
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<Company?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<MstUnit?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.Companies
+        return await _context.MstUnits
             .FirstOrDefaultAsync(c => c.Id == id && c.IsActive, cancellationToken);
     }
 
-    public async Task<string> AddAsync(Company company, CancellationToken cancellationToken = default)
+    public async Task<string> AddAsync(MstUnit unit, CancellationToken cancellationToken = default)
     {
-        _context.Companies.Add(company);
+        _context.MstUnits.Add(unit);
         await _context.SaveChangesAsync(cancellationToken);
-        return company.Id;
+        return unit.Id;
     }
 
-    public async Task UpdateAsync(Company company, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(MstUnit unit, CancellationToken cancellationToken = default)
     {
-        _context.Companies.Update(company);
+        _context.MstUnits.Update(unit);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(Company company, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(MstUnit unit, CancellationToken cancellationToken = default)
     {
-        _context.Companies.Remove(company);
+        _context.MstUnits.Remove(unit);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.Companies
+        return await _context.MstUnits
             .AnyAsync(c => c.Id == id, cancellationToken);
     }
 }

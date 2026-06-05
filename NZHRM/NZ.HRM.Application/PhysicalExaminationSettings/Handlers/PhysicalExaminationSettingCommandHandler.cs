@@ -20,7 +20,7 @@ public class PhysicalExaminationSettingCommandHandler
     {
         var optionValuesJson = command.FieldType == PhysicalExaminationFieldType.Option ? command.OptionValuesJson : null;
 
-        var setting = new PhysicalExaminationSetting
+        var setting = new HrmPhysicalExaminationSetting
         {
             FieldName = command.FieldName,
             DisplayOrder = command.DisplayOrder,

@@ -29,7 +29,7 @@ public class CellCommandHandler
         if (!sectionExists)
             throw new KeyNotFoundException($"Section with ID {command.SectionId} not found");
 
-        var cell = new Cell
+        var cell = new MstCell
         {
             NameEnglish = command.NameEnglish,
             NameBangla = command.NameBangla,
@@ -38,10 +38,10 @@ public class CellCommandHandler
 
         var cellId = await _cellRepository.AddAsync(cell, cancellationToken);
 
-        await _sectionCellRepository.SetSectionForCellAsync(
-            cellId,
-            command.SectionId,
-            cancellationToken);
+        //await _sectionCellRepository.SetSectionForCellAsync(
+        //    cellId,
+        //    command.SectionId,
+        //    cancellationToken);
 
         return cellId;
     }
@@ -61,10 +61,10 @@ public class CellCommandHandler
 
         await _cellRepository.UpdateAsync(cell, cancellationToken);
 
-        await _sectionCellRepository.SetSectionForCellAsync(
-            cell.Id,
-            command.SectionId,
-            cancellationToken);
+        //await _sectionCellRepository.SetSectionForCellAsync(
+        //    cell.Id,
+        //    command.SectionId,
+        //    cancellationToken);
     }
 
     public async Task Handle(DeleteCellCommand command, CancellationToken cancellationToken = default)

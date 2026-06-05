@@ -27,9 +27,6 @@ public class CreateCompleteEmployeeCommand
     [Required(ErrorMessage = "Section ID is required")]
     public string SectionId { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Location ID is required")]
-    public string LocationId { get; set; } = string.Empty;
-
     public string? DesignationId { get; set; }
 
     public string? GradeId { get; set; }
@@ -55,7 +52,7 @@ public class CreateCompleteEmployeeCommand
 
     // Personal Information
     [Required(ErrorMessage = "Date of birth is required")]
-    public DateTime DateOfBirth { get; set; }
+    public DateOnly DateOfBirth { get; set; }
 
     [Required(ErrorMessage = "Gender is required")]
     public Gender Gender { get; set; }

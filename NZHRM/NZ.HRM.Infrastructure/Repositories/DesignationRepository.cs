@@ -14,9 +14,9 @@ public class DesignationRepository : IDesignationRepository
         _context = context;
     }
 
-    public async Task<List<Designation>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
+    public async Task<List<MstDesignation>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
     {
-        var query = _context.Designations.AsQueryable();
+        var query = _context.MstDesignations.AsQueryable();
 
         if (!includeInactive)
             query = query.Where(d => d.IsActive);
@@ -24,32 +24,32 @@ public class DesignationRepository : IDesignationRepository
         return await query.OrderBy(d => d.DesignationName).ToListAsync(cancellationToken);
     }
 
-    public async Task<Designation?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<MstDesignation?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.Designations.FirstOrDefaultAsync(d => d.Id == id && d.IsActive, cancellationToken);
+        return await _context.MstDesignations.FirstOrDefaultAsync(d => d.Id == id && d.IsActive, cancellationToken);
     }
 
-    public async Task<string> AddAsync(Designation designation, CancellationToken cancellationToken = default)
+    public async Task<string> AddAsync(MstDesignation designation, CancellationToken cancellationToken = default)
     {
-        _context.Designations.Add(designation);
+        _context.MstDesignations.Add(designation);
         await _context.SaveChangesAsync(cancellationToken);
         return designation.Id;
     }
 
-    public async Task UpdateAsync(Designation designation, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(MstDesignation designation, CancellationToken cancellationToken = default)
     {
-        _context.Designations.Update(designation);
+        _context.MstDesignations.Update(designation);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(Designation designation, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(MstDesignation designation, CancellationToken cancellationToken = default)
     {
-        _context.Designations.Remove(designation);
+        _context.MstDesignations.Remove(designation);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.Designations.AnyAsync(d => d.Id == id, cancellationToken);
+        return await _context.MstDesignations.AnyAsync(d => d.Id == id, cancellationToken);
     }
 }

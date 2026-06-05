@@ -14,9 +14,9 @@ public class DepartmentSectionRepository : IDepartmentSectionRepository
         _context = context;
     }
 
-    public async Task<List<DepartmentSection>> GetAllAsync(bool includeInactive = false, string? departmentId = null, string? sectionId = null, CancellationToken cancellationToken = default)
+    public async Task<List<MstDepartmentSection>> GetAllAsync(bool includeInactive = false, string? departmentId = null, string? sectionId = null, CancellationToken cancellationToken = default)
     {
-        var query = _context.DepartmentSections
+        var query = _context.MstDepartmentSections
             .Include(ds => ds.Department)
             .Include(ds => ds.Section)
             .AsQueryable();
@@ -36,9 +36,9 @@ public class DepartmentSectionRepository : IDepartmentSectionRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<DepartmentSection?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<MstDepartmentSection?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.DepartmentSections
+        return await _context.MstDepartmentSections
             .Include(ds => ds.Department)
             .Include(ds => ds.Section)
             .FirstOrDefaultAsync(ds => ds.Id == id && ds.IsActive, cancellationToken);
@@ -46,7 +46,7 @@ public class DepartmentSectionRepository : IDepartmentSectionRepository
 
     public async Task<string?> GetDepartmentIdBySectionIdAsync(string sectionId, CancellationToken cancellationToken = default)
     {
-        return await _context.DepartmentSections
+        return await _context.MstDepartmentSections
             .Where(ds => ds.SectionId == sectionId)
             .Select(ds => ds.DepartmentId)
             .FirstOrDefaultAsync(cancellationToken);
@@ -54,7 +54,7 @@ public class DepartmentSectionRepository : IDepartmentSectionRepository
 
     public async Task<string?> GetDepartmentNameBySectionIdAsync(string sectionId, CancellationToken cancellationToken = default)
     {
-        return await _context.DepartmentSections
+        return await _context.MstDepartmentSections
             .Where(ds => ds.SectionId == sectionId)
             .Select(ds => ds.Department != null ? ds.Department.DepartmentName : null)
             .FirstOrDefaultAsync(cancellationToken);
@@ -62,16 +62,16 @@ public class DepartmentSectionRepository : IDepartmentSectionRepository
 
     public async Task SetDepartmentForSectionAsync(string sectionId, string departmentId, CancellationToken cancellationToken = default)
     {
-        var existingMappings = await _context.DepartmentSections
+        var existingMappings = await _context.MstDepartmentSections
             .Where(ds => ds.SectionId == sectionId)
             .ToListAsync(cancellationToken);
 
         if (existingMappings.Count > 0)
         {
-            _context.DepartmentSections.RemoveRange(existingMappings);
+            _context.MstDepartmentSections.RemoveRange(existingMappings);
         }
 
-        _context.DepartmentSections.Add(new DepartmentSection
+        _context.MstDepartmentSections.Add(new MstDepartmentSection
         {
             SectionId = sectionId,
             DepartmentId = departmentId,
@@ -81,28 +81,28 @@ public class DepartmentSectionRepository : IDepartmentSectionRepository
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<string> AddAsync(DepartmentSection departmentSection, CancellationToken cancellationToken = default)
+    public async Task<string> AddAsync(MstDepartmentSection departmentSection, CancellationToken cancellationToken = default)
     {
-        _context.DepartmentSections.Add(departmentSection);
+        _context.MstDepartmentSections.Add(departmentSection);
         await _context.SaveChangesAsync(cancellationToken);
         return departmentSection.Id;
     }
 
-    public async Task UpdateAsync(DepartmentSection departmentSection, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(MstDepartmentSection departmentSection, CancellationToken cancellationToken = default)
     {
-        _context.DepartmentSections.Update(departmentSection);
+        _context.MstDepartmentSections.Update(departmentSection);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(DepartmentSection departmentSection, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(MstDepartmentSection departmentSection, CancellationToken cancellationToken = default)
     {
-        _context.DepartmentSections.Remove(departmentSection);
+        _context.MstDepartmentSections.Remove(departmentSection);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.DepartmentSections
+        return await _context.MstDepartmentSections
             .AnyAsync(ds => ds.Id == id, cancellationToken);
     }
 }

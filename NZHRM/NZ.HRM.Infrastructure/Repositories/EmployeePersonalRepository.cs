@@ -14,49 +14,49 @@ public class EmployeePersonalRepository : IEmployeePersonalRepository
         _context = context;
     }
 
-    public async Task<List<EmployeePersonal>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<List<HrmEmployeePersonal>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        return await _context.EmployeePersonals
+        return await _context.HrmEmployeePersonals
             .Include(ep => ep.Employee)
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<EmployeePersonal?> GetByEmployeeIdAsync(string employeeId, CancellationToken cancellationToken = default)
+    public async Task<HrmEmployeePersonal?> GetByEmployeeIdAsync(string employeeId, CancellationToken cancellationToken = default)
     {
-        return await _context.EmployeePersonals
+        return await _context.HrmEmployeePersonals
             .Include(ep => ep.Employee)
             .FirstOrDefaultAsync(ep => ep.EmployeeId == employeeId, cancellationToken);
     }
 
-    public async Task<EmployeePersonal?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<HrmEmployeePersonal?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.EmployeePersonals
+        return await _context.HrmEmployeePersonals
             .Include(ep => ep.Employee)
             .FirstOrDefaultAsync(ep => ep.Id == id, cancellationToken);
     }
 
-    public async Task<string> AddAsync(EmployeePersonal employeePersonal, CancellationToken cancellationToken = default)
+    public async Task<string> AddAsync(HrmEmployeePersonal employeePersonal, CancellationToken cancellationToken = default)
     {
-        _context.EmployeePersonals.Add(employeePersonal);
+        _context.HrmEmployeePersonals.Add(employeePersonal);
         await _context.SaveChangesAsync(cancellationToken);
         return employeePersonal.Id;
     }
 
-    public async Task UpdateAsync(EmployeePersonal employeePersonal, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(HrmEmployeePersonal employeePersonal, CancellationToken cancellationToken = default)
     {
-        _context.EmployeePersonals.Update(employeePersonal);
+        _context.HrmEmployeePersonals.Update(employeePersonal);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(EmployeePersonal employeePersonal, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(HrmEmployeePersonal employeePersonal, CancellationToken cancellationToken = default)
     {
-        _context.EmployeePersonals.Remove(employeePersonal);
+        _context.HrmEmployeePersonals.Remove(employeePersonal);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<bool> ExistsForEmployeeAsync(string employeeId, CancellationToken cancellationToken = default)
     {
-        return await _context.EmployeePersonals
+        return await _context.HrmEmployeePersonals
             .AnyAsync(ep => ep.EmployeeId == employeeId, cancellationToken);
     }
 }
