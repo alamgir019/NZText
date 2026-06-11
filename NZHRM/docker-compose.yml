@@ -1,0 +1,50 @@
+version: "3.9"
+
+# ─── Named volume so Postgres data survives container restarts ───────────────
+volumes:
+  postgres_data:
+
+# ─── Private network so the two containers can reach each other by hostname ──
+networks:
+  hrm_net:
+
+services:
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # PostgreSQL database
+  # ──────────────────────────────────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine          # lightweight official Postgres image
+    container_name: hrm_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       synexis_erp   # database name (matches your connection string)
+      POSTGRES_USER:     postgres      # username
+      POSTGRES_PASSWORD: root          # password  ← change in production!
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # persist data on disk
+    ports:
+      - "5432:5432"                    # optional: exposes Postgres to your host PC
+    networks:
+      - hrm_net
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # NZ.HRM Web API
+  # ──────────────────────────────────────────────────────────────────────────
+  api:
+    build:
+      context: .                       # build from the repo root
+      dockerfile: Dockerfile
+    container_name: hrm_api
+    restart: unless-stopped
+    ports:
+      - "5000:8080"                    # visit http://localhost:5000/swagger
+    environment:
+      # Override the connection string so "localhost" → the "db" service hostname
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=synexis_erp;Username=postgres;Password=root
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+    depends_on:
+      - db                             # start Postgres before the API
+    networks:
+      - hrm_net

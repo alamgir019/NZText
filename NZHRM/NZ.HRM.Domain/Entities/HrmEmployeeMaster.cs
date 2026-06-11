@@ -17,6 +17,7 @@ namespace NZ.HRM.Domain.Entities
         public string EmployeeName { get; set; } = string.Empty;
         public string EmployeeNameBangla { get; set; } = string.Empty;
         public string EmployeeNameEnglish { get; set; } = string.Empty;
+        public string EmployeeType { get; set; } = string.Empty; // e.g. "Worker", "Staff", "Officer", "Manager", "Director"
 
         // One-to-one related sections
         public HrmEmployeePersonal? Personal { get; set; }

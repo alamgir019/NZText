@@ -16,6 +16,5 @@ namespace NZ.HRM.Domain.Entities
         public decimal MinimumSalary { get; set; }
         public decimal MaximumSalary { get; set; }
         public ICollection<MstDesignation> Designations { get; set; } = new HashSet<MstDesignation>();
-        public string EmployeeType { get; set; }
     }
 }

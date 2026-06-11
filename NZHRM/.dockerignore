@@ -1,0 +1,25 @@
+## Visual Studio artifacts
+**/.vs
+**/bin
+**/obj
+**/*.user
+**/*.suo
+**/.vscode
+
+## Git
+.git
+.gitignore
+.gitattributes
+
+## Docker files themselves (no need to copy into image)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+## OS noise
+**/.DS_Store
+**/Thumbs.db
+
+## Test projects (not needed in the runtime image)
+**/*Tests*
+**/*Test*
