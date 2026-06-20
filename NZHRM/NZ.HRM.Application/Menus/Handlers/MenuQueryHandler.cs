@@ -9,13 +9,13 @@ public class MenuQueryHandler //: IRequestHandler<GetAllMenusQuery, List<Menu>>
     public MenuQueryHandler(IMenuRepository repo) => _repo = repo;
 
 
-    public async Task<Menu?> Handle(GetMenuByIdQuery request)
-    {
-        return await _repo.FindByIdAsync(request.Id);
-    }
+    //public async Task<Menu?> Handle(GetMenuByIdQuery request)
+    //{
+    //    return await _repo.FindByIdAsync(request.Id);
+    //}
 
-    public async Task<List<Menu>> Handle(GetAllMenusQuery request)
-    {
-        return await _repo.GetAllAsync();
-    }
+    //public async Task<List<Menu>> Handle(GetAllMenusQuery request)
+    //{
+    //    return await _repo.GetAllAsync();
+    //}
 }

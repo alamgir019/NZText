@@ -17,7 +17,7 @@ public class DepartmentCommandHandler
 
     public async Task<string> Handle(CreateDepartmentCommand command, CancellationToken cancellationToken = default)
     {
-        var department = new Department
+        var department = new MstDepartment
         {
             DepartmentName = command.DepartmentName,
             DepartmentCode = command.DepartmentCode,

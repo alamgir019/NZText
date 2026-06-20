@@ -17,11 +17,11 @@ public class DesignationCommandHandler
 
     public async Task<string> Handle(CreateDesignationCommand command, CancellationToken cancellationToken = default)
     {
-        var designation = new Designation
+        var designation = new MstDesignation
         {
             DesignationName = command.DesignationName,
             DesignationCode = command.DesignationCode ?? string.Empty,
-            ParentId = command.ParentId ?? string.Empty,
+            //ParentId = command.ParentId ?? string.Empty,
             IsActive = true
         };
 
@@ -36,7 +36,7 @@ public class DesignationCommandHandler
 
         designation.DesignationName = command.DesignationName;
         designation.DesignationCode = command.DesignationCode ?? string.Empty;
-        designation.ParentId = command.ParentId ?? string.Empty;
+        //designation.ParentId = command.ParentId ?? string.Empty;
 
         await _designationRepository.UpdateAsync(designation, cancellationToken);
     }

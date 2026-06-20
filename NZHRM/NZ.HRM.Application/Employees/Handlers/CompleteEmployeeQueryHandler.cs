@@ -38,7 +38,7 @@ public class CompleteEmployeeQueryHandler
             EmployeeNameEnglish = x.EmployeeNameEnglish,
             EmployeeNameBangla = x.EmployeeNameBangla,
             EnrollmentId = x.EnrollmentId,
-            MobileNumber = x.PersonalInfo?.MobileNumber,
+            //MobileNumber = x.PersonalInfo?.MobileNumber,
         }).ToList();
     }
 
@@ -48,7 +48,8 @@ public class CompleteEmployeeQueryHandler
         if (employee == null)
             return null;
 
-        var probationMonths = employee.EmployeeType == EmployeeType.Worker ? 3 : 6;
-        return query.JoiningDate.AddMonths(probationMonths).Date;
+        //var probationMonths = employee.EmployeeType == EmployeeType.Worker ? 3 : 6;
+        //return query.JoiningDate.AddMonths(probationMonths).Date;
+        return null;
     }
 }

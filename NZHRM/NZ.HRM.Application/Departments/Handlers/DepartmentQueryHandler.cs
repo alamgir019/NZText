@@ -69,31 +69,31 @@ public class DepartmentQueryHandler
         var locationDepartmentMappings = await _locationDepartmentRepository.GetAllAsync(query.IncludeInactive, cancellationToken: cancellationToken);
 
         var headOfficeLocationIds = locationDepartmentMappings
-            .Where(m => string.Equals(m.Location?.LocationName, "Head Office", StringComparison.OrdinalIgnoreCase))
-            .Select(m => m.LocationId)
+            .Where(m => string.Equals(m.Subunit?.SubunitName, "Head Office", StringComparison.OrdinalIgnoreCase))
+            .Select(m => m.SubunitId)
             .Distinct()
             .ToHashSet();
 
         var allLocationIds = locationDepartmentMappings
-            .Where(m => string.Equals(m.Location?.LocationName, "All", StringComparison.OrdinalIgnoreCase))
-            .Select(m => m.LocationId)
+            .Where(m => string.Equals(m.Subunit?.SubunitName, "All", StringComparison.OrdinalIgnoreCase))
+            .Select(m => m.SubunitId)
             .Distinct()
             .ToHashSet();
 
-        var isHeadOfficeLocation = string.Equals(location.LocationName, "Head Office", StringComparison.OrdinalIgnoreCase);
+        var isHeadOfficeLocation = string.Equals(location?.SubunitName, "Head Office", StringComparison.OrdinalIgnoreCase);
 
         HashSet<string> allowedDepartmentIds;
         if (isHeadOfficeLocation)
         {
             allowedDepartmentIds = locationDepartmentMappings
-                .Where(m => m.LocationId == query.LocationId || allLocationIds.Contains(m.LocationId))
+                .Where(m => m.SubunitId == query.LocationId || allLocationIds.Contains(m.SubunitId))
                 .Select(m => m.DepartmentId)
                 .ToHashSet();
         }
         else
         {
             allowedDepartmentIds = locationDepartmentMappings
-                .Where(m => !headOfficeLocationIds.Contains(m.LocationId))
+                .Where(m => !headOfficeLocationIds.Contains(m.SubunitId))
                 .Select(m => m.DepartmentId)
                 .ToHashSet();
         }

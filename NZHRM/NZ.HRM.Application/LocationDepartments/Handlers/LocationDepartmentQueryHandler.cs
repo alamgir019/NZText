@@ -24,8 +24,8 @@ public class LocationDepartmentQueryHandler
         return mappings.Select(m => new LocationDepartmentDto
         {
             Id = m.Id,
-            LocationId = m.LocationId,
-            LocationName = m.Location?.LocationName ?? string.Empty,
+            //LocationId = m.LocationId,
+            //LocationName = m.Location?.LocationName ?? string.Empty,
             DepartmentId = m.DepartmentId,
             DepartmentName = m.Department?.DepartmentName ?? string.Empty,
             CreatedOn = m.CreatedOn,
@@ -45,8 +45,8 @@ public class LocationDepartmentQueryHandler
         return new LocationDepartmentDetailDto
         {
             Id = mapping.Id,
-            LocationId = mapping.LocationId,
-            LocationName = mapping.Location?.LocationName ?? string.Empty,
+            //LocationId = mapping.LocationId,
+            //LocationName = mapping.Location?.LocationName ?? string.Empty,
             DepartmentId = mapping.DepartmentId,
             DepartmentName = mapping.Department?.DepartmentName ?? string.Empty,
             CreatedOn = mapping.CreatedOn,

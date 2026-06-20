@@ -25,9 +25,6 @@ public class CreateEmployeeMasterCommand
     [Required(ErrorMessage = "Section ID is required")]
     public string SectionId { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Location ID is required")]
-    public string LocationId { get; set; } = string.Empty;
-
     [Required(ErrorMessage = "Grade ID is required")]
     public string GradeId { get; set; } = string.Empty;
 

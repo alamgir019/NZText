@@ -10,51 +10,46 @@ namespace NZ.HRM.Infrastructure.Repositories
         private readonly ApplicationDbContext _db;
         public LocationRepository(ApplicationDbContext db) => _db = db;
 
-        public async Task<Location?> FindByIdAsync(string id) => await _db.Locations.FindAsync(id);
+        public async Task<MstSubunit?> FindByIdAsync(string id) => await _db.MstSubunits.FindAsync(id);
 
-        public async Task AddAsync(Location location) => await _db.Locations.AddAsync(location);
+        public async Task AddAsync(MstSubunit location) => await _db.MstSubunits.AddAsync(location);
 
-        public async Task RemoveAsync(Location location)
+        public async Task RemoveAsync(MstSubunit location)
         {
-            _db.Locations.Remove(location);
+            _db.MstSubunits.Remove(location);
             await Task.CompletedTask;
         }
 
-        public async Task UpdateAsync(Location location)
+        public async Task UpdateAsync(MstSubunit location)
         {
-            _db.Locations.Update(location);
+            _db.MstSubunits.Update(location);
             await Task.CompletedTask;
         }
 
-        public async Task<List<Location>> GetAllAsync() => await _db.Locations.ToListAsync();
+        public async Task<List<MstSubunit>> GetAllAsync() => await _db.MstSubunits.ToListAsync();
 
-        public async Task<List<Location>> GetByCompanyIdAsync(string companyId)
+        public async Task<List<MstSubunit>> GetByCompanyIdAsync(string companyId)
         {
-            return await _db.CompanyLocations
-                .Where(cl => cl.CompanyId == companyId)
-                .Include(cl => cl.Location)
-                .Select(cl => cl.Location!)
+            return await _db.MstSubunits
+                .Where(cl => cl.UnitId == companyId)
                 .Distinct()
                 .ToListAsync();
         }
 
-        public async Task<List<Location>> GetByEmployeeIdAsync(string employeeId)
+        public async Task<List<MstSubunit>> GetByEmployeeIdAsync(string employeeId)
         {
-            var companyId = await _db.EmployeeMasters
+            var companyId = await _db.HrmEmployeeMasters
                 .Where(e => e.Id == employeeId && e.IsActive)
-                .Select(e => e.CompanyId)
+                .Select(e => e.Employment!.UnitId)
                 .FirstOrDefaultAsync();
 
             if (string.IsNullOrWhiteSpace(companyId))
             {
-                return new List<Location>();
+                return new List<MstSubunit>();
             }
 
-            return await _db.CompanyLocations
-                .Where(cl => cl.CompanyId == companyId && cl.IsActive)
-                .Include(cl => cl.Location)
-                .Where(cl => cl.Location != null && cl.Location.IsActive)
-                .Select(cl => cl.Location!)
+            return await _db.MstSubunits
+                .Where(cl => cl.UnitId == companyId && cl.IsActive)
                 .Distinct()
                 .ToListAsync();
         }

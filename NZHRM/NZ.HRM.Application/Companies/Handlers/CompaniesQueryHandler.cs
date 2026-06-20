@@ -20,14 +20,14 @@ public class CompaniesQueryHandler
         return companies.Select(c => new CompanyDto
         {
             Id = c.Id,
-            CompanyCode = c.CompanyCode,
-            CompanyName = c.CompanyName,
+            //CompanyCode = c.CompanyCode,
+            //CompanyName = c.CompanyName,
             CreatedOn = c.CreatedOn,
             CreatedBy = c.CreatedBy,
             UpdatedOn = c.UpdatedOn,
             UpdatedBy = c.UpdatedBy,
             IsActive = c.IsActive,
-            IsCompliant = c.IsCompliant
+            //IsCompliant = c.IsCompliant
         }).ToList();
     }
     public async Task<CompanyDetailDto?> Handle(GetCompanyByIdQuery query, CancellationToken cancellationToken = default)
@@ -40,14 +40,14 @@ public class CompaniesQueryHandler
         return new CompanyDetailDto
         {
             Id = company.Id,
-            CompanyCode = company.CompanyCode,
-            CompanyName = company.CompanyName,
+            //CompanyCode = company.CompanyCode,
+            //CompanyName = company.CompanyName,
             CreatedOn = company.CreatedOn,
             CreatedBy = company.CreatedBy,
             UpdatedOn = company.UpdatedOn,
             UpdatedBy = company.UpdatedBy,
             IsActive = company.IsActive,
-            IsCompliant = company.IsCompliant
+            //IsCompliant = company.IsCompliant
         };
     }
 }

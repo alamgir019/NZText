@@ -4,10 +4,10 @@ namespace NZ.HRM.Application.Interfaces.Repositories;
 
 public interface IShiftRepository
 {
-    Task<List<Shift>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default);
-    Task<Shift?> GetByIdAsync(string id, CancellationToken cancellationToken = default);
-    Task<string> AddAsync(Shift shift, CancellationToken cancellationToken = default);
-    Task UpdateAsync(Shift shift, CancellationToken cancellationToken = default);
-    Task DeleteAsync(Shift shift, CancellationToken cancellationToken = default);
+    Task<List<MstShift>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default);
+    Task<MstShift?> GetByIdAsync(string id, CancellationToken cancellationToken = default);
+    Task<string> AddAsync(MstShift shift, CancellationToken cancellationToken = default);
+    Task UpdateAsync(MstShift shift, CancellationToken cancellationToken = default);
+    Task DeleteAsync(MstShift shift, CancellationToken cancellationToken = default);
     Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default);
 }

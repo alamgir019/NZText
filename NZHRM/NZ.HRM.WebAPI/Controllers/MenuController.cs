@@ -15,13 +15,13 @@ public class MenuController : ControllerBase
         _queryHandler = queryHandler;
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> Get(string id) =>
-        Ok(await _queryHandler.Handle(new GetMenuByIdQuery(id)));
+    //[HttpGet("{id}")]
+    //public async Task<IActionResult> Get(string id) =>
+    //    Ok(await _queryHandler.Handle(new GetMenuByIdQuery(id)));
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
-        => Ok(await _queryHandler.Handle(new GetAllMenusQuery()));
+    //[HttpGet]
+    //public async Task<IActionResult> GetAll()
+    //    => Ok(await _queryHandler.Handle(new GetAllMenusQuery()));
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateMenuCommand command)

@@ -33,14 +33,15 @@ public class LocationDepartmentCommandHandler
         if (!departmentExists)
             throw new KeyNotFoundException($"Department with ID {command.DepartmentId} not found");
 
-        var mapping = new LocationDepartment
-        {
-            LocationId = command.LocationId,
-            DepartmentId = command.DepartmentId,
-            IsActive = true
-        };
+        //var mapping = new LocationDepartment
+        //{
+        //    LocationId = command.LocationId,
+        //    DepartmentId = command.DepartmentId,
+        //    IsActive = true
+        //};
 
-        return await _locationDepartmentRepository.AddAsync(mapping, cancellationToken);
+        //return await _locationDepartmentRepository.AddAsync(mapping, cancellationToken);
+        return string.Empty;
     }
 
     public async Task Handle(UpdateLocationDepartmentCommand command, CancellationToken cancellationToken = default)
@@ -57,7 +58,7 @@ public class LocationDepartmentCommandHandler
         if (!departmentExists)
             throw new KeyNotFoundException($"Department with ID {command.DepartmentId} not found");
 
-        mapping.LocationId = command.LocationId;
+        //mapping.LocationId = command.LocationId;
         mapping.DepartmentId = command.DepartmentId;
 
         await _locationDepartmentRepository.UpdateAsync(mapping, cancellationToken);

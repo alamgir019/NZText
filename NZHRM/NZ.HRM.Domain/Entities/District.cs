@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NZ.HRM.Domain.Entities
 {
+    [Table("district", Schema = "lookup")]
     public class District : BaseEntityWithSortOrder
     {
         public string DistrictName { get; set; } = string.Empty;
@@ -15,6 +16,6 @@ namespace NZ.HRM.Domain.Entities
 
         // Navigation properties
         public ICollection<Thana>? Thanas { get; set; }
-        public ICollection<Location>? Locations { get; set; }
+        public ICollection<MstSubunit>? MstSubunits { get; set; }
     }
 }

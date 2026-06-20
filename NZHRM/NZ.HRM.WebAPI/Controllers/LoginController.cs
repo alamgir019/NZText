@@ -15,14 +15,15 @@ public class LoginController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Login([FromBody] LoginUserCommand cmd)
     {
-        var user = await _handler.Handle(cmd);
-        if (user == null)
-            return Unauthorized("Invalid username or password.");
+        //var user = await _handler.Handle(cmd);
+        //if (user == null)
+        //    return Unauthorized("Invalid username or password.");
 
-        // Store user ID in session
-        HttpContext.Session.SetString("UserId", user.Id);
+        //// Store user ID in session
+        //HttpContext.Session.SetString("UserId", user.Id);
 
-        return Ok(new { user.Id, user.Username, user.RoleId });
+        //return Ok(new { user.Id, user.Username, user.RoleId });
+        return Ok(new { message = "Login successful (mock response)." });
     }
 
     [HttpPost("logout")]

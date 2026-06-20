@@ -14,23 +14,23 @@ public class EmployeeVerificationRepository : IEmployeeVerificationRepository
         _context = context;
     }
 
-    public async Task<EmployeeVerification?> GetByEmployeeIdAsync(string employeeId, CancellationToken cancellationToken = default)
+    public async Task<HrmEmployeeVerification?> GetByEmployeeIdAsync(string employeeId, CancellationToken cancellationToken = default)
     {
-        return await _context.EmployeeVerifications
+        return await _context.HrmEmployeeVerifications
             .Include(ev => ev.Employee)
             .FirstOrDefaultAsync(ev => ev.EmployeeId == employeeId, cancellationToken);
     }
 
-    public async Task<string> AddAsync(EmployeeVerification employeeVerification, CancellationToken cancellationToken = default)
+    public async Task<string> AddAsync(HrmEmployeeVerification employeeVerification, CancellationToken cancellationToken = default)
     {
-        _context.EmployeeVerifications.Add(employeeVerification);
+        _context.HrmEmployeeVerifications.Add(employeeVerification);
         await _context.SaveChangesAsync(cancellationToken);
         return employeeVerification.Id;
     }
 
-    public async Task UpdateAsync(EmployeeVerification employeeVerification, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(HrmEmployeeVerification employeeVerification, CancellationToken cancellationToken = default)
     {
-        _context.EmployeeVerifications.Update(employeeVerification);
+        _context.HrmEmployeeVerifications.Update(employeeVerification);
         await _context.SaveChangesAsync(cancellationToken);
     }
 }

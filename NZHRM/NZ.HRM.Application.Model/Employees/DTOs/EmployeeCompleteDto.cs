@@ -18,8 +18,6 @@ public class EmployeeCompleteDto
     public string DepartmentName { get; set; } = string.Empty;
     public string SectionId { get; set; } = string.Empty;
     public string SectionName { get; set; } = string.Empty;
-    public string LocationId { get; set; } = string.Empty;
-    public string LocationName { get; set; } = string.Empty;
     public string GradeId { get; set; } = string.Empty;
     public string GradeName { get; set; } = string.Empty;
     public string DesignationId { get; set; } = string.Empty;
@@ -39,7 +37,7 @@ public class EmployeeCompleteDto
 
     // From EmployeePersonal - Personal Information
     public string? PersonalInfoId { get; set; }
-    public DateTime? DateOfBirth { get; set; }
+    public DateOnly? DateOfBirth { get; set; }
     public Gender? Gender { get; set; }
     public MaritalStatus? MaritalStatus { get; set; }
     public string? MobileNumber { get; set; }

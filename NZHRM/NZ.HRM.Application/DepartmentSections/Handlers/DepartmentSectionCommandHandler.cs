@@ -32,7 +32,7 @@ public class DepartmentSectionCommandHandler
         if (!sectionExists)
             throw new KeyNotFoundException($"Section with ID {command.SectionId} not found");
 
-        var departmentSection = new DepartmentSection
+        var departmentSection = new MstDepartmentSection
         {
             DepartmentId = command.DepartmentId,
             SectionId = command.SectionId,

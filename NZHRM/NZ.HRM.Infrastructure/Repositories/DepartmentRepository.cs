@@ -14,9 +14,9 @@ public class DepartmentRepository : IDepartmentRepository
         _context = context;
     }
 
-    public async Task<List<Department>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
+    public async Task<List<MstDepartment>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
     {
-        var query = _context.Departments.AsQueryable();
+        var query = _context.MstDepartments.AsQueryable();
 
         if (!includeInactive)
         {
@@ -28,34 +28,34 @@ public class DepartmentRepository : IDepartmentRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<Department?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<MstDepartment?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.Departments
+        return await _context.MstDepartments
             .FirstOrDefaultAsync(d => d.Id == id && d.IsActive, cancellationToken);
     }
 
-    public async Task<string> AddAsync(Department department, CancellationToken cancellationToken = default)
+    public async Task<string> AddAsync(MstDepartment department, CancellationToken cancellationToken = default)
     {
-        _context.Departments.Add(department);
+        _context.MstDepartments.Add(department);
         await _context.SaveChangesAsync(cancellationToken);
         return department.Id;
     }
 
-    public async Task UpdateAsync(Department department, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(MstDepartment department, CancellationToken cancellationToken = default)
     {
-        _context.Departments.Update(department);
+        _context.MstDepartments.Update(department);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(Department department, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(MstDepartment department, CancellationToken cancellationToken = default)
     {
-        _context.Departments.Remove(department);
+        _context.MstDepartments.Remove(department);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.Departments
+        return await _context.MstDepartments
             .AnyAsync(d => d.Id == id, cancellationToken);
     }
 }
