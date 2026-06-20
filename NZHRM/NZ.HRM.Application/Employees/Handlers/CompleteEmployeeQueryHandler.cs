@@ -1,5 +1,4 @@
 using NZ.HRM.Application.Employees.Queries.GetCompleteEmployee;
-using NZ.HRM.Application.Employees.Queries.GetCompleteEmployee;
 using NZ.HRM.Application.Employees.Queries.GetEmployeeConfirmationDate;
 using NZ.HRM.Application.Employees.Queries.SearchEmployees;
 using NZ.HRM.Application.Interfaces.Repositories;

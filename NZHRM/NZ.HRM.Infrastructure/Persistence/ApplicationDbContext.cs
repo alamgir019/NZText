@@ -44,13 +44,14 @@ namespace NZ.HRM.Infrastructure.Persistence
         //public DbSet<EmployeePersonal> EmployeePersonals => Set<EmployeePersonal>();
         public DbSet<HrmEmployeeVerification> HrmEmployeeVerifications => Set<HrmEmployeeVerification>();
         //public DbSet<FinancialDetail> FinancialDetails => Set<FinancialDetail>();
-        public DbSet<HrmMedicalFitnessCheck> MedicalFitnessChecks => Set<HrmMedicalFitnessCheck>();
+        public DbSet<HrmMedicalFitnessCheck> HrmMedicalFitnessChecks => Set<HrmMedicalFitnessCheck>();
         public DbSet<HrmPhysicalExaminationSetting> HrmPhysicalExaminationSettings => Set<HrmPhysicalExaminationSetting>();
         //public DbSet<Shift> Shifts => Set<Shift>();
         //public DbSet<Holiday> Holidays => Set<Holiday>();
         //public DbSet<Menu> Menus => Set<Menu>();
         //public DbSet<MenuPermission> MenuPermissions => Set<MenuPermission>();
         //public DbSet<Post> Posts => Set<Post>();
+
 
         // HRM
         public DbSet<HrmEmployeeMaster> HrmEmployeeMasters => Set<HrmEmployeeMaster>();
@@ -71,6 +72,7 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<AttDeviceMaster> AttDeviceMasters => Set<AttDeviceMaster>();
         public DbSet<AttDeviceSyncLog> AttDeviceSyncLogs => Set<AttDeviceSyncLog>();
         public DbSet<AttRawPunch> AttRawPunches => Set<AttRawPunch>();
+        public DbSet<AttProcessedPunch> AttProcessedPunches => Set<AttProcessedPunch>();
         public DbSet<AttShiftRoster> AttShiftRosters => Set<AttShiftRoster>();
         public DbSet<AttOtAuthorization> AttOtAuthorizations => Set<AttOtAuthorization>();
         public DbSet<AttProcessedAttendance> AttProcessedAttendances => Set<AttProcessedAttendance>();
@@ -79,7 +81,6 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<AttAttendanceLock> AttAttendanceLocks => Set<AttAttendanceLock>();
         public DbSet<AttProcessingLog> AttProcessingLogs => Set<AttProcessingLog>();
         public DbSet<AttInsideFactoryStatus> AttInsideFactoryStatuses => Set<AttInsideFactoryStatus>();
-        public DbSet<MstHolidayCalendar> AttHolidayCalendars => Set<MstHolidayCalendar>();
         public DbSet<AttWeeklyOffPattern> AttWeeklyOffPatterns => Set<AttWeeklyOffPattern>();
 
         // Leave
@@ -91,7 +92,7 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<LevLeaveOpeningBalance> LevLeaveOpeningBalances => Set<LevLeaveOpeningBalance>();
         public DbSet<LevLeaveEncashment> LevLeaveEncashments => Set<LevLeaveEncashment>();
         public DbSet<LevLeaveAccrual> LevLeaveAccruals => Set<LevLeaveAccrual>();
-        public DbSet<MstHolidayCalendar> LevHolidayCalendars => Set<MstHolidayCalendar>();
+        public DbSet<LevHolidayCalendar> LevHolidayCalendars => Set<LevHolidayCalendar>();
         public DbSet<LevLeaveApprovalHistory> LevLeaveApprovalHistories => Set<LevLeaveApprovalHistory>();
         public DbSet<LevLeaveCancellation> LevLeaveCancellations => Set<LevLeaveCancellation>();
         public DbSet<LevLeaveYear> LevLeaveYears => Set<LevLeaveYear>();
@@ -189,7 +190,6 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<MstPayrollProcessingGroup>().ToTable("payroll_processing_group", "master");
             modelBuilder.Entity<MstSubunitDepartment>().ToTable("mst_subunit_department", "master");
             modelBuilder.Entity<MstDepartmentSection>().ToTable("mst_department_section", "master");
-            modelBuilder.Entity<MstHolidayCalendar>().ToTable("holiday_calendar", "master");
 
             // HRM
             modelBuilder.Entity<HrmEmployeeMaster>().ToTable("employee_master", "hrm");
@@ -248,6 +248,7 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<AttDeviceMaster>().ToTable("device_master", "attendance");
             modelBuilder.Entity<AttDeviceSyncLog>().ToTable("device_sync_log", "attendance");
             modelBuilder.Entity<AttRawPunch>().ToTable("raw_punch", "attendance");
+            modelBuilder.Entity<AttProcessedPunch>().ToTable("processed_punches", "attendance");
             modelBuilder.Entity<AttShiftRoster>().ToTable("shift_roster", "attendance");
             modelBuilder.Entity<AttOtAuthorization>().ToTable("ot_authorization", "attendance");
             modelBuilder.Entity<AttProcessedAttendance>().ToTable("processed_attendance", "attendance");
@@ -267,7 +268,7 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<LevLeaveOpeningBalance>().ToTable("leave_opening_balance", "leave_mgmt");
             modelBuilder.Entity<LevLeaveEncashment>().ToTable("leave_encashment", "leave_mgmt");
             modelBuilder.Entity<LevLeaveAccrual>().ToTable("leave_accrual", "leave_mgmt");
-            modelBuilder.Entity<MstHolidayCalendar>().ToTable("holiday_calendar", "leave_mgmt");
+            modelBuilder.Entity<LevHolidayCalendar>().ToTable("holiday_calendar", "leave_mgmt");
             modelBuilder.Entity<LevLeaveApprovalHistory>().ToTable("leave_approval_history", "leave_mgmt");
             modelBuilder.Entity<LevLeaveCancellation>().ToTable("leave_cancellation", "leave_mgmt");
             modelBuilder.Entity<LevLeaveYear>().ToTable("leave_year", "leave_mgmt");

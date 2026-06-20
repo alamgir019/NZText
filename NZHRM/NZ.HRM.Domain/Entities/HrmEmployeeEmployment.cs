@@ -44,6 +44,6 @@ namespace NZ.HRM.Domain.Entities
         [ForeignKey("ReportingEmployeeId")] public HrmEmployeeMaster? ReportingEmployee { get; set; }
         [ForeignKey("ProcessingGroupId")] public MstPayrollProcessingGroup? ProcessingGroup { get; set; }
         [ForeignKey("EmployeeNatureId")] public EmployeeNature? EmployeeNature { get; set; }
-        [ForeignKey("EmployeeHolidayId")] public MstHolidayCalendar? EmployeeHoliday { get; set; }
+        [ForeignKey("EmployeeHolidayId")] public LevHolidayCalendar? EmployeeHoliday { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using NZ.HRM.Domain.Common;
 namespace NZ.HRM.Domain.Entities
 {
     [Table("device_sync_log", Schema = "attendance")]
-    public class AttDeviceSyncLog : BaseEntityWithSortOrder
+    public class AttDeviceSyncLog : BaseEntity
     {
         public string DeviceId { get; set; } = string.Empty;
         public DateTime? SyncStartTime { get; set; }

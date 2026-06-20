@@ -2,7 +2,6 @@ using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Application.MedicalFitnessChecks.Commands.CreateMedicalFitnessCheck;
 using NZ.HRM.Application.MedicalFitnessChecks.Commands.DeleteMedicalFitnessCheck;
 using NZ.HRM.Application.MedicalFitnessChecks.Commands.UpdateMedicalFitnessCheck;
-using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Domain.Entities;
 
 namespace NZ.HRM.Application.MedicalFitnessChecks.Handlers;

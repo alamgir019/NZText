@@ -1,5 +1,4 @@
 using NZ.HRM.Application.Companies.Commands.CreateCompany;
-using NZ.HRM.Application.Companies.Commands.CreateCompany;
 using NZ.HRM.Application.Companies.Commands.DeleteCompany;
 using NZ.HRM.Application.Companies.Commands.UpdateCompany;
 using NZ.HRM.Application.Interfaces.Repositories;

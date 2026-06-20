@@ -5,7 +5,7 @@ using NZ.HRM.Domain.Common;
 namespace NZ.HRM.Domain.Entities
 {
     [Table("processed_attendance", Schema = "attendance")]
-    public class AttProcessedAttendance : BaseEntityWithSortOrder
+    public class AttProcessedAttendance : BaseEntity
     {
         public string EmployeeId { get; set; } = string.Empty;
         public DateOnly AttendanceDate { get; set; }

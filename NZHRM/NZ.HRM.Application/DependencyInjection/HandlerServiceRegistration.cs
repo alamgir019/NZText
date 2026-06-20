@@ -20,6 +20,7 @@ using NZ.HRM.Application.Districts.Handlers;
 using NZ.HRM.Application.MedicalFitnessChecks.Handlers;
 using NZ.HRM.Application.FinancialDetails.Handlers;
 using NZ.HRM.Application.PhysicalExaminationSettings.Handlers;
+using NZ.HRM.Application.RawPunches.Handlers;
 using NZ.HRM.Application.Thanas.Handlers;
 
 namespace NZ.HRM.Application.DependencyInjection
@@ -113,6 +114,11 @@ namespace NZ.HRM.Application.DependencyInjection
             // Register Financial Detail Handlers
             services.AddScoped<FinancialDetailCommandHandler>();
             services.AddScoped<FinancialDetailQueryHandler>();
+
+            // Register RawPunch Handlers
+            services.AddScoped<RawPunchCommandHandler>();
+            services.AddScoped<NZ.HRM.Domain.Services.PunchProcessingService>();
+            services.AddScoped<NZ.HRM.Domain.Services.AttendanceProcessingService>();
 
             return services;
         }

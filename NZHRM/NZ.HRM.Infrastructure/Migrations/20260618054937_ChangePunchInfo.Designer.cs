@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NZ.HRM.Infrastructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NZ.HRM.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260618054937_ChangePunchInfo")]
+    partial class ChangePunchInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -498,6 +501,9 @@ namespace NZ.HRM.Infrastructure.Migrations
 
                     b.Property<string>("ShiftId")
                         .HasColumnType("CHAR(26)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer");
 
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
@@ -3786,9 +3792,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW()");
 
-                    b.Property<int>("DaysOffset")
-                        .HasColumnType("integer");
-
                     b.Property<TimeOnly>("EndTime")
                         .HasColumnType("time without time zone");
 
@@ -3806,10 +3809,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("ShiftName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ShiftType")
                         .IsRequired()
                         .HasColumnType("text");
 
