@@ -17,16 +17,17 @@ public class ShiftCommandHandler
 
     public async Task<string> Handle(CreateShiftCommand command, CancellationToken cancellationToken = default)
     {
-        var shift = new Shift
-        {
-            ShiftName = command.ShiftName,
-            StartTime = command.StartTime,
-            EndTime = command.EndTime,
-            SortOrder = command.SortOrder,
-            IsActive = true
-        };
+        //var shift = new Shift
+        //{
+        //    ShiftName = command.ShiftName,
+        //    StartTime = command.StartTime,
+        //    EndTime = command.EndTime,
+        //    SortOrder = command.SortOrder,
+        //    IsActive = true
+        //};
 
-        return await _shiftRepository.AddAsync(shift, cancellationToken);
+        //return await _shiftRepository.AddAsync(shift, cancellationToken);
+        return string.Empty;
     }
 
     public async Task Handle(UpdateShiftCommand command, CancellationToken cancellationToken = default)
@@ -35,9 +36,9 @@ public class ShiftCommandHandler
         if (shift == null)
             throw new KeyNotFoundException($"Shift with ID {command.Id} not found");
 
-        shift.ShiftName = command.ShiftName;
-        shift.StartTime = command.StartTime;
-        shift.EndTime = command.EndTime;
+        //shift.ShiftName = command.ShiftName;
+        //shift.StartTime = command.StartTime;
+        //shift.EndTime = command.EndTime;
         shift.SortOrder = command.SortOrder;
 
         await _shiftRepository.UpdateAsync(shift, cancellationToken);

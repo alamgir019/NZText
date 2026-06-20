@@ -14,9 +14,9 @@ public class MedicalFitnessCheckRepository : IMedicalFitnessCheckRepository
         _context = context;
     }
 
-    public async Task<List<MedicalFitnessCheck>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
+    public async Task<List<HrmMedicalFitnessCheck>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
     {
-        var query = _context.MedicalFitnessChecks.AsQueryable();
+        var query = _context.HrmMedicalFitnessChecks.AsQueryable();
 
         if (!includeInactive)
             query = query.Where(x => x.IsActive);
@@ -26,9 +26,9 @@ public class MedicalFitnessCheckRepository : IMedicalFitnessCheckRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<List<MedicalFitnessCheck>> GetByEmployeeIdAsync(string employeeId, bool includeInactive = false, CancellationToken cancellationToken = default)
+    public async Task<List<HrmMedicalFitnessCheck>> GetByEmployeeIdAsync(string employeeId, bool includeInactive = false, CancellationToken cancellationToken = default)
     {
-        var query = _context.MedicalFitnessChecks
+        var query = _context.HrmMedicalFitnessChecks
             .Where(x => x.EmployeeId == employeeId)
             .AsQueryable();
 
@@ -40,35 +40,35 @@ public class MedicalFitnessCheckRepository : IMedicalFitnessCheckRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<MedicalFitnessCheck?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<HrmMedicalFitnessCheck?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.MedicalFitnessChecks
+        return await _context.HrmMedicalFitnessChecks
             .FirstOrDefaultAsync(x => x.Id == id && x.IsActive, cancellationToken);
     }
 
-    public async Task<MedicalFitnessCheck?> GetLatestByEmployeeIdAsync(string employeeId, CancellationToken cancellationToken = default)
+    public async Task<HrmMedicalFitnessCheck?> GetLatestByEmployeeIdAsync(string employeeId, CancellationToken cancellationToken = default)
     {
-        return await _context.MedicalFitnessChecks
+        return await _context.HrmMedicalFitnessChecks
             .Where(x => x.EmployeeId == employeeId && x.IsActive)
             .OrderByDescending(x => x.ExaminationDateTime)
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<string> AddAsync(MedicalFitnessCheck medicalFitnessCheck, CancellationToken cancellationToken = default)
+    public async Task<string> AddAsync(HrmMedicalFitnessCheck medicalFitnessCheck, CancellationToken cancellationToken = default)
     {
-        _context.MedicalFitnessChecks.Add(medicalFitnessCheck);
+        _context.HrmMedicalFitnessChecks.Add(medicalFitnessCheck);
         await _context.SaveChangesAsync(cancellationToken);
         return medicalFitnessCheck.Id;
     }
 
-    public async Task UpdateAsync(MedicalFitnessCheck medicalFitnessCheck, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(HrmMedicalFitnessCheck medicalFitnessCheck, CancellationToken cancellationToken = default)
     {
-        _context.MedicalFitnessChecks.Update(medicalFitnessCheck);
+        _context.HrmMedicalFitnessChecks.Update(medicalFitnessCheck);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.MedicalFitnessChecks.AnyAsync(x => x.Id == id, cancellationToken);
+        return await _context.HrmMedicalFitnessChecks.AnyAsync(x => x.Id == id, cancellationToken);
     }
 }

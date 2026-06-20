@@ -3,10 +3,10 @@ using NZ.HRM.Domain.Entities;
 
 public interface IRoleRepository
 {
-    Task<Role?> FindByIdAsync(string id);
-    Task<List<Role>> GetAllAsync();
-    Task AddAsync(Role role);
-    Task RemoveAsync(Role role);
-    Task UpdateAsync(Role role);
+    Task<SecRole?> FindByIdAsync(string id);
+    Task<List<SecRole>> GetAllAsync();
+    Task AddAsync(SecRole role);
+    Task RemoveAsync(SecRole role);
+    Task UpdateAsync(SecRole role);
     Task SaveChangesAsync();
 }

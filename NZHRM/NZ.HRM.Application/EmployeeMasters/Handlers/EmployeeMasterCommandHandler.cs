@@ -47,23 +47,23 @@ public class EmployeeMasterCommandHandler
         // Validate related entities exist
         await ValidateRelatedEntities(command.CompanyId, command.DepartmentId, command.SectionId, command.GradeId, command.ShiftId, command.EmployeeNatureId, cancellationToken);
 
-        var employeeMaster = new EmployeeMaster
+        var employeeMaster = new HrmEmployeeMaster
         {
             EmployeeCode = command.EmployeeCode,
             EmployeeNameEnglish = command.EmployeeNameEnglish,
             EmployeeNameBangla = command.EmployeeNameBangla,
-            CompanyId = command.CompanyId,
-            DepartmentId = command.DepartmentId,
-            SectionId = command.SectionId,
-            GradeId = command.GradeId,
-            EmployeeType = command.EmployeeType,
-            ShiftId = command.ShiftId,
-            EmployeeNatureId = command.EmployeeNatureId,
-            Holiday = command.Holiday,
-            ProposedMonthlySalary = command.ProposedMonthlySalary,
-            JoiningDate = command.JoiningDate,
-            ConfirmationDate = command.ConfirmationDate,
-            Status = EmployeeStatus.Draft,
+            //CompanyId = command.CompanyId,
+            //DepartmentId = command.DepartmentId,
+            //SectionId = command.SectionId,
+            //GradeId = command.GradeId,
+            //EmployeeType = command.EmployeeType,
+            //ShiftId = command.ShiftId,
+            //EmployeeNatureId = command.EmployeeNatureId,
+            //Holiday = command.Holiday,
+            //ProposedMonthlySalary = command.ProposedMonthlySalary,
+            //JoiningDate = command.JoiningDate,
+            //ConfirmationDate = command.ConfirmationDate,
+            //Status = EmployeeStatus.Draft,
             IsActive = true
         };
 
@@ -90,18 +90,18 @@ public class EmployeeMasterCommandHandler
         employeeMaster.EmployeeCode = command.EmployeeCode;
         employeeMaster.EmployeeNameEnglish = command.EmployeeNameEnglish;
         employeeMaster.EmployeeNameBangla = command.EmployeeNameBangla;
-        employeeMaster.CompanyId = command.CompanyId;
-        employeeMaster.DepartmentId = command.DepartmentId;
-        employeeMaster.SectionId = command.SectionId;
-        employeeMaster.GradeId = command.GradeId;
-        employeeMaster.EmployeeType = command.EmployeeType;
-        employeeMaster.ShiftId = command.ShiftId;
-        employeeMaster.EmployeeNatureId = command.EmployeeNatureId;
-        employeeMaster.Holiday = command.Holiday;
-        employeeMaster.ProposedMonthlySalary = command.ProposedMonthlySalary;
-        employeeMaster.JoiningDate = command.JoiningDate;
-        employeeMaster.ConfirmationDate = command.ConfirmationDate;
-        employeeMaster.Status = command.Status;
+        //employeeMaster.CompanyId = command.CompanyId;
+        //employeeMaster.DepartmentId = command.DepartmentId;
+        //employeeMaster.SectionId = command.SectionId;
+        //employeeMaster.GradeId = command.GradeId;
+        //employeeMaster.EmployeeType = command.EmployeeType;
+        //employeeMaster.ShiftId = command.ShiftId;
+        //employeeMaster.EmployeeNatureId = command.EmployeeNatureId;
+        //employeeMaster.Holiday = command.Holiday;
+        //employeeMaster.ProposedMonthlySalary = command.ProposedMonthlySalary;
+        //employeeMaster.JoiningDate = command.JoiningDate;
+        //employeeMaster.ConfirmationDate = command.ConfirmationDate;
+        //employeeMaster.Status = command.Status;
 
         await _employeeMasterRepository.UpdateAsync(employeeMaster, cancellationToken);
     }
@@ -115,7 +115,7 @@ public class EmployeeMasterCommandHandler
 
         // Soft delete
         employeeMaster.IsActive = false;
-        employeeMaster.Status = EmployeeStatus.Inactive;
+        //employeeMaster.Status = EmployeeStatus.Inactive;
         await _employeeMasterRepository.UpdateAsync(employeeMaster, cancellationToken);
 
         // Or hard delete

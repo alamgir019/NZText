@@ -4,11 +4,11 @@ namespace NZ.HRM.Application.Interfaces.Repositories;
 
 public interface IEmployeePersonalRepository
 {
-    Task<List<EmployeePersonal>> GetAllAsync(CancellationToken cancellationToken = default);
-    Task<EmployeePersonal?> GetByEmployeeIdAsync(string employeeId, CancellationToken cancellationToken = default);
-    Task<EmployeePersonal?> GetByIdAsync(string id, CancellationToken cancellationToken = default);
-    Task<string> AddAsync(EmployeePersonal employeePersonal, CancellationToken cancellationToken = default);
-    Task UpdateAsync(EmployeePersonal employeePersonal, CancellationToken cancellationToken = default);
-    Task DeleteAsync(EmployeePersonal employeePersonal, CancellationToken cancellationToken = default);
+    Task<List<HrmEmployeePersonal>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<HrmEmployeePersonal?> GetByEmployeeIdAsync(string employeeId, CancellationToken cancellationToken = default);
+    Task<HrmEmployeePersonal?> GetByIdAsync(string id, CancellationToken cancellationToken = default);
+    Task<string> AddAsync(HrmEmployeePersonal employeePersonal, CancellationToken cancellationToken = default);
+    Task UpdateAsync(HrmEmployeePersonal employeePersonal, CancellationToken cancellationToken = default);
+    Task DeleteAsync(HrmEmployeePersonal employeePersonal, CancellationToken cancellationToken = default);
     Task<bool> ExistsForEmployeeAsync(string employeeId, CancellationToken cancellationToken = default);
 }

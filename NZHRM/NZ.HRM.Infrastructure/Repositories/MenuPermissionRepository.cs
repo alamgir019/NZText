@@ -9,38 +9,38 @@ namespace NZ.HRM.Infrastructure.Repositories
         private readonly ApplicationDbContext _db;
         public MenuPermissionRepository(ApplicationDbContext db) => _db = db;
 
-        public async Task<MenuPermission?> FindByIdAsync(string id) => await _db.MenuPermissions.FindAsync(id);
+        public async Task<SecPermission?> FindByIdAsync(string id) => await _db.SecPermissions.FindAsync(id);
 
-        public async Task AddAsync(MenuPermission menuPermission) => await _db.MenuPermissions.AddAsync(menuPermission);
+        public async Task AddAsync(SecPermission secPermission) => await _db.SecPermissions.AddAsync(secPermission);
 
-        public async Task RemoveAsync(MenuPermission menuPermission)
+        public async Task RemoveAsync(SecPermission secPermission)
         {
-            _db.MenuPermissions.Remove(menuPermission);
+            _db.SecPermissions.Remove(secPermission);
             await Task.CompletedTask;
         }
 
-        public async Task UpdateAsync(MenuPermission menuPermission)
+        public async Task UpdateAsync(SecPermission secPermission)
         {
-            _db.MenuPermissions.Update(menuPermission);
+            _db.SecPermissions.Update(secPermission);
             await Task.CompletedTask;
         }
 
-        public async Task<List<MenuPermission>> GetAllAsync() => await _db.MenuPermissions.ToListAsync();
+        public async Task<List<SecPermission>> GetAllAsync() => await _db.SecPermissions.ToListAsync();
 
         public async Task SaveChangesAsync() => await _db.SaveChangesAsync();
 
-        public async Task<List<MenuPermission>> GetByUserIdAsync(string userId)
+        public async Task<List<SecPermission>> GetByUserIdAsync(string userId)
         {
-            return await _db.MenuPermissions
-                .Include(m => m.Menu)
-                .Where(mp => mp.UserId == userId && mp.Visibility)
+            return await _db.SecPermissions
+                //.Include(m => m.sec)
+                //.Where(mp => mp.UserId == userId && mp.Visibility)
                 .ToListAsync();
         }
 
-        public async Task<List<MenuPermission>> GetByRoleIdAsync(string roleId)
+        public async Task<List<SecPermission>> GetByRoleIdAsync(string roleId)
         {
-            return await _db.MenuPermissions
-                .Where(mp => mp.RoleId == roleId && mp.UserId == null && mp.Visibility)
+            return await _db.SecPermissions
+                //.Where(mp => mp.RoleId == roleId && mp.UserId == null && mp.Visibility)
                 .ToListAsync();
         }
 

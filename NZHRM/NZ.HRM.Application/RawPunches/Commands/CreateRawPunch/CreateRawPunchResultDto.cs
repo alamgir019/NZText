@@ -4,8 +4,8 @@ public class CreateRawPunchResultDto
 {
     public string RawPunchId { get; set; } = string.Empty;
     public string? ProcessedPunchId { get; set; }
-    public TimeSpan RawPunchTime { get; set; }
-    public TimeSpan AdjustedPunchTime { get; set; }
+    public TimeOnly RawPunchTime { get; set; }
+    public TimeOnly AdjustedPunchTime { get; set; }
     public string PunchType { get; set; } = string.Empty;
     public string? ShiftName { get; set; }
 }

@@ -27,14 +27,13 @@ public class RawPunchCommandHandler
     public async Task<CreateRawPunchResultDto> Handle(CreateRawPunchCommand command, CancellationToken cancellationToken = default)
     {
         // 1. Save the raw punch
-        var rawPunch = new RawPunch
+        var rawPunch = new AttRawPunch
         {
             EmployeeId = command.EmployeeId,
             PunchDate = command.PunchDate,
             PunchTime = command.PunchTime,
             PunchType = command.PunchType,
             DeviceId = command.DeviceId,
-            EmployeeCode = command.EmployeeCode
         };
 
         await _rawPunchRepository.AddAsync(rawPunch, cancellationToken);
@@ -46,7 +45,7 @@ public class RawPunchCommandHandler
         var (matchedShift, adjustedTime, determinedPunchType) = _punchProcessingService.ProcessPunch(command.PunchTime, shifts);
 
         // 4. Save the processed punch
-        var processedPunch = new ProcessedPunch
+        var processedPunch = new AttProcessedPunch
         {
             EmployeeId = command.EmployeeId,
             RawPunchId = rawPunch.Id,

@@ -2,11 +2,11 @@ using NZ.HRM.Domain.Entities;
 
 public interface IUserRepository
 {
-    Task<User?> FindByIdAsync(string id);
-    Task<User?> FindByUsernameAsync(string username);
-    Task<List<User>> GetAllAsync();
-    Task AddAsync(User user);
-    Task RemoveAsync(User user);
-    Task UpdateAsync(User user);
+    Task<SecUser?> FindByIdAsync(string id);
+    Task<SecUser?> FindByUsernameAsync(string username);
+    Task<List<SecUser>> GetAllAsync();
+    Task AddAsync(SecUser user);
+    Task RemoveAsync(SecUser user);
+    Task UpdateAsync(SecUser user);
     Task SaveChangesAsync();
 }

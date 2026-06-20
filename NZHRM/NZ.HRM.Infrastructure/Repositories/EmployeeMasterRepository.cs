@@ -14,17 +14,17 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
         _context = context;
     }
 
-    public async Task<List<EmployeeMaster>> GetAllAsync(DateTime? onDate = null, bool includeInactive = false, CancellationToken cancellationToken = default)
+    public async Task<List<HrmEmployeeMaster>> GetAllAsync(DateTime? onDate = null, bool includeInactive = false, CancellationToken cancellationToken = default)
     {
-        var query = _context.EmployeeMasters
-            .Include(e => e.Company)
-            .Include(e => e.Department)
-            .Include(e => e.Section)
-            .Include(e => e.Grade)
-            .Include(e => e.Shift)
-            .Include(e => e.EmployeeNature)
-            .Include(e => e.Holiday)
-            .Include(e => e.VerificationInfo)
+        var query = _context.HrmEmployeeMasters
+            .Include(e => e.Employment.Unit)
+            .Include(e => e.Employment.Department)
+            .Include(e => e.Employment.Section)
+            .Include(e => e.Employment.Grade)
+            .Include(e => e.Employment.Shift)
+            //.Include(e => e.Employment.EmployeeNature)
+            //.Include(e => e.Employment.Holiday)
+            //.Include(e => e.VerificationInfo)
             .AsQueryable();
         if (!includeInactive)
         {
@@ -42,17 +42,17 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<List<EmployeeMaster>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
+    public async Task<List<HrmEmployeeMaster>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
     {
-        var query = _context.EmployeeMasters
-            .Include(e => e.Company)
-            .Include(e => e.Department)
-            .Include(e => e.Section)
-            .Include(e => e.Grade)
-            .Include(e => e.Shift)
-            .Include(e => e.EmployeeNature)
-            .Include(e => e.Holiday)
-            .Include(e => e.VerificationInfo)
+        var query = _context.HrmEmployeeMasters
+            .Include(e => e.Employment.Unit)
+            .Include(e => e.Employment.Department)
+            .Include(e => e.Employment.Section)
+            .Include(e => e.Employment.Grade)
+            .Include(e => e.Employment.Shift)
+            //.Include(e => e.Employment.EmployeeNature)
+            //.Include(e => e.Employment.Holiday)
+            //.Include(e => e.VerificationInfo)
             .AsQueryable();
         if (!includeInactive)
         {
@@ -65,9 +65,9 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
     }
 
 
-    public async Task<List<EmployeeMaster>> GetByDateAsync(DateTime onDate, bool includeInactive = false, CancellationToken cancellationToken = default)
+    public async Task<List<HrmEmployeeMaster>> GetByDateAsync(DateTime onDate, bool includeInactive = false, CancellationToken cancellationToken = default)
     {
-        var query = _context.EmployeeMasters
+        var query = _context.HrmEmployeeMasters
             .AsQueryable();
         if (!includeInactive)
         {
@@ -81,117 +81,120 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<EmployeeMaster?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<HrmEmployeeMaster?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.EmployeeMasters
-            .Include(e => e.Company)
-            .Include(e => e.Department)
-            .Include(e => e.Section)
-            .Include(e => e.Grade)
-            .Include(e => e.PersonalInfo)
-            .Include(e => e.VerificationInfo)
-            .Include(e => e.Designation)
-            .Include(e => e.Shift)
-            .Include(e => e.EmployeeNature)
+        return await _context.HrmEmployeeMasters
+            .Include(e => e.Employment.Unit)
+            .Include(e => e.Employment.Department)
+            .Include(e => e.Employment.Section)
+            .Include(e => e.Employment.Grade)
+            //.Include(e => e.PersonalInfo)
+            //.Include(e => e.VerificationInfo)
+            .Include(e => e.Employment.Designation)
+            .Include(e => e.Employment.Shift)
+            //.Include(e => e.Employment.EmployeeNature)
             .FirstOrDefaultAsync(e => e.Id == id && e.IsActive, cancellationToken);
     }
 
-    public async Task<EmployeeMaster?> GetByEmployeeCodeAsync(string employeeCode, CancellationToken cancellationToken = default)
+    public async Task<HrmEmployeeMaster?> GetByEmployeeCodeAsync(string employeeCode, CancellationToken cancellationToken = default)
     {
-        return await _context.EmployeeMasters
-            .Include(e => e.Company)
-            .Include(e => e.Department)
-            .Include(e => e.Section)
-            .Include(e => e.Grade)
-            .Include(e => e.Shift)
-            .Include(e => e.EmployeeNature)
-            .Include(e => e.Holiday)
+        return await _context.HrmEmployeeMasters
+            .Include(e => e.Employment.Unit)
+            .Include(e => e.Employment.Department)
+            .Include(e => e.Employment.Section)
+            .Include(e => e.Employment.Grade)
+            .Include(e => e.Employment.Shift)
+            //.Include(e => e.Employment.EmployeeNature)
+            //.Include(e => e.Employment.Holiday)
             .FirstOrDefaultAsync(e => e.EmployeeCode == employeeCode && e.IsActive, cancellationToken);
     }
 
-    public async Task<List<EmployeeMaster>> GetByCompanyIdAsync(string companyId, CancellationToken cancellationToken = default)
+    public async Task<List<HrmEmployeeMaster>> GetByCompanyIdAsync(string companyId, CancellationToken cancellationToken = default)
     {
-        return await _context.EmployeeMasters
-            .Include(e => e.Department)
-            .Include(e => e.Section)
-            .Include(e => e.Grade)
-            .Include(e => e.Shift)
-            .Include(e => e.EmployeeNature)
-            .Include(e => e.Holiday)
-            .Where(e => e.CompanyId == companyId && e.IsActive)
+        return await _context.HrmEmployeeMasters
+            .Include(e => e.Employment.Unit)
+            .Include(e => e.Employment.Department)
+            .Include(e => e.Employment.Section)
+            .Include(e => e.Employment.Grade)
+            .Include(e => e.Employment.Shift)
+            //.Include(e => e.Employment.EmployeeNature)
+            //.Include(e => e.Employment.Holiday)
+            .Where(e => e.Employment.UnitId == companyId && e.IsActive)
             .OrderBy(e => e.EmployeeCode)
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<List<EmployeeMaster>> GetByDepartmentIdAsync(string departmentId, CancellationToken cancellationToken = default)
+    public async Task<List<HrmEmployeeMaster>> GetByDepartmentIdAsync(string departmentId, CancellationToken cancellationToken = default)
     {
-        return await _context.EmployeeMasters
-            .Include(e => e.Company)
-            .Include(e => e.Section)
-            .Include(e => e.Grade)
-            .Include(e => e.Shift)
-            .Include(e => e.EmployeeNature)
-            .Include(e => e.Holiday)
-            .Where(e => e.DepartmentId == departmentId && e.IsActive)
+        return await _context.HrmEmployeeMasters
+            .Include(e => e.Employment.Unit)
+            .Include(e => e.Employment.Department)
+            .Include(e => e.Employment.Section)
+            .Include(e => e.Employment.Grade)
+            .Include(e => e.Employment.Shift)
+            //.Include(e => e.Employment.EmployeeNature)
+            //.Include(e => e.Employment.Holiday)
+            .Where(e => e.Employment.DepartmentId == departmentId && e.IsActive)
             .OrderBy(e => e.EmployeeCode)
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<List<EmployeeMaster>> SearchAsync(string searchText, CancellationToken cancellationToken = default)
+    public async Task<List<HrmEmployeeMaster>> SearchAsync(string searchText, CancellationToken cancellationToken = default)
     {
         var searchTerm = searchText.Trim();
         if (string.IsNullOrWhiteSpace(searchTerm))
         {
-            return new List<EmployeeMaster>();
+            return new List<HrmEmployeeMaster>();
         }
 
         var searchPattern = $"%{searchTerm}%";
 
-        return await _context.EmployeeMasters
-            .Include(e => e.PersonalInfo)
+        return await _context.HrmEmployeeMasters
+            //.Include(e => e.PersonalInfo)
             .Where(e => e.IsActive &&
                        (EF.Functions.Like(e.EnrollmentId ?? string.Empty, searchPattern)
                         || EF.Functions.ILike(e.EmployeeNameEnglish, searchPattern)
                         || (e.EmployeeNameBangla != null) && EF.Functions.ILike(e.EmployeeNameBangla, searchPattern)
-                        || (e.PersonalInfo != null && EF.Functions.Like(e.PersonalInfo.MobileNumber, searchPattern))))
+                        //|| (e.PersonalInfo != null && EF.Functions.Like(e.PersonalInfo.MobileNumber, searchPattern))
+                        ))
             .OrderBy(e => e.EmployeeNameEnglish)
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<string> AddAsync(EmployeeMaster employeeMaster, CancellationToken cancellationToken = default)
+    public async Task<string> AddAsync(HrmEmployeeMaster employeeMaster, CancellationToken cancellationToken = default)
     {
-        _context.EmployeeMasters.Add(employeeMaster);
+        _context.HrmEmployeeMasters.Add(employeeMaster);
         await _context.SaveChangesAsync(cancellationToken);
         return employeeMaster.Id;
     }
 
-    public async Task UpdateAsync(EmployeeMaster employeeMaster, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(HrmEmployeeMaster employeeMaster, CancellationToken cancellationToken = default)
     {
-        _context.EmployeeMasters.Update(employeeMaster);
+        _context.HrmEmployeeMasters.Update(employeeMaster);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(EmployeeMaster employeeMaster, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(HrmEmployeeMaster employeeMaster, CancellationToken cancellationToken = default)
     {
-        _context.EmployeeMasters.Remove(employeeMaster);
+        _context.HrmEmployeeMasters.Remove(employeeMaster);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.EmployeeMasters
+        return await _context.HrmEmployeeMasters
             .AnyAsync(e => e.Id == id, cancellationToken);
     }
 
     public async Task<bool> EmployeeCodeExistsAsync(string employeeCode, CancellationToken cancellationToken = default)
     {
-        return await _context.EmployeeMasters
+        return await _context.HrmEmployeeMasters
             .AnyAsync(e => e.EmployeeCode == employeeCode, cancellationToken);
     }
 
     public async Task<bool> EnrollmentCodeExistsAsync(string enrollmentCode , CancellationToken cancellationToken = default)
     {
-        return await _context.EmployeeMasters
+        return await _context.HrmEmployeeMasters
             .AnyAsync(e => e.EnrollmentId == enrollmentCode, cancellationToken);
     }
 }

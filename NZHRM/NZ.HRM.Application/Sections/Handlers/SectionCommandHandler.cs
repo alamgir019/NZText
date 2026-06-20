@@ -28,20 +28,21 @@ public class SectionCommandHandler
         if (!departmentExists)
             throw new KeyNotFoundException($"Department with ID {command.DepartmentId} not found");
 
-        var section = new Section
-        {
-            SectionName = command.SectionName,
-            IsActive = true
-        };
+        //var section = new Section
+        //{
+        //    SectionName = command.SectionName,
+        //    IsActive = true
+        //};
 
-        var sectionId = await _sectionRepository.AddAsync(section, cancellationToken);
+        //var sectionId = await _sectionRepository.AddAsync(section, cancellationToken);
 
-        await _departmentSectionRepository.SetDepartmentForSectionAsync(
-            sectionId,
-            command.DepartmentId,
-            cancellationToken);
+        //await _departmentSectionRepository.SetDepartmentForSectionAsync(
+        //    sectionId,
+        //    command.DepartmentId,
+        //    cancellationToken);
 
-        return sectionId;
+        //return sectionId;
+        return command.DepartmentId;
     }
 
     public async Task Handle(UpdateSectionCommand command, CancellationToken cancellationToken = default)

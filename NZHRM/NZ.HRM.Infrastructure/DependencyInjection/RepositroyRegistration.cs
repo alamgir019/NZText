@@ -29,6 +29,7 @@ namespace NZ.HRM.Infrastructure.DependencyInjection
             services.AddScoped<IEmployeeMasterRepository, EmployeeMasterRepository>();
             services.AddScoped<IEmployeePersonalRepository, EmployeePersonalRepository>();
             services.AddScoped<IEmployeeVerificationRepository, EmployeeVerificationRepository>();
+            services.AddScoped<IFinancialDetailRepository, FinancialDetailRepository>();
             services.AddScoped<IDivisionRepository, DivisionRepository>();
             services.AddScoped<IDistrictRepository, DistrictRepository>();
             services.AddScoped<IThanaRepository, ThanaRepository>();

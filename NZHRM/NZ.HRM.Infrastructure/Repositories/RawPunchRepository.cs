@@ -14,23 +14,23 @@ public class RawPunchRepository : IRawPunchRepository
         _context = context;
     }
 
-    public async Task<string> AddAsync(RawPunch rawPunch, CancellationToken cancellationToken = default)
+    public async Task<string> AddAsync(AttRawPunch rawPunch, CancellationToken cancellationToken = default)
     {
-        _context.RawPunches.Add(rawPunch);
+        _context.AttRawPunches.Add(rawPunch);
         await _context.SaveChangesAsync(cancellationToken);
         return rawPunch.Id;
     }
 
-    public async Task<RawPunch?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<AttRawPunch?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.RawPunches
+        return await _context.AttRawPunches
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
-    public async Task<List<RawPunch>> GetByEmployeeIdAndDateAsync(string employeeId, DateTime date, CancellationToken cancellationToken = default)
+    public async Task<List<AttRawPunch>> GetByEmployeeIdAndDateAsync(string employeeId, DateOnly date, CancellationToken cancellationToken = default)
     {
-        return await _context.RawPunches
-            .Where(x => x.EmployeeId == employeeId && x.PunchDate.Date == date.Date)
+        return await _context.AttRawPunches
+            .Where(x => x.EmployeeId == employeeId && x.PunchDate == date)
             .OrderBy(x => x.PunchTime)
             .ToListAsync(cancellationToken);
     }

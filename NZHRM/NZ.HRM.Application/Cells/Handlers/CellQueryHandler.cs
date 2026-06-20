@@ -19,7 +19,7 @@ public class CellQueryHandler
 
     public async Task<List<CellDto>> Handle(GetAllCellsQuery query, CancellationToken cancellationToken = default)
     {
-        List<Domain.Entities.Cell> cells;
+        List<Domain.Entities.MstCell> cells;
 
         if (!string.IsNullOrEmpty(query.SectionId))
         {
@@ -33,22 +33,22 @@ public class CellQueryHandler
         var result = new List<CellDto>(cells.Count);
         foreach (var cell in cells)
         {
-            var sectionId = await _sectionCellRepository.GetSectionIdByCellIdAsync(cell.Id, cancellationToken) ?? string.Empty;
-            var sectionName = await _sectionCellRepository.GetSectionNameByCellIdAsync(cell.Id, cancellationToken) ?? string.Empty;
+            //var sectionId = await _sectionCellRepository.GetSectionIdByCellIdAsync(cell.Id, cancellationToken) ?? string.Empty;
+            //var sectionName = await _sectionCellRepository.GetSectionNameByCellIdAsync(cell.Id, cancellationToken) ?? string.Empty;
 
-            result.Add(new CellDto
-            {
-                Id = cell.Id,
-                NameEnglish = cell.NameEnglish,
-                NameBangla = cell.NameBangla,
-                SectionId = sectionId,
-                SectionName = sectionName,
-                CreatedOn = cell.CreatedOn,
-                CreatedBy = cell.CreatedBy,
-                UpdatedOn = cell.UpdatedOn,
-                UpdatedBy = cell.UpdatedBy,
-                IsActive = cell.IsActive
-            });
+            //result.Add(new CellDto
+            //{
+            //    Id = cell.Id,
+            //    NameEnglish = cell.NameEnglish,
+            //    NameBangla = cell.NameBangla,
+            //    SectionId = sectionId,
+            //    SectionName = sectionName,
+            //    CreatedOn = cell.CreatedOn,
+            //    CreatedBy = cell.CreatedBy,
+            //    UpdatedOn = cell.UpdatedOn,
+            //    UpdatedBy = cell.UpdatedBy,
+            //    IsActive = cell.IsActive
+            //});
         }
 
         return result;
@@ -60,21 +60,22 @@ public class CellQueryHandler
         if (cell == null)
             return null;
 
-        var mappedSectionId = await _sectionCellRepository.GetSectionIdByCellIdAsync(cell.Id, cancellationToken) ?? string.Empty;
-        var mappedSectionName = await _sectionCellRepository.GetSectionNameByCellIdAsync(cell.Id, cancellationToken) ?? string.Empty;
+        //var mappedSectionId = await _sectionCellRepository.GetSectionIdByCellIdAsync(cell.Id, cancellationToken) ?? string.Empty;
+        //var mappedSectionName = await _sectionCellRepository.GetSectionNameByCellIdAsync(cell.Id, cancellationToken) ?? string.Empty;
 
-        return new CellDetailDto
-        {
-            Id = cell.Id,
-            NameEnglish = cell.NameEnglish,
-            NameBangla = cell.NameBangla,
-            SectionId = mappedSectionId,
-            SectionName = mappedSectionName,
-            CreatedOn = cell.CreatedOn,
-            CreatedBy = cell.CreatedBy,
-            UpdatedOn = cell.UpdatedOn,
-            UpdatedBy = cell.UpdatedBy,
-            IsActive = cell.IsActive
-        };
+        //return new CellDetailDto
+        //{
+        //    Id = cell.Id,
+        //    NameEnglish = cell.NameEnglish,
+        //    NameBangla = cell.NameBangla,
+        //    SectionId = mappedSectionId,
+        //    SectionName = mappedSectionName,
+        //    CreatedOn = cell.CreatedOn,
+        //    CreatedBy = cell.CreatedBy,
+        //    UpdatedOn = cell.UpdatedOn,
+        //    UpdatedBy = cell.UpdatedBy,
+        //    IsActive = cell.IsActive
+        //};
+        return null;
     }
 }

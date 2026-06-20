@@ -21,8 +21,8 @@ public class ShiftQueryHandler
         {
             Id = s.Id,
             ShiftName = s.ShiftName,
-            StartTime = s.StartTime,
-            EndTime = s.EndTime,
+            //StartTime = s.StartTime,
+            //EndTime = s.EndTime,
             SortOrder = s.SortOrder,
             CreatedOn = s.CreatedOn,
             CreatedBy = s.CreatedBy,
@@ -42,8 +42,8 @@ public class ShiftQueryHandler
         {
             Id = shift.Id,
             ShiftName = shift.ShiftName,
-            StartTime = shift.StartTime,
-            EndTime = shift.EndTime,
+            //StartTime = shift.StartTime,
+            //EndTime = shift.EndTime,
             SortOrder = shift.SortOrder,
             CreatedOn = shift.CreatedOn,
             CreatedBy = shift.CreatedBy,

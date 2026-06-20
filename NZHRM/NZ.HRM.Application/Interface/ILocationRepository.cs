@@ -4,12 +4,13 @@ namespace NZ.HRM.Application.Interface
 {
     public interface ILocationRepository
     {
-        Task<Location?> FindByIdAsync(string id);
-        Task<List<Location>> GetAllAsync();
-        Task<List<Location>> GetByCompanyIdAsync(string companyId);
-        Task AddAsync(Location location);
-        Task RemoveAsync(Location location);
-        Task UpdateAsync(Location location);
+        Task<MstSubunit?> FindByIdAsync(string id);
+        Task<List<MstSubunit>> GetAllAsync();
+        Task<List<MstSubunit>> GetByCompanyIdAsync(string companyId);
+        Task<List<MstSubunit>> GetByEmployeeIdAsync(string employeeId);
+        Task AddAsync(MstSubunit location);
+        Task RemoveAsync(MstSubunit location);
+        Task UpdateAsync(MstSubunit location);
         Task SaveChangesAsync();
     }
 }

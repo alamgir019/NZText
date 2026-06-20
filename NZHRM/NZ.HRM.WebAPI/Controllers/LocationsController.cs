@@ -40,6 +40,13 @@ namespace NZ.HRM.WebAPI.Controllers
             return Ok(locations);
         }
 
+        [HttpGet("employee/{employeeId}")]
+        public async Task<IActionResult> GetByEmployee(string employeeId)
+        {
+            var locations = await _queryHandler.Handle(new GetLocationsByEmployeeIdQuery(employeeId));
+            return Ok(locations);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateLocationCommand cmd)
         {

@@ -14,9 +14,9 @@ public class CellRepository : ICellRepository
         _context = context;
     }
 
-    public async Task<List<Cell>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
+    public async Task<List<MstCell>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
     {
-        var query = _context.Set<Cell>().AsQueryable();
+        var query = _context.Set<MstCell>().AsQueryable();
 
         if (!includeInactive)
             query = query.Where(c => c.IsActive);
@@ -24,51 +24,52 @@ public class CellRepository : ICellRepository
         return await query.OrderBy(c => c.NameEnglish).ToListAsync(cancellationToken);
     }
 
-    public async Task<Cell?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<MstCell?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.Set<Cell>()
+        return await _context.Set<MstCell>()
             .FirstOrDefaultAsync(c => c.Id == id && c.IsActive, cancellationToken);
     }
 
-    public async Task<List<Cell>> GetBySectionIdAsync(string sectionId, bool includeInactive = false, CancellationToken cancellationToken = default)
+    public async Task<List<MstCell>> GetBySectionIdAsync(string sectionId, bool includeInactive = false, CancellationToken cancellationToken = default)
     {
-        var query = _context.SectionCells
-            .Where(sc => sc.SectionId == sectionId)
-            .Select(sc => sc.Cell!)
-            .AsQueryable();
+        //var query = _context.SectionCells
+        //    .Where(sc => sc.SectionId == sectionId)
+        //    .Select(sc => sc.Cell!)
+        //    .AsQueryable();
 
-        if (!includeInactive)
-        {
-            query = query.Where(c => c.IsActive);
-        }
+        //if (!includeInactive)
+        //{
+        //    query = query.Where(c => c.IsActive);
+        //}
 
-        return await query
-            .OrderBy(c => c.NameEnglish)
-            .Distinct()
-            .ToListAsync(cancellationToken);
+        //return await query
+        //    .OrderBy(c => c.NameEnglish)
+        //    .Distinct()
+        //    .ToListAsync(cancellationToken);
+        return null;
     }
 
-    public async Task<string> AddAsync(Cell cell, CancellationToken cancellationToken = default)
+    public async Task<string> AddAsync(MstCell cell, CancellationToken cancellationToken = default)
     {
-        _context.Set<Cell>().Add(cell);
+        _context.Set<MstCell>().Add(cell);
         await _context.SaveChangesAsync(cancellationToken);
         return cell.Id;
     }
 
-    public async Task UpdateAsync(Cell cell, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(MstCell cell, CancellationToken cancellationToken = default)
     {
-        _context.Set<Cell>().Update(cell);
+        _context.Set<MstCell>().Update(cell);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(Cell cell, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(MstCell cell, CancellationToken cancellationToken = default)
     {
-        _context.Set<Cell>().Remove(cell);
+        _context.Set<MstCell>().Remove(cell);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.Set<Cell>().AnyAsync(c => c.Id == id, cancellationToken);
+        return await _context.Set<MstCell>().AnyAsync(c => c.Id == id, cancellationToken);
     }
 }

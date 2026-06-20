@@ -52,7 +52,7 @@ public class CreateCompleteEmployeeCommand
 
     // Personal Information
     [Required(ErrorMessage = "Date of birth is required")]
-    public DateTime DateOfBirth { get; set; }
+    public DateOnly DateOfBirth { get; set; }
 
     [Required(ErrorMessage = "Gender is required")]
     public Gender Gender { get; set; }

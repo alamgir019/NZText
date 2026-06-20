@@ -8,10 +8,10 @@ public class CreateRawPunchCommand
     public string EmployeeId { get; set; } = string.Empty;
 
     [Required]
-    public DateTime PunchDate { get; set; }
+    public DateOnly PunchDate { get; set; }
 
     [Required]
-    public TimeSpan PunchTime { get; set; }
+    public TimeOnly PunchTime { get; set; }
 
     [MaxLength(10)]
     public string? PunchType { get; set; }

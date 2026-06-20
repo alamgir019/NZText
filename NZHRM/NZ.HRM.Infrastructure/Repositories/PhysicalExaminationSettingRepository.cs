@@ -14,9 +14,9 @@ public class PhysicalExaminationSettingRepository : IPhysicalExaminationSettingR
         _context = context;
     }
 
-    public async Task<List<PhysicalExaminationSetting>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
+    public async Task<List<HrmPhysicalExaminationSetting>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
     {
-        var query = _context.PhysicalExaminationSettings.AsQueryable();
+        var query = _context.HrmPhysicalExaminationSettings.AsQueryable();
 
         if (!includeInactive)
             query = query.Where(x => x.IsActive);
@@ -27,27 +27,27 @@ public class PhysicalExaminationSettingRepository : IPhysicalExaminationSettingR
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<PhysicalExaminationSetting?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<HrmPhysicalExaminationSetting?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.PhysicalExaminationSettings
+        return await _context.HrmPhysicalExaminationSettings
             .FirstOrDefaultAsync(x => x.Id == id && x.IsActive, cancellationToken);
     }
 
-    public async Task<string> AddAsync(PhysicalExaminationSetting setting, CancellationToken cancellationToken = default)
+    public async Task<string> AddAsync(HrmPhysicalExaminationSetting setting, CancellationToken cancellationToken = default)
     {
-        _context.PhysicalExaminationSettings.Add(setting);
+        _context.HrmPhysicalExaminationSettings.Add(setting);
         await _context.SaveChangesAsync(cancellationToken);
         return setting.Id;
     }
 
-    public async Task UpdateAsync(PhysicalExaminationSetting setting, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(HrmPhysicalExaminationSetting setting, CancellationToken cancellationToken = default)
     {
-        _context.PhysicalExaminationSettings.Update(setting);
+        _context.HrmPhysicalExaminationSettings.Update(setting);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.PhysicalExaminationSettings.AnyAsync(x => x.Id == id, cancellationToken);
+        return await _context.HrmPhysicalExaminationSettings.AnyAsync(x => x.Id == id, cancellationToken);
     }
 }

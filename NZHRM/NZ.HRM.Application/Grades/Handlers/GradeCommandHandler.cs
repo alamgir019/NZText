@@ -23,12 +23,12 @@ public class GradeCommandHandler
             throw new ArgumentException("Maximum salary must be greater than minimum salary");
         }
 
-        var grade = new Grade
+        var grade = new MstGrade
         {
             GradeName = command.GradeName,
-            MinSalary = command.MinSalary,
-            MaxSalary = command.MaxSalary,
-            EmployeeType = command.EmployeeType,
+            //MinSalary = command.MinSalary,
+            //MaxSalary = command.MaxSalary,
+            //EmployeeType = command.EmployeeType,
             IsActive = true
         };
 
@@ -49,9 +49,9 @@ public class GradeCommandHandler
         }
 
         grade.GradeName = command.GradeName;
-        grade.MinSalary = command.MinSalary;
-        grade.MaxSalary = command.MaxSalary;
-        grade.EmployeeType = command.EmployeeType;
+        //grade.MinSalary = command.MinSalary;
+        //grade.MaxSalary = command.MaxSalary;
+        //grade.EmployeeType = command.EmployeeType;
 
         await _gradeRepository.UpdateAsync(grade, cancellationToken);
     }

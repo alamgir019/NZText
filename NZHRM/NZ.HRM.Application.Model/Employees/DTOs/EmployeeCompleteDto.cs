@@ -37,7 +37,7 @@ public class EmployeeCompleteDto
 
     // From EmployeePersonal - Personal Information
     public string? PersonalInfoId { get; set; }
-    public DateTime? DateOfBirth { get; set; }
+    public DateOnly? DateOfBirth { get; set; }
     public Gender? Gender { get; set; }
     public MaritalStatus? MaritalStatus { get; set; }
     public string? MobileNumber { get; set; }

@@ -22,8 +22,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHandlerServices();
 builder.Services.AddRepositories();
 builder.Services.Configure<PunchPollingOptions>(builder.Configuration.GetSection("PunchPolling"));
-builder.Services.AddSingleton<IDevicePunchSource, SimulatedDevicePunchSource>();
-builder.Services.AddHostedService<PunchPollingBackgroundService>();
+builder.Services.AddHttpClient<IDevicePunchSource, VirdiApiDevicePunchSource>();
+//builder.Services.AddHostedService<PunchPollingBackgroundService>();
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>

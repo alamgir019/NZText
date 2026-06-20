@@ -1,5 +1,4 @@
 using NZ.HRM.Application.Companies.Commands.CreateCompany;
-using NZ.HRM.Application.Companies.Commands.CreateCompany;
 using NZ.HRM.Application.Companies.Commands.DeleteCompany;
 using NZ.HRM.Application.Companies.Commands.UpdateCompany;
 using NZ.HRM.Application.Interfaces.Repositories;
@@ -38,20 +37,20 @@ public class CompaniesCommandHandler
         if (company == null)
             throw new KeyNotFoundException($"Company with ID {command.Id} not found");
 
-        company.CompanyCode = command.CompanyCode;
-        company.CompanyName = command.CompanyName;
-        company.IsCompliant = command.IsCompliant;
+        //company.CompanyCode = command.CompanyCode;
+        //company.CompanyName = command.CompanyName;
+        //company.IsCompliant = command.IsCompliant;
 
         await _companyRepository.UpdateAsync(company, cancellationToken);
     }
 
     public async Task<string> Handle(CreateCompanyCommand command, CancellationToken cancellationToken = default)
     {
-        var company = new Company
+        var company = new MstUnit
         {
-            CompanyCode = command.CompanyCode,
-            CompanyName = command.CompanyName,
-            IsCompliant = command.IsCompliant,
+            //CompanyCode = command.CompanyCode,
+            //CompanyName = command.CompanyName,
+            //IsCompliant = command.IsCompliant,
             IsActive = true
         };
 

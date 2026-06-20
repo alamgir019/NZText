@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 
 public interface IMenuPermissionRepository
 {
-    Task<MenuPermission?> FindByIdAsync(string id);
-    Task AddAsync(MenuPermission menuPermission);
-    Task RemoveAsync(MenuPermission menuPermission);
-    Task UpdateAsync(MenuPermission menuPermission);
-    Task<List<MenuPermission>> GetAllAsync();
+    Task<SecPermission?> FindByIdAsync(string id);
+    Task AddAsync(SecPermission secPermission);
+    Task RemoveAsync(SecPermission secPermission);
+    Task UpdateAsync(SecPermission secPermission);
+    Task<List<SecPermission>> GetAllAsync();
     Task SaveChangesAsync();
-    Task<List<MenuPermission>> GetByUserIdAsync(string userId);
-    Task<List<MenuPermission>> GetByRoleIdAsync(string roleId);
+    Task<List<SecPermission>> GetByUserIdAsync(string userId);
+    Task<List<SecPermission>> GetByRoleIdAsync(string roleId);
 
 }

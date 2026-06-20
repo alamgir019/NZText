@@ -14,23 +14,23 @@ public class ProcessedPunchRepository : IProcessedPunchRepository
         _context = context;
     }
 
-    public async Task<string> AddAsync(ProcessedPunch processedPunch, CancellationToken cancellationToken = default)
+    public async Task<string> AddAsync(AttProcessedPunch processedPunch, CancellationToken cancellationToken = default)
     {
-        _context.ProcessedPunches.Add(processedPunch);
+        _context.AttProcessedPunches.Add(processedPunch);
         await _context.SaveChangesAsync(cancellationToken);
         return processedPunch.Id;
     }
 
-    public async Task<ProcessedPunch?> GetByRawPunchIdAsync(string rawPunchId, CancellationToken cancellationToken = default)
+    public async Task<AttProcessedPunch?> GetByRawPunchIdAsync(string rawPunchId, CancellationToken cancellationToken = default)
     {
-        return await _context.ProcessedPunches
+        return await _context.AttProcessedPunches
             .FirstOrDefaultAsync(x => x.RawPunchId == rawPunchId, cancellationToken);
     }
 
-    public async Task<List<ProcessedPunch>> GetByEmployeeIdAndDateAsync(string employeeId, DateTime date, CancellationToken cancellationToken = default)
+    public async Task<List<AttProcessedPunch>> GetByEmployeeIdAndDateAsync(string employeeId, DateOnly date, CancellationToken cancellationToken = default)
     {
-        return await _context.ProcessedPunches
-            .Where(x => x.EmployeeId == employeeId && x.PunchDate.Date == date.Date)
+        return await _context.AttProcessedPunches
+            .Where(x => x.EmployeeId == employeeId && x.PunchDate == date)
             .OrderBy(x => x.AdjustedPunchTime)
             .ToListAsync(cancellationToken);
     }
