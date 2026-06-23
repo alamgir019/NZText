@@ -11,9 +11,9 @@ public class UserCommandHandler
         var user = new SecUser
         {
             Id = IdentityGenerator.Next(),
-            //Username = cmd.Username,
-            //Password = cmd.Password, // Hash in production!
-            //RoleId = cmd.RoleId,
+            UserName = cmd.Username,
+            PasswordHash = cmd.Password, // Hash in production!
+            Role = cmd.Role,
             CreatedOn = DateTime.UtcNow,
             CreatedBy = cmd.CreatedBy,
             UpdatedOn = DateTime.UtcNow,
@@ -48,13 +48,13 @@ public class UserCommandHandler
         await _repo.SaveChangesAsync();
     }
 
-    //public async Task<User?> Handle(LoginUserCommand cmd)
-    //{
-    //    var user = await _repo.FindByUsernameAsync(cmd.Username);
-    //    if (user == null) return null;
-    //    // In production, use hashed and salted password comparison!
-    //    if (user.Password != cmd.Password) return null;
-    //    return user;
-    //}
+    public async Task<SecUser?> Handle(LoginUserCommand cmd)
+    {
+        var user = await _repo.FindByUsernameAsync(cmd.Username);
+        if (user == null) return null;
+        // In production, use hashed and salted password comparison!
+        if (user.PasswordHash != cmd.Password) return null;
+        return user;
+    }
 
 }

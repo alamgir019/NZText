@@ -54,11 +54,11 @@ public class MedicalFitnessCheckRepository : IMedicalFitnessCheckRepository
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<string> AddAsync(HrmMedicalFitnessCheck medicalFitnessCheck, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<string>> AddRangeAsync(List<HrmMedicalFitnessCheck> medicalFitnessChecks, CancellationToken cancellationToken = default)
     {
-        _context.HrmMedicalFitnessChecks.Add(medicalFitnessCheck);
+        await _context.HrmMedicalFitnessChecks.AddRangeAsync(medicalFitnessChecks, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
-        return medicalFitnessCheck.Id;
+        return medicalFitnessChecks.Select(x => x.Id);
     }
 
     public async Task UpdateAsync(HrmMedicalFitnessCheck medicalFitnessCheck, CancellationToken cancellationToken = default)
@@ -70,5 +70,12 @@ public class MedicalFitnessCheckRepository : IMedicalFitnessCheckRepository
     public async Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default)
     {
         return await _context.HrmMedicalFitnessChecks.AnyAsync(x => x.Id == id, cancellationToken);
+    }
+
+    public async Task<string> AddAsync(HrmMedicalFitnessCheck newVersion, CancellationToken cancellationToken)
+    {
+        await _context.HrmMedicalFitnessChecks.AddAsync(newVersion, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+        return newVersion.Id;
     }
 }

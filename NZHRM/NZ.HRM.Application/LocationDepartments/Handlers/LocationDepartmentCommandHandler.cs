@@ -10,12 +10,12 @@ namespace NZ.HRM.Application.LocationDepartments.Handlers;
 public class LocationDepartmentCommandHandler
 {
     private readonly ILocationDepartmentRepository _locationDepartmentRepository;
-    private readonly ILocationRepository _locationRepository;
+    private readonly ISubUnitRepository _locationRepository;
     private readonly IDepartmentRepository _departmentRepository;
 
     public LocationDepartmentCommandHandler(
         ILocationDepartmentRepository locationDepartmentRepository,
-        ILocationRepository locationRepository,
+        ISubUnitRepository locationRepository,
         IDepartmentRepository departmentRepository)
     {
         _locationDepartmentRepository = locationDepartmentRepository;

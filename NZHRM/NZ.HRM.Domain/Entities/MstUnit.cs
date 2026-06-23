@@ -12,6 +12,7 @@ namespace NZ.HRM.Domain.Entities
         public string GroupId { get; set; } = string.Empty;
         public string UnitCode { get; set; } = string.Empty;
         public string UnitName { get; set; } = string.Empty;
+        public bool IsCompliant { get; set; }
 
         // Navigation
         [ForeignKey("GroupId")]

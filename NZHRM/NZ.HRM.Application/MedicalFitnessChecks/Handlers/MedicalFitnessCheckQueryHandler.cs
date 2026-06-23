@@ -30,10 +30,10 @@ public class MedicalFitnessCheckQueryHandler
             EmployeeId = x.EmployeeId,
             TemporaryCandidateId = x.EnrollmentId,
             //BloodGroup = x.BloodGroup,
-            HeightCm = x.HeightCm,
-            WeightKg = x.WeightKg,
-            PhysicalExaminationDataJson = x.PhysicalExaminationDataJson,
-            IsFit = x.IsFit,
+            HeightCm = null,
+            WeightKg = null,
+            PhysicalExaminationDataJson = null,
+            IsFit = string.Equals(x.Fitness, "Fit", StringComparison.OrdinalIgnoreCase),
             Remarks = x.Remarks,
             ExaminedByDoctor = x.ExaminedByDoctor,
             ExaminationDateTime = x.ExaminationDateTime,
@@ -57,10 +57,10 @@ public class MedicalFitnessCheckQueryHandler
             EmployeeId = check.EmployeeId,
             EnrollmentId = check.EnrollmentId,
             //BloodGroup = check.BloodGroup,
-            HeightCm = check.HeightCm,
-            WeightKg = check.WeightKg,
-            PhysicalExaminationDataJson = check.PhysicalExaminationDataJson,
-            IsFit = check.IsFit,
+            HeightCm = null,
+            WeightKg = null,
+            PhysicalExaminationDataJson = null,
+            IsFit = string.Equals(check.Fitness, "Fit", StringComparison.OrdinalIgnoreCase),
             Remarks = check.Remarks,
             ExaminedByDoctor = check.ExaminedByDoctor,
             ExaminationDateTime = check.ExaminationDateTime,
@@ -94,7 +94,7 @@ public class MedicalFitnessCheckQueryHandler
             MedicalFitnessCheckId = x.Id,
             ExaminationDateTime = x.ExaminationDateTime,
             ExaminedByDoctor = x.ExaminedByDoctor,
-            IsFit = x.IsFit
+            IsFit = string.Equals(x.Fitness, "Fit", StringComparison.OrdinalIgnoreCase)
         }).ToList();
     }
 }

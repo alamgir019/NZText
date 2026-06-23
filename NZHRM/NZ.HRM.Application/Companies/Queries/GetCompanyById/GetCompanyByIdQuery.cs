@@ -1,6 +1,6 @@
-namespace NZ.HRM.Application.Companies.Queries.GetCompanyById;
+namespace NZ.HRM.Application.Units.Queries.GetUnitById;
 
-public class GetCompanyByIdQuery
+public class GetUnitByIdQuery
 {
     public string Id { get; set; } = string.Empty;
 }

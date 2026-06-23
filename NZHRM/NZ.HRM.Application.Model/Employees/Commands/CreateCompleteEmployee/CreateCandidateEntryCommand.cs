@@ -3,7 +3,7 @@ using NZ.HRM.Utility.Enum;
 
 namespace NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
 
-public class CreateEmployeeRecruitmentCommand
+public class CreateCandidateEntryCommand
 {
     // Basic Employment Information
     [Required(ErrorMessage = "Employee enrollment ID is required")]
@@ -18,8 +18,8 @@ public class CreateEmployeeRecruitmentCommand
     public EmployeeType EmployeeType { get; set; }
 
     // Company & Organization
-    [Required(ErrorMessage = "Company ID is required")]
-    public string CompanyId { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Unit ID is required")]
+    public string UnitId { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Department ID is required")]
     public string DepartmentId { get; set; } = string.Empty;
@@ -35,13 +35,13 @@ public class CreateEmployeeRecruitmentCommand
     public decimal? ProposedMonthlySalary { get; set; }
 
     [Required(ErrorMessage = "Joining date is required")]
-    public DateTime JoiningDate { get; set; }
+    public DateOnly JoiningDate { get; set; }
 
-    public DateTime? ConfirmationDate { get; set; }
+    public DateOnly? ConfirmationDate { get; set; }
 
     // Personal Information
     [Required(ErrorMessage = "Date of birth is required")]
-    public DateTime DateOfBirth { get; set; }
+    public DateOnly DateOfBirth { get; set; }
 
     [Required(ErrorMessage = "Gender is required")]
     public Gender Gender { get; set; }
@@ -103,15 +103,15 @@ public class CreateEmployeeRecruitmentCommand
     [MaxLength(100, ErrorMessage = "Security clearance by must not exceed 100 characters")]
     public string? SecurityClearanceBy { get; set; }
 
-    public DateTime? SecurityClearanceDate { get; set; }
+    public DateOnly? SecurityClearanceDate { get; set; }
 
     [MaxLength(100, ErrorMessage = "Enrolled by must not exceed 100 characters")]
     public string? EnrolledBy { get; set; }
 
-    public DateTime? EnrolledDate { get; set; }
+    public DateOnly? EnrolledDate { get; set; }
 
     [MaxLength(100, ErrorMessage = "Biometric enrolled by must not exceed 100 characters")]
     public string? BiometricEnrolledBy { get; set; }
 
-    public DateTime? BiometricEnrolledDate { get; set; }
+    public DateOnly? BiometricEnrolledDate { get; set; }
 }

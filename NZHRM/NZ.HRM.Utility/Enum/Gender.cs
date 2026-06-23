@@ -12,12 +12,12 @@ namespace NZ.HRM.Utility.Enum
         BirthCertificate,
         Passport,
     }    
-        public enum GuardianType
-        {
-            Father,
-            Mother,
-            Spouse,
-            Sibling,
-            Other
+    public enum GuardianType
+    {
+        Father,
+        Mother,
+        Spouse,
+        Sibling,
+        Other
     }
 }

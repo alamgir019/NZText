@@ -10,13 +10,13 @@ namespace NZ.HRM.Application.CompanyLocations.Handlers;
 public class CompanyLocationCommandHandler
 {
     private readonly ICompanyLocationRepository _companyLocationRepository;
-    private readonly ICompanyRepository _companyRepository;
-    private readonly ILocationRepository _locationRepository;
+    private readonly IUnitRepository _companyRepository;
+    private readonly ISubUnitRepository _locationRepository;
 
     public CompanyLocationCommandHandler(
         ICompanyLocationRepository companyLocationRepository,
-        ICompanyRepository companyRepository,
-        ILocationRepository locationRepository)
+        IUnitRepository companyRepository,
+        ISubUnitRepository locationRepository)
     {
         _companyLocationRepository = companyLocationRepository;
         _companyRepository = companyRepository;

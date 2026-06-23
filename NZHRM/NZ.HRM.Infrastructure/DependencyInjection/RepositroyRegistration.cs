@@ -13,8 +13,8 @@ namespace NZ.HRM.Infrastructure.DependencyInjection
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IMenuRepository, MenuRepository>();
             services.AddScoped<IMenuPermissionRepository, MenuPermissionRepository>();
-            services.AddScoped<ILocationRepository, LocationRepository>();
-            services.AddScoped<ICompanyRepository, CompanyRepository>();
+            services.AddScoped<ISubUnitRepository, SubUnitRepository>();
+            services.AddScoped<IUnitRepository, UnitRepository>();
             services.AddScoped<ICompanyLocationRepository, CompanyLocationRepository>();
             services.AddScoped<ILocationDepartmentRepository, LocationDepartmentRepository>();
             services.AddScoped<IDepartmentRepository, DepartmentRepository>();

@@ -1,5 +1,6 @@
 using NZ.HRM.Application.Employees.Queries.GetCompleteEmployee;
 using NZ.HRM.Application.Employees.Queries.GetEmployeeConfirmationDate;
+using NZ.HRM.Application.Employees.Queries.GetEmployeesByStatus;
 using NZ.HRM.Application.Employees.Queries.SearchEmployees;
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Application.Model.Employees.DTOs;
@@ -50,5 +51,37 @@ public class CompleteEmployeeQueryHandler
         //var probationMonths = employee.EmployeeType == EmployeeType.Worker ? 3 : 6;
         //return query.JoiningDate.AddMonths(probationMonths).Date;
         return null;
+    }
+
+    public async Task<List<EmployeeByStatusDto>> Handle(GetEmployeesByStatusQuery query, CancellationToken cancellationToken = default)
+    {
+        var employees = await _employeeMasterRepository.GetByStatusAsync(query.Status, cancellationToken);
+
+        return employees.Select(x => new EmployeeByStatusDto
+        {
+            EmployeeId = x.Id,
+            EnrollmentId = x.EnrollmentId,
+            EmployeeName = string.IsNullOrWhiteSpace(x.EmployeeName) ? x.EmployeeNameBangla : x.EmployeeName,
+            Age = CalculateAge(x.Personal?.DateOfBirth),
+            ExaminationDate = x.MedicalFitnessCheck?.ExaminationDateTime
+        }).ToList();
+    }
+
+    private static int? CalculateAge(DateOnly? dateOfBirth)
+    {
+        if (!dateOfBirth.HasValue)
+        {
+            return null;
+        }
+
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        var age = today.Year - dateOfBirth.Value.Year;
+
+        if (dateOfBirth.Value > today.AddYears(-age))
+        {
+            age--;
+        }
+
+        return age;
     }
 }

@@ -33,7 +33,7 @@ public class EmployeeCompleteDto
     public decimal? ProposedMonthlySalary { get; set; }
     public DateTime? JoiningDate { get; set; }
     public DateTime? ConfirmationDate { get; set; }
-    public EmployeeStatus? Status { get; set; }
+    public string Status { get; set; } = string.Empty;
 
     // From EmployeePersonal - Personal Information
     public string? PersonalInfoId { get; set; }
@@ -76,11 +76,11 @@ public class EmployeeCompleteDto
     // From EmployeeVerification
     public string? VerificationInfoId { get; set; }
     public string? SecurityClearanceBy { get; set; }
-    public DateTime? SecurityClearanceDate { get; set; }
+    public DateOnly? SecurityClearanceDate { get; set; }
     public string? EnrolledBy { get; set; }
-    public DateTime? EnrolledDate { get; set; }
+    public DateOnly? EnrolledDate { get; set; }
     public string? BiometricEnrolledBy { get; set; }
-    public DateTime? BiometricEnrolledDate { get; set; }
+    public DateOnly? BiometricEnrolledDate { get; set; }
 
     // Audit Fields
     public DateTime CreatedOn { get; set; }

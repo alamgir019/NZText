@@ -96,7 +96,7 @@ public static class EmployeeMapper
             //ProposedMonthlySalary = employee.ProposedMonthlySalary,
             //JoiningDate = employee.JoiningDate,
             //ConfirmationDate = employee.ConfirmationDate,
-            //Status = employee.Status,
+            Status = employee.Status,
             CreatedOn = employee.CreatedOn,
             CreatedBy = employee.CreatedBy,
             UpdatedOn = employee.UpdatedOn,

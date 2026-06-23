@@ -46,9 +46,9 @@ public class CreateCompleteEmployeeCommand
     public decimal? ProposedMonthlySalary { get; set; }
 
     [Required(ErrorMessage = "Joining date is required")]
-    public DateTime JoiningDate { get; set; }
+    public DateOnly JoiningDate { get; set; }
 
-    public DateTime? ConfirmationDate { get; set; }
+    public DateOnly? ConfirmationDate { get; set; }
 
     // Personal Information
     [Required(ErrorMessage = "Date of birth is required")]
@@ -147,15 +147,15 @@ public class CreateCompleteEmployeeCommand
     [MaxLength(100, ErrorMessage = "Security clearance by must not exceed 100 characters")]
     public string? SecurityClearanceBy { get; set; }
 
-    public DateTime? SecurityClearanceDate { get; set; }
+    public DateOnly? SecurityClearanceDate { get; set; }
 
     [MaxLength(100, ErrorMessage = "Enrolled by must not exceed 100 characters")]
     public string? EnrolledBy { get; set; }
 
-    public DateTime? EnrolledDate { get; set; }
+    public DateOnly? EnrolledDate { get; set; }
 
     [MaxLength(100, ErrorMessage = "Biometric enrolled by must not exceed 100 characters")]
     public string? BiometricEnrolledBy { get; set; }
 
-    public DateTime? BiometricEnrolledDate { get; set; }
+    public DateOnly? BiometricEnrolledDate { get; set; }
 }

@@ -6,4 +6,9 @@ namespace NZ.HRM.Utility.Enum
         Text,
         Option
     }
+    public enum FitnessOption
+    {
+        Fit,
+        Unfit        
+    }
 }

@@ -74,13 +74,16 @@ public class MedicalFitnessChecksController : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Create([FromBody] CreateMedicalFitnessCheckCommand command)
+    public async Task<IActionResult> Create([FromBody] List<CreateMedicalFitnessCheckCommand> commands)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var id = await _commandHandler.Handle(command);
-        return CreatedAtAction(nameof(GetById), new { id }, new { id });
+        if (commands == null || commands.Count == 0)
+            return BadRequest(new { message = "At least one medical fitness check is required." });
+
+        var ids = await _commandHandler.Handle(commands);
+        return Created(string.Empty, new { ids });
     }
 
     [HttpPut("employee/{employeeId}")]

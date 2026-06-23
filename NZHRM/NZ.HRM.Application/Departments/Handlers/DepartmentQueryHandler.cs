@@ -9,12 +9,12 @@ namespace NZ.HRM.Application.Departments.Handlers;
 public class DepartmentQueryHandler
 {
     private readonly IDepartmentRepository _departmentRepository;
-    private readonly ILocationRepository _locationRepository;
+    private readonly ISubUnitRepository _locationRepository;
     private readonly ILocationDepartmentRepository _locationDepartmentRepository;
 
     public DepartmentQueryHandler(
         IDepartmentRepository departmentRepository,
-        ILocationRepository locationRepository,
+        ISubUnitRepository locationRepository,
         ILocationDepartmentRepository locationDepartmentRepository)
     {
         _departmentRepository = departmentRepository;

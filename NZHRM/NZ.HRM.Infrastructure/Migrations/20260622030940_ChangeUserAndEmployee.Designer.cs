@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NZ.HRM.Infrastructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NZ.HRM.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260622030940_ChangeUserAndEmployee")]
+    partial class ChangeUserAndEmployee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1200,6 +1203,53 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.ToTable("bank", "lookup");
                 });
 
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.BloodGroup", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("CHAR(26)")
+                        .HasColumnName("Id");
+
+                    b.Property<bool>("ActiveFlag")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("BloodGroupCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("BloodGroupName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("blood_group", "lookup");
+                });
+
             modelBuilder.Entity("NZ.HRM.Domain.Entities.District", b =>
                 {
                     b.Property<string>("Id")
@@ -2337,6 +2387,9 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("CHAR(26)")
                         .HasColumnName("Id");
 
+                    b.Property<string>("BloodGroupId")
+                        .HasColumnType("CHAR(26)");
+
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasColumnType("text");
@@ -2363,20 +2416,22 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("Fitness")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("IdentificationSign")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                    b.Property<decimal?>("HeightCm")
+                        .HasColumnType("numeric");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsFit")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("PhysicalExaminationDataJson")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
                     b.Property<string>("Remarks")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
 
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
@@ -2387,10 +2442,14 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW()");
 
+                    b.Property<decimal?>("WeightKg")
+                        .HasColumnType("numeric");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId")
-                        .IsUnique();
+                    b.HasIndex("BloodGroupId");
+
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("medical_fitness_check", "hrm");
                 });
@@ -7250,11 +7309,17 @@ namespace NZ.HRM.Infrastructure.Migrations
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.HrmMedicalFitnessCheck", b =>
                 {
+                    b.HasOne("NZ.HRM.Domain.Entities.BloodGroup", "BloodGroup")
+                        .WithMany()
+                        .HasForeignKey("BloodGroupId");
+
                     b.HasOne("NZ.HRM.Domain.Entities.HrmEmployeeMaster", "Employee")
-                        .WithOne("MedicalFitnessCheck")
-                        .HasForeignKey("NZ.HRM.Domain.Entities.HrmMedicalFitnessCheck", "EmployeeId")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("BloodGroup");
 
                     b.Navigation("Employee");
                 });
@@ -8034,8 +8099,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.Navigation("Experiences");
 
                     b.Navigation("FamilyMembers");
-
-                    b.Navigation("MedicalFitnessCheck");
 
                     b.Navigation("Nominees");
 

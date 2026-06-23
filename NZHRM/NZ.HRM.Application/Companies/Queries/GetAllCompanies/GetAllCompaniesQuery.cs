@@ -1,6 +1,6 @@
-namespace NZ.HRM.Application.Companies.Queries.GetAllCompanies;
+namespace NZ.HRM.Application.Units.Queries.GetAllUnits;
 
-public class GetAllCompaniesQuery
+public class GetAllUnitsQuery
 {
     public bool IncludeInactive { get; set; } = false;
 }

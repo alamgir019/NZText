@@ -18,19 +18,12 @@ public class HrmMedicalFitnessCheck : BaseEntity
     [MaxLength(50)]
     public string EnrollmentId { get; set; } = string.Empty;
 
-    [MaxLength(20)]
-    public BloodGroup? BloodGroup { get; set; }
+    [MaxLength(200)]
+    public string? IdentificationSign { get; set; }
 
-    public decimal? HeightCm { get; set; }
+    public string Fitness { get; set; } = string.Empty;
 
-    public decimal? WeightKg { get; set; }
-
-    [MaxLength(2000)]
-    public string? PhysicalExaminationDataJson { get; set; }
-
-    public bool IsFit { get; set; }
-
-    [MaxLength(1000)]
+    [MaxLength(200)]
     public string? Remarks { get; set; }
 
     [Required]

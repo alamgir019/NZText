@@ -8,6 +8,8 @@ namespace NZ.HRM.Utility.Enum
         OnLeave,
         Suspended,
         Terminated,
-        Resigned
+        Resigned,
+        CandidateEntry,
+        Medical
     }
 }

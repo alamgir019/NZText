@@ -1,11 +1,11 @@
-namespace NZ.HRM.Application.Companies.Queries.GetAllCompanies;
+namespace NZ.HRM.Application.Units.Queries.GetAllUnits;
 
-public class CompanyDto
+public class UnitDto
 {
     public string Id { get; set; } = string.Empty;
-    public string CompanyCode { get; set; } = string.Empty;
-    public string CompanyName { get; set; } = string.Empty;
-    // Locations are available via CompanyLocation mapping
+    public string UnitCode { get; set; } = string.Empty;
+    public string UnitName { get; set; } = string.Empty;
+    // Locations are available via UnitLocation mapping
     public DateTime CreatedOn { get; set; }
     public string CreatedBy { get; set; } = string.Empty;
     public DateTime UpdatedOn { get; set; }

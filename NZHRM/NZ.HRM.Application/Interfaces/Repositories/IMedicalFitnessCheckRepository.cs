@@ -8,7 +8,8 @@ public interface IMedicalFitnessCheckRepository
     Task<List<HrmMedicalFitnessCheck>> GetByEmployeeIdAsync(string employeeId, bool includeInactive = false, CancellationToken cancellationToken = default);
     Task<HrmMedicalFitnessCheck?> GetByIdAsync(string id, CancellationToken cancellationToken = default);
     Task<HrmMedicalFitnessCheck?> GetLatestByEmployeeIdAsync(string employeeId, CancellationToken cancellationToken = default);
-    Task<string> AddAsync(HrmMedicalFitnessCheck medicalFitnessCheck, CancellationToken cancellationToken = default);
+    Task<IEnumerable<string>> AddRangeAsync(List<HrmMedicalFitnessCheck> medicalFitnessChecks, CancellationToken cancellationToken = default);
     Task UpdateAsync(HrmMedicalFitnessCheck medicalFitnessCheck, CancellationToken cancellationToken = default);
     Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default);
+    Task<string> AddAsync(HrmMedicalFitnessCheck newVersion, CancellationToken cancellationToken);
 }

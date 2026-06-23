@@ -10,7 +10,7 @@ namespace NZ.HRM.Domain.Entities
     {
         public string? EmployeeId { get; set; }
         public string UserName { get; set; } = string.Empty;
-        public string LoginId { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
         public string? PasswordHash { get; set; }
         public string? Email { get; set; }
         public string? MobileNo { get; set; }

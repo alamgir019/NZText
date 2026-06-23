@@ -10,10 +10,12 @@ public interface IEmployeeMasterRepository
     Task<HrmEmployeeMaster?> GetByEmployeeCodeAsync(string employeeCode, CancellationToken cancellationToken = default);
     Task<List<HrmEmployeeMaster>> GetByCompanyIdAsync(string companyId, CancellationToken cancellationToken = default);
     Task<List<HrmEmployeeMaster>> GetByDepartmentIdAsync(string departmentId, CancellationToken cancellationToken = default);
+    Task<List<HrmEmployeeMaster>> GetByStatusAsync(string status, CancellationToken cancellationToken = default);
     Task<List<HrmEmployeeMaster>> SearchAsync(string searchText, CancellationToken cancellationToken = default);
     Task<List<HrmEmployeeMaster>> GetByDateAsync(DateTime onDatel, bool includeInactive = false, CancellationToken cancellationToken = default);
     Task<string> AddAsync(HrmEmployeeMaster employeeMaster, CancellationToken cancellationToken = default);
     Task UpdateAsync(HrmEmployeeMaster employeeMaster, CancellationToken cancellationToken = default);
+    Task UpdateRangeAsync(List<HrmEmployeeMaster> employeeMasters, CancellationToken cancellationToken = default);
     Task DeleteAsync(HrmEmployeeMaster employeeMaster, CancellationToken cancellationToken = default);
     Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default);
     Task<bool> EmployeeCodeExistsAsync(string employeeCode, CancellationToken cancellationToken = default);

@@ -5,11 +5,11 @@ using NZ.HRM.Infrastructure.Persistence;
 
 namespace NZ.HRM.Infrastructure.Repositories;
 
-public class CompanyRepository : ICompanyRepository
+public class UnitRepository : IUnitRepository
 {
     private readonly ApplicationDbContext _context;
 
-    public CompanyRepository(ApplicationDbContext context)
+    public UnitRepository(ApplicationDbContext context)
     {
         _context = context;
     }

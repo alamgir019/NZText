@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NZ.HRM.Infrastructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NZ.HRM.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260622051943_ChangeMedialFitness")]
+    partial class ChangeMedialFitness
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2389,8 +2392,7 @@ namespace NZ.HRM.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId")
-                        .IsUnique();
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("medical_fitness_check", "hrm");
                 });
@@ -7251,8 +7253,8 @@ namespace NZ.HRM.Infrastructure.Migrations
             modelBuilder.Entity("NZ.HRM.Domain.Entities.HrmMedicalFitnessCheck", b =>
                 {
                     b.HasOne("NZ.HRM.Domain.Entities.HrmEmployeeMaster", "Employee")
-                        .WithOne("MedicalFitnessCheck")
-                        .HasForeignKey("NZ.HRM.Domain.Entities.HrmMedicalFitnessCheck", "EmployeeId")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -8034,8 +8036,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.Navigation("Experiences");
 
                     b.Navigation("FamilyMembers");
-
-                    b.Navigation("MedicalFitnessCheck");
 
                     b.Navigation("Nominees");
 

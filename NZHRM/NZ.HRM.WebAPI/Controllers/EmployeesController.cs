@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using NZ.HRM.Application.Employees.Handlers;
 using NZ.HRM.Application.Employees.Queries.GetCompleteEmployee;
 using NZ.HRM.Application.Employees.Queries.GetEmployeeConfirmationDate;
+using NZ.HRM.Application.Employees.Queries.GetEmployeesByStatus;
 using NZ.HRM.Application.Employees.Queries.SearchEmployees;
 using NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
 using NZ.HRM.Application.Model.Employees.DTOs;
@@ -86,10 +87,10 @@ public class EmployeesController : ControllerBase
         }
     }
 
-    [HttpPost("recruitment")]
+    [HttpPost("candidate-entry")]
     [ProducesResponseType(typeof(object), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> CreateEmployeeRecruitment([FromBody] CreateEmployeeRecruitmentCommand command)
+    public async Task<IActionResult> CreateEmployeeRecruitment([FromBody] CreateCandidateEntryCommand command)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -164,6 +165,23 @@ public class EmployeesController : ControllerBase
             return NotFound(new { message = $"Employee with ID {employeeId} not found" });
 
         return Ok(new { confirmationDate = confirmationDate.Value.ToString("yyyy-MM-dd") });
+    }
+
+    [HttpGet("by-status")]
+    [ProducesResponseType(typeof(List<EmployeeByStatusDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetEmployeesByStatus([FromQuery] string status)
+    {
+        if (string.IsNullOrWhiteSpace(status))
+            return BadRequest(new { message = "status is required" });
+
+        var query = new GetEmployeesByStatusQuery
+        {
+            Status = status
+        };
+
+        var employees = await _getCompleteEmployeeHandler.Handle(query, cancellationToken: default);
+        return Ok(employees);
     }
 
     

@@ -1,20 +1,20 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace NZ.HRM.Application.Companies.Commands.UpdateCompany;
+namespace NZ.HRM.Application.Companies.Commands.UpdateUnit;
 
-public class UpdateCompanyCommand
+public class UpdateUnitCommand
 {
     public string Id { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Company code is required")]
-    [MaxLength(10, ErrorMessage = "Company code must not exceed 10 characters")]
-    public string CompanyCode { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Unit code is required")]
+    [MaxLength(10, ErrorMessage = "Unit code must not exceed 10 characters")]
+    public string UnitCode { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Company name is required")]
-    [MaxLength(100, ErrorMessage = "Company name must not exceed 100 characters")]
-    public string CompanyName { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Unit name is required")]
+    [MaxLength(100, ErrorMessage = "Unit name must not exceed 100 characters")]
+    public string UnitName { get; set; } = string.Empty;
 
-    // Location association is handled via CompanyLocation mapping entity
+    // Location association is handled via UnitLocation mapping entity
 
     public bool IsCompliant { get; set; } = false;
 }

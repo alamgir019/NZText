@@ -10,7 +10,7 @@ namespace NZ.HRM.Application.EmployeeMasters.Handlers;
 public class EmployeeMasterCommandHandler
 {
     private readonly IEmployeeMasterRepository _employeeMasterRepository;
-    private readonly ICompanyRepository _companyRepository;
+    private readonly IUnitRepository _companyRepository;
     private readonly IDepartmentRepository _departmentRepository;
     private readonly ISectionRepository _sectionRepository;
     private readonly IGradeRepository _gradeRepository;
@@ -19,7 +19,7 @@ public class EmployeeMasterCommandHandler
 
     public EmployeeMasterCommandHandler(
         IEmployeeMasterRepository employeeMasterRepository,
-        ICompanyRepository companyRepository,
+        IUnitRepository companyRepository,
         IDepartmentRepository departmentRepository,
         ISectionRepository sectionRepository,
         IGradeRepository gradeRepository,

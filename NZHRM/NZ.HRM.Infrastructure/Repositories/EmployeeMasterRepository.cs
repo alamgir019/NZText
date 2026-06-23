@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Domain.Entities;
 using NZ.HRM.Infrastructure.Persistence;
+using NZ.HRM.Mapping.Employees;
 
 namespace NZ.HRM.Infrastructure.Repositories;
 
@@ -139,6 +140,23 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<List<HrmEmployeeMaster>> GetByStatusAsync(string status, CancellationToken cancellationToken = default)
+    {
+        var normalizedStatus = status.Trim();
+
+        if (string.IsNullOrWhiteSpace(normalizedStatus))
+        {
+            return new List<HrmEmployeeMaster>();
+        }
+
+        return await _context.HrmEmployeeMasters
+            .Include(e => e.Personal)
+            .Include(e => e.MedicalFitnessCheck)
+            .Where(e => e.Status != null && EF.Functions.ILike(e.Status, normalizedStatus))
+            .OrderBy(e => e.EnrollmentId)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<List<HrmEmployeeMaster>> SearchAsync(string searchText, CancellationToken cancellationToken = default)
     {
         var searchTerm = searchText.Trim();
@@ -196,5 +214,11 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
     {
         return await _context.HrmEmployeeMasters
             .AnyAsync(e => e.EnrollmentId == enrollmentCode, cancellationToken);
+    }
+
+    public async Task UpdateRangeAsync(List<HrmEmployeeMaster> employeeMasters, CancellationToken cancellationToken = default)
+    {
+        _context.HrmEmployeeMasters.UpdateRange(employeeMasters);
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }

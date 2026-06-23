@@ -13,17 +13,17 @@ namespace NZ.HRM.Domain.Entities
         [MaxLength(100)]
         public string? SecurityClearanceBy { get; set; }
 
-        public DateTime? SecurityClearanceDate { get; set; }
+        public DateOnly? SecurityClearanceDate { get; set; }
 
         [MaxLength(100)]
         public string? EnrolledBy { get; set; }
 
-        public DateTime? EnrolledDate { get; set; }
+        public DateOnly? EnrolledDate { get; set; }
 
         [MaxLength(100)]
         public string? BiometricEnrolledBy { get; set; }
 
-        public DateTime? BiometricEnrolledDate { get; set; }
+        public DateOnly? BiometricEnrolledDate { get; set; }
 
         [ForeignKey("EmployeeId")] public HrmEmployeeMaster? Employee { get; set; }
     }

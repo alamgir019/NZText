@@ -42,7 +42,7 @@ namespace NZ.HRM.Infrastructure.Repositories
 
         public async Task<SecUser?> FindByUsernameAsync(string username)
         {
-            return await _db.SecUsers.FirstOrDefaultAsync(u => u.UserName == username);
+            return await _db.SecUsers.FirstOrDefaultAsync(u => u.Role == username);
         }
 
         public async Task SaveChangesAsync()

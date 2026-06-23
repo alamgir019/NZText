@@ -12,15 +12,9 @@ public class CreateMedicalFitnessCheckCommand
     [MaxLength(50)]
     public string EnrollmentId { get; set; } = string.Empty;
 
-    public BloodGroup? BloodGroup { get; set; }
+    public string? IdentificationSign { get; set; }
 
-    public decimal? HeightCm { get; set; }
-
-    public decimal? WeightKg { get; set; }
-
-    public string? PhysicalExaminationDataJson { get; set; }
-
-    public bool IsFit { get; set; }
+    public FitnessOption Fitness { get; set; }
 
     [MaxLength(1000)]
     public string? Remarks { get; set; }

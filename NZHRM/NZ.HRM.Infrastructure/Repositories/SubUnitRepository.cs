@@ -5,24 +5,24 @@ using NZ.HRM.Infrastructure.Persistence;
 
 namespace NZ.HRM.Infrastructure.Repositories
 {
-    public class LocationRepository : ILocationRepository
+    public class SubUnitRepository : ISubUnitRepository
     {
         private readonly ApplicationDbContext _db;
-        public LocationRepository(ApplicationDbContext db) => _db = db;
+        public SubUnitRepository(ApplicationDbContext db) => _db = db;
 
         public async Task<MstSubunit?> FindByIdAsync(string id) => await _db.MstSubunits.FindAsync(id);
 
-        public async Task AddAsync(MstSubunit location) => await _db.MstSubunits.AddAsync(location);
+        public async Task AddAsync(MstSubunit subUnit) => await _db.MstSubunits.AddAsync(subUnit);
 
-        public async Task RemoveAsync(MstSubunit location)
+        public async Task RemoveAsync(MstSubunit subUnit)
         {
-            _db.MstSubunits.Remove(location);
+            _db.MstSubunits.Remove(subUnit);
             await Task.CompletedTask;
         }
 
-        public async Task UpdateAsync(MstSubunit location)
+        public async Task UpdateAsync(MstSubunit subUnit)
         {
-            _db.MstSubunits.Update(location);
+            _db.MstSubunits.Update(subUnit);
             await Task.CompletedTask;
         }
 

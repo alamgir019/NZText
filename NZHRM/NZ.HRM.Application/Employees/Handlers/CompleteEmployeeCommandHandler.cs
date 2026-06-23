@@ -11,7 +11,7 @@ public class CompleteEmployeeCommandHandler
     private readonly IEmployeeMasterRepository _employeeMasterRepository;
     private readonly IEmployeePersonalRepository _employeePersonalRepository;
     private readonly IEmployeeVerificationRepository _employeeVerificationRepository;
-    private readonly ICompanyRepository _companyRepository;
+    private readonly IUnitRepository _unitRepository;
     private readonly IDepartmentRepository _departmentRepository;
     private readonly ISectionRepository _sectionRepository;
     private readonly IGradeRepository _gradeRepository;
@@ -22,7 +22,7 @@ public class CompleteEmployeeCommandHandler
         IEmployeeMasterRepository employeeMasterRepository,
         IEmployeePersonalRepository employeePersonalRepository,
         IEmployeeVerificationRepository employeeVerificationRepository,
-        ICompanyRepository companyRepository,
+        IUnitRepository unitRepository,
         IDepartmentRepository departmentRepository,
         ISectionRepository sectionRepository,
         IGradeRepository gradeRepository,
@@ -32,7 +32,7 @@ public class CompleteEmployeeCommandHandler
         _employeeMasterRepository = employeeMasterRepository;
         _employeePersonalRepository = employeePersonalRepository;
         _employeeVerificationRepository = employeeVerificationRepository;
-        _companyRepository = companyRepository;
+        _unitRepository = unitRepository;
         _departmentRepository = departmentRepository;
         _sectionRepository = sectionRepository;
         _gradeRepository = gradeRepository;
@@ -89,7 +89,7 @@ public class CompleteEmployeeCommandHandler
     }
 
 
-    public async Task<string> Handle(CreateEmployeeRecruitmentCommand command, CancellationToken cancellationToken = default)
+    public async Task<string> Handle(CreateCandidateEntryCommand command, CancellationToken cancellationToken = default)
     {
         // Validate employee enrollment ID uniqueness
         var enrollmentExists = await _employeeMasterRepository.EnrollmentCodeExistsAsync(command.EmployeeEnrollmentId, cancellationToken);
@@ -100,7 +100,7 @@ public class CompleteEmployeeCommandHandler
 
         // Validate related entities exist
         await ValidateRelatedEntities(
-            command.CompanyId,
+            command.UnitId,
             command.DepartmentId,
             command.SectionId,
             null,
@@ -113,14 +113,14 @@ public class CompleteEmployeeCommandHandler
         {
             EnrollmentId = command.EmployeeEnrollmentId,
             EmployeeNameBangla = command.EmployeeNameBangla,
-            //CompanyId = command.CompanyId,
+            //UnitId = command.UnitId,
             //DepartmentId = command.DepartmentId,
             //SectionId = command.SectionId,
             //CellId = command.CellId,
-            //EmployeeType = command.EmployeeType,
+            EmployeeType = command.EmployeeType.ToString(),
             //ProposedMonthlySalary = command.ProposedMonthlySalary,
             //JoiningDate = command.JoiningDate,
-            //Status = EmployeeStatus.Draft,
+            Status = EmployeeStatus.CandidateEntry.ToString(),
             IsActive = true
         };
 
@@ -130,11 +130,11 @@ public class CompleteEmployeeCommandHandler
         // Create EmployeePersonal
         var employeePersonal = new HrmEmployeePersonal
         {
-            EmployeeId = employeeId,            
-            //DateOfBirth = command.DateOfBirth,
-            //Gender = command.Gender,
-            //BloodGroup = command.BloodGroup,
-            //GuardianType = command.GuardianType,
+            EmployeeId = employeeId,
+            DateOfBirth = command.DateOfBirth,
+            Gender = command.Gender.ToString(),
+            BloodGroup = command.BloodGroup?.ToString(),
+            //GuardianType = command.GuardianType.ToString(),
             //GuardianName = command.GuardianName,
             //MotherNameBangla = command.MotherNameBangla,
             //IdType = command.IDType,
@@ -183,9 +183,9 @@ public class CompleteEmployeeCommandHandler
         //string locationId, 
         CancellationToken cancellationToken)
     {
-        var companyExists = await _companyRepository.ExistsAsync(companyId, cancellationToken);
-        if (!companyExists)
-            throw new KeyNotFoundException($"Company with ID {companyId} not found");
+        var unitExists = await _unitRepository.ExistsAsync(companyId, cancellationToken);
+        if (!unitExists)
+            throw new KeyNotFoundException($"Unit with ID {companyId} not found");
 
         var departmentExists = await _departmentRepository.ExistsAsync(departmentId, cancellationToken);
         if (!departmentExists)

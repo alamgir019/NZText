@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NZ.HRM.Application.Companies.Handlers;
 using NZ.HRM.Application.CompanyLocations.Handlers;
 using NZ.HRM.Application.LocationDepartments.Handlers;
-using NZ.HRM.Application.Locations.Handlers;
+using NZ.HRM.Application.SubUnits.Handlers;
 using NZ.HRM.Application.Departments.Handlers;
 using NZ.HRM.Application.DepartmentSections.Handlers;
 using NZ.HRM.Application.Grades.Handlers;
@@ -22,6 +22,7 @@ using NZ.HRM.Application.FinancialDetails.Handlers;
 using NZ.HRM.Application.PhysicalExaminationSettings.Handlers;
 using NZ.HRM.Application.RawPunches.Handlers;
 using NZ.HRM.Application.Thanas.Handlers;
+using NZ.HRM.Application.Units.Handlers;
 
 namespace NZ.HRM.Application.DependencyInjection
 {
@@ -37,13 +38,13 @@ namespace NZ.HRM.Application.DependencyInjection
             services.AddScoped<MenuQueryHandler>();
             services.AddScoped<MenuPermissionCommandHandler>();
             services.AddScoped<MenuPermissionQueryHandler>();
-            services.AddScoped<LocationCommandHandler>();
-            services.AddScoped<LocationQueryHandler>();
+            services.AddScoped<SubUnitsCommandHandler>();
+            services.AddScoped<SubUnitsQueryHandler>();
             // Add this in your service configuration
             // Register Command Handlers
-            services.AddScoped<CompaniesCommandHandler>();
+            services.AddScoped<UnitsCommandHandler>();
             // Register Query Handlers
-            services.AddScoped<CompaniesQueryHandler>();
+            services.AddScoped<UnitsQueryHandler>();
 
             // Register CompanyLocation Handlers
             services.AddScoped<CompanyLocationCommandHandler>();

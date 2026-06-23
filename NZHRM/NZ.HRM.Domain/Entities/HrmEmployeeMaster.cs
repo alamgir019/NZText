@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using NZ.HRM.Domain.Common;
 
@@ -18,6 +15,7 @@ namespace NZ.HRM.Domain.Entities
         public string EmployeeNameBangla { get; set; } = string.Empty;
         public string EmployeeNameEnglish { get; set; } = string.Empty;
         public string EmployeeType { get; set; } = string.Empty; // e.g. "Worker", "Staff", "Officer", "Manager", "Director"
+        public string Status { get; set; } = string.Empty;
 
         // One-to-one related sections
         public HrmEmployeePersonal? Personal { get; set; }
@@ -25,6 +23,7 @@ namespace NZ.HRM.Domain.Entities
         public HrmEmployeeEmployment? Employment { get; set; }
         public HrmEmployeePayroll? Payroll { get; set; }
         public HrmEmployeeVerification? Verification { get; set; }
+        public HrmMedicalFitnessCheck? MedicalFitnessCheck { get; set; }
 
         // Navigation collections
         public ICollection<HrmEmployeeDocument> Documents { get; set; } = new HashSet<HrmEmployeeDocument>();
