@@ -15,7 +15,7 @@ public class CreateCompleteEmployeeCommand
     public string EmployeeNameEnglish { get; set; } = string.Empty;
 
     [MaxLength(100, ErrorMessage = "Employee name (Bangla) must not exceed 100 characters")]
-    public string? EmployeeNameBangla { get; set; }
+    public string EmployeeNameBangla { get; set; } = string.Empty;
 
     // Company & Organization
     [Required(ErrorMessage = "Company ID is required")]
@@ -87,17 +87,17 @@ public class CreateCompleteEmployeeCommand
     public string FatherNameEnglish { get; set; } = string.Empty;
 
     [MaxLength(100, ErrorMessage = "Father's name (Bangla) must not exceed 100 characters")]
-    public string? FatherNameBangla { get; set; }
+    public string FatherNameBangla { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Mother's name (English) is required")]
     [MaxLength(100, ErrorMessage = "Mother's name must not exceed 100 characters")]
     public string MotherNameEnglish { get; set; } = string.Empty;
 
     [MaxLength(100, ErrorMessage = "Mother's name (Bangla) must not exceed 100 characters")]
-    public string? MotherNameBangla { get; set; }
+    public string MotherNameBangla { get; set; } = string.Empty;
 
     [MaxLength(100, ErrorMessage = "Spouse name must not exceed 100 characters")]
-    public string? SpouseName { get; set; }
+    public string SpouseName { get; set; } = string.Empty;
 
     [MaxLength(20, ErrorMessage = "Spouse mobile must not exceed 20 characters")]
     public string? SpouseMobile { get; set; }

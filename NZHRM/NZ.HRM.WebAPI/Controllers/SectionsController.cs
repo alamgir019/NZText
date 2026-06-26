@@ -5,6 +5,7 @@ using NZ.HRM.Application.Sections.Commands.UpdateSection;
 using NZ.HRM.Application.Sections.Handlers;
 using NZ.HRM.Application.Sections.Queries.GetAllSections;
 using NZ.HRM.Application.Sections.Queries.GetSectionById;
+using NZ.HRM.Application.Sections.Queries.GetSectionsByDepartmentId;
 
 namespace NZ.HRM.WebAPI.Controllers;
 
@@ -54,6 +55,28 @@ public class SectionsController : ControllerBase
             return NotFound(new { message = $"Section with ID {id} not found" });
 
         return Ok(section);
+    }
+
+
+    /// <summary>
+    /// Get list of sections by department ID
+    /// </summary>
+    [HttpGet("by-department/{departmentId}")]
+    [ProducesResponseType(typeof(List<SectionDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetByDepartmentId(string departmentId, [FromQuery] bool includeInactive = false)
+    {
+        if (string.IsNullOrWhiteSpace(departmentId))
+            return BadRequest(new { message = "Department ID is required" });
+
+        var query = new GetSectionsByDepartmentIdQuery
+        {
+            DepartmentId = departmentId,
+            IncludeInactive = includeInactive
+        };
+
+        var sections = await _queryHandler.Handle(query);
+        return Ok(sections);
     }
 
     /// <summary>

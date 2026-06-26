@@ -35,7 +35,7 @@ public class CompleteEmployeeQueryHandler
         return employees.Select(x => 
         new EmployeeSearchDto() {
             Id = x.Id,
-            EmployeeNameEnglish = x.EmployeeNameEnglish,
+            EmployeeNameEnglish = x.EmployeeName,
             EmployeeNameBangla = x.EmployeeNameBangla,
             EnrollmentId = x.EnrollmentId,
             //MobileNumber = x.PersonalInfo?.MobileNumber,

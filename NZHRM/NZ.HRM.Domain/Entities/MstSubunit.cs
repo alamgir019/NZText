@@ -16,6 +16,5 @@ namespace NZ.HRM.Domain.Entities
         // Navigation
         [ForeignKey("UnitId")]
         public MstUnit? Unit { get; set; }
-        public ICollection<MstSubunitDepartment> SubunitDepartments { get; set; } = new HashSet<MstSubunitDepartment>();
     }
 }

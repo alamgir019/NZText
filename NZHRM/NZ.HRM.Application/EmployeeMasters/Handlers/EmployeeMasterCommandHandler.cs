@@ -50,8 +50,8 @@ public class EmployeeMasterCommandHandler
         var employeeMaster = new HrmEmployeeMaster
         {
             EmployeeCode = command.EmployeeCode,
-            EmployeeNameEnglish = command.EmployeeNameEnglish,
-            EmployeeNameBangla = command.EmployeeNameBangla,
+            EmployeeName = command.EmployeeNameEnglish,
+            EmployeeNameBangla = command.EmployeeNameBangla ?? string.Empty,
             //CompanyId = command.CompanyId,
             //DepartmentId = command.DepartmentId,
             //SectionId = command.SectionId,
@@ -88,8 +88,8 @@ public class EmployeeMasterCommandHandler
         await ValidateRelatedEntities(command.CompanyId, command.DepartmentId, command.SectionId, command.GradeId, command.ShiftId, command.EmployeeNatureId, cancellationToken);
 
         employeeMaster.EmployeeCode = command.EmployeeCode;
-        employeeMaster.EmployeeNameEnglish = command.EmployeeNameEnglish;
-        employeeMaster.EmployeeNameBangla = command.EmployeeNameBangla;
+        employeeMaster.EmployeeName = command.EmployeeNameEnglish;
+        employeeMaster.EmployeeNameBangla = command.EmployeeNameBangla ?? string.Empty;
         //employeeMaster.CompanyId = command.CompanyId;
         //employeeMaster.DepartmentId = command.DepartmentId;
         //employeeMaster.SectionId = command.SectionId;

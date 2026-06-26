@@ -17,6 +17,7 @@ public class CompleteEmployeeCommandHandler
     private readonly IGradeRepository _gradeRepository;
     private readonly IShiftRepository _shiftRepository;
     private readonly IEmployeeNatureRepository _employeeNatureRepository;
+    private readonly IEmployeeEmploymentRepository _employeeEmploymentRepository;
 
     public CompleteEmployeeCommandHandler(
         IEmployeeMasterRepository employeeMasterRepository,
@@ -27,7 +28,8 @@ public class CompleteEmployeeCommandHandler
         ISectionRepository sectionRepository,
         IGradeRepository gradeRepository,
         IShiftRepository shiftRepository,
-        IEmployeeNatureRepository employeeNatureRepository)
+        IEmployeeNatureRepository employeeNatureRepository,
+        IEmployeeEmploymentRepository employeeEmploymentRepository)
     {
         _employeeMasterRepository = employeeMasterRepository;
         _employeePersonalRepository = employeePersonalRepository;
@@ -38,6 +40,7 @@ public class CompleteEmployeeCommandHandler
         _gradeRepository = gradeRepository;
         _shiftRepository = shiftRepository;
         _employeeNatureRepository = employeeNatureRepository;
+        _employeeEmploymentRepository = employeeEmploymentRepository;
     }
 
     public async Task<string> Handle(CreateCompleteEmployeeCommand command, CancellationToken cancellationToken = default)
@@ -112,7 +115,7 @@ public class CompleteEmployeeCommandHandler
         var employeeMaster = new HrmEmployeeMaster
         {
             EnrollmentId = command.EmployeeEnrollmentId,
-            EmployeeNameBangla = command.EmployeeNameBangla,
+            EmployeeNameBangla = command.EmployeeNameBangla ?? string.Empty,
             //UnitId = command.UnitId,
             //DepartmentId = command.DepartmentId,
             //SectionId = command.SectionId,
@@ -139,8 +142,11 @@ public class CompleteEmployeeCommandHandler
             //MotherNameBangla = command.MotherNameBangla,
             //IdType = command.IDType,
             //IDNumber = command.IDNumber,
-            //EmployeeReference = command.EmployeeReference,
-            //ReferencePersonId = command.ReferencePersonId,
+            EmployeeReference = command.EmployeeReference,
+            ReferenceType = command.ReferenceType?.ToString(),
+            ReferencePersonId = command.ReferencePersonId,
+            ReferenceMobileNumber = command.ReferenceMobileNumber,
+            Relationship = command.Relationship?.ToString(),
             //PermanentVillageAreaRoad = command.PermanentVillageAreaRoad,
             //PermanentPostOffice = command.PermanentPostOffice,
             //PermanentThana = command.PermanentThana,
@@ -171,11 +177,21 @@ public class CompleteEmployeeCommandHandler
 
         await _employeeVerificationRepository.AddAsync(employeeVerification, cancellationToken);
 
+        var employeeEmployment = new HrmEmployeeEmployment
+        {
+            EmployeeId = employeeId,
+            UnitId = command.UnitId,
+            JoiningDate = command.JoiningDate,
+            IsActive = true
+        };
+
+        await _employeeEmploymentRepository.AddAsync(employeeEmployment, cancellationToken);
+
         return employeeId;
     }
 
     private async Task ValidateRelatedEntities(
-        string companyId, 
+        string unitId, 
         string departmentId, 
         string sectionId, 
         string? shiftId,
@@ -183,17 +199,24 @@ public class CompleteEmployeeCommandHandler
         //string locationId, 
         CancellationToken cancellationToken)
     {
-        var unitExists = await _unitRepository.ExistsAsync(companyId, cancellationToken);
-        if (!unitExists)
-            throw new KeyNotFoundException($"Unit with ID {companyId} not found");
-
-        var departmentExists = await _departmentRepository.ExistsAsync(departmentId, cancellationToken);
-        if (!departmentExists)
-            throw new KeyNotFoundException($"Department with ID {departmentId} not found");
-
-        var sectionExists = await _sectionRepository.ExistsAsync(sectionId, cancellationToken);
-        if (!sectionExists)
-            throw new KeyNotFoundException($"Section with ID {sectionId} not found");
+        if (!string.IsNullOrWhiteSpace(unitId))
+        {
+            var unitExists = await _unitRepository.ExistsAsync(unitId, cancellationToken);
+            if (!unitExists)
+                throw new KeyNotFoundException($"Unit with ID {unitId} not found");
+        }
+        if (!string.IsNullOrWhiteSpace(departmentId))
+        {
+            var departmentExists = await _departmentRepository.ExistsAsync(departmentId, cancellationToken);
+            if (!departmentExists)
+                throw new KeyNotFoundException($"Department with ID {departmentId} not found");
+        }
+        if (!string.IsNullOrWhiteSpace(sectionId))
+        {
+            var sectionExists = await _sectionRepository.ExistsAsync(sectionId, cancellationToken);
+            if (!sectionExists)
+                throw new KeyNotFoundException($"Section with ID {sectionId} not found");
+        }
 
         if (!string.IsNullOrWhiteSpace(shiftId))
         {

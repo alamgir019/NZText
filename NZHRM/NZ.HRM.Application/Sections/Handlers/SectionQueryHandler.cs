@@ -1,6 +1,7 @@
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Application.Sections.Queries.GetAllSections;
 using NZ.HRM.Application.Sections.Queries.GetSectionById;
+using NZ.HRM.Application.Sections.Queries.GetSectionsByDepartmentId;
 
 namespace NZ.HRM.Application.Sections.Handlers;
 
@@ -34,8 +35,8 @@ public class SectionQueryHandler
         var result = new List<SectionDto>(sections.Count);
         foreach (var section in sections)
         {
-            var departmentId = await _departmentSectionRepository.GetDepartmentIdBySectionIdAsync(section.Id, cancellationToken) ?? string.Empty;
-            var departmentName = await _departmentSectionRepository.GetDepartmentNameBySectionIdAsync(section.Id, cancellationToken) ?? string.Empty;
+            var departmentId = section.DepartmentId;
+            var departmentName = section.Department != null ? section.Department.DepartmentName : string.Empty;
 
             result.Add(new SectionDto
             {
@@ -61,14 +62,14 @@ public class SectionQueryHandler
         if (section == null)
             return null;
 
-        var mappedDepartmentId = await _departmentSectionRepository.GetDepartmentIdBySectionIdAsync(section.Id, cancellationToken) ?? string.Empty;
-        var mappedDepartmentName = await _departmentSectionRepository.GetDepartmentNameBySectionIdAsync(section.Id, cancellationToken) ?? string.Empty;
+        //var mappedDepartmentId = await _departmentSectionRepository.GetDepartmentIdBySectionIdAsync(section.Id, cancellationToken) ?? string.Empty;
+        //var mappedDepartmentName = await _departmentSectionRepository.GetDepartmentNameBySectionIdAsync(section.Id, cancellationToken) ?? string.Empty;
 
         return new SectionDetailDto
         {
             Id = section.Id,
-            DepartmentId = mappedDepartmentId,
-            DepartmentName = mappedDepartmentName,
+            DepartmentId = section.DepartmentId,
+            DepartmentName = section.Department != null ? section.Department.DepartmentName : string.Empty,
             SectionName = section.SectionName,
             CreatedOn = section.CreatedOn,
             CreatedBy = section.CreatedBy,
@@ -76,5 +77,29 @@ public class SectionQueryHandler
             UpdatedBy = section.UpdatedBy,
             IsActive = section.IsActive
         };
+    }
+
+    public async Task<List<SectionDto>> Handle(GetSectionsByDepartmentIdQuery query, CancellationToken cancellationToken = default)
+    {
+        var sections = await _sectionRepository.GetByDepartmentIdAsync(query.DepartmentId, query.IncludeInactive, cancellationToken);
+
+        var result = new List<SectionDto>(sections.Count);
+        foreach (var section in sections)
+        {
+            result.Add(new SectionDto
+            {
+                Id = section.Id,
+                DepartmentId = section.DepartmentId,
+                DepartmentName = section.Department != null ? section.Department.DepartmentName : string.Empty,
+                SectionName = section.SectionName,
+                CreatedOn = section.CreatedOn,
+                CreatedBy = section.CreatedBy,
+                UpdatedOn = section.UpdatedOn,
+                UpdatedBy = section.UpdatedBy,
+                IsActive = section.IsActive
+            });
+        }
+
+        return result;
     }
 }

@@ -21,14 +21,14 @@ public class CreateCandidateEntryCommand
     [Required(ErrorMessage = "Unit ID is required")]
     public string UnitId { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Department ID is required")]
-    public string DepartmentId { get; set; } = string.Empty;
+    //[Required(ErrorMessage = "Department ID is required")]
+    public string? DepartmentId { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Location ID is required")]
-    public string LocationId { get; set; } = string.Empty;
+    //[Required(ErrorMessage = "Location ID is required")]
+    public string? LocationId { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Section ID is required")]
-    public string SectionId { get; set; } = string.Empty;
+    //[Required(ErrorMessage = "Section ID is required")]
+    public string? SectionId { get; set; } = string.Empty;
 
     public string? CellId { get; set; }
 
@@ -46,11 +46,18 @@ public class CreateCandidateEntryCommand
     [Required(ErrorMessage = "Gender is required")]
     public Gender Gender { get; set; }
 
+
+    [Required(ErrorMessage = "Religion is required")]
+    public Religion Religion { get; set; }
     public BloodGroup? BloodGroup { get; set; }
     public IDType IDType { get; set; }
-    public string IDNumber { get; set; } = string.Empty;
+    public string? IDNumber { get; set; } = string.Empty;
 
 
+
+    [Required(ErrorMessage = "Mobile number is required")]
+    [MaxLength(20, ErrorMessage = "Mobile number must not exceed 20 characters")]
+    public string MobileNumber { get; set; } = string.Empty;
 
     // Family Information
     public GuardianType GuardianType { get; set; }
@@ -59,12 +66,18 @@ public class CreateCandidateEntryCommand
 
     [MaxLength(100, ErrorMessage = "Mother's name (Bangla) must not exceed 100 characters")]
     public string? MotherNameBangla { get; set; }
+    public ReferenceType? ReferenceType { get; set; }
 
     [MaxLength(100, ErrorMessage = "Employee reference must not exceed 100 characters")]
     public string? EmployeeReference { get; set; }
 
     [MaxLength(50, ErrorMessage = "Reference person ID must not exceed 50 characters")]
     public string? ReferencePersonId { get; set; }
+
+    [MaxLength(20, ErrorMessage = "Mobile number must not exceed 20 characters")]
+    public string? ReferenceMobileNumber { get; set; }
+    public Relation? Relationship { get; set; }
+
 
 
     // Address Information

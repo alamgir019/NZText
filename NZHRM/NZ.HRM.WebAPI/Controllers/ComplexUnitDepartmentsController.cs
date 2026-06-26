@@ -10,12 +10,12 @@ namespace NZ.HRM.WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class LocationDepartmentsController : ControllerBase
+public class ComplexUnitDepartmentsController : ControllerBase
 {
     private readonly LocationDepartmentQueryHandler _queryHandler;
     private readonly LocationDepartmentCommandHandler _commandHandler;
 
-    public LocationDepartmentsController(
+    public ComplexUnitDepartmentsController(
         LocationDepartmentQueryHandler queryHandler,
         LocationDepartmentCommandHandler commandHandler)
     {

@@ -16,7 +16,7 @@ namespace NZ.HRM.Infrastructure.DependencyInjection
             services.AddScoped<ISubUnitRepository, SubUnitRepository>();
             services.AddScoped<IUnitRepository, UnitRepository>();
             services.AddScoped<ICompanyLocationRepository, CompanyLocationRepository>();
-            services.AddScoped<ILocationDepartmentRepository, LocationDepartmentRepository>();
+            services.AddScoped<IComplexUnitDepartmentRepository, ComplexUnitDepartmentRepository>();
             services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             services.AddScoped<IDepartmentSectionRepository, DepartmentSectionRepository>();
             services.AddScoped<IGradeRepository, GradeRepository>();
@@ -37,6 +37,7 @@ namespace NZ.HRM.Infrastructure.DependencyInjection
             services.AddScoped<IPhysicalExaminationSettingRepository, PhysicalExaminationSettingRepository>();
             services.AddScoped<IRawPunchRepository, RawPunchRepository>();
             services.AddScoped<IProcessedPunchRepository, ProcessedPunchRepository>();
+            services.AddScoped<IEmployeeEmploymentRepository, EmployeeEmploymentRepository>();
             return services;
         }
     }

@@ -34,7 +34,7 @@ public class EmployeeMasterQueryHandler
         {
             Id = e.Id,
             EmployeeCode = e.EmployeeCode,
-            EmployeeNameEnglish = e.EmployeeNameEnglish,
+            EmployeeNameEnglish = e.EmployeeName,
             EmployeeNameBangla = e.EmployeeNameBangla,
             //CompanyId = e.CompanyId,
             //CompanyName = e.Company?.CompanyName ?? string.Empty,
@@ -73,7 +73,7 @@ public class EmployeeMasterQueryHandler
         {
             Id = employee.Id,
             EmployeeCode = employee.EmployeeCode,
-            EmployeeNameEnglish = employee.EmployeeNameEnglish,
+            EmployeeNameEnglish = employee.EmployeeName,
             EmployeeNameBangla = employee.EmployeeNameBangla,
             //CompanyId = employee.CompanyId,
             //CompanyName = employee.Company?.CompanyName ?? string.Empty,

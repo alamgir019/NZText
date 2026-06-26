@@ -3,6 +3,7 @@ using NZ.HRM.Application.Departments.Queries.GetDepartmentsByLocation;
 using NZ.HRM.Application.Departments.Queries.GetDepartmentById;
 using NZ.HRM.Application.Interface;
 using NZ.HRM.Application.Interfaces.Repositories;
+using NZ.HRM.Application.ComplexUnitDepartments.Queries.GetAllComplexUnitDepartments;
 
 namespace NZ.HRM.Application.Departments.Handlers;
 
@@ -10,32 +11,32 @@ public class DepartmentQueryHandler
 {
     private readonly IDepartmentRepository _departmentRepository;
     private readonly ISubUnitRepository _locationRepository;
-    private readonly ILocationDepartmentRepository _locationDepartmentRepository;
+    private readonly IComplexUnitDepartmentRepository _complexUnitDepartmentRepository;
 
     public DepartmentQueryHandler(
         IDepartmentRepository departmentRepository,
         ISubUnitRepository locationRepository,
-        ILocationDepartmentRepository locationDepartmentRepository)
+        IComplexUnitDepartmentRepository complexUnitDepartmentRepository)
     {
         _departmentRepository = departmentRepository;
         _locationRepository = locationRepository;
-        _locationDepartmentRepository = locationDepartmentRepository;
+        _complexUnitDepartmentRepository = complexUnitDepartmentRepository;
     }
 
-    public async Task<List<DepartmentDto>> Handle(GetAllDepartmentsQuery query, CancellationToken cancellationToken = default)
+    public async Task<List<ComplexUnitDepartmentDto>> Handle(GetAllDepartmentsQuery query, CancellationToken cancellationToken = default)
     {
         var departments = await _departmentRepository.GetAllAsync(query.IncludeInactive, cancellationToken);
 
-        return departments.Select(d => new DepartmentDto
+        return departments.Select(d => new ComplexUnitDepartmentDto
         {
-            Id = d.Id,
+            DepartmentId = d.Id,
             DepartmentName = d.DepartmentName,
             DepartmentCode = d.DepartmentCode,
-            CreatedOn = d.CreatedOn,
-            CreatedBy = d.CreatedBy,
-            UpdatedOn = d.UpdatedOn,
-            UpdatedBy = d.UpdatedBy,
-            IsActive = d.IsActive
+            //CreatedOn = d.CreatedOn,
+            //CreatedBy = d.CreatedBy,
+            //UpdatedOn = d.UpdatedOn,
+            //UpdatedBy = d.UpdatedBy,
+            //IsActive = d.IsActive
         }).ToList();
     }
 
@@ -59,57 +60,24 @@ public class DepartmentQueryHandler
         };
     }
 
-    public async Task<List<DepartmentDto>> Handle(GetDepartmentsByLocationQuery query, CancellationToken cancellationToken = default)
+    public async Task<List<ComplexUnitDepartmentDto>> Handle(GetDepartmentsByComplexUnitQuery query, CancellationToken cancellationToken = default)
     {
-        var location = await _locationRepository.FindByIdAsync(query.LocationId);
+        var location = await _locationRepository.FindByIdAsync(query.ComplexId);
         if (location == null)
-            return new List<DepartmentDto>();
+            return new List<ComplexUnitDepartmentDto>();
 
-        var allDepartments = await _departmentRepository.GetAllAsync(query.IncludeInactive, cancellationToken);
-        var locationDepartmentMappings = await _locationDepartmentRepository.GetAllAsync(query.IncludeInactive, cancellationToken: cancellationToken);
+        var complexUnitDepartmentMappings = await _complexUnitDepartmentRepository.GetAllAsync(query.IncludeInactive, query.ComplexId, query.UnitId, cancellationToken);
 
-        var headOfficeLocationIds = locationDepartmentMappings
-            .Where(m => string.Equals(m.Subunit?.SubunitName, "Head Office", StringComparison.OrdinalIgnoreCase))
-            .Select(m => m.SubunitId)
-            .Distinct()
-            .ToHashSet();
-
-        var allLocationIds = locationDepartmentMappings
-            .Where(m => string.Equals(m.Subunit?.SubunitName, "All", StringComparison.OrdinalIgnoreCase))
-            .Select(m => m.SubunitId)
-            .Distinct()
-            .ToHashSet();
-
-        var isHeadOfficeLocation = string.Equals(location?.SubunitName, "Head Office", StringComparison.OrdinalIgnoreCase);
-
-        HashSet<string> allowedDepartmentIds;
-        if (isHeadOfficeLocation)
-        {
-            allowedDepartmentIds = locationDepartmentMappings
-                .Where(m => m.SubunitId == query.LocationId || allLocationIds.Contains(m.SubunitId))
-                .Select(m => m.DepartmentId)
-                .ToHashSet();
-        }
-        else
-        {
-            allowedDepartmentIds = locationDepartmentMappings
-                .Where(m => !headOfficeLocationIds.Contains(m.SubunitId))
-                .Select(m => m.DepartmentId)
-                .ToHashSet();
-        }
-
-        return allDepartments
-            .Where(d => allowedDepartmentIds.Contains(d.Id))
-            .Select(d => new DepartmentDto
+        return complexUnitDepartmentMappings
+            .Select(d => new ComplexUnitDepartmentDto
             {
-                Id = d.Id,
-                DepartmentName = d.DepartmentName,
-                DepartmentCode = d.DepartmentCode,
-                CreatedOn = d.CreatedOn,
-                CreatedBy = d.CreatedBy,
-                UpdatedOn = d.UpdatedOn,
-                UpdatedBy = d.UpdatedBy,
-                IsActive = d.IsActive
+                ComplexId = d.ComplexId,
+                ComplexName = d.Complex?.GroupName ?? string.Empty,
+                UnitId = d.UnitId,
+                UnitName = d.Unit?.UnitName ?? string.Empty,
+                DepartmentId = d.Id,
+                DepartmentName = d.Department?.DepartmentName ?? string.Empty,
+                DepartmentCode = d.Department?.DepartmentCode ?? string.Empty
             }).ToList();
     }
 }

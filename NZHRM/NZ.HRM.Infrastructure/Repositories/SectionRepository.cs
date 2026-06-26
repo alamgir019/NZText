@@ -30,9 +30,10 @@ public class SectionRepository : ISectionRepository
 
     public async Task<List<MstSection>> GetByDepartmentIdAsync(string departmentId, bool includeInactive = false, CancellationToken cancellationToken = default)
     {
-        var query = _context.MstDepartmentSections
+        var query = _context.MstSections
             .Where(ds => ds.DepartmentId == departmentId)
-            .Select(ds => ds.Section!)
+            .Include(ds => ds.Department)
+            .Select(ds => ds)
             .AsQueryable();
 
         if (!includeInactive)

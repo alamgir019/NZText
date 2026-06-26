@@ -9,16 +9,16 @@ namespace NZ.HRM.Application.LocationDepartments.Handlers;
 
 public class LocationDepartmentCommandHandler
 {
-    private readonly ILocationDepartmentRepository _locationDepartmentRepository;
+    //private readonly ILocationDepartmentRepository _locationDepartmentRepository;
     private readonly ISubUnitRepository _locationRepository;
     private readonly IDepartmentRepository _departmentRepository;
 
     public LocationDepartmentCommandHandler(
-        ILocationDepartmentRepository locationDepartmentRepository,
+        //ILocationDepartmentRepository locationDepartmentRepository,
         ISubUnitRepository locationRepository,
         IDepartmentRepository departmentRepository)
     {
-        _locationDepartmentRepository = locationDepartmentRepository;
+        //_locationDepartmentRepository = locationDepartmentRepository;
         _locationRepository = locationRepository;
         _departmentRepository = departmentRepository;
     }
@@ -46,31 +46,31 @@ public class LocationDepartmentCommandHandler
 
     public async Task Handle(UpdateLocationDepartmentCommand command, CancellationToken cancellationToken = default)
     {
-        var mapping = await _locationDepartmentRepository.GetByIdAsync(command.Id, cancellationToken);
-        if (mapping == null)
-            throw new KeyNotFoundException($"LocationDepartment with ID {command.Id} not found");
+        //var mapping = await _locationDepartmentRepository.GetByIdAsync(command.Id, cancellationToken);
+        //if (mapping == null)
+        //    throw new KeyNotFoundException($"LocationDepartment with ID {command.Id} not found");
 
-        var location = await _locationRepository.FindByIdAsync(command.LocationId);
-        if (location == null)
-            throw new KeyNotFoundException($"Location with ID {command.LocationId} not found");
+        //var location = await _locationRepository.FindByIdAsync(command.LocationId);
+        //if (location == null)
+        //    throw new KeyNotFoundException($"Location with ID {command.LocationId} not found");
 
-        var departmentExists = await _departmentRepository.ExistsAsync(command.DepartmentId, cancellationToken);
-        if (!departmentExists)
-            throw new KeyNotFoundException($"Department with ID {command.DepartmentId} not found");
+        //var departmentExists = await _departmentRepository.ExistsAsync(command.DepartmentId, cancellationToken);
+        //if (!departmentExists)
+        //    throw new KeyNotFoundException($"Department with ID {command.DepartmentId} not found");
 
-        //mapping.LocationId = command.LocationId;
-        mapping.DepartmentId = command.DepartmentId;
+        ////mapping.LocationId = command.LocationId;
+        //mapping.DepartmentId = command.DepartmentId;
 
-        await _locationDepartmentRepository.UpdateAsync(mapping, cancellationToken);
+        //await _locationDepartmentRepository.UpdateAsync(mapping, cancellationToken);
     }
 
     public async Task Handle(DeleteLocationDepartmentCommand command, CancellationToken cancellationToken = default)
     {
-        var mapping = await _locationDepartmentRepository.GetByIdAsync(command.Id, cancellationToken);
-        if (mapping == null)
-            throw new KeyNotFoundException($"LocationDepartment with ID {command.Id} not found");
+        //var mapping = await _locationDepartmentRepository.GetByIdAsync(command.Id, cancellationToken);
+        //if (mapping == null)
+        //    throw new KeyNotFoundException($"LocationDepartment with ID {command.Id} not found");
 
-        mapping.IsActive = false;
-        await _locationDepartmentRepository.UpdateAsync(mapping, cancellationToken);
+        //mapping.IsActive = false;
+        //await _locationDepartmentRepository.UpdateAsync(mapping, cancellationToken);
     }
 }

@@ -5,101 +5,102 @@ using NZ.HRM.Infrastructure.Persistence;
 
 namespace NZ.HRM.Infrastructure.Repositories;
 
-public class LocationDepartmentRepository : ILocationDepartmentRepository
+public class ComplexUnitDepartmentRepository : IComplexUnitDepartmentRepository
 {
     private readonly ApplicationDbContext _context;
 
-    public LocationDepartmentRepository(ApplicationDbContext context)
+    public ComplexUnitDepartmentRepository(ApplicationDbContext context)
     {
         _context = context;
     }
 
-    public async Task<List<MstSubunitDepartment>> GetAllAsync(bool includeInactive = false, string? locationId = null, string? departmentId = null, CancellationToken cancellationToken = default)
+    public async Task<List<MstDepartmentUnitComplex>> GetAllAsync(bool includeInactive = false, string? complexId = null, string? unitId = null, CancellationToken cancellationToken = default)
     {
-        var query = _context.MstSubunitDepartments
-            .Include(ld => ld.Subunit)
+        var query = _context.MstDepartmentUnitComplexes
+            .Include(ld => ld.Complex)
             .Include(ld => ld.Department)
             .AsQueryable();
 
         if (!includeInactive)
             query = query.Where(ld => ld.IsActive);
 
-        if (!string.IsNullOrWhiteSpace(locationId))
-            query = query.Where(ld => ld.SubunitId == locationId);
+        if (!string.IsNullOrWhiteSpace(complexId))
+            query = query.Where(ld => ld.ComplexId == complexId);
 
-        if (!string.IsNullOrWhiteSpace(departmentId))
-            query = query.Where(ld => ld.DepartmentId == departmentId);
+        if (!string.IsNullOrWhiteSpace(unitId))
+            query = query.Where(ld => ld.UnitId == unitId);
 
         return await query
-            .OrderBy(ld => ld.Subunit != null ? ld.Subunit.SubunitName : string.Empty)
+            .OrderBy(ld => ld.Complex != null ? ld.Complex.GroupName : string.Empty)
+            .ThenBy(ld => ld.Unit != null ? ld.Unit.UnitName : string.Empty)
             .ThenBy(ld => ld.Department != null ? ld.Department.DepartmentName : string.Empty)
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<MstSubunitDepartment?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<MstDepartmentUnitComplex?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.MstSubunitDepartments
-            .Include(ld => ld.Subunit)
+        return await _context.MstDepartmentUnitComplexes
+            .Include(ld => ld.Complex)
             .Include(ld => ld.Department)
             .FirstOrDefaultAsync(ld => ld.Id == id && ld.IsActive, cancellationToken);
     }
 
-    public async Task<string?> GetLocationIdByDepartmentIdAsync(string departmentId, CancellationToken cancellationToken = default)
+    public async Task<string?> GetComplexIdByDepartmentIdAsync(string departmentId, CancellationToken cancellationToken = default)
     {
-        return await _context.MstSubunitDepartments
+        return await _context.MstDepartmentUnitComplexes
             .Where(ld => ld.DepartmentId == departmentId)
-            .Select(ld => ld.SubunitId)
+            .Select(ld => ld.ComplexId)
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<string?> GetLocationNameByDepartmentIdAsync(string departmentId, CancellationToken cancellationToken = default)
+    public async Task<string?> GetComplexNameByDepartmentIdAsync(string departmentId, CancellationToken cancellationToken = default)
     {
-        return await _context.MstSubunitDepartments
+        return await _context.MstDepartmentUnitComplexes
             .Where(ld => ld.DepartmentId == departmentId)
-            .Select(ld => ld.Subunit != null ? ld.Subunit.SubunitName : null)
+            .Select(ld => ld.Complex != null ? ld.Complex.GroupName : null)
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task SetLocationForDepartmentAsync(string departmentId, string locationId, CancellationToken cancellationToken = default)
+    public async Task SetComplexForDepartmentAsync(string departmentId, string complexId, CancellationToken cancellationToken = default)
     {
-        var existingMappings = await _context.MstSubunitDepartments
+        var existingMappings = await _context.MstDepartmentUnitComplexes
             .Where(ld => ld.DepartmentId == departmentId)
             .ToListAsync(cancellationToken);
 
         if (existingMappings.Count > 0)
-            _context.MstSubunitDepartments.RemoveRange(existingMappings);
+            _context.MstDepartmentUnitComplexes.RemoveRange(existingMappings);
 
-        _context.MstSubunitDepartments.Add(new MstSubunitDepartment
+        _context.MstDepartmentUnitComplexes.Add(new MstDepartmentUnitComplex
         {
             DepartmentId = departmentId,
-            SubunitId = locationId,
+            ComplexId = complexId,
             IsActive = true
         });
 
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<string> AddAsync(MstSubunitDepartment locationDepartment, CancellationToken cancellationToken = default)
+    public async Task<string> AddAsync(MstDepartmentUnitComplex locationDepartment, CancellationToken cancellationToken = default)
     {
-        _context.MstSubunitDepartments.Add(locationDepartment);
+        _context.MstDepartmentUnitComplexes.Add(locationDepartment);
         await _context.SaveChangesAsync(cancellationToken);
         return locationDepartment.Id;
     }
 
-    public async Task UpdateAsync(MstSubunitDepartment locationDepartment, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(MstDepartmentUnitComplex locationDepartment, CancellationToken cancellationToken = default)
     {
-        _context.MstSubunitDepartments.Update(locationDepartment);
+        _context.MstDepartmentUnitComplexes.Update(locationDepartment);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(MstSubunitDepartment locationDepartment, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(MstDepartmentUnitComplex locationDepartment, CancellationToken cancellationToken = default)
     {
-        _context.MstSubunitDepartments.Remove(locationDepartment);
+        _context.MstDepartmentUnitComplexes.Remove(locationDepartment);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _context.MstSubunitDepartments.AnyAsync(ld => ld.Id == id, cancellationToken);
+        return await _context.MstDepartmentUnitComplexes.AnyAsync(ld => ld.Id == id, cancellationToken);
     }
 }

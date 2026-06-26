@@ -20,4 +20,18 @@ namespace NZ.HRM.Utility.Enum
         Sibling,
         Other
     }
+    public enum ReferenceType
+    {
+        Personal,
+        Professional,
+        Other
+    }
+    public enum Relation
+    {
+        Father,
+        Mother,
+        Spouse,
+        Sibling,
+        Other
+    }
 }

@@ -17,7 +17,7 @@ public class CellRepository : ICellRepository
     public async Task<List<MstCell>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
     {
         var query = _context.Set<MstCell>().AsQueryable();
-
+        query = query.Include(c => c.Section);
         if (!includeInactive)
             query = query.Where(c => c.IsActive);
 
@@ -27,26 +27,26 @@ public class CellRepository : ICellRepository
     public async Task<MstCell?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
         return await _context.Set<MstCell>()
+            .Include(c => c.Section)
             .FirstOrDefaultAsync(c => c.Id == id && c.IsActive, cancellationToken);
     }
 
     public async Task<List<MstCell>> GetBySectionIdAsync(string sectionId, bool includeInactive = false, CancellationToken cancellationToken = default)
     {
-        //var query = _context.SectionCells
-        //    .Where(sc => sc.SectionId == sectionId)
-        //    .Select(sc => sc.Cell!)
-        //    .AsQueryable();
+        var query = _context.MstCells
+            .Where(sc => sc.SectionId == sectionId)
+            .Include(c => c.Section)
+            .AsQueryable();
 
-        //if (!includeInactive)
-        //{
-        //    query = query.Where(c => c.IsActive);
-        //}
+        if (!includeInactive)
+        {
+            query = query.Where(c => c.IsActive);
+        }
 
-        //return await query
-        //    .OrderBy(c => c.NameEnglish)
-        //    .Distinct()
-        //    .ToListAsync(cancellationToken);
-        return null;
+        return await query
+            .OrderBy(c => c.NameEnglish)
+            .Distinct()
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<string> AddAsync(MstCell cell, CancellationToken cancellationToken = default)

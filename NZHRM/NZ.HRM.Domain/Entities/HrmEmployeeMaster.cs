@@ -10,10 +10,9 @@ namespace NZ.HRM.Domain.Entities
         public string EmployeeCode { get; set; } = string.Empty;
         public string EnrollmentId { get; set; } = string.Empty;
         public string CardNo { get; set; } = string.Empty;
-        public string? OldCardNo { get; set; }
+        public string OldCardNo { get; set; } = string.Empty;
         public string EmployeeName { get; set; } = string.Empty;
         public string EmployeeNameBangla { get; set; } = string.Empty;
-        public string EmployeeNameEnglish { get; set; } = string.Empty;
         public string EmployeeType { get; set; } = string.Empty; // e.g. "Worker", "Staff", "Officer", "Manager", "Director"
         public string Status { get; set; } = string.Empty;
 

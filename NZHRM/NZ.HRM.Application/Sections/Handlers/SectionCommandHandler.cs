@@ -60,10 +60,10 @@ public class SectionCommandHandler
 
         await _sectionRepository.UpdateAsync(section, cancellationToken);
 
-        await _departmentSectionRepository.SetDepartmentForSectionAsync(
-            section.Id,
-            command.DepartmentId,
-            cancellationToken);
+        //await _departmentSectionRepository.SetDepartmentForSectionAsync(
+        //    section.Id,
+        //    command.DepartmentId,
+        //    cancellationToken);
     }
 
     public async Task Handle(DeleteSectionCommand command, CancellationToken cancellationToken = default)

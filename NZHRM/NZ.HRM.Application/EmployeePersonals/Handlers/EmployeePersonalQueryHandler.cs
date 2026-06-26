@@ -31,7 +31,7 @@ public class EmployeePersonalQueryHandler
         {
             Id = ep.Id,
             EmployeeId = ep.EmployeeId,
-            EmployeeNameEnglish = ep.Employee?.EmployeeNameEnglish ?? string.Empty,
+            EmployeeNameEnglish = ep.Employee?.EmployeeName ?? string.Empty,
             //DateOfBirth = ep.DateOfBirth,
             //Gender = ep.Gender,
             //MaritalStatus = ep.MaritalStatus,
@@ -75,7 +75,7 @@ public class EmployeePersonalQueryHandler
         {
             Id = employeePersonal.Id,
             EmployeeId = employeePersonal.EmployeeId,
-            EmployeeNameEnglish = employeePersonal.Employee?.EmployeeNameEnglish ?? string.Empty,
+            EmployeeNameEnglish = employeePersonal.Employee?.EmployeeName ?? string.Empty,
             //DateOfBirth = employeePersonal.DateOfBirth,
             //Gender = employeePersonal.Gender,
             //MaritalStatus = employeePersonal.MaritalStatus,

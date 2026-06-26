@@ -20,8 +20,8 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<MstShift> MstShifts => Set<MstShift>();
         public DbSet<MstEmployeeCategory> MstEmployeeCategories => Set<MstEmployeeCategory>();
         public DbSet<MstPayrollProcessingGroup> MstPayrollProcessingGroups => Set<MstPayrollProcessingGroup>();
-        public DbSet<MstSubunitDepartment> MstSubunitDepartments => Set<MstSubunitDepartment>();
-        public DbSet<MstDepartmentSection> MstDepartmentSections => Set<MstDepartmentSection>();
+        public DbSet<MstDepartmentUnitComplex> MstDepartmentUnitComplexes => Set<MstDepartmentUnitComplex>();
+        //public DbSet<MstDepartmentSection> MstDepartmentSections => Set<MstDepartmentSection>();
 
         // Legacy / Compatibility entities used by repositories
         public DbSet<Division> Divisions => Set<Division>();
@@ -188,8 +188,8 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<MstShift>().ToTable("mst_shift", "master");
             modelBuilder.Entity<MstEmployeeCategory>().ToTable("mst_employee_category", "master");
             modelBuilder.Entity<MstPayrollProcessingGroup>().ToTable("payroll_processing_group", "master");
-            modelBuilder.Entity<MstSubunitDepartment>().ToTable("mst_subunit_department", "master");
-            modelBuilder.Entity<MstDepartmentSection>().ToTable("mst_department_section", "master");
+            modelBuilder.Entity<MstDepartmentUnitComplex>().ToTable("mst_department_unit_complex", "master");
+            //modelBuilder.Entity<MstDepartmentSection>().ToTable("mst_department_section", "master");
 
             // HRM
             modelBuilder.Entity<HrmEmployeeMaster>().ToTable("employee_master", "hrm");

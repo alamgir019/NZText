@@ -49,8 +49,8 @@ public static class EmployeeMapper
         return new HrmEmployeeMaster
         {
             EmployeeCode = command.EmployeeCode,
-            EmployeeNameEnglish = command.EmployeeNameEnglish,
-            EmployeeNameBangla = command.EmployeeNameBangla,
+            EmployeeName = command.EmployeeNameEnglish,
+            EmployeeNameBangla = command.EmployeeNameBangla ?? string.Empty,
             //CompanyId = command.CompanyId,
             //DepartmentId = command.DepartmentId,
             //SectionId = command.SectionId,
@@ -75,7 +75,7 @@ public static class EmployeeMapper
             Id = employee.Id,
             EnrollmentId = employee.EnrollmentId ?? string.Empty,
             EmployeeCode = employee.EmployeeCode,
-            EmployeeNameEnglish = employee.EmployeeNameEnglish,
+            EmployeeNameEnglish = employee.EmployeeName,
             EmployeeNameBangla = employee.EmployeeNameBangla,
             //CompanyId = employee.CompanyId,
             //CompanyName = employee.Company?.CompanyName ?? string.Empty,

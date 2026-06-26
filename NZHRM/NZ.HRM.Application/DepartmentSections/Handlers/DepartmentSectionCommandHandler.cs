@@ -22,53 +22,53 @@ public class DepartmentSectionCommandHandler
         _sectionRepository = sectionRepository;
     }
 
-    public async Task<string> Handle(CreateDepartmentSectionCommand command, CancellationToken cancellationToken = default)
-    {
-        var departmentExists = await _departmentRepository.ExistsAsync(command.DepartmentId, cancellationToken);
-        if (!departmentExists)
-            throw new KeyNotFoundException($"Department with ID {command.DepartmentId} not found");
+    //public async Task<string> Handle(CreateDepartmentSectionCommand command, CancellationToken cancellationToken = default)
+    //{
+    //    var departmentExists = await _departmentRepository.ExistsAsync(command.DepartmentId, cancellationToken);
+    //    if (!departmentExists)
+    //        throw new KeyNotFoundException($"Department with ID {command.DepartmentId} not found");
 
-        var sectionExists = await _sectionRepository.ExistsAsync(command.SectionId, cancellationToken);
-        if (!sectionExists)
-            throw new KeyNotFoundException($"Section with ID {command.SectionId} not found");
+    //    var sectionExists = await _sectionRepository.ExistsAsync(command.SectionId, cancellationToken);
+    //    if (!sectionExists)
+    //        throw new KeyNotFoundException($"Section with ID {command.SectionId} not found");
 
-        var departmentSection = new MstDepartmentSection
-        {
-            DepartmentId = command.DepartmentId,
-            SectionId = command.SectionId,
-            IsActive = true
-        };
+    //    var departmentSection = new MstDepartmentSection
+    //    {
+    //        DepartmentId = command.DepartmentId,
+    //        SectionId = command.SectionId,
+    //        IsActive = true
+    //    };
 
-        return await _departmentSectionRepository.AddAsync(departmentSection, cancellationToken);
-    }
+    //    return await _departmentSectionRepository.AddAsync(departmentSection, cancellationToken);
+    //}
 
-    public async Task Handle(UpdateDepartmentSectionCommand command, CancellationToken cancellationToken = default)
-    {
-        var departmentSection = await _departmentSectionRepository.GetByIdAsync(command.Id, cancellationToken);
-        if (departmentSection == null)
-            throw new KeyNotFoundException($"DepartmentSection with ID {command.Id} not found");
+    //public async Task Handle(UpdateDepartmentSectionCommand command, CancellationToken cancellationToken = default)
+    //{
+    //    var departmentSection = await _departmentSectionRepository.GetByIdAsync(command.Id, cancellationToken);
+    //    if (departmentSection == null)
+    //        throw new KeyNotFoundException($"DepartmentSection with ID {command.Id} not found");
 
-        var departmentExists = await _departmentRepository.ExistsAsync(command.DepartmentId, cancellationToken);
-        if (!departmentExists)
-            throw new KeyNotFoundException($"Department with ID {command.DepartmentId} not found");
+    //    var departmentExists = await _departmentRepository.ExistsAsync(command.DepartmentId, cancellationToken);
+    //    if (!departmentExists)
+    //        throw new KeyNotFoundException($"Department with ID {command.DepartmentId} not found");
 
-        var sectionExists = await _sectionRepository.ExistsAsync(command.SectionId, cancellationToken);
-        if (!sectionExists)
-            throw new KeyNotFoundException($"Section with ID {command.SectionId} not found");
+    //    var sectionExists = await _sectionRepository.ExistsAsync(command.SectionId, cancellationToken);
+    //    if (!sectionExists)
+    //        throw new KeyNotFoundException($"Section with ID {command.SectionId} not found");
 
-        departmentSection.DepartmentId = command.DepartmentId;
-        departmentSection.SectionId = command.SectionId;
+    //    departmentSection.DepartmentId = command.DepartmentId;
+    //    departmentSection.SectionId = command.SectionId;
 
-        await _departmentSectionRepository.UpdateAsync(departmentSection, cancellationToken);
-    }
+    //    await _departmentSectionRepository.UpdateAsync(departmentSection, cancellationToken);
+    //}
 
-    public async Task Handle(DeleteDepartmentSectionCommand command, CancellationToken cancellationToken = default)
-    {
-        var departmentSection = await _departmentSectionRepository.GetByIdAsync(command.Id, cancellationToken);
-        if (departmentSection == null)
-            throw new KeyNotFoundException($"DepartmentSection with ID {command.Id} not found");
+    //public async Task Handle(DeleteDepartmentSectionCommand command, CancellationToken cancellationToken = default)
+    //{
+    //    var departmentSection = await _departmentSectionRepository.GetByIdAsync(command.Id, cancellationToken);
+    //    if (departmentSection == null)
+    //        throw new KeyNotFoundException($"DepartmentSection with ID {command.Id} not found");
 
-        departmentSection.IsActive = false;
-        await _departmentSectionRepository.UpdateAsync(departmentSection, cancellationToken);
-    }
+    //    departmentSection.IsActive = false;
+    //    await _departmentSectionRepository.UpdateAsync(departmentSection, cancellationToken);
+    //}
 }

@@ -6,6 +6,7 @@ using NZ.HRM.Application.Departments.Handlers;
 using NZ.HRM.Application.Departments.Queries.GetAllDepartments;
 using NZ.HRM.Application.Departments.Queries.GetDepartmentsByLocation;
 using NZ.HRM.Application.Departments.Queries.GetDepartmentById;
+using NZ.HRM.Application.ComplexUnitDepartments.Queries.GetAllComplexUnitDepartments;
 
 namespace NZ.HRM.WebAPI.Controllers;
 
@@ -28,7 +29,7 @@ public class DepartmentsController : ControllerBase
     /// Get all departments
     /// </summary>
     [HttpGet]
-    [ProducesResponseType(typeof(List<DepartmentDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ComplexUnitDepartmentDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll([FromQuery] bool includeInactive = false)
     {
         var query = new GetAllDepartmentsQuery { IncludeInactive = includeInactive };
@@ -37,15 +38,16 @@ public class DepartmentsController : ControllerBase
     }
 
     /// <summary>
-    /// Get departments by location with Head Office specific rules
+    /// Get departments by complex unit with Head Office specific rules
     /// </summary>
-    [HttpGet("by-location/{locationId}")]
-    [ProducesResponseType(typeof(List<DepartmentDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetByLocation(string locationId, [FromQuery] bool includeInactive = false)
+    [HttpGet("complex/{complexId}/unit/{unitId}")]
+    [ProducesResponseType(typeof(List<ComplexUnitDepartmentDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetByComplexUnit(string complexId, string unitId, [FromQuery] bool includeInactive = false)
     {
-        var query = new GetDepartmentsByLocationQuery
+        var query = new GetDepartmentsByComplexUnitQuery
         {
-            LocationId = locationId,
+            ComplexId = complexId,
+            UnitId = unitId,
             IncludeInactive = includeInactive
         };
 
