@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using NZ.HRM.Application.EmployeeMasters.Handlers;
 using NZ.HRM.Application.Employees.Handlers;
 using NZ.HRM.Application.Employees.Queries.GetCompleteEmployee;
 using NZ.HRM.Application.Employees.Queries.GetEmployeeConfirmationDate;
@@ -13,15 +14,18 @@ namespace NZ.HRM.WebAPI.Controllers;
 [Route("api/[controller]")]
 public class EmployeesController : ControllerBase
 {
-    private readonly CompleteEmployeeCommandHandler _createCompleteEmployeeHandler;
+    private readonly EmployeeCommandHandler _createCompleteEmployeeHandler;
     private readonly CompleteEmployeeQueryHandler _getCompleteEmployeeHandler;
+    private readonly GetEnrollmentIdQueryHandler _getEnrollmentIdHandler;
 
     public EmployeesController(
-        CompleteEmployeeCommandHandler createCompleteEmployeeHandler,
-        CompleteEmployeeQueryHandler getCompleteEmployeeHandler)
+        EmployeeCommandHandler createCompleteEmployeeHandler,
+        CompleteEmployeeQueryHandler getCompleteEmployeeHandler,
+        GetEnrollmentIdQueryHandler getEnrollmentIdHandler)
     {
         _createCompleteEmployeeHandler = createCompleteEmployeeHandler;
         _getCompleteEmployeeHandler = getCompleteEmployeeHandler;
+        _getEnrollmentIdHandler = getEnrollmentIdHandler;
     }
 
     /// <summary>
@@ -184,5 +188,88 @@ public class EmployeesController : ControllerBase
         return Ok(employees);
     }
 
+    /// <summary>
+    /// Generate a new enrollment id in format {ddMMyy}{NNN}
+    /// </summary>
+    [HttpGet("enrollment-id")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetEnrollmentId()
+    {
+        var query = new Application.EmployeeMasters.Queries.GetEnrollmentId.GetEnrollmentIdQuery
+        {
+            Today = DateTime.UtcNow
+        };
+        var enrollmentId = await _getEnrollmentIdHandler.Handle(query, cancellationToken: default);
+        return Ok(new { enrollmentId });
+    }
+
+    [HttpPost("hr-executive-entry")]
+    [ProducesResponseType(typeof(object), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> CreateEmployeeHRExecutive([FromBody] CreateEmployeeHRExecutiveCommand command)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        try
+        {
+            var employeeId = await _createCompleteEmployeeHandler.Handle(command, cancellationToken: default);
+            return CreatedAtAction(
+                nameof(GetCompleteEmployee),
+                new { id = employeeId },
+                new { id = employeeId, message = "Employee created successfully with personal information" });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An error occurred while creating the employee", details = ex.Message });
+        }
+    }
     
+
+    [HttpPost("upload-file")]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> UploadFile(string employeeEnrollmentId, List<IFormFile> files)
+    {
+        string _targetFolder = Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles", employeeEnrollmentId);
+        // 1. Validate file existence
+        if (files == null || files.Count == 0)
+            return BadRequest("No file uploaded or file is empty.");
+
+        try
+        {
+            // 2. Ensure target directory exists
+            if (!Directory.Exists(_targetFolder))
+                Directory.CreateDirectory(_targetFolder);
+
+            // 3. Generate safe unique file path
+            var uploadedFiles = new List<string>();
+            foreach (var file in files)
+            {
+                var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
+                var filePath = Path.Combine(_targetFolder, uniqueFileName);
+
+                // 4. Save file to disk
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                uploadedFiles.Add(uniqueFileName);
+            }
+
+            return Ok(new { message = "Upload successful", fileNames = uploadedFiles });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
 }

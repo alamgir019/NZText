@@ -9,6 +9,7 @@ namespace NZ.HRM.Domain.Entities
     {
         public string EmployeeId { get; set; } = string.Empty; // FK to employee_master.Id
 
+        public decimal? ProbationPeriod { get; set; } // in months
         public DateOnly? JoiningDate { get; set; }
         public DateOnly? ConfirmationDate { get; set; }
         public DateOnly? ResignationDate { get; set; }
@@ -24,10 +25,10 @@ namespace NZ.HRM.Domain.Entities
         public string? GradeId { get; set; }
         public string? ShiftId { get; set; }
         public string? EmployeeCategoryId { get; set; }
-        public string? ReportingEmployeeId { get; set; }
+        public string? ReportingTo { get; set; }
         public string? ProcessingGroupId { get; set; }
         public string? EmployeeNatureId { get; set; }
-        public string? EmployeeHolidayId { get; set; }
+        public string? WeeklyOffDay { get; set; }
 
 
         [ForeignKey("EmployeeId")] public HrmEmployeeMaster? Employee { get; set; }
@@ -43,7 +44,6 @@ namespace NZ.HRM.Domain.Entities
         [ForeignKey("EmployeeCategoryId")] public MstEmployeeCategory? EmployeeCategory { get; set; }
         [ForeignKey("ReportingEmployeeId")] public HrmEmployeeMaster? ReportingEmployee { get; set; }
         [ForeignKey("ProcessingGroupId")] public MstPayrollProcessingGroup? ProcessingGroup { get; set; }
-        [ForeignKey("EmployeeNatureId")] public EmployeeNature? EmployeeNature { get; set; }
-        [ForeignKey("EmployeeHolidayId")] public LevHolidayCalendar? EmployeeHoliday { get; set; }
+        [ForeignKey("EmployeeNatureId")] public LookEmployeeNature? EmployeeNature { get; set; }
     }
 }

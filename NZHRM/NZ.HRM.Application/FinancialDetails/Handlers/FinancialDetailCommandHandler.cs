@@ -8,11 +8,11 @@ namespace NZ.HRM.Application.FinancialDetails.Handlers;
 
 public class FinancialDetailCommandHandler
 {
-    private readonly IFinancialDetailRepository _financialDetailRepository;
+    private readonly IPayrollRepository _financialDetailRepository;
     private readonly IEmployeeMasterRepository _employeeMasterRepository;
 
     public FinancialDetailCommandHandler(
-        IFinancialDetailRepository financialDetailRepository,
+        IPayrollRepository financialDetailRepository,
         IEmployeeMasterRepository employeeMasterRepository)
     {
         _financialDetailRepository = financialDetailRepository;
@@ -36,7 +36,7 @@ public class FinancialDetailCommandHandler
             //GrossSalary = command.GrossSalary,
             //PaymentMethod = command.PaymentMethod,
             //BankName = command.BankName,
-            BankAccountNo = command.BankAccountNo,
+            //BankAccountNo = command.BankAccountNo,
             //AccountType = command.AccountType,
             //Branch = command.Branch,
             //TinNumber = command.TinNumber,

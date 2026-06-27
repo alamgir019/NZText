@@ -9,13 +9,13 @@ namespace NZ.HRM.Domain.Entities
     public class HrmEmployeeDocument : BaseEntityWithSortOrder
     {
         public string EmployeeId { get; set; } = string.Empty;
-        public string? DocumentTypeId { get; set; }
+        public string? DocumentType { get; set; }
         public string? DocumentNo { get; set; }
         public DateOnly? IssueDate { get; set; }
         public DateOnly? ExpiryDate { get; set; }
         public string? FileName { get; set; }
         public string? FilePath { get; set; }
-        public string? Remarks { get; set; }
+
         [ForeignKey("EmployeeId")]
         public HrmEmployeeMaster? Employee { get; set; }
     }

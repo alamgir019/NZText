@@ -34,10 +34,10 @@ namespace NZ.HRM.WebAPI.Controllers
             return Ok(subUnits);
         }
 
-        [HttpGet("company/{companyId}")]
-        public async Task<IActionResult> GetByCompany(string companyId)
+        [HttpGet("unit/{unitId}")]
+        public async Task<IActionResult> GetByUnit(string unitId)
         {
-            var subUnits = await _queryHandler.Handle(new GetSubUnitsByCompanyIdQuery(companyId));
+            var subUnits = await _queryHandler.Handle(new GetSubUnitsByUnitIdQuery(unitId));
             return Ok(subUnits);
         }
 

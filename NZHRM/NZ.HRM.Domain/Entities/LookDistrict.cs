@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace NZ.HRM.Domain.Entities
 {
     [Table("district", Schema = "lookup")]
-    public class District : BaseEntityWithSortOrder
+    public class LookDistrict : BaseEntityWithSortOrder
     {
         public string DistrictName { get; set; } = string.Empty;
 
@@ -12,10 +12,10 @@ namespace NZ.HRM.Domain.Entities
         public string DivisionId { get; set; } = string.Empty;
 
         [ForeignKey(nameof(DivisionId))]
-        public Division? Division { get; set; }
+        public LookDivision? Division { get; set; }
 
         // Navigation properties
-        public ICollection<Thana>? Thanas { get; set; }
+        public ICollection<LookThana>? Thanas { get; set; }
         public ICollection<MstSubunit>? MstSubunits { get; set; }
     }
 }

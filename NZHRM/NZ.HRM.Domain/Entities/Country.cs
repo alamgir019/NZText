@@ -10,6 +10,6 @@ namespace NZ.HRM.Domain.Entities
         public string CountryName { get; set; } = string.Empty;
         public string NationalityName { get; set; } = string.Empty;
         public bool ActiveFlag { get; set; } = true;
-        public ICollection<Division>? Divisions { get; set; }
+        public ICollection<LookDivision>? Divisions { get; set; }
     }
 }

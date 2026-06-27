@@ -89,11 +89,11 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Employment.Department)
             .Include(e => e.Employment.Section)
             .Include(e => e.Employment.Grade)
-            //.Include(e => e.PersonalInfo)
-            //.Include(e => e.VerificationInfo)
+            .Include(e => e.Personal)
+            .Include(e => e.Verification)
             .Include(e => e.Employment.Designation)
             .Include(e => e.Employment.Shift)
-            //.Include(e => e.Employment.EmployeeNature)
+            .Include(e => e.Employment.EmployeeNature)
             .FirstOrDefaultAsync(e => e.Id == id && e.IsActive, cancellationToken);
     }
 

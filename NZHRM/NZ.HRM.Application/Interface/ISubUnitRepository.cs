@@ -6,7 +6,7 @@ namespace NZ.HRM.Application.Interface
     {
         Task<MstSubunit?> FindByIdAsync(string id);
         Task<List<MstSubunit>> GetAllAsync();
-        Task<List<MstSubunit>> GetByCompanyIdAsync(string companyId);
+        Task<List<MstSubunit>> GetByUnitIdAsync(string unitId);
         Task<List<MstSubunit>> GetByEmployeeIdAsync(string employeeId);
         Task AddAsync(MstSubunit subUnit);
         Task RemoveAsync(MstSubunit subUnit);

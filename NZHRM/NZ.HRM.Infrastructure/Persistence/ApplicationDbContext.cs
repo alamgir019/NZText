@@ -8,7 +8,7 @@ namespace NZ.HRM.Infrastructure.Persistence
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        // Master & Lookup
+        // Master
         public DbSet<MstGroup> MstGroups => Set<MstGroup>();
         public DbSet<MstUnit> MstUnits => Set<MstUnit>();
         public DbSet<MstSubunit> MstSubunits => Set<MstSubunit>();
@@ -21,39 +21,18 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<MstEmployeeCategory> MstEmployeeCategories => Set<MstEmployeeCategory>();
         public DbSet<MstPayrollProcessingGroup> MstPayrollProcessingGroups => Set<MstPayrollProcessingGroup>();
         public DbSet<MstDepartmentUnitComplex> MstDepartmentUnitComplexes => Set<MstDepartmentUnitComplex>();
-        //public DbSet<MstDepartmentSection> MstDepartmentSections => Set<MstDepartmentSection>();
 
-        // Legacy / Compatibility entities used by repositories
-        public DbSet<Division> Divisions => Set<Division>();
-        public DbSet<District> Districts => Set<District>();
-        public DbSet<Thana> Thanas => Set<Thana>();
-        public DbSet<EmployeeNature> EmployeeNatures => Set<EmployeeNature>();
-        public DbSet<Bank> Banks => Set<Bank>();
-        //public DbSet<Location> Locations => Set<Location>();
-        //public DbSet<CompanyLocation> CompanyLocations => Set<CompanyLocation>();
-        //public DbSet<Company> Companies => Set<Company>();
-        //public DbSet<Department> Departments => Set<Department>();
-        //public DbSet<LocationDepartment> LocationDepartments => Set<LocationDepartment>();
-        //public DbSet<DepartmentSection> DepartmentSections => Set<DepartmentSection>();
-        //public DbSet<Designation> Designations => Set<Designation>();
-        //public DbSet<Grade> Grades => Set<Grade>();
-        //public DbSet<Section> Sections => Set<Section>();
-        //public DbSet<SectionCell> SectionCells => Set<SectionCell>();
-        //public DbSet<Cell> Cells => Set<Cell>();
-        //public DbSet<EmployeeMaster> EmployeeMasters => Set<EmployeeMaster>();
-        //public DbSet<EmployeePersonal> EmployeePersonals => Set<EmployeePersonal>();
-        public DbSet<HrmEmployeeVerification> HrmEmployeeVerifications => Set<HrmEmployeeVerification>();
-        //public DbSet<FinancialDetail> FinancialDetails => Set<FinancialDetail>();
-        public DbSet<HrmMedicalFitnessCheck> HrmMedicalFitnessChecks => Set<HrmMedicalFitnessCheck>();
-        public DbSet<HrmPhysicalExaminationSetting> HrmPhysicalExaminationSettings => Set<HrmPhysicalExaminationSetting>();
-        //public DbSet<Shift> Shifts => Set<Shift>();
-        //public DbSet<Holiday> Holidays => Set<Holiday>();
-        //public DbSet<Menu> Menus => Set<Menu>();
-        //public DbSet<MenuPermission> MenuPermissions => Set<MenuPermission>();
-        //public DbSet<Post> Posts => Set<Post>();
-
+        // lookup
+        public DbSet<LookDivision> Divisions => Set<LookDivision>();
+        public DbSet<LookDistrict> Districts => Set<LookDistrict>();
+        public DbSet<LookThana> Thanas => Set<LookThana>();
+        public DbSet<LookEmployeeNature> EmployeeNatures => Set<LookEmployeeNature>();
+        public DbSet<LookBanking> Banks => Set<LookBanking>();
 
         // HRM
+        public DbSet<HrmEmployeeVerification> HrmEmployeeVerifications => Set<HrmEmployeeVerification>();
+        public DbSet<HrmMedicalFitnessCheck> HrmMedicalFitnessChecks => Set<HrmMedicalFitnessCheck>();
+        public DbSet<HrmPhysicalExaminationSetting> HrmPhysicalExaminationSettings => Set<HrmPhysicalExaminationSetting>();
         public DbSet<HrmEmployeeMaster> HrmEmployeeMasters => Set<HrmEmployeeMaster>();
         public DbSet<HrmEmployeePersonal> HrmEmployeePersonals => Set<HrmEmployeePersonal>();
         public DbSet<HrmEmployeeContact> HrmEmployeeContacts => Set<HrmEmployeeContact>();
@@ -65,7 +44,7 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<HrmEmployeeExperience> HrmEmployeeExperiences => Set<HrmEmployeeExperience>();
         public DbSet<HrmEmployeeTraining> HrmEmployeeTrainings => Set<HrmEmployeeTraining>();
         public DbSet<HrmEmployeeFamily> HrmEmployeeFamilies => Set<HrmEmployeeFamily>();
-        public DbSet<HrmEmployeeBankAccount> HrmEmployeeBankAccounts => Set<HrmEmployeeBankAccount>();
+        public DbSet<HrmEmployeeSalaryAccount> HrmEmployeeBankAccounts => Set<HrmEmployeeSalaryAccount>();
         public DbSet<HrmEmployeeReporting> HrmEmployeeReportings => Set<HrmEmployeeReporting>();
 
         // Attendance
@@ -164,6 +143,7 @@ namespace NZ.HRM.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Security
             //modelBuilder.Entity<User>().ToTable("Users");
             modelBuilder.Entity<SecUser>().ToTable("user_account", "security");
             //modelBuilder.Entity<Role>().ToTable("Roles");
@@ -176,6 +156,7 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<SecModuleAccess>().ToTable("module_access", "security");
             modelBuilder.Entity<SecFieldSecurity>().ToTable("field_security", "security");
             modelBuilder.Entity<SecEmergencyAccess>().ToTable("emergency_access", "security");
+
             // Master
             modelBuilder.Entity<MstGroup>().ToTable("mst_group", "master");
             modelBuilder.Entity<MstUnit>().ToTable("mst_unit", "master");
@@ -203,8 +184,11 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<HrmEmployeeExperience>().ToTable("employee_experience", "hrm");
             modelBuilder.Entity<HrmEmployeeTraining>().ToTable("employee_training", "hrm");
             modelBuilder.Entity<HrmEmployeeFamily>().ToTable("employee_family", "hrm");
-            modelBuilder.Entity<HrmEmployeeBankAccount>().ToTable("employee_bank_account", "hrm");
+            modelBuilder.Entity<HrmEmployeeSalaryAccount>().ToTable("employee_bank_account", "hrm");
             modelBuilder.Entity<HrmEmployeeReporting>().ToTable("employee_reporting", "hrm");
+            modelBuilder.Entity<HrmEmployeeVerification>().ToTable("employee_verification", "hrm");
+            modelBuilder.Entity<HrmMedicalFitnessCheck>().ToTable("medical_fitness_check", "hrm");
+            modelBuilder.Entity<HrmPhysicalExaminationSetting>().ToTable("physical_examination_setting", "hrm");
 
             // HRM one-to-one mappings: explicit configuration for Employee related one-to-one sections
             modelBuilder.Entity<HrmEmployeeMaster>()
@@ -330,26 +314,15 @@ namespace NZ.HRM.Infrastructure.Persistence
             //modelBuilder.Entity<MenuPermission>().ToTable("MenuPermissions");
             //modelBuilder.Entity<ApplicationTracking>().ToTable("ApplicationTrackings");
             //modelBuilder.Entity<OfferLetter>().ToTable("OfferLetters");
-            modelBuilder.Entity<Division>().ToTable("division", "lookup");
-            modelBuilder.Entity<District>().ToTable("district", "lookup");
-            modelBuilder.Entity<Thana>().ToTable("thana", "lookup");
-            modelBuilder.Entity<Bank>().ToTable("bank", "lookup");
-            //modelBuilder.Entity<Location>().ToTable("Locations");
-            //modelBuilder.Entity<CompanyLocation>().ToTable("CompanyLocations");
-            //modelBuilder.Entity<Department>().ToTable("Departments");
-            //modelBuilder.Entity<LocationDepartment>().ToTable("LocationDepartments");
-            //modelBuilder.Entity<Grade>().ToTable("Grades");
-            modelBuilder.Entity<EmployeeNature>().ToTable("employee_nature", "lookup");
-            //modelBuilder.Entity<Section>().ToTable("Sections");
-            //modelBuilder.Entity<Cell>().ToTable("Cells");
-            //modelBuilder.Entity<EmployeeMaster>().ToTable("EmployeeMasters");
-            //modelBuilder.Entity<EmployeePersonal>().ToTable("EmployeePersonals");
-            modelBuilder.Entity<HrmEmployeeVerification>().ToTable("employee_verification", "hrm");
-            //modelBuilder.Entity<FinancialDetail>().ToTable("FinancialDetails");
-            modelBuilder.Entity<HrmMedicalFitnessCheck>().ToTable("medical_fitness_check", "hrm");
-            modelBuilder.Entity<HrmPhysicalExaminationSetting>().ToTable("physical_examination_setting", "hrm");
-            //modelBuilder.Entity<Shift>().ToTable("Shifts");
-            //modelBuilder.Entity<Holiday>().ToTable("Holidays");
+
+            //lookup
+            modelBuilder.Entity<LookDivision>().ToTable("division", "lookup");
+            modelBuilder.Entity<LookDistrict>().ToTable("district", "lookup");
+            modelBuilder.Entity<LookThana>().ToTable("thana", "lookup");
+            modelBuilder.Entity<LookBanking>().ToTable("banking", "lookup");
+            modelBuilder.Entity<LookEmployeeNature>().ToTable("employee_nature", "lookup");
+            //modelBuilder.Entity<LookShift>().ToTable("shifts", "lookup");
+            //modelBuilder.Entity<LookHoliday>().ToTable("holidays", "lookup");
 
 
             // Apply to all entities that have CreatedOn and UpdatedOn properties

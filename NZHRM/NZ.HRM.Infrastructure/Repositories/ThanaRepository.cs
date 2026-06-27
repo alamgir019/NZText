@@ -14,7 +14,7 @@ public class ThanaRepository : IThanaRepository
         _context = context;
     }
 
-    public async Task<List<Thana>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<List<LookThana>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Thanas
             .Include(t => t.District)
@@ -23,7 +23,7 @@ public class ThanaRepository : IThanaRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<List<Thana>> GetByDistrictIdAsync(string districtId, CancellationToken cancellationToken = default)
+    public async Task<List<LookThana>> GetByDistrictIdAsync(string districtId, CancellationToken cancellationToken = default)
     {
         return await _context.Thanas
             .Include(t => t.District)

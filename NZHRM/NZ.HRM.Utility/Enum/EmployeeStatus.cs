@@ -10,6 +10,7 @@ namespace NZ.HRM.Utility.Enum
         Terminated,
         Resigned,
         CandidateEntry,
-        Medical
+        Medical,
+        HRExecutive
     }
 }

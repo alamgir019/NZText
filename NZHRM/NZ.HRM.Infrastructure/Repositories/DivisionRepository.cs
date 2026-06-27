@@ -14,7 +14,7 @@ public class DivisionRepository : IDivisionRepository
         _context = context;
     }
 
-    public async Task<List<Division>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<List<LookDivision>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Divisions
             .Where(d => d.IsActive)
@@ -22,7 +22,7 @@ public class DivisionRepository : IDivisionRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<Division?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<LookDivision?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
         return await _context.Divisions
             .FirstOrDefaultAsync(d => d.Id == id && d.IsActive, cancellationToken);

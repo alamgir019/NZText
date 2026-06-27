@@ -15,8 +15,8 @@ namespace NZ.HRM.Application.SubUnits.Handlers
         public async Task<List<MstSubunit>> Handle(GetAllSubUnitsQuery query)
             => await _repo.GetAllAsync();
 
-        public async Task<List<MstSubunit>> Handle(GetSubUnitsByCompanyIdQuery query)
-            => await _repo.GetByCompanyIdAsync(query.CompanyId);
+        public async Task<List<MstSubunit>> Handle(GetSubUnitsByUnitIdQuery query)
+            => await _repo.GetByUnitIdAsync(query.UnitId);
 
         public async Task<List<MstSubunit>> Handle(GetSubUnitsByEmployeeIdQuery query)
             => await _repo.GetByEmployeeIdAsync(query.EmployeeId);

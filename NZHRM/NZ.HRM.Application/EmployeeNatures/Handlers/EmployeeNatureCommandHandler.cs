@@ -17,7 +17,7 @@ public class EmployeeNatureCommandHandler
 
     public async Task<string> Handle(CreateEmployeeNatureCommand command, CancellationToken cancellationToken = default)
     {
-        var employeeNature = new EmployeeNature
+        var employeeNature = new LookEmployeeNature
         {
             NatureName = command.NatureName,
             SortOrder = command.SortOrder,

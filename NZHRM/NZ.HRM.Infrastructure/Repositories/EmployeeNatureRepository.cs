@@ -14,7 +14,7 @@ public class EmployeeNatureRepository : IEmployeeNatureRepository
         _context = context;
     }
 
-    public async Task<List<EmployeeNature>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
+    public async Task<List<LookEmployeeNature>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
     {
         var query = _context.EmployeeNatures.AsQueryable();
 
@@ -27,26 +27,26 @@ public class EmployeeNatureRepository : IEmployeeNatureRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<EmployeeNature?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<LookEmployeeNature?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
         return await _context.EmployeeNatures
             .FirstOrDefaultAsync(x => x.Id == id && x.IsActive, cancellationToken);
     }
 
-    public async Task<string> AddAsync(EmployeeNature employeeNature, CancellationToken cancellationToken = default)
+    public async Task<string> AddAsync(LookEmployeeNature employeeNature, CancellationToken cancellationToken = default)
     {
         _context.EmployeeNatures.Add(employeeNature);
         await _context.SaveChangesAsync(cancellationToken);
         return employeeNature.Id;
     }
 
-    public async Task UpdateAsync(EmployeeNature employeeNature, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(LookEmployeeNature employeeNature, CancellationToken cancellationToken = default)
     {
         _context.EmployeeNatures.Update(employeeNature);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(EmployeeNature employeeNature, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(LookEmployeeNature employeeNature, CancellationToken cancellationToken = default)
     {
         _context.EmployeeNatures.Remove(employeeNature);
         await _context.SaveChangesAsync(cancellationToken);

@@ -31,7 +31,6 @@ public class EmployeeEmploymentRepository : IEmployeeEmploymentRepository
             .Include(ee => ee.ReportingEmployee)
             .Include(ee => ee.ProcessingGroup)
             .Include(ee => ee.EmployeeNature)
-            .Include(ee => ee.EmployeeHoliday)
             .ToListAsync(cancellationToken);
     }
 

@@ -96,7 +96,7 @@ namespace NZ.HRM.Application.DependencyInjection
             services.AddScoped<EmployeePersonalQueryHandler>();
 
             // Register Complete Employee Handlers
-            services.AddScoped<CompleteEmployeeCommandHandler>();
+            services.AddScoped<EmployeeCommandHandler>();
             services.AddScoped<CompleteEmployeeQueryHandler>();
 
             // Register Geo Handlers

@@ -4,6 +4,6 @@ namespace NZ.HRM.Application.Interfaces.Repositories;
 
 public interface IThanaRepository
 {
-    Task<List<Thana>> GetAllAsync(CancellationToken cancellationToken = default);
-    Task<List<Thana>> GetByDistrictIdAsync(string districtId, CancellationToken cancellationToken = default);
+    Task<List<LookThana>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<List<LookThana>> GetByDistrictIdAsync(string districtId, CancellationToken cancellationToken = default);
 }

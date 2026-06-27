@@ -6,9 +6,9 @@ namespace NZ.HRM.Application.FinancialDetails.Handlers;
 
 public class FinancialDetailQueryHandler
 {
-    private readonly IFinancialDetailRepository _financialDetailRepository;
+    private readonly IPayrollRepository _financialDetailRepository;
 
-    public FinancialDetailQueryHandler(IFinancialDetailRepository financialDetailRepository)
+    public FinancialDetailQueryHandler(IPayrollRepository financialDetailRepository)
     {
         _financialDetailRepository = financialDetailRepository;
     }

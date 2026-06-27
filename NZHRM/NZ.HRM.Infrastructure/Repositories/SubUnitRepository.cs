@@ -28,28 +28,28 @@ namespace NZ.HRM.Infrastructure.Repositories
 
         public async Task<List<MstSubunit>> GetAllAsync() => await _db.MstSubunits.ToListAsync();
 
-        public async Task<List<MstSubunit>> GetByCompanyIdAsync(string companyId)
+        public async Task<List<MstSubunit>> GetByUnitIdAsync(string unitId)
         {
             return await _db.MstSubunits
-                .Where(cl => cl.UnitId == companyId)
+                .Where(cl => cl.UnitId == unitId)
                 .Distinct()
                 .ToListAsync();
         }
 
         public async Task<List<MstSubunit>> GetByEmployeeIdAsync(string employeeId)
         {
-            var companyId = await _db.HrmEmployeeMasters
+            var unitId = await _db.HrmEmployeeMasters
                 .Where(e => e.Id == employeeId && e.IsActive)
                 .Select(e => e.Employment!.UnitId)
                 .FirstOrDefaultAsync();
 
-            if (string.IsNullOrWhiteSpace(companyId))
+            if (string.IsNullOrWhiteSpace(unitId))
             {
                 return new List<MstSubunit>();
             }
 
             return await _db.MstSubunits
-                .Where(cl => cl.UnitId == companyId && cl.IsActive)
+                .Where(cl => cl.UnitId == unitId && cl.IsActive)
                 .Distinct()
                 .ToListAsync();
         }

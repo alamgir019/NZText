@@ -114,7 +114,7 @@ MaritalStatus = employee.Personal?.MaritalStatus != null && Enum.TryParse<Utilit
     : (Utility.Enum.MaritalStatus?)null,
 MobileNumber = employee.Contact?.MobileNo,
             EmailAddress = employee.Contact?.PersonalEmail,
-            DocumentType = employee.Documents?.FirstOrDefault()?.DocumentTypeId != null && Enum.TryParse<Utility.Enum.DocumentType>(employee.Documents.FirstOrDefault()?.DocumentTypeId, out var documentType)
+            DocumentType = employee.Documents?.FirstOrDefault()?.DocumentType != null && Enum.TryParse<Utility.Enum.DocumentType>(employee.Documents.FirstOrDefault()?.DocumentType, out var documentType)
     ? documentType
     : (Utility.Enum.DocumentType?)null,
 DocumentNumber = employee.Documents?.FirstOrDefault()?.DocumentNo,

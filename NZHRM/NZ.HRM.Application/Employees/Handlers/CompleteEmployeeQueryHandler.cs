@@ -4,7 +4,6 @@ using NZ.HRM.Application.Employees.Queries.GetEmployeesByStatus;
 using NZ.HRM.Application.Employees.Queries.SearchEmployees;
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Application.Model.Employees.DTOs;
-using NZ.HRM.Utility.Enum;
 using NZ.HRM.Mapping.Employees;
 
 namespace NZ.HRM.Application.Employees.Handlers;

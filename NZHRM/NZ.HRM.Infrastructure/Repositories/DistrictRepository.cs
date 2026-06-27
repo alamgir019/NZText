@@ -14,7 +14,7 @@ public class DistrictRepository : IDistrictRepository
         _context = context;
     }
 
-    public async Task<List<District>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<List<LookDistrict>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Districts
             .Include(d => d.Division)
@@ -23,7 +23,7 @@ public class DistrictRepository : IDistrictRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<List<District>> GetByDivisionIdAsync(string divisionId, CancellationToken cancellationToken = default)
+    public async Task<List<LookDistrict>> GetByDivisionIdAsync(string divisionId, CancellationToken cancellationToken = default)
     {
         return await _context.Districts
             .Include(d => d.Division)
