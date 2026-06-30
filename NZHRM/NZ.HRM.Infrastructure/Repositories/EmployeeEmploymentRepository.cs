@@ -28,7 +28,6 @@ public class EmployeeEmploymentRepository : IEmployeeEmploymentRepository
             .Include(ee => ee.Grade)
             .Include(ee => ee.Shift)
             .Include(ee => ee.EmployeeCategory)
-            .Include(ee => ee.ReportingEmployee)
             .Include(ee => ee.ProcessingGroup)
             .Include(ee => ee.EmployeeNature)
             .ToListAsync(cancellationToken);

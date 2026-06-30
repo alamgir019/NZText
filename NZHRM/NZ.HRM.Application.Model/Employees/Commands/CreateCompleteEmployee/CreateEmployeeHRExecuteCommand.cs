@@ -54,7 +54,6 @@ public class CreateEmployeeHRExecutiveCommand
     public decimal? BankPortion { get; set; }
     public decimal? CashPortion { get; set; }
     public Dictionary<string, decimal> OtherAllowance { get; set; } = new Dictionary<string, decimal>();
-    public string? SalaryAccountId { get; set; }
     public decimal? Tax { get; set; }
     public string PaymentMethod { get; set; } = string.Empty; // e.g., "Bank Transfer", "Cash", etc.
     public string? BankingId { get; set; }

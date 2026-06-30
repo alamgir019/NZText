@@ -94,6 +94,8 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Employment.Designation)
             .Include(e => e.Employment.Shift)
             .Include(e => e.Employment.EmployeeNature)
+            .Include(e => e.Payroll).ThenInclude(p => p.SalaryAccount).ThenInclude(sa => sa.Banking)
+
             .FirstOrDefaultAsync(e => e.Id == id && e.IsActive, cancellationToken);
     }
 

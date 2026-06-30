@@ -184,7 +184,7 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<HrmEmployeeExperience>().ToTable("employee_experience", "hrm");
             modelBuilder.Entity<HrmEmployeeTraining>().ToTable("employee_training", "hrm");
             modelBuilder.Entity<HrmEmployeeFamily>().ToTable("employee_family", "hrm");
-            modelBuilder.Entity<HrmEmployeeSalaryAccount>().ToTable("employee_bank_account", "hrm");
+            modelBuilder.Entity<HrmEmployeeSalaryAccount>().ToTable("employee_salary_account", "hrm");
             modelBuilder.Entity<HrmEmployeeReporting>().ToTable("employee_reporting", "hrm");
             modelBuilder.Entity<HrmEmployeeVerification>().ToTable("employee_verification", "hrm");
             modelBuilder.Entity<HrmMedicalFitnessCheck>().ToTable("medical_fitness_check", "hrm");
@@ -208,6 +208,12 @@ namespace NZ.HRM.Infrastructure.Persistence
                 .WithOne(emp => emp.Employee)
                 .HasForeignKey<HrmEmployeeEmployment>(emp => emp.EmployeeId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<HrmEmployeePayroll>()
+                .HasOne(p => p.SalaryAccount)
+                .WithMany() // or WithOne if you add back-navigation
+                .HasForeignKey(p => p.SalaryAccountId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<HrmEmployeeMaster>()
                 .HasOne(e => e.Payroll)

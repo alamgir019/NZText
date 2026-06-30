@@ -23,6 +23,7 @@ public class EmployeeCommandHandler
     private readonly IEmployeeNatureRepository _employeeNatureRepository;
     private readonly IEmployeeEmploymentRepository _employeeEmploymentRepository;
     private readonly IEmployeeDocumentRepository _employeeDocumentRepository;
+    private readonly IEmployeeSalaryAccountRepository _employeeSalaryAccountRepository;
 
     public EmployeeCommandHandler(
         IEmployeeMasterRepository employeeMasterRepository,
@@ -36,7 +37,7 @@ public class EmployeeCommandHandler
         IShiftRepository shiftRepository,
         IEmployeeNatureRepository employeeNatureRepository,
         IEmployeeEmploymentRepository employeeEmploymentRepository,
-        IEmployeeDocumentRepository employeeDocumentRepository)
+        IEmployeeSalaryAccountRepository employeeSalaryAccountRepository)
     {
         _employeeMasterRepository = employeeMasterRepository;
         _employeePersonalRepository = employeePersonalRepository;
@@ -47,7 +48,7 @@ public class EmployeeCommandHandler
         _sectionRepository = sectionRepository;
         _gradeRepository = gradeRepository;
         _shiftRepository = shiftRepository;
-        _employeeDocumentRepository = employeeDocumentRepository;
+        _employeeSalaryAccountRepository = employeeSalaryAccountRepository;
         _employeeNatureRepository = employeeNatureRepository;
         _employeeEmploymentRepository = employeeEmploymentRepository;
     }
@@ -262,22 +263,9 @@ public class EmployeeCommandHandler
         }
 
 
+
         if (employeeMaster.Payroll is null)
         {
-            var employeePayroll = new HrmEmployeePayroll
-            {
-                EmployeeId = employeeMaster.Id,
-                ProposedSalary = command.ProposedMonthlySalary,
-                GrossSalary = command.GrossSalary,
-                BankPortion = command.BankPortion,
-                CashPortion = command.CashPortion,
-                OtherAllowance = JsonSerializer.Serialize(command.OtherAllowance),
-                SalaryAccountId = command.SalaryAccountId,
-                TINNo = command.TinNumber,
-                Tax = command.Tax,
-                IsActive = true
-            };
-
             var salaryAccount = new HrmEmployeeSalaryAccount
             {
                 EmployeeId = employeeMaster.Id,
@@ -289,7 +277,20 @@ public class EmployeeCommandHandler
                 AccountType = command.AccountType,
                 IsActive = true
             };
-            employeePayroll.SalaryAccount = salaryAccount;
+
+            var employeePayroll = new HrmEmployeePayroll
+            {
+                EmployeeId = employeeMaster.Id,
+                ProposedSalary = command.ProposedMonthlySalary,
+                GrossSalary = command.GrossSalary,
+                BankPortion = command.BankPortion,
+                CashPortion = command.CashPortion,
+                OtherAllowance = JsonSerializer.Serialize(command.OtherAllowance),
+                TINNo = command.TinNumber,
+                Tax = command.Tax,
+                IsActive = true,
+                SalaryAccount = salaryAccount
+            };
             await _employeePayrollRepository.AddAsync(employeePayroll, cancellationToken);
         }
         else
@@ -300,16 +301,37 @@ public class EmployeeCommandHandler
             employeeMaster.Payroll.BankPortion = command.BankPortion;
             employeeMaster.Payroll.CashPortion = command.CashPortion;
             employeeMaster.Payroll.OtherAllowance = JsonSerializer.Serialize(command.OtherAllowance);
-            employeeMaster.Payroll.SalaryAccountId = command.SalaryAccountId;
             employeeMaster.Payroll.TINNo = command.TinNumber;
             employeeMaster.Payroll.Tax = command.Tax;
             employeeMaster.Payroll.IsActive = true;
-            employeeMaster.Payroll.SalaryAccount!.BankingId = command.BankingId;
-            employeeMaster.Payroll.SalaryAccount.AccountName = command.AccountName;
-            employeeMaster.Payroll.SalaryAccount.AccountNo = command.AccountNo;
-            employeeMaster.Payroll.SalaryAccount.RoutingNo = command.RoutingNo;
-            employeeMaster.Payroll.SalaryAccount.BranchName = command.BranchName;
-            employeeMaster.Payroll.SalaryAccount.AccountType = command.AccountType;
+
+            if (employeeMaster.Payroll.SalaryAccount == null)
+            {
+                var salaryAccount = new HrmEmployeeSalaryAccount
+                {
+                    EmployeeId = employeeMaster.Id,
+                    BankingId = command.BankingId,
+                    AccountName = command.AccountName,
+                    AccountNo = command.AccountNo,
+                    RoutingNo = command.RoutingNo,
+                    BranchName = command.BranchName,
+                    AccountType = command.AccountType,
+                    IsActive = true
+                };
+                await _employeeSalaryAccountRepository.AddAsync(salaryAccount, cancellationToken);
+
+                employeeMaster.Payroll.SalaryAccountId = salaryAccount.Id;
+            }
+            else
+            {
+                employeeMaster.Payroll.SalaryAccount.EmployeeId = employeeMaster.Id;
+                employeeMaster.Payroll.SalaryAccount.BankingId = command.BankingId;
+                employeeMaster.Payroll.SalaryAccount.AccountName = command.AccountName;
+                employeeMaster.Payroll.SalaryAccount.AccountNo = command.AccountNo;
+                employeeMaster.Payroll.SalaryAccount.RoutingNo = command.RoutingNo;
+                employeeMaster.Payroll.SalaryAccount.BranchName = command.BranchName;
+                employeeMaster.Payroll.SalaryAccount.AccountType = command.AccountType;
+            }
 
             await _employeePayrollRepository.UpdateAsync(employeeMaster.Payroll, cancellationToken);
         }
@@ -402,7 +424,9 @@ public class EmployeeCommandHandler
             FilePath = item.FilePath,
             IsActive = true
         }).ToList();
-        await _employeeDocumentRepository.AddRangeAsync(employeeDocuments, cancellationToken);
+
+        if (employeeDocuments.Any())
+            await _employeeDocumentRepository.AddRangeAsync(employeeDocuments, cancellationToken);
     }
 
     private async Task ValidateRelatedEntities(

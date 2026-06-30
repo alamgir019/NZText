@@ -42,7 +42,6 @@ namespace NZ.HRM.Domain.Entities
         [ForeignKey("GradeId")] public MstGrade? Grade { get; set; }
         [ForeignKey("ShiftId")] public MstShift? Shift { get; set; }
         [ForeignKey("EmployeeCategoryId")] public MstEmployeeCategory? EmployeeCategory { get; set; }
-        [ForeignKey("ReportingEmployeeId")] public HrmEmployeeMaster? ReportingEmployee { get; set; }
         [ForeignKey("ProcessingGroupId")] public MstPayrollProcessingGroup? ProcessingGroup { get; set; }
         [ForeignKey("EmployeeNatureId")] public LookEmployeeNature? EmployeeNature { get; set; }
     }
