@@ -37,7 +37,8 @@ public class EmployeeCommandHandler
         IShiftRepository shiftRepository,
         IEmployeeNatureRepository employeeNatureRepository,
         IEmployeeEmploymentRepository employeeEmploymentRepository,
-        IEmployeeSalaryAccountRepository employeeSalaryAccountRepository)
+        IEmployeeSalaryAccountRepository employeeSalaryAccountRepository,
+        IEmployeeDocumentRepository employeeDocumentRepository)
     {
         _employeeMasterRepository = employeeMasterRepository;
         _employeePersonalRepository = employeePersonalRepository;
@@ -51,6 +52,7 @@ public class EmployeeCommandHandler
         _employeeSalaryAccountRepository = employeeSalaryAccountRepository;
         _employeeNatureRepository = employeeNatureRepository;
         _employeeEmploymentRepository = employeeEmploymentRepository;
+        _employeeDocumentRepository = employeeDocumentRepository;
     }
 
     public async Task<string> Handle(CreateCompleteEmployeeCommand command, CancellationToken cancellationToken = default)
