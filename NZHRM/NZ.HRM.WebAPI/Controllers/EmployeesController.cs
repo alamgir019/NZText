@@ -103,7 +103,7 @@ public class EmployeesController : ControllerBase
         {
             var employeeId = await _createCompleteEmployeeHandler.Handle(command, cancellationToken: default);
             return CreatedAtAction(
-                nameof(GetCompleteEmployee),
+                nameof(CreateEmployeeRecruitment),
                 new { id = employeeId },
                 new { id = employeeId, message = "Employee created successfully with personal information" });
         }
@@ -215,7 +215,7 @@ public class EmployeesController : ControllerBase
         {
             var employeeId = await _createCompleteEmployeeHandler.Handle(command, cancellationToken: default);
             return CreatedAtAction(
-                nameof(GetCompleteEmployee),
+                nameof(CreateEmployeeHRExecutive),
                 new { id = employeeId },
                 new { id = employeeId, message = "Employee created successfully with personal information" });
         }
@@ -232,9 +232,98 @@ public class EmployeesController : ControllerBase
             return StatusCode(500, new { message = "An error occurred while creating the employee", details = ex.Message });
         }
     }
-    
 
-    [HttpPost("upload-file")]
+    [HttpPost("biometric-capture")]
+    [ProducesResponseType(typeof(object), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> CaptureBiometricAndPhoto([FromBody] CreateBiometricCommand command)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        try
+        {
+            var employeeId = await _createCompleteEmployeeHandler.Handle(command, cancellationToken: default);
+            return CreatedAtAction(
+                nameof(CaptureBiometricAndPhoto),
+                new { id = employeeId },
+                new { id = employeeId, message = "Employee created successfully with personal information" });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An error occurred while creating the employee", details = ex.Message });
+        }
+    }
+
+    [HttpPost("directors-review")]
+    [ProducesResponseType(typeof(object), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> DirectorsReview([FromBody] List<CreateDirectorReviewCommand> commands)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        try
+        {
+            var employeeId = await _createCompleteEmployeeHandler.Handle(commands, cancellationToken: default);
+            return CreatedAtAction(
+                nameof(DirectorsReview),
+                new { id = employeeId },
+                new { id = employeeId, message = "Employee created successfully with personal information" });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An error occurred while creating the employee", details = ex.Message });
+        }
+    }
+
+    [HttpPost("it-activation")]
+    [ProducesResponseType(typeof(object), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ITActivation([FromBody] CreateITActivationCommand command)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        try
+        {
+            var employeeId = await _createCompleteEmployeeHandler.Handle(command, cancellationToken: default);
+            return CreatedAtAction(
+                nameof(ITActivation),
+                new { id = employeeId },
+                new { id = employeeId, message = "Employee created successfully with personal information" });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An error occurred while creating the employee", details = ex.Message });
+        }
+    }
+
+    [HttpPost("upload-files")]
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> UploadFile(string employeeEnrollmentId, List<IFormFile> files)
     {
@@ -271,5 +360,40 @@ public class EmployeesController : ControllerBase
         {
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
+    }
+
+    [HttpGet("view-files/{employeeEnrollmentId}")]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public IActionResult GetUploadedFiles(string employeeEnrollmentId)
+    {
+        string targetFolder = Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles", employeeEnrollmentId);
+
+        if (!Directory.Exists(targetFolder))
+            return NotFound(new { message = "Target folder not found." });
+
+        var files = Directory.GetFiles(targetFolder)
+            .Select(filePath =>
+            {
+                var fileInfo = new FileInfo(filePath);
+
+                return new
+                {
+                    filePath = fileInfo.FullName,
+                    fileName = fileInfo.Name,
+                    fileExtension = fileInfo.Extension,
+                    fileSize = fileInfo.Length,
+                    createdOn = fileInfo.CreationTime,
+                    lastModifiedOn = fileInfo.LastWriteTime
+                };
+            })
+            .ToList();
+
+        return Ok(new
+        {
+            employeeEnrollmentId,
+            totalFiles = files.Count,
+            files
+        });
     }
 }

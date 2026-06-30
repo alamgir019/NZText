@@ -48,8 +48,6 @@ public class CreateEmployeeHRExecutiveCommand
     [Required(ErrorMessage = "Joining date is required")]
     public DateOnly JoiningDate { get; set; }
 
-    public DateOnly? ConfirmationDate { get; set; }
-
     //salary information
 
     public decimal? ProposedMonthlySalary { get; set; }

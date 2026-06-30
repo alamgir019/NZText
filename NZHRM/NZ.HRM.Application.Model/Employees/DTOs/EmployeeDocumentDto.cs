@@ -1,9 +1,11 @@
-﻿namespace NZ.HRM.Application.Model.Employees.DTOs
+﻿using NZ.HRM.Utility.Enum;
+
+namespace NZ.HRM.Application.Model.Employees.DTOs
 {
     public class EmployeeDocumentDto
     {
         public string? EmployeeId { get; set; }
-        public string? DocumentType { get; set; }
+        public DocumentType? DocumentType { get; set; }
         public string? DocumentNo { get; set; }
         public DateOnly? IssueDate { get; set; }
         public DateOnly? ExpiryDate { get; set; }

@@ -6,6 +6,9 @@ namespace NZ.HRM.Utility.Enum
         Passport,
         BirthCertificate,
         DrivingLicense,
+        Photo,
+        Biometric,
+        FingerPrint,
         Other
     }
 }

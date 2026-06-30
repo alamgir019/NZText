@@ -20,7 +20,7 @@ public class MedicalFitnessCheckCommandHandler
         _employeeMasterRepository = employeeMasterRepository;
     }
 
-    public async Task<(HrmMedicalFitnessCheck, HrmEmployeeMaster)> MedicalFitnessMap(CreateMedicalFitnessCheckCommand command, CancellationToken cancellationToken = default)
+    private async Task<(HrmMedicalFitnessCheck, HrmEmployeeMaster)> MedicalFitnessMap(CreateMedicalFitnessCheckCommand command, CancellationToken cancellationToken = default)
     {
         var existingEmployee = await _employeeMasterRepository.GetByIdAsync(command.EmployeeId, cancellationToken);
         if (existingEmployee is null)
@@ -38,7 +38,7 @@ public class MedicalFitnessCheckCommandHandler
             IsActive = true
         };
 
-        existingEmployee.Status = "Medical";
+        existingEmployee.Status = EmployeeStatus.Medical.ToString();
         //await _employeeMasterRepository.UpdateAsync(existingEmployee, cancellationToken);
         return (medicalFitnessCheck, existingEmployee);
     }

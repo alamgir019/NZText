@@ -11,6 +11,9 @@ namespace NZ.HRM.Utility.Enum
         Resigned,
         CandidateEntry,
         Medical,
-        HRExecutive
+        HRExecutive,
+        Biometric,
+        DirectorReview,
+        ITActivation,
     }
 }

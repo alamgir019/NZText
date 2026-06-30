@@ -1,4 +1,5 @@
 using NZ.HRM.Application.Interfaces.Repositories;
+using NZ.HRM.Application.MedicalFitnessChecks.Commands.CreateMedicalFitnessCheck;
 using NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
 using NZ.HRM.Application.Model.Employees.DTOs;
 using NZ.HRM.Domain.Entities;
@@ -202,15 +203,8 @@ public class EmployeeCommandHandler
     {
         var employeeMaster = await _employeeMasterRepository.GetByIdAsync(command.EmployeeId, cancellationToken);
 
-        if (employeeMaster == null)
+        if (employeeMaster == null || employeeMaster.EnrollmentId != command.EmployeeEnrollmentId)
             throw new KeyNotFoundException($"Employee with ID {command.EmployeeId} not found");
-
-        // Validate employee enrollment ID uniqueness (excluding current employee)
-        var existingEmployee = await _employeeMasterRepository.GetByEmployeeCodeAsync(command.EmployeeEnrollmentId, cancellationToken);
-        if (existingEmployee != null && existingEmployee.Id != command.EmployeeId)
-        {
-            throw new ArgumentException($"Employee enrollment ID '{command.EmployeeEnrollmentId}' already exists");
-        }
 
         employeeMaster.Status = EmployeeStatus.HRExecutive.ToString();
 
@@ -322,21 +316,93 @@ public class EmployeeCommandHandler
 
         if (employeeMaster.Documents is null || employeeMaster.Documents.Count == 0)
         {
-            var employeeDocuments = (command.Documents ?? []).Select(item => new HrmEmployeeDocument
-            {
-                EmployeeId = employeeMaster.Id,
-                DocumentNo = item.DocumentNo,
-                DocumentType = item.DocumentType,
-                IssueDate = item.IssueDate,
-                ExpiryDate = item.ExpiryDate,
-                FileName = item.FileName,
-                FilePath = item.FilePath,
-                IsActive = true
-            }).ToList();
-            await _employeeDocumentRepository.AddRangeAsync(employeeDocuments, cancellationToken);
+            AddEmployeeDocument(command.Documents, employeeMaster, cancellationToken).Wait(cancellationToken);
         }
 
         return command.EmployeeId;
+    }
+
+
+    public async Task<string> Handle(CreateBiometricCommand command, CancellationToken cancellationToken = default)
+    {
+        var employeeMaster = await _employeeMasterRepository.GetByIdAsync(command.EmployeeId, cancellationToken);
+
+        if (employeeMaster == null || employeeMaster.EnrollmentId != command.EmployeeEnrollmentId)
+            throw new KeyNotFoundException($"Employee with ID {command.EmployeeId} not found");
+
+        employeeMaster.CardNo = command.CardNo;
+        employeeMaster.Status = EmployeeStatus.Biometric.ToString();
+        await AddEmployeeDocument(command.Documents, employeeMaster, cancellationToken);
+        
+        await _employeeMasterRepository.UpdateAsync(employeeMaster, cancellationToken);
+
+        return command.EmployeeId;
+    }
+
+    public async Task<List<string>> Handle(List<CreateDirectorReviewCommand> commands, CancellationToken cancellationToken = default)
+    {
+        var payrolls = new List<HrmEmployeePayroll>();
+        var employees = new List<HrmEmployeeMaster>();
+        foreach (var command in commands)
+        {
+            var (payroll, employee) = await DirectorsReviewMap(command, cancellationToken);
+            if (payroll is null)
+                throw new InvalidOperationException($"Payroll for employee with ID {command.EmployeeId} not found");
+            payrolls.Add(payroll);
+            employees.Add(employee);
+        }
+        var result = await _employeePayrollRepository.AddRangeAsync(payrolls, cancellationToken);
+        await _employeeMasterRepository.UpdateRangeAsync(employees, cancellationToken);
+        return result.ToList();
+    }
+
+    public async Task<string> Handle(CreateITActivationCommand command, CancellationToken cancellationToken = default)
+    {
+        var employeeMaster = await _employeeMasterRepository.GetByIdAsync(command.EmployeeId, cancellationToken);
+
+        if (employeeMaster == null || employeeMaster.EnrollmentId != command.EmployeeEnrollmentId)
+            throw new KeyNotFoundException($"Employee with ID {command.EmployeeId} not found");
+
+        employeeMaster.Status = EmployeeStatus.ITActivation.ToString();
+        await _employeeMasterRepository.UpdateAsync(employeeMaster, cancellationToken);
+
+        return command.EmployeeId;
+    }
+
+
+
+    private async Task<(HrmEmployeePayroll?, HrmEmployeeMaster)> DirectorsReviewMap(CreateDirectorReviewCommand command, CancellationToken cancellationToken = default)
+    {
+        var existingEmployee = await _employeeMasterRepository.GetByIdAsync(command.EmployeeId, cancellationToken);
+        if (existingEmployee is null)
+            throw new KeyNotFoundException($"Employee with ID {command.EmployeeId} not found");
+
+        var payroll = existingEmployee.Payroll;
+        if (payroll != null)
+        {
+            payroll.ProposedSalary = command.ProposedMonthlySalary;
+            payroll.GrossSalary = command.GrossSalary;
+        }
+
+        existingEmployee.Status = EmployeeStatus.DirectorReview.ToString();
+        return (payroll, existingEmployee);
+    }
+
+    private async Task AddEmployeeDocument(List<EmployeeDocumentDto>? documents,
+        HrmEmployeeMaster employeeMaster, CancellationToken cancellationToken)
+    {
+        var employeeDocuments = (documents ?? []).Select(item => new HrmEmployeeDocument
+        {
+            EmployeeId = employeeMaster.Id,
+            DocumentNo = item.DocumentNo,
+            DocumentType = item.DocumentType.ToString(),
+            IssueDate = item.IssueDate,
+            ExpiryDate = item.ExpiryDate,
+            FileName = item.FileName,
+            FilePath = item.FilePath,
+            IsActive = true
+        }).ToList();
+        await _employeeDocumentRepository.AddRangeAsync(employeeDocuments, cancellationToken);
     }
 
     private async Task ValidateRelatedEntities(
