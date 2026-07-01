@@ -1,6 +1,6 @@
 namespace NZ.HRM.Utility.Enum
 {
-    public enum Holiday
+    public enum WeekOffDay
     {
         Friday,
         Saturday,

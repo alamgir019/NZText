@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using NZ.HRM.Application.EmployeeMasters.Handlers;
 using NZ.HRM.Application.Employees.Handlers;
-using NZ.HRM.Application.Employees.Queries.GetCompleteEmployee;
 using NZ.HRM.Application.Employees.Queries.GetEmployeeConfirmationDate;
+using NZ.HRM.Application.Employees.Queries.GetEmployeeDetail;
 using NZ.HRM.Application.Employees.Queries.GetEmployeesByStatus;
 using NZ.HRM.Application.Employees.Queries.SearchEmployees;
 using NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
@@ -33,33 +33,6 @@ public class EmployeesController : ControllerBase
     /// </summary>
     /// <remarks>
     /// This endpoint creates both EmployeeMaster and EmployeePersonal records in a single transaction.
-    /// 
-    /// Sample request:
-    /// 
-    ///     POST /api/employees
-    ///     {
-    ///         "employeeCode": "EMP-2026-0415",
-    ///         "employeeNameEnglish": "Rahim Uddin",
-    ///         "employeeNameBangla": "???? ??????",
-    ///         "companyId": "01HQZXY00000000000000001",
-    ///         "departmentId": "01HQZXY00000000000000002",
-    ///         "sectionId": "01HQZXY00000000000000003",
-    ///         "gradeId": "01HQZXY00000000000000004",
-    ///         "employeeType": 0,
-    ///         "shiftId": "01HQZXY00000000000000005",
-    ///         "employeeNature": 0,
-    ///         "joiningDate": "2026-04-15",
-    ///         "dateOfBirth": "2002-01-01",
-    ///         "gender": 0,
-    ///         "maritalStatus": 0,
-    ///         "mobileNumber": "01712-345678",
-    ///         "documentType": 0,
-    ///         "documentNumber": "19876543210987654",
-    ///         "religion": 0,
-    ///         "nationality": 0,
-    ///         "fatherNameEnglish": "Abdul Karim",
-    ///         "motherNameEnglish": "Fatema Begum"
-    ///     }
     /// </remarks>
     [HttpPost]
     [ProducesResponseType(typeof(object), StatusCodes.Status201Created)]
@@ -73,7 +46,7 @@ public class EmployeesController : ControllerBase
         {
             var employeeId = await _createCompleteEmployeeHandler.Handle(command, cancellationToken: default);
             return CreatedAtAction(
-                nameof(GetCompleteEmployee),
+                nameof(GetEmployeeDetail),
                 new { id = employeeId },
                 new { id = employeeId, message = "Personal Information Saved Successfully" });
         }
@@ -126,11 +99,11 @@ public class EmployeesController : ControllerBase
     /// Get complete employee information (master + personal)
     /// </summary>
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(EmployeeCompleteDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(EmployeeDetailDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetCompleteEmployee(string id)
+    public async Task<IActionResult> GetEmployeeDetail(string id)
     {
-        var query = new GetCompleteEmployeeQuery { EmployeeId = id };
+        var query = new GetEmployeeDetailQuery { EmployeeId = id };
         var employee = await _getCompleteEmployeeHandler.Handle(query, cancellationToken: default);
 
         if (employee == null)
@@ -140,7 +113,7 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpGet("search")]
-    [ProducesResponseType(typeof(List<EmployeeCompleteDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<EmployeeDetailDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> SearchEmployees([FromQuery] string searchText)
     {

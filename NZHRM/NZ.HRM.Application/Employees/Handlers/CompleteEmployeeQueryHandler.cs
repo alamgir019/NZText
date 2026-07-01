@@ -1,10 +1,11 @@
-using NZ.HRM.Application.Employees.Queries.GetCompleteEmployee;
 using NZ.HRM.Application.Employees.Queries.GetEmployeeConfirmationDate;
+using NZ.HRM.Application.Employees.Queries.GetEmployeeDetail;
 using NZ.HRM.Application.Employees.Queries.GetEmployeesByStatus;
 using NZ.HRM.Application.Employees.Queries.SearchEmployees;
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Application.Model.Employees.DTOs;
 using NZ.HRM.Mapping.Employees;
+using NZ.HRM.Utility.Enum;
 
 namespace NZ.HRM.Application.Employees.Handlers;
 
@@ -17,14 +18,14 @@ public class CompleteEmployeeQueryHandler
         _employeeMasterRepository = employeeMasterRepository;
     }
 
-    public async Task<EmployeeCompleteDto?> Handle(GetCompleteEmployeeQuery query, CancellationToken cancellationToken = default)
+    public async Task<EmployeeDetailDto?> Handle(GetEmployeeDetailQuery query, CancellationToken cancellationToken = default)
     {
         var employee = await _employeeMasterRepository.GetByIdAsync(query.EmployeeId, cancellationToken);
 
         if (employee == null)
             return null;
 
-        return employee.MapToEmployeeCompleteDto();
+        return employee.MapToEmployeeDetailDto();
     }
 
     public async Task<List<EmployeeSearchDto>> Handle(SearchEmployeesQuery query, CancellationToken cancellationToken = default)
@@ -62,7 +63,25 @@ public class CompleteEmployeeQueryHandler
             EnrollmentId = x.EnrollmentId,
             EmployeeName = string.IsNullOrWhiteSpace(x.EmployeeName) ? x.EmployeeNameBangla : x.EmployeeName,
             Age = CalculateAge(x.Personal?.DateOfBirth),
-            ExaminationDate = x.MedicalFitnessCheck?.ExaminationDateTime
+            ExaminationDate = x.MedicalFitnessCheck?.ExaminationDateTime,
+            DateOfJoining = x.Employment?.JoiningDate,
+            DateOfBirth = x.Personal?.DateOfBirth,
+            BloodGroup = !string.IsNullOrWhiteSpace(x.Personal?.BloodGroup) && Enum.TryParse<BloodGroup>(x.Personal.BloodGroup, out var bloodGroup)
+                ? bloodGroup
+                : null,
+            Gender = !string.IsNullOrWhiteSpace(x.Personal?.Gender) && Enum.TryParse<Gender>(x.Personal.Gender, out var gender)
+                ? gender
+                : null,
+            Department = x.Employment?.Department?.DepartmentName,
+            Section = x.Employment?.Section?.SectionName,
+            Cell = x.Employment?.Cell?.CellName,
+            Designation = x.Employment?.Designation?.DesignationName,
+            Grade = x.Employment?.Grade?.GradeName,
+            Shift = x.Employment?.Shift?.ShiftName,
+            WeekOffDay = !string.IsNullOrWhiteSpace(x.Employment?.WeeklyOffDay) && Enum.TryParse<WeekOffDay>(x.Employment.WeeklyOffDay, out var weekOffDay)
+                ? weekOffDay
+                : null, 
+            ProposedSalary = x.Payroll?.ProposedSalary
         }).ToList();
     }
 

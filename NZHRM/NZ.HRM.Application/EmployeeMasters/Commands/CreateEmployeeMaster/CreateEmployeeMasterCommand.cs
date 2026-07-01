@@ -38,7 +38,7 @@ public class CreateEmployeeMasterCommand
     public string EmployeeNatureId { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Holiday is required")]
-    public Holiday Holiday { get; set; }
+    public WeekOffDay Holiday { get; set; }
 
     public decimal? ProposedMonthlySalary { get; set; }
 

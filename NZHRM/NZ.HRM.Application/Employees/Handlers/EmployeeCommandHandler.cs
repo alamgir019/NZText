@@ -1,5 +1,4 @@
 using NZ.HRM.Application.Interfaces.Repositories;
-using NZ.HRM.Application.MedicalFitnessChecks.Commands.CreateMedicalFitnessCheck;
 using NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
 using NZ.HRM.Application.Model.Employees.DTOs;
 using NZ.HRM.Domain.Entities;
@@ -18,7 +17,6 @@ public class EmployeeCommandHandler
     private readonly IUnitRepository _unitRepository;
     private readonly IDepartmentRepository _departmentRepository;
     private readonly ISectionRepository _sectionRepository;
-    private readonly IGradeRepository _gradeRepository;
     private readonly IShiftRepository _shiftRepository;
     private readonly IEmployeeNatureRepository _employeeNatureRepository;
     private readonly IEmployeeEmploymentRepository _employeeEmploymentRepository;
@@ -33,7 +31,6 @@ public class EmployeeCommandHandler
         IUnitRepository unitRepository,
         IDepartmentRepository departmentRepository,
         ISectionRepository sectionRepository,
-        IGradeRepository gradeRepository,
         IShiftRepository shiftRepository,
         IEmployeeNatureRepository employeeNatureRepository,
         IEmployeeEmploymentRepository employeeEmploymentRepository,
@@ -47,7 +44,6 @@ public class EmployeeCommandHandler
         _unitRepository = unitRepository;
         _departmentRepository = departmentRepository;
         _sectionRepository = sectionRepository;
-        _gradeRepository = gradeRepository;
         _shiftRepository = shiftRepository;
         _employeeSalaryAccountRepository = employeeSalaryAccountRepository;
         _employeeNatureRepository = employeeNatureRepository;
@@ -405,7 +401,7 @@ public class EmployeeCommandHandler
         if (payroll != null)
         {
             payroll.ProposedSalary = command.ProposedMonthlySalary;
-            payroll.GrossSalary = command.GrossSalary;
+            payroll.GrossSalary = command.ProposedMonthlySalary;
         }
 
         existingEmployee.Status = EmployeeStatus.DirectorReview.ToString();

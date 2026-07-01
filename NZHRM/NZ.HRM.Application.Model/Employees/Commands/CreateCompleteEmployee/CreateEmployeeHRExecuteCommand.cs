@@ -42,7 +42,7 @@ public class CreateEmployeeHRExecutiveCommand
     [Required(ErrorMessage = "Employee nature is required")]
     public string? EmployeeNatureId { get; set; }
 
-    public Holiday Holiday { get; set; }
+    public WeekOffDay Holiday { get; set; }
 
 
     [Required(ErrorMessage = "Joining date is required")]

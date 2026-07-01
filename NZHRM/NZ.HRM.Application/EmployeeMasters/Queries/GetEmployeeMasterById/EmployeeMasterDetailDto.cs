@@ -21,7 +21,7 @@ public class EmployeeMasterDetailDto
     public string ShiftName { get; set; } = string.Empty;
     public string? EmployeeNatureId { get; set; }
     public string EmployeeNatureName { get; set; } = string.Empty;
-    public Holiday? Holiday { get; set; }
+    public WeekOffDay? Holiday { get; set; }
     public decimal? ProposedMonthlySalary { get; set; }
     public DateTime? JoiningDate { get; set; }
     public DateTime? ConfirmationDate { get; set; }

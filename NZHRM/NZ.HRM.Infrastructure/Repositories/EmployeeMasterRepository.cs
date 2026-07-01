@@ -90,7 +90,6 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Employment.Section)
             .Include(e => e.Employment.Grade)
             .Include(e => e.Personal)
-            .Include(e => e.Verification)
             .Include(e => e.Employment.Designation)
             .Include(e => e.Employment.Shift)
             .Include(e => e.Employment.EmployeeNature)
@@ -154,6 +153,14 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
         return await _context.HrmEmployeeMasters
             .Include(e => e.Personal)
             .Include(e => e.MedicalFitnessCheck)
+            .Include(e => e.Employment.Unit)
+            .Include(e => e.Employment.Department)
+            .Include(e => e.Employment.Section)
+            .Include(e => e.Employment.Cell)
+            .Include(e => e.Employment.Grade)
+            .Include(e => e.Employment.Designation)
+            .Include(e => e.Employment.Shift)
+            .Include(e => e.Payroll).ThenInclude(p => p.SalaryAccount)
             .Where(e => e.Status != null && EF.Functions.ILike(e.Status, normalizedStatus))
             .OrderBy(e => e.EnrollmentId)
             .ToListAsync(cancellationToken);

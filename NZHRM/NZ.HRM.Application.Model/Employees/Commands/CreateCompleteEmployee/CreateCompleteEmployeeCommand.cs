@@ -41,7 +41,7 @@ public class CreateCompleteEmployeeCommand
     [Required(ErrorMessage = "Employee nature is required")]
     public string EmployeeNatureId { get; set; } = string.Empty;
 
-    public Holiday Holiday { get; set; }
+    public WeekOffDay Holiday { get; set; }
 
     public decimal? ProposedMonthlySalary { get; set; }
 
