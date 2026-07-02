@@ -64,6 +64,9 @@ public class CompleteEmployeeQueryHandler
             EmployeeName = string.IsNullOrWhiteSpace(x.EmployeeName) ? x.EmployeeNameBangla : x.EmployeeName,
             Age = CalculateAge(x.Personal?.DateOfBirth),
             ExaminationDate = x.MedicalFitnessCheck?.ExaminationDateTime,
+            MedicalResult = !string.IsNullOrWhiteSpace(x.MedicalFitnessCheck?.Fitness) && Enum.TryParse<FitnessOption>(x.MedicalFitnessCheck.Fitness, out var fitnessOption)
+                ? fitnessOption
+                : null,            
             DateOfJoining = x.Employment?.JoiningDate,
             DateOfBirth = x.Personal?.DateOfBirth,
             BloodGroup = !string.IsNullOrWhiteSpace(x.Personal?.BloodGroup) && Enum.TryParse<BloodGroup>(x.Personal.BloodGroup, out var bloodGroup)
