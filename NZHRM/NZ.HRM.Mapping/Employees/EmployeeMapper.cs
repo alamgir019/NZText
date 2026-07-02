@@ -98,30 +98,54 @@ public static class EmployeeMapper
 
     public static EmployeeDetailForIT MapToEmployeeDetailForIT(this HrmEmployeeMaster employee)
     {
-        var employeeDetailDto = new EmployeeDetailForIT();
-        employeeDetailDto = (EmployeeDetailForIT) employee.MapToEmployeeDetailDto();
-        employeeDetailDto.FatherName = employee.Personal?.FatherName;
-        employeeDetailDto.DateOfBirth = employee.Personal?.DateOfBirth;
-        employeeDetailDto.Religion = employee.Personal?.Religion;
-        employeeDetailDto.NomineeName = employee.Nominees.FirstOrDefault()?.NomineeName;
-        employeeDetailDto.NomineeRelation = employee.Nominees.FirstOrDefault()?.Relationship;
-        employeeDetailDto.Mobile = employee.Contact?.MobileNo;
-        employeeDetailDto.ApprovedByDirector = null;
-        employeeDetailDto.Department = employee.Employment?.Department?.DepartmentName;
-        employeeDetailDto.WeekOffDay = employee.Employment?.WeeklyOffDay;
-        employeeDetailDto.PayBasis = employee.Payroll?.OtherAllowance;
-        employeeDetailDto.ProbationPeriod = null;
-        employeeDetailDto.ReportingTo = employee.Reportings.FirstOrDefault()?.ReportingEmployee?.EmployeeName;
-        employeeDetailDto.Documents = employee.Documents?.Select(d => new EmployeeDocumentDto
+        // Map shared/base properties first using the existing mapper
+        var baseDto = employee.MapToEmployeeDetailDto();
+
+        // Create EmployeeDetailForIT and copy base properties
+        var employeeDetailDto = new EmployeeDetailForIT
         {
-            EmployeeId = d.EmployeeId,
-            DocumentNo = d.DocumentNo,
-            DocumentType = string.IsNullOrWhiteSpace(d.DocumentType) ? null : Enum.TryParse<Utility.Enum.DocumentType>(d.DocumentType, out var dt) ? dt : (Utility.Enum.DocumentType?)null,
-            IssueDate = d.IssueDate,
-            ExpiryDate = d.ExpiryDate,
-            FileName = d.FileName,
-            FilePath = d.FilePath
-        }).ToArray();
+            Id = baseDto.Id,
+            EnrollmentId = baseDto.EnrollmentId,
+            EmployeeCode = baseDto.EmployeeCode,
+            EmployeeNameEnglish = baseDto.EmployeeNameEnglish,
+            EmployeeNameBangla = baseDto.EmployeeNameBangla,
+            EmployeeName = baseDto.EmployeeName,
+            UnitName = baseDto.UnitName,
+            SubUnitName = baseDto.SubUnitName,
+            DepartmentName = baseDto.DepartmentName,
+            SectionName = baseDto.SectionName,
+            CellName = baseDto.CellName,
+            GradeName = baseDto.GradeName,
+            DesignationName = baseDto.DesignationName,
+            ShiftName = baseDto.ShiftName,
+            ProposedMonthlySalary = baseDto.ProposedMonthlySalary,
+            Gender = baseDto.Gender,
+            BloodGroup = baseDto.BloodGroup,
+            JoiningDate = baseDto.JoiningDate,
+            EmployeeType = baseDto.EmployeeType,
+            FatherName = employee.Personal?.FatherName,
+            DateOfBirth = employee.Personal?.DateOfBirth,
+            Religion = employee.Personal?.Religion,
+            NomineeName = employee.Nominees.FirstOrDefault()?.NomineeName,
+            NomineeRelation = employee.Nominees.FirstOrDefault()?.Relationship,
+            Mobile = employee.Contact?.MobileNo,
+            ApprovedByDirector = null,
+            Department = employee.Employment?.Department?.DepartmentName,
+            WeekOffDay = employee.Employment?.WeeklyOffDay,
+            PayBasis = employee.Payroll?.OtherAllowance,
+            ProbationPeriod = null,
+            ReportingTo = employee.Reportings.FirstOrDefault()?.ReportingEmployee?.EmployeeName,
+            Documents = employee.Documents?.Select(d => new EmployeeDocumentDto
+            {
+                EmployeeId = d.EmployeeId,
+                DocumentNo = d.DocumentNo,
+                DocumentType = string.IsNullOrWhiteSpace(d.DocumentType) ? null : Enum.TryParse<Utility.Enum.DocumentType>(d.DocumentType, out var dt) ? dt : null,
+                IssueDate = d.IssueDate,
+                ExpiryDate = d.ExpiryDate,
+                FileName = d.FileName,
+                FilePath = d.FilePath
+            }).ToArray()
+        };
 
         return employeeDetailDto;
     }
