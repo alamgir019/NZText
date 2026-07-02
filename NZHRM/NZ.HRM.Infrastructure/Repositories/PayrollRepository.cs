@@ -53,9 +53,9 @@ public class PayrollRepository : IPayrollRepository
         return financialDetail.Id;
     }
 
-    public async Task<IEnumerable<string>> AddRangeAsync(List<HrmEmployeePayroll> payrolls, CancellationToken cancellationToken)
+    public async Task<IEnumerable<string>> UpdateRangeAsync(List<HrmEmployeePayroll> payrolls, CancellationToken cancellationToken)
     {
-        _context.AddRange(payrolls);
+        _context.Set<HrmEmployeePayroll>().UpdateRange(payrolls);
         await _context.SaveChangesAsync(cancellationToken);
         return payrolls.Select(x => x.Id);
     }

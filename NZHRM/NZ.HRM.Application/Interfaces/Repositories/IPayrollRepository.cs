@@ -11,5 +11,5 @@ public interface IPayrollRepository
     Task UpdateAsync(HrmEmployeePayroll financialDetail, CancellationToken cancellationToken = default);
     Task DeleteAsync(HrmEmployeePayroll financialDetail, CancellationToken cancellationToken = default);
     Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default);
-    Task<IEnumerable<string>> AddRangeAsync(List<HrmEmployeePayroll> payrolls, CancellationToken cancellationToken);
+    Task<IEnumerable<string>> UpdateRangeAsync(List<HrmEmployeePayroll> payrolls, CancellationToken cancellationToken);
 }

@@ -371,7 +371,7 @@ public class EmployeeCommandHandler
             payrolls.Add(payroll);
             employees.Add(employee);
         }
-        var result = await _employeePayrollRepository.AddRangeAsync(payrolls, cancellationToken);
+        var result = await _employeePayrollRepository.UpdateRangeAsync(payrolls, cancellationToken);
         await _employeeMasterRepository.UpdateRangeAsync(employees, cancellationToken);
         return result.ToList();
     }
