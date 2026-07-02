@@ -17,51 +17,45 @@ public class EmployeesController : ControllerBase
     private readonly EmployeeCommandHandler _createCompleteEmployeeHandler;
     private readonly CompleteEmployeeQueryHandler _getCompleteEmployeeHandler;
     private readonly GetEnrollmentIdQueryHandler _getEnrollmentIdHandler;
+    private readonly EmployeeQueryHandler _employeeQueryHandler;
 
     public EmployeesController(
         EmployeeCommandHandler createCompleteEmployeeHandler,
         CompleteEmployeeQueryHandler getCompleteEmployeeHandler,
-        GetEnrollmentIdQueryHandler getEnrollmentIdHandler)
+        GetEnrollmentIdQueryHandler getEnrollmentIdHandler,
+        EmployeeQueryHandler employeeQueryHandler)
     {
         _createCompleteEmployeeHandler = createCompleteEmployeeHandler;
         _getCompleteEmployeeHandler = getCompleteEmployeeHandler;
         _getEnrollmentIdHandler = getEnrollmentIdHandler;
+        _employeeQueryHandler = employeeQueryHandler;
+        //_itActivationSummaryQueryHandler = itActivationSummaryQueryHandler;
     }
 
-    /// <summary>
-    /// Create a complete employee record (both master and personal information)
-    /// </summary>
-    /// <remarks>
-    /// This endpoint creates both EmployeeMaster and EmployeePersonal records in a single transaction.
-    /// </remarks>
-    [HttpPost]
-    [ProducesResponseType(typeof(object), StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> CreateCompleteEmployee([FromBody] CreateCompleteEmployeeCommand command)
+    [HttpGet("it-detail/{employeeId}")]
+    [ProducesResponseType(typeof(EmployeeDetailForIT), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetEmployeeDetailForIT(string employeeId)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+        if (string.IsNullOrWhiteSpace(employeeId))
+            return BadRequest(new { message = "employeeId is required" });
 
-        try
-        {
-            var employeeId = await _createCompleteEmployeeHandler.Handle(command, cancellationToken: default);
-            return CreatedAtAction(
-                nameof(GetEmployeeDetail),
-                new { id = employeeId },
-                new { id = employeeId, message = "Personal Information Saved Successfully" });
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { message = "An error occurred while creating the employee", details = ex.Message });
-        }
+        var query = new Application.Employees.Queries.GetEmployeeDetailForIT.GetEmployeeDetailForITQuery { EmployeeId = employeeId };
+        var result = await _employeeQueryHandler.Handle(query, cancellationToken: default);
+
+        if (result == null)
+            return NotFound(new { message = $"Employee with ID {employeeId} not found" });
+
+        return Ok(result);
+    }
+
+    [HttpGet("it-activation-summary")]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetItActivationSummary()
+    {
+        var query = new Application.Employees.Queries.GetItActivationSummary.GetItActivationSummaryQuery();
+        var result = await _employeeQueryHandler.Handle(query, cancellationToken: default);
+        return Ok(result);
     }
 
     [HttpPost("candidate-entry")]
@@ -111,6 +105,8 @@ public class EmployeesController : ControllerBase
 
         return Ok(employee);
     }
+
+
 
     [HttpGet("search")]
     [ProducesResponseType(typeof(List<EmployeeDetailDto>), StatusCodes.Status200OK)]

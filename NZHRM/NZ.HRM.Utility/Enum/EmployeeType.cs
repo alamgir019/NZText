@@ -5,6 +5,5 @@ namespace NZ.HRM.Utility.Enum
         Worker,
         Staff,
         Management,
-        Supervisor,
     }
 }

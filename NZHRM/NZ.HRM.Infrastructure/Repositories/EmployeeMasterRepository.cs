@@ -15,6 +15,37 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
         _context = context;
     }
 
+    public async Task<List<HrmEmployeeMaster>> GetByStatusUpToDateAsync(string status, DateTime upToUtc, bool includeInactive = false, CancellationToken cancellationToken = default)
+    {
+        var normalizedStatus = status?.Trim();
+
+        if (string.IsNullOrWhiteSpace(normalizedStatus))
+            return new List<HrmEmployeeMaster>();
+
+        var query = _context.HrmEmployeeMasters
+            .Include(e => e.Personal)
+            .Include(e => e.MedicalFitnessCheck)
+            .Include(e => e.Employment.Unit)
+            .Include(e => e.Employment.Department)
+            .Include(e => e.Employment.Section)
+            .Include(e => e.Employment.Cell)
+            .Include(e => e.Employment.Grade)
+            .Include(e => e.Employment.Designation)
+            .Include(e => e.Employment.Shift)
+            .Include(e => e.Payroll).ThenInclude(p => p.SalaryAccount)
+            .AsQueryable();
+
+        if (!includeInactive)
+        {
+            query = query.Where(e => e.IsActive);
+        }
+
+        // Filter by status and created date (CreatedOn stored as UTC or local, so compare using UTC)
+        query = query.Where(e => e.Status != null && EF.Functions.ILike(e.Status, normalizedStatus) && e.UpdatedOn.ToUniversalTime() <= upToUtc);
+
+        return await query.OrderBy(e => e.EnrollmentId).ToListAsync(cancellationToken);
+    }
+
     public async Task<List<HrmEmployeeMaster>> GetAllAsync(DateTime? onDate = null, bool includeInactive = false, CancellationToken cancellationToken = default)
     {
         var query = _context.HrmEmployeeMasters

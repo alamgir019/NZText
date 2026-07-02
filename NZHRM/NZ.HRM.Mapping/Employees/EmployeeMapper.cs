@@ -96,4 +96,33 @@ public static class EmployeeMapper
         };
     }
 
+    public static EmployeeDetailForIT MapToEmployeeDetailForIT(this HrmEmployeeMaster employee)
+    {
+        var employeeDetailDto = new EmployeeDetailForIT();
+        employeeDetailDto = (EmployeeDetailForIT) employee.MapToEmployeeDetailDto();
+        employeeDetailDto.FatherName = employee.Personal?.FatherName;
+        employeeDetailDto.DateOfBirth = employee.Personal?.DateOfBirth;
+        employeeDetailDto.Religion = employee.Personal?.Religion;
+        employeeDetailDto.NomineeName = employee.Nominees.FirstOrDefault()?.NomineeName;
+        employeeDetailDto.NomineeRelation = employee.Nominees.FirstOrDefault()?.Relationship;
+        employeeDetailDto.Mobile = employee.Contact?.MobileNo;
+        employeeDetailDto.ApprovedByDirector = null;
+        employeeDetailDto.Department = employee.Employment?.Department?.DepartmentName;
+        employeeDetailDto.WeekOffDay = employee.Employment?.WeeklyOffDay;
+        employeeDetailDto.PayBasis = employee.Payroll?.OtherAllowance;
+        employeeDetailDto.ProbationPeriod = null;
+        employeeDetailDto.ReportingTo = employee.Reportings.FirstOrDefault()?.ReportingEmployee?.EmployeeName;
+        employeeDetailDto.Documents = employee.Documents?.Select(d => new EmployeeDocumentDto
+        {
+            EmployeeId = d.EmployeeId,
+            DocumentNo = d.DocumentNo,
+            DocumentType = string.IsNullOrWhiteSpace(d.DocumentType) ? null : Enum.TryParse<Utility.Enum.DocumentType>(d.DocumentType, out var dt) ? dt : (Utility.Enum.DocumentType?)null,
+            IssueDate = d.IssueDate,
+            ExpiryDate = d.ExpiryDate,
+            FileName = d.FileName,
+            FilePath = d.FilePath
+        }).ToArray();
+
+        return employeeDetailDto;
+    }
 }
