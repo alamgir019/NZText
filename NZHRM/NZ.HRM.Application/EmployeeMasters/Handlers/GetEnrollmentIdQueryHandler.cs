@@ -16,11 +16,7 @@ public class GetEnrollmentIdQueryHandler
     {
         // Use the provided date (caller should pass UTC DateTime)
         var today = query.Today.Date;
-        var all = await _employeeMasterRepository.GetByDateAsync(today, includeInactive: true, cancellationToken: cancellationToken);
-        var todaysCount = all.Count;
-        var sequence = todaysCount + 1;
-        var datePart = today.ToString("ddMMyy");
-        var enrollmentId = $"{datePart}{sequence:D3}";
-        return enrollmentId;
+        var next = await _employeeMasterRepository.GetNextEnrollmentIdAsync(today, cancellationToken: cancellationToken);
+        return next;
     }
 }

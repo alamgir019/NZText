@@ -39,6 +39,7 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<HrmEmployeeEmployment> HrmEmployeeEmployments => Set<HrmEmployeeEmployment>();
         public DbSet<HrmEmployeePayroll> HrmEmployeePayrolls => Set<HrmEmployeePayroll>();
         public DbSet<HrmEmployeeDocument> HrmEmployeeDocuments => Set<HrmEmployeeDocument>();
+        public DbSet<Domain.Entities.LookKeyValue> LookupKeyValues => Set<Domain.Entities.LookKeyValue>();
         public DbSet<HrmEmployeeNominee> HrmEmployeeNominees => Set<HrmEmployeeNominee>();
         public DbSet<HrmEmployeeEducation> HrmEmployeeEducations => Set<HrmEmployeeEducation>();
         public DbSet<HrmEmployeeExperience> HrmEmployeeExperiences => Set<HrmEmployeeExperience>();
@@ -187,6 +188,7 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<HrmEmployeeSalaryAccount>().ToTable("employee_salary_account", "hrm");
             modelBuilder.Entity<HrmEmployeeReporting>().ToTable("employee_reporting", "hrm");
             modelBuilder.Entity<HrmEmployeeVerification>().ToTable("employee_verification", "hrm");
+            modelBuilder.Entity<Domain.Entities.LookKeyValue>().ToTable("lookup_key_value", "lookup");
             modelBuilder.Entity<HrmMedicalFitnessCheck>().ToTable("medical_fitness_check", "hrm");
             modelBuilder.Entity<HrmPhysicalExaminationSetting>().ToTable("physical_examination_setting", "hrm");
 

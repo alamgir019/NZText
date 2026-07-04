@@ -22,4 +22,7 @@ public interface IEmployeeMasterRepository
     Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default);
     Task<bool> EmployeeCodeExistsAsync(string employeeCode, CancellationToken cancellationToken = default);
     Task<bool> EnrollmentCodeExistsAsync(string enrollmentCode, CancellationToken cancellationToken = default);
+    // Generate a next unique enrollment id for the provided date (caller should pass UTC date).
+    // Implementations should ensure uniqueness under concurrent callers.
+    Task<string> GetNextEnrollmentIdAsync(DateTime todayUtc, CancellationToken cancellationToken = default);
 }

@@ -261,4 +261,65 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
         _context.HrmEmployeeMasters.UpdateRange(employeeMasters);
         await _context.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task<string> GetNextEnrollmentIdAsync(DateTime todayUtc, CancellationToken cancellationToken = default)
+    {
+        var datePart = todayUtc.Date.ToString("ddMMyy");
+        var key = $"lastEnrollmentId:{datePart}";
+
+        // Use a transaction to read/update the lookup key/value row for today
+        await using var transaction = await _context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken);
+
+        var kv = await _context.Set<LookKeyValue>()
+            .FirstOrDefaultAsync(k => k.Key == key, cancellationToken);
+
+        int nextSeq = 1;
+        if (kv == null)
+        {
+            var value = $"{datePart}{nextSeq:D3}";
+            kv = new LookKeyValue
+            {
+                Key = key,
+                Value = value,
+                IsActive = true,
+                CreatedOn = DateTime.UtcNow,
+                UpdatedOn = DateTime.UtcNow
+            };
+
+            _context.Set<LookKeyValue>().Add(kv);
+        }
+        else
+        {
+            // parse existing value's sequence suffix
+            var existing = kv.Value ?? string.Empty;
+            if (existing.Length >= datePart.Length + 1 && existing.StartsWith(datePart))
+            {
+                var seqPart = existing.Substring(datePart.Length);
+                if (int.TryParse(seqPart, out var seq))
+                {
+                    nextSeq = seq + 1;
+                }
+                else
+                {
+                    nextSeq = 1;
+                }
+            }
+            else
+            {
+                nextSeq = 1;
+            }
+
+            kv.Value = $"{datePart}{nextSeq:D3}";
+            kv.UpdatedOn = DateTime.UtcNow;
+            _context.Set<LookKeyValue>().Update(kv);
+        }
+
+        await _context.SaveChangesAsync(cancellationToken);
+
+        var nextEnrollmentId = kv.Value!;
+
+        await transaction.CommitAsync(cancellationToken);
+
+        return nextEnrollmentId;
+    }
 }
