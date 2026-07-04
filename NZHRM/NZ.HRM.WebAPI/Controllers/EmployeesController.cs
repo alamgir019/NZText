@@ -68,6 +68,13 @@ public class EmployeesController : ControllerBase
 
         try
         {
+
+            var query = new Application.EmployeeMasters.Queries.GetEnrollmentId.GetEnrollmentIdQuery
+            {
+                Today = DateTime.UtcNow
+            };
+            command.EmployeeEnrollmentId = await _getEnrollmentIdHandler.Handle(query, cancellationToken: default);
+
             var employeeId = await _createCompleteEmployeeHandler.Handle(command, cancellationToken: default);
             return CreatedAtAction(
                 nameof(CreateEmployeeRecruitment),
