@@ -8,20 +8,16 @@ public class RoleCommandHandler
 
     public async Task<string> Handle(CreateRoleCommand cmd)
     {
-        //var role = new Role
-        //{
-        //    Id = IdentityGenerator.Next(),
-        //    RoleName = cmd.RoleName,
-        //    //CreatedOn = DateTime.UtcNow,
-        //    CreatedBy = cmd.CreatedBy,
-        //    //UpdatedOn = DateTime.UtcNow,
-        //    UpdatedBy = cmd.CreatedBy,
-        //    IsActive = true
-        //};
-        //await _repo.AddAsync(role);
-        //await _repo.SaveChangesAsync();
-        //return role.Id;
-        return string.Empty;
+        var role = new SecRole
+        {
+            RoleName = cmd.RoleName,
+            CreatedBy = cmd.CreatedBy,
+            UpdatedBy = cmd.CreatedBy,
+            IsActive = true
+        };
+        await _repo.AddAsync(role);
+        await _repo.SaveChangesAsync();
+        return role.Id;
     }
 
     public async Task Handle(UpdateRoleCommand cmd)

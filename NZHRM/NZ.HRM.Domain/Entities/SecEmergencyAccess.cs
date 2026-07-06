@@ -5,7 +5,7 @@ using NZ.HRM.Domain.Common;
 namespace NZ.HRM.Domain.Entities
 {
     [Table("emergency_access", Schema = "security")]
-    public class SecEmergencyAccess : BaseEntityWithSortOrder
+    public class SecEmergencyAccess : BaseEntity
     {
         public string UserId { get; set; } = string.Empty;
         public string GrantedBy { get; set; } = string.Empty;
@@ -14,6 +14,6 @@ namespace NZ.HRM.Domain.Entities
         public string? Reason { get; set; }
         public string? Status { get; set; }
 
-        [ForeignKey("UserId")] public SecUser? User { get; set; }
+        [ForeignKey(nameof(UserId))] public SecUser? User { get; set; }
     }
 }

@@ -23,6 +23,10 @@ using NZ.HRM.Application.PhysicalExaminationSettings.Handlers;
 using NZ.HRM.Application.RawPunches.Handlers;
 using NZ.HRM.Application.Thanas.Handlers;
 using NZ.HRM.Application.Units.Handlers;
+using NZ.HRM.Application.RolePermissions.Handlers;
+using NZ.HRM.Application.Permissions.Handlers;
+using NZ.HRM.Application.UserRoles.Handlers;
+using NZ.HRM.Application.UserRoles.Handlers;
 
 namespace NZ.HRM.Application.DependencyInjection
 {
@@ -119,8 +123,18 @@ namespace NZ.HRM.Application.DependencyInjection
 
             // Register RawPunch Handlers
             services.AddScoped<RawPunchCommandHandler>();
-            services.AddScoped<NZ.HRM.Domain.Services.PunchProcessingService>();
-            services.AddScoped<NZ.HRM.Domain.Services.AttendanceProcessingService>();
+            services.AddScoped<Domain.Services.PunchProcessingService>();
+            services.AddScoped<Domain.Services.AttendanceProcessingService>();
+
+            // UserRole Handlers
+            services.AddScoped<UserRoleCommandHandler>();
+            services.AddScoped<UserRoleQueryHandler>();
+            // Permission Handlers
+            services.AddScoped<PermissionCommandHandler>();
+            services.AddScoped<PermissionQueryHandler>();
+            // RolePermission Handlers
+            services.AddScoped<RolePermissionCommandHandler>();
+            services.AddScoped<RolePermissionQueryHandler>();
 
             return services;
         }

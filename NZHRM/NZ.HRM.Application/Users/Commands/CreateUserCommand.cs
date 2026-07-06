@@ -1,1 +1,1 @@
-public record CreateUserCommand(string Username, string Password, string Role, string CreatedBy);
+public record CreateUserCommand(string Username, string Password, string EmployeeId, string CreatedBy);

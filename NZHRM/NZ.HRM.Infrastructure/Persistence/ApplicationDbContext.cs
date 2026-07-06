@@ -151,7 +151,9 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<SecRole>().ToTable("role", "security");
             modelBuilder.Entity<SecUserRole>().ToTable("user_role", "security");
             modelBuilder.Entity<SecUserSession>().ToTable("user_session", "security");
-            modelBuilder.Entity<SecPermission>().ToTable("permission", "security");
+            modelBuilder.Entity<SecPermission>().ToTable("permission", "security")
+                .Property(p => p.PermissionType).HasConversion<string>()
+                .HasMaxLength(50);
             modelBuilder.Entity<SecRolePermission>().ToTable("role_permission", "security");
             modelBuilder.Entity<SecPasswordHistory>().ToTable("password_history", "security");
             modelBuilder.Entity<SecModuleAccess>().ToTable("module_access", "security");
@@ -188,7 +190,7 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<HrmEmployeeSalaryAccount>().ToTable("employee_salary_account", "hrm");
             modelBuilder.Entity<HrmEmployeeReporting>().ToTable("employee_reporting", "hrm");
             modelBuilder.Entity<HrmEmployeeVerification>().ToTable("employee_verification", "hrm");
-            modelBuilder.Entity<Domain.Entities.LookKeyValue>().ToTable("lookup_key_value", "lookup");
+            modelBuilder.Entity<LookKeyValue>().ToTable("lookup_key_value", "lookup");
             modelBuilder.Entity<HrmMedicalFitnessCheck>().ToTable("medical_fitness_check", "hrm");
             modelBuilder.Entity<HrmPhysicalExaminationSetting>().ToTable("physical_examination_setting", "hrm");
 

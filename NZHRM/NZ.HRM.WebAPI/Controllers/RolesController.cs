@@ -13,13 +13,13 @@ public class RolesController : ControllerBase
         _queryHandler = queryHandler;
     }
 
-    //[HttpGet]
-    //public async Task<IActionResult> GetAll() =>
-    //    Ok(await _queryHandler.Handle(new GetAllRolesQuery()));
+    [HttpGet]
+    public async Task<IActionResult> GetAll() =>
+        Ok(await _queryHandler.Handle(new GetAllRolesQuery()));
 
-    //[HttpGet("{id}")]
-    //public async Task<IActionResult> GetById(string id) =>
-    //    Ok(await _queryHandler.Handle(new GetRoleByIdQuery(id)));
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(string id) =>
+        Ok(await _queryHandler.Handle(new GetRoleByIdQuery(id)));
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateRoleCommand cmd) =>

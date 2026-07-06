@@ -1,3 +1,4 @@
+using NZ.HRM.Application.DTOs;
 using NZ.HRM.Domain.Entities;
 using NZ.HRM.Domain.Helper;
 
@@ -13,10 +14,8 @@ public class UserCommandHandler
             Id = IdentityGenerator.Next(),
             UserName = cmd.Username,
             PasswordHash = cmd.Password, // Hash in production!
-            Role = cmd.Role,
-            CreatedOn = DateTime.UtcNow,
+            EmployeeId = cmd.EmployeeId,
             CreatedBy = cmd.CreatedBy,
-            UpdatedOn = DateTime.UtcNow,
             UpdatedBy = cmd.CreatedBy,
             IsActive = true
         };
@@ -30,9 +29,9 @@ public class UserCommandHandler
     {
         var user = await _repo.FindByIdAsync(cmd.Id);
         if (user is null) throw new Exception("User not found");
-        //user.Username = cmd.Username;
-        //user.Password = cmd.Password; // Hash in production!
-        //user.RoleId = cmd.RoleId;
+        user.UserName = cmd.Username;
+        user.PasswordHash = cmd.Password; // Hash in production!
+        user.EmployeeId = cmd.EmployeeId;
         user.UpdatedOn = DateTime.UtcNow;
         user.UpdatedBy = cmd.UpdatedBy;
         user.IsActive = cmd.IsActive;
@@ -48,13 +47,22 @@ public class UserCommandHandler
         await _repo.SaveChangesAsync();
     }
 
-    public async Task<SecUser?> Handle(LoginUserCommand cmd)
+    public async Task<LoginUserDto?> Handle(LoginUserCommand cmd)
     {
         var user = await _repo.FindByUsernameAsync(cmd.Username);
         if (user == null) return null;
         // In production, use hashed and salted password comparison!
         if (user.PasswordHash != cmd.Password) return null;
-        return user;
+        return new LoginUserDto
+        {
+            UserId = user.Id,
+            UserName = user.UserName,
+            EmployeeId = user.EmployeeId,
+            UnitId = user.EmployeeMaster?.Employment?.UnitId,
+            PermissionNames = user.UserRoles.SelectMany(ur => ur.Role.RolePermissions).Select(rp => rp.Permission.PermissionName).ToList(),
+            RoleNames = user.UserRoles.Select(ur => ur.Role.RoleName).ToList(),
+            ModuleNames = user.UserRoles.SelectMany(ur => ur.Role.RolePermissions).Select(rp => rp.Permission.ModuleName).ToList()
+        };
     }
 
 }

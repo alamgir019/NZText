@@ -20,9 +20,9 @@ public class LoginController : ControllerBase
             return Unauthorized("Invalid username or password.");
 
         // Store user ID in session
-        HttpContext.Session.SetString("UserId", user.Id);
+        HttpContext.Session.SetString("UserId", user.UserId);
 
-        return Ok(new { user.Id, user.UserName, user.Role });
+        return Ok(user);
     }
 
     [HttpPost("logout")]

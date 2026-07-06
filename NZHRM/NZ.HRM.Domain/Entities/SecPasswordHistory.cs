@@ -5,12 +5,12 @@ using NZ.HRM.Domain.Common;
 namespace NZ.HRM.Domain.Entities
 {
     [Table("password_history", Schema = "security")]
-    public class SecPasswordHistory : BaseEntityWithSortOrder
+    public class SecPasswordHistory : BaseEntity
     {
         public string UserId { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
         public DateTime? ChangedDate { get; set; }
 
-        [ForeignKey("UserId")] public SecUser? User { get; set; }
+        [ForeignKey(nameof(UserId))] public SecUser? User { get; set; }
     }
 }

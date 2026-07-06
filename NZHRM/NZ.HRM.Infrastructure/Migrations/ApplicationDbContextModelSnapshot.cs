@@ -5713,9 +5713,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.Property<string>("Reason")
                         .HasColumnType("text");
 
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime?>("StartDateTime")
                         .HasColumnType("timestamp with time zone");
 
@@ -5779,9 +5776,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("integer");
-
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
                         .HasColumnType("text");
@@ -5843,9 +5837,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("CHAR(26)");
 
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("integer");
-
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
                         .HasColumnType("text");
@@ -5888,9 +5879,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("integer");
-
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
                         .HasColumnType("text");
@@ -5918,9 +5906,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("CHAR(26)")
                         .HasColumnName("Id");
 
-                    b.Property<bool>("ActiveFlag")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasColumnType("text");
@@ -5945,10 +5930,8 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PermissionType")
-                        .HasColumnType("text");
-
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("integer");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
@@ -5970,9 +5953,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("CHAR(26)")
                         .HasColumnName("Id");
-
-                    b.Property<bool>("ActiveFlag")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -5997,9 +5977,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("integer");
-
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
                         .HasColumnType("text");
@@ -6021,9 +5998,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("CHAR(26)")
                         .HasColumnName("Id");
 
-                    b.Property<bool>("ActiveFlag")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasColumnType("text");
@@ -6043,9 +6017,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.Property<string>("RoleId")
                         .IsRequired()
                         .HasColumnType("CHAR(26)");
-
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("integer");
 
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
@@ -6072,9 +6043,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("CHAR(26)")
                         .HasColumnName("Id");
 
-                    b.Property<bool>("ActiveFlag")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasColumnType("text");
@@ -6084,11 +6052,8 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW()");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("text");
-
                     b.Property<string>("EmployeeId")
-                        .HasColumnType("text");
+                        .HasColumnType("CHAR(26)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -6096,18 +6061,8 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.Property<DateTime?>("LastLoginDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("MobileNo")
-                        .HasColumnType("text");
-
                     b.Property<string>("PasswordHash")
                         .HasColumnType("text");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("integer");
 
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
@@ -6124,6 +6079,8 @@ namespace NZ.HRM.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EmployeeId");
+
                     b.ToTable("user_account", "security");
                 });
 
@@ -6133,9 +6090,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("CHAR(26)")
                         .HasColumnName("Id");
-
-                    b.Property<bool>("ActiveFlag")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -6158,9 +6112,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.Property<string>("RoleId")
                         .IsRequired()
                         .HasColumnType("CHAR(26)");
-
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("integer");
 
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
@@ -6217,9 +6168,6 @@ namespace NZ.HRM.Infrastructure.Migrations
 
                     b.Property<string>("SessionStatus")
                         .HasColumnType("text");
-
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("integer");
 
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
@@ -7906,6 +7854,15 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.Navigation("Permission");
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.SecUser", b =>
+                {
+                    b.HasOne("NZ.HRM.Domain.Entities.HrmEmployeeMaster", "EmployeeMaster")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId");
+
+                    b.Navigation("EmployeeMaster");
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.SecUserRole", b =>
