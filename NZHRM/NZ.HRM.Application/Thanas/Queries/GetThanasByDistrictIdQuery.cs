@@ -11,4 +11,5 @@ public class ThanaDto
     public string ThanaName { get; set; } = string.Empty;
     public string DistrictId { get; set; } = string.Empty;
     public string DistrictName { get; set; } = string.Empty;
+    public string? ThanaNameBangla { get; internal set; }
 }

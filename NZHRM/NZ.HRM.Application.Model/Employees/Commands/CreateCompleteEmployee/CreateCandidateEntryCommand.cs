@@ -60,9 +60,12 @@ public class CreateCandidateEntryCommand
     public string MobileNumber { get; set; } = string.Empty;
 
     // Family Information
-    public GuardianType GuardianType { get; set; }
+    public GuardianType? GuardianType { get; set; }
     [MaxLength(100, ErrorMessage = "Guardian's name (Bangla) must not exceed 100 characters")]
-    public string GuardianName { get; set; } = string.Empty;
+    public string? GuardianNameBangla { get; set; }
+
+    [MaxLength(100, ErrorMessage = "Father's name (Bangla) must not exceed 100 characters")]
+    public string FatherNameBangla { get; set; } = string.Empty;
 
     [MaxLength(100, ErrorMessage = "Mother's name (Bangla) must not exceed 100 characters")]
     public string? MotherNameBangla { get; set; }
@@ -88,13 +91,13 @@ public class CreateCandidateEntryCommand
     public string? PermanentPostOffice { get; set; }
 
     [MaxLength(100, ErrorMessage = "Permanent thana must not exceed 100 characters")]
-    public string? PermanentThana { get; set; }
+    public string? PermanentThanaId { get; set; }
 
     [MaxLength(100, ErrorMessage = "Permanent district must not exceed 100 characters")]
-    public string? PermanentDistrict { get; set; }
+    public string? PermanentDistrictId { get; set; }
 
     [MaxLength(100, ErrorMessage = "Permanent division must not exceed 100 characters")]
-    public string? PermanentDivision { get; set; }
+    public string? PermanentDivisionId { get; set; }
 
 
     [MaxLength(200, ErrorMessage = "Present village/area/road must not exceed 200 characters")]
@@ -104,13 +107,13 @@ public class CreateCandidateEntryCommand
     public string? PresentPostOffice { get; set; }
 
     [MaxLength(100, ErrorMessage = "Present thana must not exceed 100 characters")]
-    public string? PresentThana { get; set; }
+    public string? PresentThanaId { get; set; }
 
     [MaxLength(100, ErrorMessage = "Present district must not exceed 100 characters")]
-    public string? PresentDistrict { get; set; }
+    public string? PresentDistrictId { get; set; }
 
     [MaxLength(100, ErrorMessage = "Present division must not exceed 100 characters")]
-    public string? PresentDivision { get; set; }
+    public string? PresentDivisionId { get; set; }
 
     // Verification Information
     [MaxLength(100, ErrorMessage = "Security clearance by must not exceed 100 characters")]

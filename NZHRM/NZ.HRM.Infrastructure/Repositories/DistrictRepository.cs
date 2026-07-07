@@ -31,4 +31,33 @@ public class DistrictRepository : IDistrictRepository
             .OrderBy(d => d.DistrictName)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<string> AddAsync(LookDistrict district, CancellationToken cancellationToken = default)
+    {
+        _context.Districts.Add(district);
+        await _context.SaveChangesAsync(cancellationToken);
+        return district.Id;
+    }
+
+    public async Task UpdateAsync(LookDistrict district, CancellationToken cancellationToken = default)
+    {
+        _context.Districts.Update(district);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task DeleteAsync(LookDistrict district, CancellationToken cancellationToken = default)
+    {
+        _context.Districts.Remove(district);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<LookDistrict?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    {
+        return await _context.Districts.FirstOrDefaultAsync(d => d.Id == id && d.IsActive, cancellationToken);
+    }
+
+    public async Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default)
+    {
+        return await _context.Districts.AnyAsync(d => d.Id == id, cancellationToken);
+    }
 }

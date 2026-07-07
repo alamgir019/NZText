@@ -15,35 +15,45 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
         _context = context;
     }
 
-    public async Task<List<HrmEmployeeMaster>> GetByStatusUpToDateAsync(string status, DateTime upToUtc, bool includeInactive = false, CancellationToken cancellationToken = default)
+    public async Task<List<HrmEmployeeMaster>> GetByStatusUpToDateAsync(Application.Employees.Queries.GetItActivationSummary.GetItActivationSummaryQuery query, CancellationToken cancellationToken = default)
     {
-        var normalizedStatus = status?.Trim();
+        var normalizedStatus = query.status?.Trim();
 
         if (string.IsNullOrWhiteSpace(normalizedStatus))
             return new List<HrmEmployeeMaster>();
 
-        var query = _context.HrmEmployeeMasters
-            .Include(e => e.Personal)
-            .Include(e => e.MedicalFitnessCheck)
+        var result = _context.HrmEmployeeMasters
+            //.Include(e => e.Personal)
+            //.Include(e => e.MedicalFitnessCheck)
             .Include(e => e.Employment.Unit)
-            .Include(e => e.Employment.Department)
-            .Include(e => e.Employment.Section)
-            .Include(e => e.Employment.Cell)
-            .Include(e => e.Employment.Grade)
-            .Include(e => e.Employment.Designation)
-            .Include(e => e.Employment.Shift)
-            .Include(e => e.Payroll).ThenInclude(p => p.SalaryAccount)
+            //.Include(e => e.Employment.Department)
+            //.Include(e => e.Employment.Section)
+            //.Include(e => e.Employment.Cell)
+            //.Include(e => e.Employment.Grade)
+            //.Include(e => e.Employment.Designation)
+            //.Include(e => e.Employment.Shift)
+            //.Include(e => e.Payroll).ThenInclude(p => p.SalaryAccount)
             .AsQueryable();
 
-        if (!includeInactive)
+        if (!query.includeInactive)
         {
-            query = query.Where(e => e.IsActive);
+            result = result.Where(e => e.IsActive);
+        }
+        if (!string.IsNullOrWhiteSpace(query.UnitId))
+        {
+            result = result.Where(e => e.Employment.UnitId == query.UnitId);
+        }
+        if (!string.IsNullOrWhiteSpace(query.status))
+        {
+            result = result.Where(e => EF.Functions.ILike(e.Status, normalizedStatus));
+            return new List<HrmEmployeeMaster>();
+        }
+        if (query.date != default)
+        {
+            result = result.Where(e => e.UpdatedOn.ToUniversalTime() <= query.date.ToUniversalTime());
         }
 
-        // Filter by status and created date (CreatedOn stored as UTC or local, so compare using UTC)
-        query = query.Where(e => e.Status != null && EF.Functions.ILike(e.Status, normalizedStatus) && e.UpdatedOn.ToUniversalTime() <= upToUtc);
-
-        return await query.OrderBy(e => e.EnrollmentId).ToListAsync(cancellationToken);
+        return await result.OrderBy(e => e.EnrollmentId).ToListAsync(cancellationToken);
     }
 
     public async Task<List<HrmEmployeeMaster>> GetAllAsync(DateTime? onDate = null, bool includeInactive = false, CancellationToken cancellationToken = default)

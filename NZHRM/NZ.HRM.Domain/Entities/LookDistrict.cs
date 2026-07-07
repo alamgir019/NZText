@@ -7,6 +7,7 @@ namespace NZ.HRM.Domain.Entities
     public class LookDistrict : BaseEntityWithSortOrder
     {
         public string DistrictName { get; set; } = string.Empty;
+        public string? DistrictNameBangla { get; set; }
 
         // Foreign key to Division
         public string DivisionId { get; set; } = string.Empty;

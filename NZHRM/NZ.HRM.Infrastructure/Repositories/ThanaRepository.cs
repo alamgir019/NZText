@@ -31,4 +31,33 @@ public class ThanaRepository : IThanaRepository
             .OrderBy(t => t.ThanaName)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<string> AddAsync(LookThana thana, CancellationToken cancellationToken = default)
+    {
+        _context.Thanas.Add(thana);
+        await _context.SaveChangesAsync(cancellationToken);
+        return thana.Id;
+    }
+
+    public async Task UpdateAsync(LookThana thana, CancellationToken cancellationToken = default)
+    {
+        _context.Thanas.Update(thana);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task DeleteAsync(LookThana thana, CancellationToken cancellationToken = default)
+    {
+        _context.Thanas.Remove(thana);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<LookThana?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    {
+        return await _context.Thanas.FirstOrDefaultAsync(t => t.Id == id && t.IsActive, cancellationToken);
+    }
+
+    public async Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default)
+    {
+        return await _context.Thanas.AnyAsync(t => t.Id == id, cancellationToken);
+    }
 }

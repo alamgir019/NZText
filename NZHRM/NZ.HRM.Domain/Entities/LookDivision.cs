@@ -7,6 +7,7 @@ namespace NZ.HRM.Domain.Entities
     public class LookDivision : BaseEntityWithSortOrder
     {
         public string DivisionName { get; set; } = string.Empty;
+        public string? DivisionNameBangla { get; set; }
 
         // Navigation property
         public ICollection<LookDistrict>? Districts { get; set; }

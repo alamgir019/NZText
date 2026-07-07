@@ -108,6 +108,10 @@ namespace NZ.HRM.Application.DependencyInjection
             services.AddScoped<DivisionQueryHandler>();
             services.AddScoped<DistrictQueryHandler>();
             services.AddScoped<ThanaQueryHandler>();
+            // Command handlers for Geo
+            services.AddScoped<DivisionCommandHandler>();
+            services.AddScoped<DistrictCommandHandler>();
+            services.AddScoped<ThanaCommandHandler>();
 
             // Register Physical Examination Settings Handlers
             services.AddScoped<PhysicalExaminationSettingCommandHandler>();

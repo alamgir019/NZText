@@ -51,55 +51,6 @@ public class EmployeeCommandHandler
         _employeeDocumentRepository = employeeDocumentRepository;
     }
 
-    public async Task<string> Handle(CreateCompleteEmployeeCommand command, CancellationToken cancellationToken = default)
-    {
-        // Validate employee code uniqueness
-        var codeExists = await _employeeMasterRepository.EmployeeCodeExistsAsync(command.EmployeeCode, cancellationToken);
-        if (codeExists)
-        {
-            throw new ArgumentException($"Employee code '{command.EmployeeCode}' already exists");
-        }
-
-        // Validate related entities exist
-        await ValidateRelatedEntities(
-            command.CompanyId, 
-            command.DepartmentId, 
-            command.SectionId, 
-            command.ShiftId,
-            command.EmployeeNatureId,
-            //command.GradeId, 
-            cancellationToken);
-
-        // Create EmployeeMaster
-        var employeeMaster = EmployeeMapper.CreateCompleteEmployeeCommandToMaster(command);
-
-        // Save EmployeeMaster first
-        var employeeId = await _employeeMasterRepository.AddAsync(employeeMaster, cancellationToken);
-
-        // Create EmployeePersonal
-        var employeePersonal = EmployeeMapper.CreateCompleteEmployeeCommandToPersonal(command, employeeId);
-
-        // Save EmployeePersonal
-        await _employeePersonalRepository.AddAsync(employeePersonal, cancellationToken);
-
-        var employeeVerification = new HrmEmployeeVerification
-        {
-            EmployeeId = employeeId,
-            SecurityClearanceBy = command.SecurityClearanceBy,
-            SecurityClearanceDate = command.SecurityClearanceDate,
-            EnrolledBy = command.EnrolledBy,
-            EnrolledDate = command.EnrolledDate,
-            BiometricEnrolledBy = command.BiometricEnrolledBy,
-            BiometricEnrolledDate = command.BiometricEnrolledDate,
-            IsActive = true
-        };
-
-        await _employeeVerificationRepository.AddAsync(employeeVerification, cancellationToken);
-
-        return employeeId;
-    }
-
-
     public async Task<string> Handle(CreateCandidateEntryCommand command, CancellationToken cancellationToken = default)
     {
         // Validate employee enrollment ID uniqueness
@@ -124,13 +75,7 @@ public class EmployeeCommandHandler
         {
             EnrollmentId = command.EmployeeEnrollmentId,
             EmployeeNameBangla = command.EmployeeNameBangla ?? string.Empty,
-            //UnitId = command.UnitId,
-            //DepartmentId = command.DepartmentId,
-            //SectionId = command.SectionId,
-            //CellId = command.CellId,
             EmployeeType = command.EmployeeType.ToString(),
-            //ProposedMonthlySalary = command.ProposedMonthlySalary,
-            //JoiningDate = command.JoiningDate,
             Status = EmployeeStatus.CandidateEntry.ToString(),
             IsActive = true
         };
@@ -145,26 +90,25 @@ public class EmployeeCommandHandler
             DateOfBirth = command.DateOfBirth,
             Gender = command.Gender.ToString(),
             BloodGroup = command.BloodGroup?.ToString(),
-            //GuardianType = command.GuardianType.ToString(),
-            //GuardianName = command.GuardianName,
-            //MotherNameBangla = command.MotherNameBangla,
-            //IdType = command.IDType,
-            //IDNumber = command.IDNumber,
+            GuardianType = command.GuardianType,
+            GuardianNameBangla = command.GuardianNameBangla,
+            MotherNameBangla = command.MotherNameBangla,
+            FatherNameBangla = command.FatherNameBangla,
             EmployeeReference = command.EmployeeReference,
             ReferenceType = command.ReferenceType?.ToString(),
             ReferencePersonId = command.ReferencePersonId,
             ReferenceMobileNumber = command.ReferenceMobileNumber,
             Relationship = command.Relationship?.ToString(),
-            //PermanentVillageAreaRoad = command.PermanentVillageAreaRoad,
-            //PermanentPostOffice = command.PermanentPostOffice,
-            //PermanentThana = command.PermanentThana,
-            //PermanentDistrict = command.PermanentDistrict,
-            //PermanentDivision = command.PermanentDivision,
-            //PresentVillageAreaRoad = command.PresentVillageAreaRoad,
-            //PresentPostOffice = command.PresentPostOffice,
-            //PresentThana = command.PresentThana,
-            //PresentDistrict = command.PresentDistrict,
-            //PresentDivision = command.PresentDivision,
+            PermanentVillageAreaRoad = command.PermanentVillageAreaRoad,
+            PermanentPostOffice = command.PermanentPostOffice,
+            PermanentThanaId = command.PermanentThanaId,
+            PermanentDistrictId = command.PermanentDistrictId,
+            PermanentDivisionId = command.PermanentDivisionId,
+            PresentVillageAreaRoad = command.PresentVillageAreaRoad,
+            PresentPostOffice = command.PresentPostOffice,
+            PresentThanaId = command.PresentThanaId,
+            PresentDistrictId = command.PresentDistrictId,
+            PresentDivisionId = command.PresentDivisionId,
             IsActive = true
         };
 

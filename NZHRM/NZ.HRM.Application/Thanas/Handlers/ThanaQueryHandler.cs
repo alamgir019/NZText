@@ -20,6 +20,7 @@ public class ThanaQueryHandler
         {
             Id = t.Id,
             ThanaName = t.ThanaName,
+            ThanaNameBangla = t.ThanaNameBangla,
             DistrictId = t.DistrictId,
             DistrictName = t.District?.DistrictName ?? string.Empty
         }).ToList();

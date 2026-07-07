@@ -177,7 +177,9 @@ namespace NZ.HRM.Infrastructure.Persistence
 
             // HRM
             modelBuilder.Entity<HrmEmployeeMaster>().ToTable("employee_master", "hrm");
-            modelBuilder.Entity<HrmEmployeePersonal>().ToTable("employee_personal", "hrm");
+            modelBuilder.Entity<HrmEmployeePersonal>().ToTable("employee_personal", "hrm")
+                .Property(p => p.GuardianType).HasConversion<string>()
+                .HasMaxLength(50);
             modelBuilder.Entity<HrmEmployeeContact>().ToTable("employee_contact", "hrm");
             modelBuilder.Entity<HrmEmployeeEmployment>().ToTable("employee_employment", "hrm");
             modelBuilder.Entity<HrmEmployeePayroll>().ToTable("employee_payroll", "hrm");

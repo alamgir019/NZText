@@ -7,6 +7,7 @@ namespace NZ.HRM.Domain.Entities
     public class LookThana : BaseEntityWithSortOrder
     {
         public string ThanaName { get; set; } = string.Empty;
+        public string? ThanaNameBangla { get; set; }
 
         // Foreign key to District
         public string DistrictId { get; set; } = string.Empty;

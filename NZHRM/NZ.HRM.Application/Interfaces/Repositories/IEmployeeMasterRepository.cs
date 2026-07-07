@@ -12,7 +12,7 @@ public interface IEmployeeMasterRepository
     Task<List<HrmEmployeeMaster>> GetByDepartmentIdAsync(string departmentId, CancellationToken cancellationToken = default);
     Task<List<HrmEmployeeMaster>> GetByStatusAsync(string status, CancellationToken cancellationToken = default);
     // Get employees by status up to a specified UTC date (inclusive). When includeInactive is false, only active employees are returned.
-    Task<List<HrmEmployeeMaster>> GetByStatusUpToDateAsync(string status, DateTime upToUtc, bool includeInactive = false, CancellationToken cancellationToken = default);
+    Task<List<HrmEmployeeMaster>> GetByStatusUpToDateAsync(Employees.Queries.GetItActivationSummary.GetItActivationSummaryQuery query, CancellationToken cancellationToken = default);
     Task<List<HrmEmployeeMaster>> SearchAsync(string searchText, CancellationToken cancellationToken = default);
     Task<List<HrmEmployeeMaster>> GetByDateAsync(DateTime onDatel, bool includeInactive = false, CancellationToken cancellationToken = default);
     Task<string> AddAsync(HrmEmployeeMaster employeeMaster, CancellationToken cancellationToken = default);

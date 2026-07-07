@@ -11,4 +11,6 @@ public class DistrictDto
     public string DistrictName { get; set; } = string.Empty;
     public string DivisionId { get; set; } = string.Empty;
     public string DivisionName { get; set; } = string.Empty;
+    public string? DistrictNameBangla { get; internal set; }
+    public string DivisionNameBangla { get; internal set; }
 }

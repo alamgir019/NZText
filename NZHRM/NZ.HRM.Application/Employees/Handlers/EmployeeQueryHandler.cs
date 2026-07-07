@@ -29,8 +29,7 @@ public class EmployeeQueryHandler
     public async Task<Queries.GetItActivationSummary.ItActivationSummaryDto> Handle(Queries.GetItActivationSummary.GetItActivationSummaryQuery query, CancellationToken cancellationToken = default)
     {
         // Fetch active employees up to now and filter by status
-        var now = DateTime.UtcNow;
-        var itActivated = await _employeeMasterRepository.GetByStatusUpToDateAsync("ITActivation", now, includeInactive: false, cancellationToken: cancellationToken);
+        var itActivated = await _employeeMasterRepository.GetByStatusUpToDateAsync(query, cancellationToken: cancellationToken);
 
         var dto = new Queries.GetItActivationSummary.ItActivationSummaryDto
         {
@@ -39,7 +38,19 @@ public class EmployeeQueryHandler
             Staff = itActivated.Count(e => string.Equals(e.EmployeeType, EmployeeType.Staff.ToString(), StringComparison.OrdinalIgnoreCase)),
             Management = itActivated.Count(e => string.Equals(e.EmployeeType, EmployeeType.Management.ToString(), StringComparison.OrdinalIgnoreCase))
         };
-
+        var groupedByCompany = itActivated.GroupBy(e => e.Employment?.Unit?.UnitName);
+        foreach (var group in groupedByCompany)
+        {
+            var companySummary = new Queries.GetItActivationSummary.ItActivationSummaryDto
+            {
+                CompanyName = group.Key,
+                Total = group.Count(),
+                Workers = group.Count(e => string.Equals(e.EmployeeType, EmployeeType.Worker.ToString(), StringComparison.OrdinalIgnoreCase)),
+                Staff = group.Count(e => string.Equals(e.EmployeeType, EmployeeType.Staff.ToString(), StringComparison.OrdinalIgnoreCase)),
+                Management = group.Count(e => string.Equals(e.EmployeeType, EmployeeType.Management.ToString(), StringComparison.OrdinalIgnoreCase))
+            };
+            dto.CompanySummaries.Add(companySummary);
+        }
         return dto;
     }
 }

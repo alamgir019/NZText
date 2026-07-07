@@ -19,7 +19,8 @@ public class DivisionQueryHandler
         return divisions.Select(d => new DivisionDto
         {
             Id = d.Id,
-            DivisionName = d.DivisionName
+            DivisionName = d.DivisionName,
+            DivisionNameBangla = d.DivisionNameBangla,
         }).ToList();
     }
 }

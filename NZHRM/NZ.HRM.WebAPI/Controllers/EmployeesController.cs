@@ -29,7 +29,6 @@ public class EmployeesController : ControllerBase
         _getCompleteEmployeeHandler = getCompleteEmployeeHandler;
         _getEnrollmentIdHandler = getEnrollmentIdHandler;
         _employeeQueryHandler = employeeQueryHandler;
-        //_itActivationSummaryQueryHandler = itActivationSummaryQueryHandler;
     }
 
     [HttpGet("it-detail/{employeeId}")]
@@ -46,15 +45,6 @@ public class EmployeesController : ControllerBase
         if (result == null)
             return NotFound(new { message = $"Employee with ID {employeeId} not found" });
 
-        return Ok(result);
-    }
-
-    [HttpGet("it-activation-summary")]
-    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetItActivationSummary()
-    {
-        var query = new Application.Employees.Queries.GetItActivationSummary.GetItActivationSummaryQuery();
-        var result = await _employeeQueryHandler.Handle(query, cancellationToken: default);
         return Ok(result);
     }
 

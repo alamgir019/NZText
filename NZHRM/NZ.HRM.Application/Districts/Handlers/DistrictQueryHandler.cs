@@ -20,8 +20,10 @@ public class DistrictQueryHandler
         {
             Id = d.Id,
             DistrictName = d.DistrictName,
+            DistrictNameBangla = d.DistrictNameBangla,
             DivisionId = d.DivisionId,
-            DivisionName = d.Division?.DivisionName ?? string.Empty
+            DivisionName = d.Division?.DivisionName ?? string.Empty,
+            DivisionNameBangla = d.Division?.DivisionNameBangla ?? string.Empty
         }).ToList();
     }
 }
