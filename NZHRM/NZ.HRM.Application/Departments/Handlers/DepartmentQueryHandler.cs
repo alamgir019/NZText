@@ -1,25 +1,25 @@
 using NZ.HRM.Application.Departments.Queries.GetAllDepartments;
-using NZ.HRM.Application.Departments.Queries.GetDepartmentsByLocation;
 using NZ.HRM.Application.Departments.Queries.GetDepartmentById;
 using NZ.HRM.Application.Interface;
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Application.ComplexUnitDepartments.Queries.GetAllComplexUnitDepartments;
+using NZ.HRM.Application.Departments.Queries.GetDepartmentsByComplexUnit;
 
 namespace NZ.HRM.Application.Departments.Handlers;
 
 public class DepartmentQueryHandler
 {
     private readonly IDepartmentRepository _departmentRepository;
-    private readonly ISubUnitRepository _locationRepository;
+    private readonly ISubUnitRepository _subUnitRepository;
     private readonly IComplexUnitDepartmentRepository _complexUnitDepartmentRepository;
 
     public DepartmentQueryHandler(
         IDepartmentRepository departmentRepository,
-        ISubUnitRepository locationRepository,
+        ISubUnitRepository subUnitRepository,
         IComplexUnitDepartmentRepository complexUnitDepartmentRepository)
     {
         _departmentRepository = departmentRepository;
-        _locationRepository = locationRepository;
+        _subUnitRepository = subUnitRepository;
         _complexUnitDepartmentRepository = complexUnitDepartmentRepository;
     }
 
@@ -62,8 +62,8 @@ public class DepartmentQueryHandler
 
     public async Task<List<ComplexUnitDepartmentDto>> Handle(GetDepartmentsByComplexUnitQuery query, CancellationToken cancellationToken = default)
     {
-        var location = await _locationRepository.FindByIdAsync(query.ComplexId);
-        if (location == null)
+        var subUnit = await _subUnitRepository.FindByIdAsync(query.ComplexId);
+        if (subUnit == null)
             return new List<ComplexUnitDepartmentDto>();
 
         var complexUnitDepartmentMappings = await _complexUnitDepartmentRepository.GetAllAsync(query.IncludeInactive, query.ComplexId, query.UnitId, cancellationToken);
@@ -72,7 +72,7 @@ public class DepartmentQueryHandler
             .Select(d => new ComplexUnitDepartmentDto
             {
                 ComplexId = d.ComplexId,
-                ComplexName = d.Complex?.GroupName ?? string.Empty,
+                ComplexName = d.Complex?.ComplexName ?? string.Empty,
                 UnitId = d.UnitId,
                 UnitName = d.Unit?.UnitName ?? string.Empty,
                 DepartmentId = d.Id,

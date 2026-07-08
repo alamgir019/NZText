@@ -4,9 +4,12 @@ namespace NZ.HRM.Application.LocationDepartments.Commands.CreateLocationDepartme
 
 public class CreateLocationDepartmentCommand
 {
-    [Required(ErrorMessage = "Location ID is required")]
-    public string LocationId { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "Department ID is required")]
+    [Required]
     public string DepartmentId { get; set; } = string.Empty;
+
+    [Required]
+    public string UnitId { get; set; } = string.Empty;
+
+    [Required]
+    public string ComplexId { get; set; } = string.Empty;
 }

@@ -1,4 +1,4 @@
-namespace NZ.HRM.Application.Departments.Queries.GetDepartmentsByLocation;
+namespace NZ.HRM.Application.Departments.Queries.GetDepartmentsByComplexUnit;
 
 public class GetDepartmentsByComplexUnitQuery
 {

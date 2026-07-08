@@ -33,6 +33,9 @@ namespace NZ.HRM.Infrastructure.DependencyInjection
             services.AddScoped<IDivisionRepository, DivisionRepository>();
             services.AddScoped<IDistrictRepository, DistrictRepository>();
             services.AddScoped<IThanaRepository, ThanaRepository>();
+            services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<IGroupComplexRepository, GroupComplexRepository>();
+            services.AddScoped<IGroupComplexRepository, GroupComplexRepository>();
             services.AddScoped<IMedicalFitnessCheckRepository, MedicalFitnessCheckRepository>();
             services.AddScoped<IPhysicalExaminationSettingRepository, PhysicalExaminationSettingRepository>();
             services.AddScoped<IRawPunchRepository, RawPunchRepository>();

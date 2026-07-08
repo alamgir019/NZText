@@ -11,4 +11,5 @@ public class LoginUserDto
     public List<string>? PermissionNames { get; set; }
     public List<string>? RoleNames { get; set; }
     public List<string>? ModuleNames { get; set; }
+    public string? ComplexId { get; internal set; }
 }

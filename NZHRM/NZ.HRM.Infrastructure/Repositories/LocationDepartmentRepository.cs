@@ -31,7 +31,7 @@ public class ComplexUnitDepartmentRepository : IComplexUnitDepartmentRepository
             query = query.Where(ld => ld.UnitId == unitId);
 
         return await query
-            .OrderBy(ld => ld.Complex != null ? ld.Complex.GroupName : string.Empty)
+            .OrderBy(ld => ld.Complex != null ? ld.Complex.ComplexName : string.Empty)
             .ThenBy(ld => ld.Unit != null ? ld.Unit.UnitName : string.Empty)
             .ThenBy(ld => ld.Department != null ? ld.Department.DepartmentName : string.Empty)
             .ToListAsync(cancellationToken);
@@ -57,7 +57,7 @@ public class ComplexUnitDepartmentRepository : IComplexUnitDepartmentRepository
     {
         return await _context.MstDepartmentUnitComplexes
             .Where(ld => ld.DepartmentId == departmentId)
-            .Select(ld => ld.Complex != null ? ld.Complex.GroupName : null)
+            .Select(ld => ld.Complex != null ? ld.Complex.ComplexName : null)
             .FirstOrDefaultAsync(cancellationToken);
     }
 

@@ -43,30 +43,8 @@ public static class EmployeeMapper
             //PresentDivision = command.PresentDivision,
             IsActive = true
         };
-    }
-    public static HrmEmployeeMaster CreateCompleteEmployeeCommandToMaster(CreateCompleteEmployeeCommand command)
-    {
-        return new HrmEmployeeMaster
-        {
-            EmployeeCode = command.EmployeeCode,
-            EmployeeName = command.EmployeeNameEnglish,
-            EmployeeNameBangla = command.EmployeeNameBangla ?? string.Empty,
-            //CompanyId = command.CompanyId,
-            //DepartmentId = command.DepartmentId,
-            //SectionId = command.SectionId,
-            //GradeId = command.GradeId,
-            //DesignationId = command.DesignationId,
-            //EmployeeType = command.EmployeeType,
-            //ShiftId = command.ShiftId,
-            //EmployeeNatureId = command.EmployeeNatureId,
-            //Holiday = command.Holiday,
-            //ProposedMonthlySalary = command.ProposedMonthlySalary,
-            //JoiningDate = command.JoiningDate,
-            //ConfirmationDate = command.ConfirmationDate,
-            //Status = EmployeeStatus.Draft,
-            IsActive = true
-        };
-    }
+    }    
+
     public static EmployeeDetailDto MapToEmployeeDetailDto(this HrmEmployeeMaster employee)
     {
         return new EmployeeDetailDto
@@ -124,6 +102,9 @@ public static class EmployeeMapper
             JoiningDate = baseDto.JoiningDate,
             EmployeeType = baseDto.EmployeeType,
             FatherName = employee.Personal?.FatherName,
+            FatherNameBangla = employee.Personal?.FatherNameBangla,
+            MotherName = employee.Personal?.MotherName,
+            MotherNameBangla = employee.Personal?.MotherNameBangla,
             DateOfBirth = employee.Personal?.DateOfBirth,
             Religion = employee.Personal?.Religion,
             NomineeName = employee.Nominees.FirstOrDefault()?.NomineeName,
@@ -132,7 +113,6 @@ public static class EmployeeMapper
             ApprovedByDirector = null,
             Department = employee.Employment?.Department?.DepartmentName,
             WeekOffDay = employee.Employment?.WeeklyOffDay,
-            PayBasis = employee.Payroll?.OtherAllowance,
             ProbationPeriod = null,
             ReportingTo = employee.Reportings.FirstOrDefault()?.ReportingEmployee?.EmployeeName,
             Documents = employee.Documents?.Select(d => new EmployeeDocumentDto

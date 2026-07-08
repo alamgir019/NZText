@@ -12,7 +12,5 @@ public class CreateUnitCommand
     [MaxLength(100, ErrorMessage = "Unit name must not exceed 100 characters")]
     public string UnitName { get; set; } = string.Empty;
 
-    // Location association is handled via UnitLocation mapping entity
-
     public bool IsCompliant { get; set; } = false;
 }

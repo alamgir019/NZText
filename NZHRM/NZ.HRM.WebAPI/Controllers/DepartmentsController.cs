@@ -4,7 +4,7 @@ using NZ.HRM.Application.Departments.Commands.DeleteDepartment;
 using NZ.HRM.Application.Departments.Commands.UpdateDepartment;
 using NZ.HRM.Application.Departments.Handlers;
 using NZ.HRM.Application.Departments.Queries.GetAllDepartments;
-using NZ.HRM.Application.Departments.Queries.GetDepartmentsByLocation;
+using NZ.HRM.Application.Departments.Queries.GetDepartmentsByComplexUnit;
 using NZ.HRM.Application.Departments.Queries.GetDepartmentById;
 using NZ.HRM.Application.ComplexUnitDepartments.Queries.GetAllComplexUnitDepartments;
 

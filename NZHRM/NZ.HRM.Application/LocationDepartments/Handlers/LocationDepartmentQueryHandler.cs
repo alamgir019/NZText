@@ -1,63 +1,48 @@
-using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Application.LocationDepartments.Queries.GetAllLocationDepartments;
 using NZ.HRM.Application.LocationDepartments.Queries.GetLocationDepartmentById;
+using NZ.HRM.Application.Interfaces.Repositories;
+using System.Linq;
 
 namespace NZ.HRM.Application.LocationDepartments.Handlers;
 
-public class LocationDepartmentQueryHandler     
+public class LocationDepartmentQueryHandler
 {
-    //private readonly ILocationDepartmentRepository _locationDepartmentRepository;
+    private readonly IComplexUnitDepartmentRepository _locationRepo;
 
-    public LocationDepartmentQueryHandler(
-        //ILocationDepartmentRepository locationDepartmentRepository
-        )
+    public LocationDepartmentQueryHandler(IComplexUnitDepartmentRepository locationRepo)
     {
-        //_locationDepartmentRepository = locationDepartmentRepository;
+        _locationRepo = locationRepo;
     }
 
     public async Task<List<LocationDepartmentDto>> Handle(GetAllLocationDepartmentsQuery query, CancellationToken cancellationToken = default)
     {
-        //var mappings = await _locationDepartmentRepository.GetAllAsync(
-        //    query.IncludeInactive,
-        //    query.LocationId,
-        //    query.DepartmentId,
-        //    cancellationToken);
-
-        //return mappings.Select(m => new LocationDepartmentDto
-        //{
-        //    Id = m.Id,
-        //    //LocationId = m.LocationId,
-        //    //LocationName = m.Location?.LocationName ?? string.Empty,
-        //    DepartmentId = m.DepartmentId,
-        //    DepartmentName = m.Department?.DepartmentName ?? string.Empty,
-        //    CreatedOn = m.CreatedOn,
-        //    CreatedBy = m.CreatedBy,
-        //    UpdatedOn = m.UpdatedOn,
-        //    UpdatedBy = m.UpdatedBy,
-        //    IsActive = m.IsActive
-        //}).ToList();
-        return new List<LocationDepartmentDto>();
+        var list = await _locationRepo.GetAllAsync(query.IncludeInactive, query.ComplexId, query.UnitId, cancellationToken);
+            return list.Select(m => new LocationDepartmentDto
+        {
+            Id = m.Id,
+            ComplexId = m.ComplexId,
+            ComplexName = m.Complex?.ComplexName ?? string.Empty,
+            UnitId = m.UnitId,
+            UnitName = m.Unit?.UnitName ?? string.Empty,
+            DepartmentId = m.DepartmentId,
+            DepartmentName = m.Department?.DepartmentName ?? string.Empty
+        }).ToList();
     }
 
     public async Task<LocationDepartmentDetailDto?> Handle(GetLocationDepartmentByIdQuery query, CancellationToken cancellationToken = default)
     {
-        //var mapping = await _locationDepartmentRepository.GetByIdAsync(query.Id, cancellationToken);
-        //if (mapping == null)
-        //    return null;
-
-        //return new LocationDepartmentDetailDto
-        //{
-        //    Id = mapping.Id,
-        //    //LocationId = mapping.LocationId,
-        //    //LocationName = mapping.Location?.LocationName ?? string.Empty,
-        //    DepartmentId = mapping.DepartmentId,
-        //    DepartmentName = mapping.Department?.DepartmentName ?? string.Empty,
-        //    CreatedOn = mapping.CreatedOn,
-        //    CreatedBy = mapping.CreatedBy,
-        //    UpdatedOn = mapping.UpdatedOn,
-        //    UpdatedBy = mapping.UpdatedBy,
-        //    IsActive = mapping.IsActive
-        //};
-        return null;
+        var m = await _locationRepo.GetByIdAsync(query.Id, cancellationToken);
+        if (m == null) return null;
+        return new LocationDepartmentDetailDto
+        {
+            Id = m.Id,
+            ComplexId = m.ComplexId,
+            ComplexName = m.Complex?.ComplexName ?? string.Empty,
+            UnitId = m.UnitId,
+            UnitName = m.Unit?.UnitName ?? string.Empty,
+            DepartmentId = m.DepartmentId,
+            DepartmentName = m.Department?.DepartmentName ?? string.Empty,
+            IsActive = m.IsActive
+        };
     }
 }

@@ -10,6 +10,7 @@ namespace NZ.HRM.Infrastructure.Persistence
 
         // Master
         public DbSet<MstGroup> MstGroups => Set<MstGroup>();
+        public DbSet<MstGroupComplex> MstGroupComplexes => Set<MstGroupComplex>();
         public DbSet<MstUnit> MstUnits => Set<MstUnit>();
         public DbSet<MstSubunit> MstSubunits => Set<MstSubunit>();
         public DbSet<MstDepartment> MstDepartments => Set<MstDepartment>();
@@ -28,6 +29,7 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<LookThana> Thanas => Set<LookThana>();
         public DbSet<LookEmployeeNature> EmployeeNatures => Set<LookEmployeeNature>();
         public DbSet<LookBanking> Banks => Set<LookBanking>();
+        public DbSet<LookKeyValue> LookupKeyValues => Set<LookKeyValue>();
 
         // HRM
         public DbSet<HrmEmployeeVerification> HrmEmployeeVerifications => Set<HrmEmployeeVerification>();
@@ -39,7 +41,6 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<HrmEmployeeEmployment> HrmEmployeeEmployments => Set<HrmEmployeeEmployment>();
         public DbSet<HrmEmployeePayroll> HrmEmployeePayrolls => Set<HrmEmployeePayroll>();
         public DbSet<HrmEmployeeDocument> HrmEmployeeDocuments => Set<HrmEmployeeDocument>();
-        public DbSet<Domain.Entities.LookKeyValue> LookupKeyValues => Set<Domain.Entities.LookKeyValue>();
         public DbSet<HrmEmployeeNominee> HrmEmployeeNominees => Set<HrmEmployeeNominee>();
         public DbSet<HrmEmployeeEducation> HrmEmployeeEducations => Set<HrmEmployeeEducation>();
         public DbSet<HrmEmployeeExperience> HrmEmployeeExperiences => Set<HrmEmployeeExperience>();
@@ -173,7 +174,7 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<MstEmployeeCategory>().ToTable("mst_employee_category", "master");
             modelBuilder.Entity<MstPayrollProcessingGroup>().ToTable("payroll_processing_group", "master");
             modelBuilder.Entity<MstDepartmentUnitComplex>().ToTable("mst_department_unit_complex", "master");
-            //modelBuilder.Entity<MstDepartmentSection>().ToTable("mst_department_section", "master");
+            modelBuilder.Entity<MstGroupComplex>().ToTable("mst_group_complex", "master");
 
             // HRM
             modelBuilder.Entity<HrmEmployeeMaster>().ToTable("employee_master", "hrm");

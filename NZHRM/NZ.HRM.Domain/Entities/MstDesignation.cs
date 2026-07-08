@@ -11,10 +11,7 @@ namespace NZ.HRM.Domain.Entities
     {
         public string DesignationCode { get; set; } = string.Empty;
         public string DesignationName { get; set; } = string.Empty;
-        public string GradeId { get; set; } = string.Empty;
+        public string? DesignationNameBangla { get; set; }
         public bool OtEligible { get; set; }
-
-        [ForeignKey("GradeId")]
-        public MstGrade? Grade { get; set; }
     }
 }

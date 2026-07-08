@@ -59,6 +59,7 @@ public class UserCommandHandler
             UserName = user.UserName,
             EmployeeId = user.EmployeeId,
             UnitId = user.EmployeeMaster?.Employment?.UnitId,
+            ComplexId = user.EmployeeMaster?.Employment?.Unit?.ComplexId,
             PermissionNames = user.UserRoles.SelectMany(ur => ur.Role.RolePermissions).Select(rp => rp.Permission.PermissionName).ToList(),
             RoleNames = user.UserRoles.Select(ur => ur.Role.RoleName).ToList(),
             ModuleNames = user.UserRoles.SelectMany(ur => ur.Role.RolePermissions).Select(rp => rp.Permission.ModuleName).ToList()

@@ -15,6 +15,5 @@ namespace NZ.HRM.Domain.Entities
         public string GradeName { get; set; } = string.Empty;
         public decimal MinimumSalary { get; set; }
         public decimal MaximumSalary { get; set; }
-        public ICollection<MstDesignation> Designations { get; set; } = new HashSet<MstDesignation>();
     }
 }

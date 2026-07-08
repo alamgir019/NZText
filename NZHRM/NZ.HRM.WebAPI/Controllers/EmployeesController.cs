@@ -31,7 +31,7 @@ public class EmployeesController : ControllerBase
         _employeeQueryHandler = employeeQueryHandler;
     }
 
-    [HttpGet("it-detail/{employeeId}")]
+    [HttpGet("employee-detail/{employeeId}")]
     [ProducesResponseType(typeof(EmployeeDetailForIT), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetEmployeeDetailForIT(string employeeId)
@@ -78,7 +78,6 @@ public class EmployeesController : ControllerBase
         }
     }
 
-
     /// <summary>
     /// Get complete employee information (master + personal)
     /// </summary>
@@ -95,7 +94,6 @@ public class EmployeesController : ControllerBase
 
         return Ok(employee);
     }
-
 
 
     [HttpGet("search")]
@@ -145,21 +143,6 @@ public class EmployeesController : ControllerBase
 
         var employees = await _getCompleteEmployeeHandler.Handle(query, cancellationToken: default);
         return Ok(employees);
-    }
-
-    /// <summary>
-    /// Generate a new enrollment id in format {ddMMyy}{NNN}
-    /// </summary>
-    [HttpGet("enrollment-id")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetEnrollmentId()
-    {
-        var query = new Application.EmployeeMasters.Queries.GetEnrollmentId.GetEnrollmentIdQuery
-        {
-            Today = DateTime.UtcNow
-        };
-        var enrollmentId = await _getEnrollmentIdHandler.Handle(query, cancellationToken: default);
-        return Ok(new { enrollmentId });
     }
 
     [HttpPost("hr-executive-entry")]

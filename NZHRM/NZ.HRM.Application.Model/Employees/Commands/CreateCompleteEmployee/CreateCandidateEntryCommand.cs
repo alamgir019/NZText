@@ -5,11 +5,6 @@ namespace NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
 
 public class CreateCandidateEntryCommand
 {
-    // Basic Employment Information
-    [Required(ErrorMessage = "Employee enrollment ID is required")]
-    [MaxLength(50, ErrorMessage = "Employee enrollment ID must not exceed 50 characters")]
-    public string EmployeeEnrollmentId { get; set; } = string.Empty;
-
     [MaxLength(100, ErrorMessage = "Employee name (Bangla) must not exceed 100 characters")]
     public string? EmployeeNameBangla { get; set; }
 
@@ -52,8 +47,6 @@ public class CreateCandidateEntryCommand
     public BloodGroup? BloodGroup { get; set; }
     public IDType IDType { get; set; }
     public string? IDNumber { get; set; } = string.Empty;
-
-
 
     [Required(ErrorMessage = "Mobile number is required")]
     [MaxLength(20, ErrorMessage = "Mobile number must not exceed 20 characters")]

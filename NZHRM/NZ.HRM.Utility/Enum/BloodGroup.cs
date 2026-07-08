@@ -19,6 +19,8 @@ namespace NZ.HRM.Utility.Enum
         [EnumMember(Value = "AB+")]
         ABPositive,   // AB+
         [EnumMember(Value = "AB-")]
-        ABNegative    // AB-
+        ABNegative,    // AB-
+        [EnumMember(Value = "Other")]
+        Other    // Other
     }
 }

@@ -1,76 +1,81 @@
-using NZ.HRM.Application.Interfaces.Repositories;
-using NZ.HRM.Application.Interface;
 using NZ.HRM.Application.LocationDepartments.Commands.CreateLocationDepartment;
 using NZ.HRM.Application.LocationDepartments.Commands.DeleteLocationDepartment;
 using NZ.HRM.Application.LocationDepartments.Commands.UpdateLocationDepartment;
+using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Domain.Entities;
 
 namespace NZ.HRM.Application.LocationDepartments.Handlers;
 
 public class LocationDepartmentCommandHandler
 {
-    //private readonly ILocationDepartmentRepository _locationDepartmentRepository;
-    private readonly ISubUnitRepository _locationRepository;
+    private readonly IComplexUnitDepartmentRepository _locationRepo;
     private readonly IDepartmentRepository _departmentRepository;
+    private readonly IUnitRepository _unitRepository;
+    private readonly IGroupComplexRepository _complexRepository;
 
     public LocationDepartmentCommandHandler(
-        //ILocationDepartmentRepository locationDepartmentRepository,
-        ISubUnitRepository locationRepository,
-        IDepartmentRepository departmentRepository)
+        IComplexUnitDepartmentRepository locationRepo,
+        IDepartmentRepository departmentRepository,
+        IUnitRepository unitRepository,
+        IGroupComplexRepository complexRepository)
     {
-        //_locationDepartmentRepository = locationDepartmentRepository;
-        _locationRepository = locationRepository;
+        _locationRepo = locationRepo;
         _departmentRepository = departmentRepository;
+        _unitRepository = unitRepository;
+        _complexRepository = complexRepository;
     }
 
     public async Task<string> Handle(CreateLocationDepartmentCommand command, CancellationToken cancellationToken = default)
     {
-        var location = await _locationRepository.FindByIdAsync(command.LocationId);
-        if (location == null)
-            throw new KeyNotFoundException($"Location with ID {command.LocationId} not found");
+        // validate department, unit, complex
+        var dept = await _departmentRepository.ExistsAsync(command.DepartmentId, cancellationToken);
+        if (!dept) throw new KeyNotFoundException($"Department with ID {command.DepartmentId} not found");
 
-        var departmentExists = await _departmentRepository.ExistsAsync(command.DepartmentId, cancellationToken);
-        if (!departmentExists)
-            throw new KeyNotFoundException($"Department with ID {command.DepartmentId} not found");
+        var unit = await _unitRepository.ExistsAsync(command.UnitId, cancellationToken);
+        if (!unit) throw new KeyNotFoundException($"Unit with ID {command.UnitId} not found");
 
-        //var mapping = new LocationDepartment
-        //{
-        //    LocationId = command.LocationId,
-        //    DepartmentId = command.DepartmentId,
-        //    IsActive = true
-        //};
+        var complex = await _complexRepository.ExistsAsync(command.ComplexId, cancellationToken);
+        if (!complex) throw new KeyNotFoundException($"Complex with ID {command.ComplexId} not found");
 
-        //return await _locationDepartmentRepository.AddAsync(mapping, cancellationToken);
-        return string.Empty;
+        var mapping = new MstDepartmentUnitComplex
+        {
+            DepartmentId = command.DepartmentId,
+            UnitId = command.UnitId,
+            ComplexId = command.ComplexId,
+            IsActive = true
+        };
+
+        return await _locationRepo.AddAsync(mapping, cancellationToken);
     }
 
     public async Task Handle(UpdateLocationDepartmentCommand command, CancellationToken cancellationToken = default)
     {
-        //var mapping = await _locationDepartmentRepository.GetByIdAsync(command.Id, cancellationToken);
-        //if (mapping == null)
-        //    throw new KeyNotFoundException($"LocationDepartment with ID {command.Id} not found");
+        var mapping = await _locationRepo.GetByIdAsync(command.Id, cancellationToken);
+        if (mapping == null) throw new KeyNotFoundException($"Mapping with ID {command.Id} not found");
 
-        //var location = await _locationRepository.FindByIdAsync(command.LocationId);
-        //if (location == null)
-        //    throw new KeyNotFoundException($"Location with ID {command.LocationId} not found");
+        var dept = await _departmentRepository.ExistsAsync(command.DepartmentId, cancellationToken);
+        if (!dept) throw new KeyNotFoundException($"Department with ID {command.DepartmentId} not found");
 
-        //var departmentExists = await _departmentRepository.ExistsAsync(command.DepartmentId, cancellationToken);
-        //if (!departmentExists)
-        //    throw new KeyNotFoundException($"Department with ID {command.DepartmentId} not found");
+        var unit = await _unitRepository.ExistsAsync(command.UnitId, cancellationToken);
+        if (!unit) throw new KeyNotFoundException($"Unit with ID {command.UnitId} not found");
 
-        ////mapping.LocationId = command.LocationId;
-        //mapping.DepartmentId = command.DepartmentId;
+        var complex = await _complexRepository.ExistsAsync(command.ComplexId, cancellationToken);
+        if (!complex) throw new KeyNotFoundException($"Complex with ID {command.ComplexId} not found");
 
-        //await _locationDepartmentRepository.UpdateAsync(mapping, cancellationToken);
+        mapping.DepartmentId = command.DepartmentId;
+        mapping.UnitId = command.UnitId;
+        mapping.ComplexId = command.ComplexId;
+
+        await _locationRepo.UpdateAsync(mapping, cancellationToken);
     }
 
     public async Task Handle(DeleteLocationDepartmentCommand command, CancellationToken cancellationToken = default)
     {
-        //var mapping = await _locationDepartmentRepository.GetByIdAsync(command.Id, cancellationToken);
-        //if (mapping == null)
-        //    throw new KeyNotFoundException($"LocationDepartment with ID {command.Id} not found");
+        var mapping = await _locationRepo.GetByIdAsync(command.Id, cancellationToken);
+        if (mapping == null) throw new KeyNotFoundException($"Mapping with ID {command.Id} not found");
 
-        //mapping.IsActive = false;
-        //await _locationDepartmentRepository.UpdateAsync(mapping, cancellationToken);
+        // soft delete
+        mapping.IsActive = false;
+        await _locationRepo.UpdateAsync(mapping, cancellationToken);
     }
 }

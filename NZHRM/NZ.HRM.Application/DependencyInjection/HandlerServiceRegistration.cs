@@ -1,6 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using NZ.HRM.Application.Companies.Handlers;
-using NZ.HRM.Application.CompanyLocations.Handlers;
 using NZ.HRM.Application.LocationDepartments.Handlers;
 using NZ.HRM.Application.SubUnits.Handlers;
 using NZ.HRM.Application.Departments.Handlers;
@@ -22,10 +21,10 @@ using NZ.HRM.Application.FinancialDetails.Handlers;
 using NZ.HRM.Application.PhysicalExaminationSettings.Handlers;
 using NZ.HRM.Application.RawPunches.Handlers;
 using NZ.HRM.Application.Thanas.Handlers;
+using NZ.HRM.Application.GroupComplexes.Handlers;
 using NZ.HRM.Application.Units.Handlers;
 using NZ.HRM.Application.RolePermissions.Handlers;
 using NZ.HRM.Application.Permissions.Handlers;
-using NZ.HRM.Application.UserRoles.Handlers;
 using NZ.HRM.Application.UserRoles.Handlers;
 
 namespace NZ.HRM.Application.DependencyInjection
@@ -49,10 +48,6 @@ namespace NZ.HRM.Application.DependencyInjection
             services.AddScoped<UnitsCommandHandler>();
             // Register Query Handlers
             services.AddScoped<UnitsQueryHandler>();
-
-            // Register CompanyLocation Handlers
-            services.AddScoped<CompanyLocationCommandHandler>();
-            services.AddScoped<CompanyLocationQueryHandler>();
 
             // Register LocationDepartment Handlers
             services.AddScoped<LocationDepartmentCommandHandler>();
@@ -108,6 +103,9 @@ namespace NZ.HRM.Application.DependencyInjection
             services.AddScoped<DivisionQueryHandler>();
             services.AddScoped<DistrictQueryHandler>();
             services.AddScoped<ThanaQueryHandler>();
+            // GroupComplex handlers
+            services.AddScoped<GroupComplexQueryHandler>();
+            services.AddScoped<GroupComplexCommandHandler>();
             // Command handlers for Geo
             services.AddScoped<DivisionCommandHandler>();
             services.AddScoped<DistrictCommandHandler>();
