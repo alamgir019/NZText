@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using NZ.HRM.Application.EmployeeMasters.Handlers;
 using NZ.HRM.Application.Employees.Handlers;
 using NZ.HRM.Application.Employees.Queries.GetEmployeeConfirmationDate;
@@ -281,7 +282,7 @@ public class EmployeesController : ControllerBase
                 Directory.CreateDirectory(_targetFolder);
 
             // 3. Generate safe unique file path
-            var uploadedFiles = new List<string>();
+            var uploadedFiles = new List<Tuple<string, string>>();
             foreach (var file in files)
             {
                 var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
@@ -293,7 +294,7 @@ public class EmployeesController : ControllerBase
                     await file.CopyToAsync(stream);
                 }
 
-                uploadedFiles.Add(uniqueFileName);
+                uploadedFiles.Add(Tuple.Create(uniqueFileName, filePath));
             }
 
             return Ok(new { message = "Upload successful", fileNames = uploadedFiles });
@@ -337,5 +338,38 @@ public class EmployeesController : ControllerBase
             totalFiles = files.Count,
             files
         });
+    }
+
+
+
+    /// <summary>
+    /// Return an image file given a full file system path.
+    /// Example: GET /api/EmployeeMasters/image?path=C:\images\photo.jpg
+    /// </summary>
+    [HttpGet("image")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetImage([FromQuery] string path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return BadRequest(new { message = "Path is required" });
+
+        if (!System.IO.File.Exists(path))
+            return NotFound(new { message = $"File not found: {path}" });
+
+        try
+        {       
+            var provider = new FileExtensionContentTypeProvider();
+            if (!provider.TryGetContentType(path, out var contentType))
+                contentType = "application/octet-stream";
+
+            var bytes = await System.IO.File.ReadAllBytesAsync(path);
+            return File(bytes, contentType);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 }

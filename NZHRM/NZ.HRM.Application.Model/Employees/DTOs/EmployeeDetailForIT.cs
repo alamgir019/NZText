@@ -19,4 +19,12 @@ public class EmployeeDetailForIT : EmployeeDetailDto
     public string? FatherNameBangla { get; set; }
     public string? MotherName { get; set; }
     public string? MotherNameBangla { get; set; }
+    public string? UnitId { get; set; }
+    public string? SubUnitId { get; set; }
+    public string? DepartmentId { get; set; }
+    public string? SectionId { get; set; }
+    public string? CellId { get; set; }
+    public string? GradeId { get; set; }
+    public string? DesignationId { get; set; }
+    public string? ShiftId { get; set; }
 }
