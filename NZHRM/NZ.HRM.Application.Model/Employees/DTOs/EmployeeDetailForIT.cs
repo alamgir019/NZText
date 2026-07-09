@@ -13,7 +13,7 @@ public class EmployeeDetailForIT : EmployeeDetailDto
     public bool? ApprovedByDirector { get; set; }
     public string? Department { get; set; }
     public string? WeekOffDay { get; set; }
-    public string? ProbationPeriod { get; set; }
+    public decimal? ProbationPeriod { get; set; }
     public string? ReportingTo { get; set; }
     public EmployeeDocumentDto[]? Documents { get; set; }
     public string? FatherNameBangla { get; set; }

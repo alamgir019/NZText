@@ -67,6 +67,7 @@ public class EmployeeCommandHandler
         // Use the provided date (caller should pass UTC DateTime)
         var today = DateTime.UtcNow;
         var next = await _employeeMasterRepository.GetNextEnrollmentIdAsync(today, cancellationToken: cancellationToken);
+ 
         // Create EmployeeMaster
         var employeeMaster = new HrmEmployeeMaster
         {
@@ -91,6 +92,7 @@ public class EmployeeCommandHandler
             GuardianNameBangla = command.GuardianNameBangla,
             MotherNameBangla = command.MotherNameBangla,
             FatherNameBangla = command.FatherNameBangla,
+            MobileNumber = command.MobileNumber,
             EmployeeReference = command.EmployeeReference,
             ReferenceType = command.ReferenceType?.ToString(),
             ReferencePersonId = command.ReferencePersonId,
@@ -105,7 +107,7 @@ public class EmployeeCommandHandler
             PresentPostOffice = command.PresentPostOffice,
             PresentThanaId = command.PresentThanaId,
             PresentDistrictId = command.PresentDistrictId,
-            PresentDivisionId = command.PresentDivisionId,
+            PresentDivisionId = command.PresentDivisionId,            
             IsActive = true
         };
 
@@ -152,9 +154,8 @@ public class EmployeeCommandHandler
         employeeMaster.EmployeeName = command.EmployeeName ?? string.Empty;
         employeeMaster.EmployeeType = command.EmployeeType.ToString();
         employeeMaster.Status = EmployeeStatus.HRExecutive.ToString();
-
+        
         await _employeeMasterRepository.UpdateAsync(employeeMaster, cancellationToken);
-
         // Validate related entities exist
         await ValidateRelatedEntities(command.UnitId, command.DepartmentId, command.SectionId, command.ShiftId, command.EmployeeNatureId, cancellationToken);
 
@@ -219,6 +220,7 @@ public class EmployeeCommandHandler
                 GuardianNameBangla = command.GuardianNameBangla,
                 MotherNameBangla = command.MotherNameBangla,
                 FatherNameBangla = command.FatherNameBangla,
+                MobileNumber = command.MobileNumber,
                 EmployeeReference = command.EmployeeReference,
                 ReferenceType = command.ReferenceType?.ToString(),
                 ReferencePersonId = command.ReferencePersonId,
@@ -253,6 +255,7 @@ public class EmployeeCommandHandler
             personal.FatherNameBangla = command.FatherNameBangla;
             personal.MotherName = command.MotherName;
             personal.FatherName = command.FatherName;
+            personal.MobileNumber = command.MobileNumber;
             personal.EmployeeReference = command.EmployeeReference;
             personal.ReferenceType = command.ReferenceType?.ToString();
             personal.ReferencePersonId = command.ReferencePersonId;
@@ -351,7 +354,6 @@ public class EmployeeCommandHandler
 
         return command.EmployeeId;
     }
-
 
     public async Task<string> Handle(CreateBiometricCommand command, CancellationToken cancellationToken = default)
     {

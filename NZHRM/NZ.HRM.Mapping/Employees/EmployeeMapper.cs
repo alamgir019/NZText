@@ -54,9 +54,9 @@ public static class EmployeeMapper
             EmployeeCode = employee.EmployeeCode,
             EmployeeNameEnglish = employee.EmployeeName,
             EmployeeNameBangla = employee.EmployeeNameBangla,
-            Gender = employee.Personal?.Gender != null && Enum.TryParse<Utility.Enum.Gender>(employee.Personal.Gender, out var gender)
+            Gender = employee.Personal?.Gender != null && Enum.TryParse<Gender>(employee.Personal.Gender, out var gender)
             ? gender : null,
-            BloodGroup = employee.Personal?.BloodGroup != null && Enum.TryParse<Utility.Enum.BloodGroup>(employee.Personal.BloodGroup, out var bloodGroup)
+            BloodGroup = employee.Personal?.BloodGroup != null && Enum.TryParse<BloodGroup>(employee.Personal.BloodGroup, out var bloodGroup)
             ? bloodGroup : null,
             JoiningDate = employee.Employment?.JoiningDate,
             EmployeeType = employee.EmployeeType != null && Enum.TryParse<EmployeeType>(employee.EmployeeType, out var employeeType)
@@ -117,11 +117,11 @@ public static class EmployeeMapper
             Religion = employee.Personal?.Religion,
             NomineeName = employee.Nominees.FirstOrDefault()?.NomineeName,
             NomineeRelation = employee.Nominees.FirstOrDefault()?.Relationship,
-            Mobile = employee.Contact?.MobileNo,
+            Mobile = employee.Personal?.MobileNumber,
             ApprovedByDirector = null,
             Department = employee.Employment?.Department?.DepartmentName,
             WeekOffDay = employee.Employment?.WeeklyOffDay,
-            ProbationPeriod = null,
+            ProbationPeriod = employee.Employment?.ProbationPeriod,
             ReportingTo = employee.Reportings.FirstOrDefault()?.ReportingEmployee?.EmployeeName,
             Documents = employee.Documents?.Select(d => new EmployeeDocumentDto
             {

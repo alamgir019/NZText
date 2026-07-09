@@ -1,12 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using NZ.HRM.Application.EmployeeMasters.Handlers;
 using NZ.HRM.Application.Employees.Handlers;
-using NZ.HRM.Application.Employees.Queries.GetEmployeeConfirmationDate;
-using NZ.HRM.Application.Employees.Queries.GetEmployeeDetail;
-using NZ.HRM.Application.Employees.Queries.GetEmployeesByStatus;
-using NZ.HRM.Application.Employees.Queries.SearchEmployees;
-using NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
-using NZ.HRM.Application.Model.Employees.DTOs;
 
 namespace NZ.HRM.WebAPI.Controllers;
 

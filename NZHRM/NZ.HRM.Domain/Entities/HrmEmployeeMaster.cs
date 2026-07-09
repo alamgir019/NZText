@@ -18,7 +18,6 @@ namespace NZ.HRM.Domain.Entities
 
         // One-to-one related sections
         public HrmEmployeePersonal? Personal { get; set; }
-        public HrmEmployeeContact? Contact { get; set; }
         public HrmEmployeeEmployment? Employment { get; set; }
         public HrmEmployeePayroll? Payroll { get; set; }
         public HrmEmployeeVerification? Verification { get; set; }

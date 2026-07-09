@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NZ.HRM.Domain.Common;
 using NZ.HRM.Domain.Entities;
 
 namespace NZ.HRM.Infrastructure.Persistence
@@ -37,7 +36,6 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<HrmPhysicalExaminationSetting> HrmPhysicalExaminationSettings => Set<HrmPhysicalExaminationSetting>();
         public DbSet<HrmEmployeeMaster> HrmEmployeeMasters => Set<HrmEmployeeMaster>();
         public DbSet<HrmEmployeePersonal> HrmEmployeePersonals => Set<HrmEmployeePersonal>();
-        public DbSet<HrmEmployeeContact> HrmEmployeeContacts => Set<HrmEmployeeContact>();
         public DbSet<HrmEmployeeEmployment> HrmEmployeeEmployments => Set<HrmEmployeeEmployment>();
         public DbSet<HrmEmployeePayroll> HrmEmployeePayrolls => Set<HrmEmployeePayroll>();
         public DbSet<HrmEmployeeDocument> HrmEmployeeDocuments => Set<HrmEmployeeDocument>();
@@ -181,7 +179,6 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<HrmEmployeePersonal>().ToTable("employee_personal", "hrm")
                 .Property(p => p.GuardianType).HasConversion<string>()
                 .HasMaxLength(50);
-            modelBuilder.Entity<HrmEmployeeContact>().ToTable("employee_contact", "hrm");
             modelBuilder.Entity<HrmEmployeeEmployment>().ToTable("employee_employment", "hrm");
             modelBuilder.Entity<HrmEmployeePayroll>().ToTable("employee_payroll", "hrm");
             modelBuilder.Entity<HrmEmployeeDocument>().ToTable("employee_document", "hrm");
@@ -202,12 +199,6 @@ namespace NZ.HRM.Infrastructure.Persistence
                 .HasOne(e => e.Personal)
                 .WithOne(p => p.Employee)
                 .HasForeignKey<HrmEmployeePersonal>(p => p.EmployeeId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<HrmEmployeeMaster>()
-                .HasOne(e => e.Contact)
-                .WithOne(c => c.Employee)
-                .HasForeignKey<HrmEmployeeContact>(c => c.EmployeeId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<HrmEmployeeMaster>()

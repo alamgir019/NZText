@@ -55,5 +55,6 @@ namespace NZ.HRM.Domain.Entities
         public LookDistrict? PresentDistrict { get; set; }
         [ForeignKey(nameof(PresentDivisionId))]
         public LookDivision? PresentDivision { get; set; }
+        public string? MobileNumber { get; set; }
     }
 }
