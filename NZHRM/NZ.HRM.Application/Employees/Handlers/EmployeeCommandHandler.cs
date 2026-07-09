@@ -150,14 +150,14 @@ public class EmployeeCommandHandler
             throw new KeyNotFoundException($"Employee with ID {command.EmployeeId} not found");
 
         employeeMaster.EmployeeCode = command.EmployeeCode;
-        employeeMaster.EmployeeNameBangla = command.EmployeeNameBangla ?? string.Empty;
+        //employeeMaster.EmployeeNameBangla = command.EmployeeNameBangla ?? string.Empty;
         employeeMaster.EmployeeName = command.EmployeeName ?? string.Empty;
-        employeeMaster.EmployeeType = command.EmployeeType.ToString();
+        employeeMaster.EmployeeType = command.EmployeeNatureId.ToString();
         employeeMaster.Status = EmployeeStatus.HRExecutive.ToString();
         
         await _employeeMasterRepository.UpdateAsync(employeeMaster, cancellationToken);
         // Validate related entities exist
-        await ValidateRelatedEntities(command.UnitId, command.DepartmentId, command.SectionId, command.ShiftId, command.EmployeeNatureId, cancellationToken);
+        await ValidateRelatedEntities(command.UnitId, command.DepartmentId, command.SectionId, command.ShiftId, null, cancellationToken);
 
         if (employeeMaster.Employment is null)
         {
@@ -174,7 +174,7 @@ public class EmployeeCommandHandler
                 GradeId = command.GradeId,
                 WeeklyOffDay = command.Holiday.ToString(),
                 EmployeeCategoryId = command.EmployeeTypeId,
-                EmployeeNatureId = command.EmployeeNatureId,
+                //EmployeeNatureId = command.EmployeeNatureId,
                 ProbationPeriod = command.ProbationPeriod,
                 ReportingTo = command.ReportingTo,
                 JoiningDate = command.JoiningDate,
@@ -197,7 +197,7 @@ public class EmployeeCommandHandler
             employeeMaster.Employment.GradeId = command.GradeId;
             employeeMaster.Employment.WeeklyOffDay = command.Holiday.ToString();
             employeeMaster.Employment.EmployeeCategoryId = command.EmployeeTypeId;
-            employeeMaster.Employment.EmployeeNatureId = command.EmployeeNatureId;
+            //employeeMaster.Employment.EmployeeNatureId = command.EmployeeNatureId;
             employeeMaster.Employment.ProbationPeriod = command.ProbationPeriod;
             employeeMaster.Employment.ReportingTo = command.ReportingTo;
             employeeMaster.Employment.JoiningDate = command.JoiningDate;
@@ -213,29 +213,29 @@ public class EmployeeCommandHandler
             var employeePersonal = new HrmEmployeePersonal
             {
                 EmployeeId = employeeMaster.Id,
-                DateOfBirth = command.DateOfBirth,
-                Gender = command.Gender.ToString(),
-                BloodGroup = command.BloodGroup?.ToString(),
-                GuardianType = command.GuardianType,
-                GuardianNameBangla = command.GuardianNameBangla,
-                MotherNameBangla = command.MotherNameBangla,
-                FatherNameBangla = command.FatherNameBangla,
+                //DateOfBirth = command.DateOfBirth,
+                //Gender = command.Gender.ToString(),
+                //BloodGroup = command.BloodGroup?.ToString(),
+                //GuardianType = command.GuardianType,
+                //GuardianNameBangla = command.GuardianNameBangla,
+                MotherName = command.MotherName,
+                FatherName = command.FatherName,
                 MobileNumber = command.MobileNumber,
-                EmployeeReference = command.EmployeeReference,
-                ReferenceType = command.ReferenceType?.ToString(),
-                ReferencePersonId = command.ReferencePersonId,
-                ReferenceMobileNumber = command.ReferenceMobileNumber,
-                Relationship = command.Relationship?.ToString(),
-                PermanentVillageAreaRoad = command.PermanentVillageAreaRoad,
-                PermanentPostOffice = command.PermanentPostOffice,
-                PermanentThanaId = command.PermanentThanaId,
-                PermanentDistrictId = command.PermanentDistrictId,
-                PermanentDivisionId = command.PermanentDivisionId,
-                PresentVillageAreaRoad = command.PresentVillageAreaRoad,
-                PresentPostOffice = command.PresentPostOffice,
-                PresentThanaId = command.PresentThanaId,
-                PresentDistrictId = command.PresentDistrictId,
-                PresentDivisionId = command.PresentDivisionId,
+                //EmployeeReference = command.EmployeeReference,
+                //ReferenceType = command.ReferenceType?.ToString(),
+                //ReferencePersonId = command.ReferencePersonId,
+                //ReferenceMobileNumber = command.ReferenceMobileNumber,
+                //Relationship = command.Relationship?.ToString(),
+                //PermanentVillageAreaRoad = command.PermanentVillageAreaRoad,
+                //PermanentPostOffice = command.PermanentPostOffice,
+                //PermanentThanaId = command.PermanentThanaId,
+                //PermanentDistrictId = command.PermanentDistrictId,
+                //PermanentDivisionId = command.PermanentDivisionId,
+                //PresentVillageAreaRoad = command.PresentVillageAreaRoad,
+                //PresentPostOffice = command.PresentPostOffice,
+                //PresentThanaId = command.PresentThanaId,
+                //PresentDistrictId = command.PresentDistrictId,
+                //PresentDivisionId = command.PresentDivisionId,
                 IsActive = true
             };
 
@@ -246,31 +246,31 @@ public class EmployeeCommandHandler
         {
             var personal = employeeMaster.Personal;
 
-            personal.DateOfBirth = command.DateOfBirth;
-            personal.Gender = command.Gender.ToString();
-            personal.BloodGroup = command.BloodGroup?.ToString();
-            personal.GuardianType = command.GuardianType;
-            personal.GuardianNameBangla = command.GuardianNameBangla;
-            personal.MotherNameBangla = command.MotherNameBangla;
-            personal.FatherNameBangla = command.FatherNameBangla;
+            //personal.DateOfBirth = command.DateOfBirth;
+            //personal.Gender = command.Gender.ToString();
+            //personal.BloodGroup = command.BloodGroup?.ToString();
+            //personal.GuardianType = command.GuardianType;
+            //personal.GuardianNameBangla = command.GuardianNameBangla;
+            //personal.MotherNameBangla = command.MotherNameBangla;
+            //personal.FatherNameBangla = command.FatherNameBangla;
             personal.MotherName = command.MotherName;
             personal.FatherName = command.FatherName;
             personal.MobileNumber = command.MobileNumber;
-            personal.EmployeeReference = command.EmployeeReference;
-            personal.ReferenceType = command.ReferenceType?.ToString();
-            personal.ReferencePersonId = command.ReferencePersonId;
-            personal.ReferenceMobileNumber = command.ReferenceMobileNumber;
-            personal.Relationship = command.Relationship?.ToString();
-            personal.PermanentVillageAreaRoad = command.PermanentVillageAreaRoad;
-            personal.PermanentPostOffice = command.PermanentPostOffice;
-            personal.PermanentThanaId = command.PermanentThanaId;
-            personal.PermanentDistrictId = command.PermanentDistrictId;
-            personal.PermanentDivisionId = command.PermanentDivisionId;
-            personal.PresentVillageAreaRoad = command.PresentVillageAreaRoad;
-            personal.PresentPostOffice = command.PresentPostOffice;
-            personal.PresentThanaId = command.PresentThanaId;
-            personal.PresentDistrictId = command.PresentDistrictId;
-            personal.PresentDivisionId = command.PresentDivisionId;
+            //personal.EmployeeReference = command.EmployeeReference;
+            //personal.ReferenceType = command.ReferenceType?.ToString();
+            //personal.ReferencePersonId = command.ReferencePersonId;
+            //personal.ReferenceMobileNumber = command.ReferenceMobileNumber;
+            //personal.Relationship = command.Relationship?.ToString();
+            //personal.PermanentVillageAreaRoad = command.PermanentVillageAreaRoad;
+            //personal.PermanentPostOffice = command.PermanentPostOffice;
+            //personal.PermanentThanaId = command.PermanentThanaId;
+            //personal.PermanentDistrictId = command.PermanentDistrictId;
+            //personal.PermanentDivisionId = command.PermanentDivisionId;
+            //personal.PresentVillageAreaRoad = command.PresentVillageAreaRoad;
+            //personal.PresentPostOffice = command.PresentPostOffice;
+            //personal.PresentThanaId = command.PresentThanaId;
+            //personal.PresentDistrictId = command.PresentDistrictId;
+            //personal.PresentDivisionId = command.PresentDivisionId;
             await _employeePersonalRepository.UpdateAsync(personal, cancellationToken);
         }
 

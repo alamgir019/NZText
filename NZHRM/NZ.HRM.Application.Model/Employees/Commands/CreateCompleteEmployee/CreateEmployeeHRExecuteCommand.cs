@@ -30,7 +30,7 @@ public class CreateEmployeeHRExecutiveCommand : CreateCandidateEntryCommand
     public string ShiftId { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Employee nature is required")]
-    public string? EmployeeNatureId { get; set; }
+    public EmployeeType EmployeeNatureId { get; set; }
 
     [Required(ErrorMessage = "Employee code is required")]
     public string EmployeeCode { get; set; } = string.Empty;
