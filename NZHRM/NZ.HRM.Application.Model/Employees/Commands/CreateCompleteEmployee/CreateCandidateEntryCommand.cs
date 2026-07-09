@@ -18,6 +18,7 @@ public class CreateCandidateEntryCommand
 
     //[Required(ErrorMessage = "Department ID is required")]
     public string? DepartmentId { get; set; } = string.Empty;
+    public string? DesignationId { get; set; }
 
     //[Required(ErrorMessage = "Location ID is required")]
     public string? LocationId { get; set; } = string.Empty;

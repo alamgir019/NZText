@@ -130,6 +130,7 @@ public class EmployeeCommandHandler
         {
             EmployeeId = employeeId,
             UnitId = command.UnitId,
+            DesignationId = command.DesignationId,
             JoiningDate = command.JoiningDate,
             IsActive = true
         };
