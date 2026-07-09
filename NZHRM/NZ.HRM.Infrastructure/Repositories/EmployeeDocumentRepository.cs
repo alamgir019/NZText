@@ -27,7 +27,7 @@ public class EmployeeDocumentRepository : IEmployeeDocumentRepository
         return await _context.HrmEmployeeDocuments
             .Include(ed => ed.Employee)
             .Where(ed => ed.EmployeeId == employeeId)
-            .OrderBy(ed => ed.SortOrder)
+            .OrderBy(ed => ed.CreatedOn)
             .ToListAsync(cancellationToken);
     }
 

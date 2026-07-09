@@ -350,11 +350,17 @@ public class EmployeesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetImage([FromQuery] string path)
+    public async Task<IActionResult> GetImage([FromQuery] string employeeId)
     {
-        if (string.IsNullOrWhiteSpace(path))
-            return BadRequest(new { message = "Path is required" });
+        if (string.IsNullOrWhiteSpace(employeeId))
+            return BadRequest(new { message = "Employee ID is required" });
 
+        var photoDocument = await _getCompleteEmployeeHandler.Handle(employeeId, cancellationToken: default);
+
+        if (photoDocument == null)
+            return NotFound(new { message = $"Employee with ID {employeeId} not found" });
+
+        string path = photoDocument.FilePath ?? string.Empty;
         if (!System.IO.File.Exists(path))
             return NotFound(new { message = $"File not found: {path}" });
 

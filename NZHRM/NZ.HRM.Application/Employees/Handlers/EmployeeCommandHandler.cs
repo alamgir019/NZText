@@ -362,7 +362,7 @@ public class EmployeeCommandHandler
         if (employeeMaster == null || employeeMaster.EnrollmentId != command.EmployeeEnrollmentId)
             throw new KeyNotFoundException($"Employee with ID {command.EmployeeId} not found");
 
-        employeeMaster.CardNo = command.CardNo;
+        //employeeMaster.CardNo = command.CardNo;
         employeeMaster.Status = EmployeeStatus.Biometric.ToString();
         await AddEmployeeDocument(command.Documents, employeeMaster, cancellationToken);
         

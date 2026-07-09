@@ -13,8 +13,8 @@ public class CreateBiometricCommand
     [MaxLength(50, ErrorMessage = "Employee enrollment ID must not exceed 50 characters")]
     public string EmployeeEnrollmentId { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Card number is required")]
-    public string CardNo { get; set; } = string.Empty;
+    //[Required(ErrorMessage = "Card number is required")]
+    //public string CardNo { get; set; } = string.Empty;
 
     public List<EmployeeDocumentDto>? Documents { get; set; }
 }

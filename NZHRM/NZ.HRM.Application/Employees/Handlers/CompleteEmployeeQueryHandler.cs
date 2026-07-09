@@ -4,6 +4,7 @@ using NZ.HRM.Application.Employees.Queries.GetEmployeesByStatus;
 using NZ.HRM.Application.Employees.Queries.SearchEmployees;
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Application.Model.Employees.DTOs;
+using NZ.HRM.Domain.Entities;
 using NZ.HRM.Mapping.Employees;
 using NZ.HRM.Utility.Enum;
 
@@ -12,10 +13,12 @@ namespace NZ.HRM.Application.Employees.Handlers;
 public class CompleteEmployeeQueryHandler
 {
     private readonly IEmployeeMasterRepository _employeeMasterRepository;
+    private readonly IEmployeeDocumentRepository _employeeDocumentRepository;
 
-    public CompleteEmployeeQueryHandler(IEmployeeMasterRepository employeeMasterRepository)
+    public CompleteEmployeeQueryHandler(IEmployeeMasterRepository employeeMasterRepository, IEmployeeDocumentRepository employeeDocumentRepository)
     {
         _employeeMasterRepository = employeeMasterRepository;
+        _employeeDocumentRepository = employeeDocumentRepository;
     }
 
     public async Task<EmployeeDetailDto?> Handle(GetEmployeeDetailQuery query, CancellationToken cancellationToken = default)
@@ -28,6 +31,15 @@ public class CompleteEmployeeQueryHandler
         return employee.MapToEmployeeDetailDto();
     }
 
+    public async Task<HrmEmployeeDocument?> Handle(string employeeId, CancellationToken cancellationToken = default)
+    {
+        var documents = await _employeeDocumentRepository.GetByEmployeeIdAsync(employeeId, cancellationToken);
+        if (documents == null)
+            return null;
+        var photoDocument = documents.LastOrDefault(d => d.DocumentType == "Photo");
+        return photoDocument;
+    }
+    
     public async Task<List<EmployeeSearchDto>> Handle(SearchEmployeesQuery query, CancellationToken cancellationToken = default)
     {
         var employees = await _employeeMasterRepository.SearchAsync(query.SearchText, cancellationToken);
