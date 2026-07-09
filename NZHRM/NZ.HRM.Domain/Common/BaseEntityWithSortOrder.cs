@@ -1,8 +1,4 @@
-﻿using NZ.HRM.Domain.Helper;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-
-namespace NZ.HRM.Domain.Common
+﻿namespace NZ.HRM.Domain.Common
 {
     public abstract class BaseEntityWithSortOrder : BaseEntity
     {

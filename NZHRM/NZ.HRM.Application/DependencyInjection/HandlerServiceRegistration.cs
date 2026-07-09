@@ -3,6 +3,7 @@ using NZ.HRM.Application.Companies.Handlers;
 using NZ.HRM.Application.LocationDepartments.Handlers;
 using NZ.HRM.Application.SubUnits.Handlers;
 using NZ.HRM.Application.Departments.Handlers;
+using NZ.HRM.Application.Banks.Handlers;
 using NZ.HRM.Application.DepartmentSections.Handlers;
 using NZ.HRM.Application.Grades.Handlers;
 using NZ.HRM.Application.EmployeeNatures.Handlers;
@@ -114,6 +115,10 @@ namespace NZ.HRM.Application.DependencyInjection
             // Register Physical Examination Settings Handlers
             services.AddScoped<PhysicalExaminationSettingCommandHandler>();
             services.AddScoped<PhysicalExaminationSettingQueryHandler>();
+
+            // Register Bank handlers
+            services.AddScoped<BankCommandHandler>();
+            services.AddScoped<BankQueryHandler>();
 
             // Register Medical Fitness Check Handlers
             services.AddScoped<MedicalFitnessCheckCommandHandler>();

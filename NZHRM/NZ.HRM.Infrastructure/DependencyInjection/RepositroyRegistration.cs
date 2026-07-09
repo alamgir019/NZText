@@ -35,6 +35,7 @@ namespace NZ.HRM.Infrastructure.DependencyInjection
             services.AddScoped<IThanaRepository, ThanaRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<IGroupComplexRepository, GroupComplexRepository>();
+            services.AddScoped<IBankRepository, BankRepository>();
             services.AddScoped<IGroupComplexRepository, GroupComplexRepository>();
             services.AddScoped<IMedicalFitnessCheckRepository, MedicalFitnessCheckRepository>();
             services.AddScoped<IPhysicalExaminationSettingRepository, PhysicalExaminationSettingRepository>();
