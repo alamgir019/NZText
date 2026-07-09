@@ -98,6 +98,7 @@ public class EmployeeCommandHandler
             ReferencePersonId = command.ReferencePersonId,
             ReferenceMobileNumber = command.ReferenceMobileNumber,
             Relationship = command.Relationship?.ToString(),
+            Religion = command.Religion.ToString(),
             PermanentVillageAreaRoad = command.PermanentVillageAreaRoad,
             PermanentPostOffice = command.PermanentPostOffice,
             PermanentThanaId = command.PermanentThanaId,

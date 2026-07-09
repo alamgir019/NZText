@@ -50,7 +50,6 @@ public class CompleteEmployeeQueryHandler
             EmployeeNameEnglish = x.EmployeeName,
             EmployeeNameBangla = x.EmployeeNameBangla,
             EnrollmentId = x.EnrollmentId,
-            //MobileNumber = x.PersonalInfo?.MobileNumber,
         }).ToList();
     }
 
