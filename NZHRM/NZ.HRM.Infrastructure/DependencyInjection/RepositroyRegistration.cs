@@ -44,6 +44,7 @@ namespace NZ.HRM.Infrastructure.DependencyInjection
             services.AddScoped<IEmployeeEmploymentRepository, EmployeeEmploymentRepository>();
             services.AddScoped<IEmployeeDocumentRepository, EmployeeDocumentRepository>();
             services.AddScoped<IEmployeeSalaryAccountRepository, EmployeeSalaryAccountRepository>();
+            services.AddScoped<IEmployeeNomineeRepository, EmployeeNomineeRepository>();
             // Security repositories
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
             services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
