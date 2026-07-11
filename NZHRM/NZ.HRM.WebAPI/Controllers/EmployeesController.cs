@@ -17,18 +17,15 @@ public class EmployeesController : ControllerBase
 {
     private readonly EmployeeCommandHandler _createCompleteEmployeeHandler;
     private readonly CompleteEmployeeQueryHandler _getCompleteEmployeeHandler;
-    private readonly GetEnrollmentIdQueryHandler _getEnrollmentIdHandler;
     private readonly EmployeeQueryHandler _employeeQueryHandler;
 
     public EmployeesController(
         EmployeeCommandHandler createCompleteEmployeeHandler,
         CompleteEmployeeQueryHandler getCompleteEmployeeHandler,
-        GetEnrollmentIdQueryHandler getEnrollmentIdHandler,
         EmployeeQueryHandler employeeQueryHandler)
     {
         _createCompleteEmployeeHandler = createCompleteEmployeeHandler;
         _getCompleteEmployeeHandler = getCompleteEmployeeHandler;
-        _getEnrollmentIdHandler = getEnrollmentIdHandler;
         _employeeQueryHandler = employeeQueryHandler;
     }
 
@@ -76,6 +73,37 @@ public class EmployeesController : ControllerBase
         catch (Exception ex)
         {
             return StatusCode(500, new { message = "An error occurred while creating the employee", details = ex.Message });
+        }
+    }
+
+
+    [HttpPut("candidate-entry/{employeeId}")]
+    [ProducesResponseType(typeof(object), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> UpdateEmployeeRecruitment(string employeeId, [FromBody] UpdateCandidateEntryCommand command)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        try
+        {
+            await _createCompleteEmployeeHandler.Handle(employeeId, command, cancellationToken: default);
+            return CreatedAtAction(
+                nameof(UpdateEmployeeRecruitment),
+                new { id = employeeId },
+                new { id = employeeId, message = "Employee updated successfully with personal information" });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An error occurred while updating the employee", details = ex.Message });
         }
     }
 
@@ -366,6 +394,37 @@ public class EmployeesController : ControllerBase
 
         try
         {       
+            var provider = new FileExtensionContentTypeProvider();
+            if (!provider.TryGetContentType(path, out var contentType))
+                contentType = "application/octet-stream";
+
+            var bytes = await System.IO.File.ReadAllBytesAsync(path);
+            return File(bytes, contentType);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    /// <summary>
+    /// Return an image file given a full file system path.
+    /// Example: GET /api/EmployeeMasters/image-by-path?path=C:\images\photo.jpg
+    /// </summary>
+    [HttpGet("image-by-path")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetImageByPath([FromQuery] string path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return BadRequest(new { message = "File path is required" });
+
+        if (!System.IO.File.Exists(path))
+            return NotFound(new { message = $"File not found: {path}" });
+
+        try
+        {
             var provider = new FileExtensionContentTypeProvider();
             if (!provider.TryGetContentType(path, out var contentType))
                 contentType = "application/octet-stream";

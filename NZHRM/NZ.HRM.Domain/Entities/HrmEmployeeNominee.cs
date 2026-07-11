@@ -5,7 +5,7 @@ using NZ.HRM.Domain.Common;
 
 namespace NZ.HRM.Domain.Entities
 {
-    [System.ComponentModel.DataAnnotations.Schema.Table("employee_nominee", Schema = "hrm")]
+    [Table("employee_nominee", Schema = "hrm")]
     public class HrmEmployeeNominee : BaseEntityWithSortOrder
     {
         public string EmployeeId { get; set; } = string.Empty;

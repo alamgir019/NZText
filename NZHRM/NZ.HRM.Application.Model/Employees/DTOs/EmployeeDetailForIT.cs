@@ -9,6 +9,8 @@ public class EmployeeDetailForIT : EmployeeDetailDto
     public string? Religion { get; set; }
     public string? NomineeName { get; set; }
     public string? NomineeRelation { get; set; }
+    public string? NomineeNID { get; set; }
+    public string? NomineeMobile { get; set; }
     public string? Mobile { get; set; } = null;
     public bool? ApprovedByDirector { get; set; }
     public string? Department { get; set; }

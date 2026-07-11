@@ -63,8 +63,8 @@ public class CreateEmployeeHRExecutiveCommand : CreateCandidateEntryCommand
     public decimal? GrossSalary { get; set; }
     public string? MotherName { get; set; }
     public string? FatherName { get; set; }
-    //public string? NomineeName { get; set; }
-    //public string? NomineeID { get; set; }
-    //public string? NomineeRelation { get; set; }
-    //public string? NomineeMobileNumber { get; set; }
+    public string? NomineeName { get; set; }
+    public string? NomineeID { get; set; }
+    public string? NomineeRelation { get; set; }
+    public string? NomineeMobileNumber { get; set; }
 }

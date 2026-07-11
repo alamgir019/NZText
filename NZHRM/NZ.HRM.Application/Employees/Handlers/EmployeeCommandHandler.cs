@@ -23,6 +23,7 @@ public class EmployeeCommandHandler
     private readonly IEmployeeEmploymentRepository _employeeEmploymentRepository;
     private readonly IEmployeeDocumentRepository _employeeDocumentRepository;
     private readonly IEmployeeSalaryAccountRepository _employeeSalaryAccountRepository;
+    private readonly IEmployeeNomineeRepository _employeeNomineeRepository;
 
     public EmployeeCommandHandler(
         IEmployeeMasterRepository employeeMasterRepository,
@@ -36,7 +37,8 @@ public class EmployeeCommandHandler
         IEmployeeNatureRepository employeeNatureRepository,
         IEmployeeEmploymentRepository employeeEmploymentRepository,
         IEmployeeSalaryAccountRepository employeeSalaryAccountRepository,
-        IEmployeeDocumentRepository employeeDocumentRepository)
+        IEmployeeDocumentRepository employeeDocumentRepository,
+        IEmployeeNomineeRepository employeeNomineeRepository)
     {
         _employeeMasterRepository = employeeMasterRepository;
         _employeePersonalRepository = employeePersonalRepository;
@@ -47,6 +49,7 @@ public class EmployeeCommandHandler
         _sectionRepository = sectionRepository;
         _shiftRepository = shiftRepository;
         _employeeSalaryAccountRepository = employeeSalaryAccountRepository;
+        _employeeNomineeRepository = employeeNomineeRepository;
         _employeeNatureRepository = employeeNatureRepository;
         _employeeEmploymentRepository = employeeEmploymentRepository;
         _employeeDocumentRepository = employeeDocumentRepository;
@@ -67,7 +70,7 @@ public class EmployeeCommandHandler
         // Use the provided date (caller should pass UTC DateTime)
         var today = DateTime.UtcNow;
         var next = await _employeeMasterRepository.GetNextEnrollmentIdAsync(today, cancellationToken: cancellationToken);
- 
+
         // Create EmployeeMaster
         var employeeMaster = new HrmEmployeeMaster
         {
@@ -108,7 +111,7 @@ public class EmployeeCommandHandler
             PresentPostOffice = command.PresentPostOffice,
             PresentThanaId = command.PresentThanaId,
             PresentDistrictId = command.PresentDistrictId,
-            PresentDivisionId = command.PresentDivisionId,            
+            PresentDivisionId = command.PresentDivisionId,
             IsActive = true
         };
 
@@ -143,6 +146,76 @@ public class EmployeeCommandHandler
         return employeeId;
     }
 
+
+    public async Task<string> Handle(string employeeId, UpdateCandidateEntryCommand command, CancellationToken cancellationToken = default)
+    {
+        var employeee = await _employeeMasterRepository.GetByIdAsync(employeeId, cancellationToken: cancellationToken);
+
+        if (employeee == null)
+            throw new KeyNotFoundException($"Employee with ID {employeeId} not found");
+
+        employeee.EmployeeNameBangla = command.EmployeeNameBangla ?? string.Empty;
+            employeee.EmployeeType = command.EmployeeType.ToString();
+        employeee.Status = EmployeeStatus.CandidateEntry.ToString();
+        employeee.IsActive = true;
+        // Save EmployeeMaster first
+        await _employeeMasterRepository.UpdateAsync(employeee, cancellationToken);
+
+        if (employeee.Personal != null)
+        {
+            employeee.Personal.EmployeeId = employeeId;
+            employeee.Personal.DateOfBirth = command.DateOfBirth;
+            employeee.Personal.Gender = command.Gender.ToString();
+            employeee.Personal.BloodGroup = command.BloodGroup?.ToString();
+            employeee.Personal.GuardianType = command.GuardianType;
+            employeee.Personal.GuardianNameBangla = command.GuardianNameBangla;
+            employeee.Personal.MotherNameBangla = command.MotherNameBangla;
+            employeee.Personal.FatherNameBangla = command.FatherNameBangla;
+            employeee.Personal.MobileNumber = command.MobileNumber;
+            employeee.Personal.EmployeeReference = command.EmployeeReference;
+            employeee.Personal.ReferenceType = command.ReferenceType?.ToString();
+            employeee.Personal.ReferencePersonId = command.ReferencePersonId;
+            employeee.Personal.ReferenceMobileNumber = command.ReferenceMobileNumber;
+            employeee.Personal.Relationship = command.Relationship?.ToString();
+            employeee.Personal.Religion = command.Religion.ToString();
+            employeee.Personal.PermanentVillageAreaRoad = command.PermanentVillageAreaRoad;
+            employeee.Personal.PermanentPostOffice = command.PermanentPostOffice;
+            employeee.Personal.PermanentThanaId = command.PermanentThanaId;
+            employeee.Personal.PermanentDistrictId = command.PermanentDistrictId;
+            employeee.Personal.PermanentDivisionId = command.PermanentDivisionId;
+            employeee.Personal.PresentVillageAreaRoad = command.PresentVillageAreaRoad;
+            employeee.Personal.PresentPostOffice = command.PresentPostOffice;
+            employeee.Personal.PresentThanaId = command.PresentThanaId;
+            employeee.Personal.PresentDistrictId = command.PresentDistrictId;
+            employeee.Personal.PresentDivisionId = command.PresentDivisionId;
+            employeee.Personal.IsActive = true;
+
+            await _employeePersonalRepository.UpdateAsync(employeee.Personal, cancellationToken);
+        }
+        if (employeee.Verification != null)
+        {
+            employeee.Verification.EmployeeId = employeeId;
+            employeee.Verification.SecurityClearanceBy = command.SecurityClearanceBy;
+            employeee.Verification.SecurityClearanceDate = command.SecurityClearanceDate;
+            employeee.Verification.EnrolledBy = command.EnrolledBy;
+            employeee.Verification.EnrolledDate = command.EnrolledDate;
+            employeee.Verification.BiometricEnrolledBy = command.BiometricEnrolledBy;
+            employeee.Verification.BiometricEnrolledDate = command.BiometricEnrolledDate;
+            employeee.Verification.IsActive = true;
+            await _employeeVerificationRepository.UpdateAsync(employeee.Verification, cancellationToken);
+        }
+        if (employeee.Employment != null)
+        {
+            employeee.Employment.EmployeeId = employeeId;
+            employeee.Employment.UnitId = command.UnitId;
+            employeee.Employment.DesignationId = command.DesignationId;
+            employeee.Employment.JoiningDate = command.JoiningDate;
+            employeee.Employment.IsActive = true;
+            await _employeeEmploymentRepository.UpdateAsync(employeee.Employment, cancellationToken);
+        }
+        return employeeId;
+    }
+
     public async Task<string> Handle(CreateEmployeeHRExecutiveCommand command, CancellationToken cancellationToken = default)
     {
         var employeeMaster = await _employeeMasterRepository.GetByIdAsync(command.EmployeeId, cancellationToken);
@@ -151,11 +224,10 @@ public class EmployeeCommandHandler
             throw new KeyNotFoundException($"Employee with ID {command.EmployeeId} not found");
 
         employeeMaster.EmployeeCode = command.EmployeeCode;
-        //employeeMaster.EmployeeNameBangla = command.EmployeeNameBangla ?? string.Empty;
         employeeMaster.EmployeeName = command.EmployeeName ?? string.Empty;
         employeeMaster.EmployeeType = command.EmployeeNatureId.ToString();
         employeeMaster.Status = EmployeeStatus.HRExecutive.ToString();
-        
+
         await _employeeMasterRepository.UpdateAsync(employeeMaster, cancellationToken);
         // Validate related entities exist
         await ValidateRelatedEntities(command.UnitId, command.DepartmentId, command.SectionId, command.ShiftId, null, cancellationToken);
@@ -175,7 +247,6 @@ public class EmployeeCommandHandler
                 GradeId = command.GradeId,
                 WeeklyOffDay = command.Holiday.ToString(),
                 EmployeeCategoryId = command.EmployeeTypeId,
-                //EmployeeNatureId = command.EmployeeNatureId,
                 ProbationPeriod = command.ProbationPeriod,
                 ReportingTo = command.ReportingTo,
                 JoiningDate = command.JoiningDate,
@@ -207,75 +278,40 @@ public class EmployeeCommandHandler
 
             await _employeeEmploymentRepository.UpdateAsync(employeeMaster.Employment, cancellationToken);
         }
+        await UpsertPersonalInfo(command, employeeMaster, cancellationToken);
 
+        await UpsertPayroll(command, employeeMaster, cancellationToken);
 
-        if (employeeMaster.Personal is null)
+        await UpsertNominee(command, employeeMaster, cancellationToken);
+
+        if (employeeMaster.Documents is null || employeeMaster.Documents.Count == 0)
         {
-            var employeePersonal = new HrmEmployeePersonal
-            {
-                EmployeeId = employeeMaster.Id,
-                //DateOfBirth = command.DateOfBirth,
-                //Gender = command.Gender.ToString(),
-                //BloodGroup = command.BloodGroup?.ToString(),
-                //GuardianType = command.GuardianType,
-                //GuardianNameBangla = command.GuardianNameBangla,
-                MotherName = command.MotherName,
-                FatherName = command.FatherName,
-                MobileNumber = command.MobileNumber,
-                //EmployeeReference = command.EmployeeReference,
-                //ReferenceType = command.ReferenceType?.ToString(),
-                //ReferencePersonId = command.ReferencePersonId,
-                //ReferenceMobileNumber = command.ReferenceMobileNumber,
-                //Relationship = command.Relationship?.ToString(),
-                //PermanentVillageAreaRoad = command.PermanentVillageAreaRoad,
-                //PermanentPostOffice = command.PermanentPostOffice,
-                //PermanentThanaId = command.PermanentThanaId,
-                //PermanentDistrictId = command.PermanentDistrictId,
-                //PermanentDivisionId = command.PermanentDivisionId,
-                //PresentVillageAreaRoad = command.PresentVillageAreaRoad,
-                //PresentPostOffice = command.PresentPostOffice,
-                //PresentThanaId = command.PresentThanaId,
-                //PresentDistrictId = command.PresentDistrictId,
-                //PresentDivisionId = command.PresentDivisionId,
-                IsActive = true
-            };
-
-            // Save EmployeePersonal
-            await _employeePersonalRepository.AddAsync(employeePersonal, cancellationToken);
-        }
-        else
-        {
-            var personal = employeeMaster.Personal;
-
-            //personal.DateOfBirth = command.DateOfBirth;
-            //personal.Gender = command.Gender.ToString();
-            //personal.BloodGroup = command.BloodGroup?.ToString();
-            //personal.GuardianType = command.GuardianType;
-            //personal.GuardianNameBangla = command.GuardianNameBangla;
-            //personal.MotherNameBangla = command.MotherNameBangla;
-            //personal.FatherNameBangla = command.FatherNameBangla;
-            personal.MotherName = command.MotherName;
-            personal.FatherName = command.FatherName;
-            personal.MobileNumber = command.MobileNumber;
-            //personal.EmployeeReference = command.EmployeeReference;
-            //personal.ReferenceType = command.ReferenceType?.ToString();
-            //personal.ReferencePersonId = command.ReferencePersonId;
-            //personal.ReferenceMobileNumber = command.ReferenceMobileNumber;
-            //personal.Relationship = command.Relationship?.ToString();
-            //personal.PermanentVillageAreaRoad = command.PermanentVillageAreaRoad;
-            //personal.PermanentPostOffice = command.PermanentPostOffice;
-            //personal.PermanentThanaId = command.PermanentThanaId;
-            //personal.PermanentDistrictId = command.PermanentDistrictId;
-            //personal.PermanentDivisionId = command.PermanentDivisionId;
-            //personal.PresentVillageAreaRoad = command.PresentVillageAreaRoad;
-            //personal.PresentPostOffice = command.PresentPostOffice;
-            //personal.PresentThanaId = command.PresentThanaId;
-            //personal.PresentDistrictId = command.PresentDistrictId;
-            //personal.PresentDivisionId = command.PresentDivisionId;
-            await _employeePersonalRepository.UpdateAsync(personal, cancellationToken);
+            AddEmployeeDocument(command.Documents, employeeMaster, cancellationToken).Wait(cancellationToken);
         }
 
+        return command.EmployeeId;
+    }
 
+    private async Task UpsertNominee(CreateEmployeeHRExecutiveCommand command, HrmEmployeeMaster employeeMaster, CancellationToken cancellationToken)
+    {
+
+        var employeeNominee = new HrmEmployeeNominee
+        {
+            EmployeeId = employeeMaster.Id,
+            NomineeName = command.NomineeName,
+            Relationship = command.NomineeRelation,
+            //DateOfBirth = command.DateOfBirth,
+            NidNo = command.NomineeID,
+            MobileNo = command.NomineeMobileNumber,
+            //Address = command.Address,
+            //NominationPercentage = command.NominationPercentage,
+            IsActive = true
+        };
+        await _employeeNomineeRepository.AddAsync(employeeNominee, cancellationToken);
+    }
+
+    private async Task UpsertPayroll(CreateEmployeeHRExecutiveCommand command, HrmEmployeeMaster employeeMaster, CancellationToken cancellationToken)
+    {
         if (employeeMaster.Payroll is null)
         {
             var salaryAccount = new HrmEmployeeSalaryAccount
@@ -347,13 +383,32 @@ public class EmployeeCommandHandler
 
             await _employeePayrollRepository.UpdateAsync(employeeMaster.Payroll, cancellationToken);
         }
+    }
 
-        if (employeeMaster.Documents is null || employeeMaster.Documents.Count == 0)
+    private async Task UpsertPersonalInfo(CreateEmployeeHRExecutiveCommand command, HrmEmployeeMaster employeeMaster, CancellationToken cancellationToken)
+    {
+        if (employeeMaster.Personal is null)
         {
-            AddEmployeeDocument(command.Documents, employeeMaster, cancellationToken).Wait(cancellationToken);
-        }
+            var employeePersonal = new HrmEmployeePersonal
+            {
+                EmployeeId = employeeMaster.Id,
+                MotherName = command.MotherName,
+                FatherName = command.FatherName,
+                MobileNumber = command.MobileNumber,
+                IsActive = true
+            };
 
-        return command.EmployeeId;
+            // Save EmployeePersonal
+            await _employeePersonalRepository.AddAsync(employeePersonal, cancellationToken);
+        }
+        else
+        {
+            var personal = employeeMaster.Personal;
+            personal.MotherName = command.MotherName;
+            personal.FatherName = command.FatherName;
+            personal.MobileNumber = command.MobileNumber;
+            await _employeePersonalRepository.UpdateAsync(personal, cancellationToken);
+        }
     }
 
     public async Task<string> Handle(CreateBiometricCommand command, CancellationToken cancellationToken = default)
@@ -401,8 +456,6 @@ public class EmployeeCommandHandler
 
         return command.EmployeeId;
     }
-
-
 
     private async Task<(HrmEmployeePayroll?, HrmEmployeeMaster)> DirectorsReviewMap(CreateDirectorReviewCommand command, CancellationToken cancellationToken = default)
     {

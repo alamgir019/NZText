@@ -117,6 +117,8 @@ public static class EmployeeMapper
             Religion = employee.Personal?.Religion,
             NomineeName = employee.Nominees.FirstOrDefault()?.NomineeName,
             NomineeRelation = employee.Nominees.FirstOrDefault()?.Relationship,
+            NomineeNID = employee.Nominees.FirstOrDefault()?.NidNo,
+            NomineeMobile = employee.Nominees.FirstOrDefault()?.MobileNo,
             Mobile = employee.Personal?.MobileNumber,
             ApprovedByDirector = null,
             Department = employee.Employment?.Department?.DepartmentName,
