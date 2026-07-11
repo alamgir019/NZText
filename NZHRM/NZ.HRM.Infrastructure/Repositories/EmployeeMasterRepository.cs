@@ -46,7 +46,6 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
         if (!string.IsNullOrWhiteSpace(query.status))
         {
             result = result.Where(e => EF.Functions.ILike(e.Status, normalizedStatus));
-            return new List<HrmEmployeeMaster>();
         }
         if (query.date != default)
         {
