@@ -16,17 +16,7 @@ public class UpdateCandidateEntryCommand
     [Required(ErrorMessage = "Unit ID is required")]
     public string UnitId { get; set; } = string.Empty;
 
-    //[Required(ErrorMessage = "Department ID is required")]
-    public string? DepartmentId { get; set; } = string.Empty;
     public string? DesignationId { get; set; }
-
-    //[Required(ErrorMessage = "Location ID is required")]
-    public string? LocationId { get; set; } = string.Empty;
-
-    //[Required(ErrorMessage = "Section ID is required")]
-    public string? SectionId { get; set; } = string.Empty;
-
-    public string? CellId { get; set; }
 
     public decimal? ProposedMonthlySalary { get; set; }
 

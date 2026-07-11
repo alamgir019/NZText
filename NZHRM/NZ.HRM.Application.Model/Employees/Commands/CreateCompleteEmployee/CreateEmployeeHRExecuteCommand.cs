@@ -67,4 +67,7 @@ public class CreateEmployeeHRExecutiveCommand : CreateCandidateEntryCommand
     public string? NomineeID { get; set; }
     public string? NomineeRelation { get; set; }
     public string? NomineeMobileNumber { get; set; }
+    public string DepartmentId { get; set; } = string.Empty;
+    public string SectionId { get; set; } = string.Empty;
+    public string? CellId { get; set; }
 }

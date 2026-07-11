@@ -57,16 +57,6 @@ public class EmployeeCommandHandler
 
     public async Task<string> Handle(CreateCandidateEntryCommand command, CancellationToken cancellationToken = default)
     {
-        // Validate related entities exist
-        await ValidateRelatedEntities(
-            command.UnitId,
-            command.DepartmentId,
-            command.SectionId,
-            null,
-            null,
-            //command.LocationId,
-            cancellationToken);
-
         // Use the provided date (caller should pass UTC DateTime)
         var today = DateTime.UtcNow;
         var next = await _employeeMasterRepository.GetNextEnrollmentIdAsync(today, cancellationToken: cancellationToken);
