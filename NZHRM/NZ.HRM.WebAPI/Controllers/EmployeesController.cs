@@ -287,6 +287,7 @@ public class EmployeesController : ControllerBase
                 });
             }
 
+
             if (signature != null && signature.Length > 0)
             {
                 var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(signature.FileName)}";

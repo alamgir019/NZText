@@ -26,7 +26,6 @@ namespace NZ.HRM.Domain.Entities
         public string? NidNo { get; set; }
         public string? BirthCertificateNo { get; set; }
         public string? PassportNo { get; set; }
-        public string? ReferenceType { get; set; }
         public string? EmployeeReference { get; set; }
         public string? ReferenceMobileNumber { get; set; }
         [ForeignKey("EmployeeId")] public HrmEmployeeMaster? Employee { get; set; }

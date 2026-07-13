@@ -49,7 +49,6 @@ public class UpdateCandidateEntryCommand
 
     [MaxLength(100, ErrorMessage = "Mother's name (Bangla) must not exceed 100 characters")]
     public string? MotherNameBangla { get; set; }
-    public ReferenceType? ReferenceType { get; set; }
 
     [MaxLength(100, ErrorMessage = "Employee reference must not exceed 100 characters")]
     public string? EmployeeReference { get; set; }

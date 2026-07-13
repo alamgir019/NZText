@@ -84,7 +84,6 @@ public class EmployeeCommandHandler
             FatherNameBangla = command.FatherNameBangla,
             MobileNumber = command.MobileNumber,
             EmployeeReference = command.EmployeeReference,
-            ReferenceType = command.ReferenceType?.ToString(),
             ReferenceMobileNumber = command.ReferenceMobileNumber,
             Religion = command.Religion.ToString(),
             PermanentVillageAreaRoad = command.PermanentVillageAreaRoad,
@@ -154,7 +153,6 @@ public class EmployeeCommandHandler
             employeee.Personal.FatherNameBangla = command.FatherNameBangla;
             employeee.Personal.MobileNumber = command.MobileNumber;
             employeee.Personal.EmployeeReference = command.EmployeeReference;
-            employeee.Personal.ReferenceType = command.ReferenceType?.ToString();
             employeee.Personal.ReferenceMobileNumber = command.ReferenceMobileNumber;
             employeee.Personal.Religion = command.Religion.ToString();
             employeee.Personal.PermanentVillageAreaRoad = command.PermanentVillageAreaRoad;

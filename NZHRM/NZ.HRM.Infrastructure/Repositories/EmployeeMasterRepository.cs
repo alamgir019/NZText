@@ -110,6 +110,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
     {
         return await _context.HrmEmployeeMasters
             .Include(e => e.Employment.Unit)
+            .Include(e => e.Employment.Subunit)
             .Include(e => e.Employment.Department)
             .Include(e => e.Employment.Section)
             .Include(e => e.Employment.Grade)
