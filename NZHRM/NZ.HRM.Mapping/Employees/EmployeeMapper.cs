@@ -59,7 +59,7 @@ public static class EmployeeMapper
             BloodGroup = employee.Personal?.BloodGroup != null && Enum.TryParse<BloodGroup>(employee.Personal.BloodGroup, out var bloodGroup)
             ? bloodGroup : null,
             JoiningDate = employee.Employment?.JoiningDate,
-            EmployeeType = employee.EmployeeType != null && Enum.TryParse<EmployeeType>(employee.EmployeeType, out var employeeType)
+            EmployeeType = employee.EmployeeNature != null && Enum.TryParse<EmployeeNature>(employee.EmployeeNature, out var employeeType)
             ? employeeType : null,
             EmployeeName = employee.EmployeeName,
             UnitName = employee.Employment?.Unit?.UnitName ?? string.Empty,
@@ -114,7 +114,7 @@ public static class EmployeeMapper
             MotherName = employee.Personal?.MotherName,
             MotherNameBangla = employee.Personal?.MotherNameBangla,
             DateOfBirth = employee.Personal?.DateOfBirth,
-            Religion = employee.Personal?.Religion,
+            Religion = string.IsNullOrWhiteSpace(employee.Personal?.Religion) ? null : Enum.TryParse<Utility.Enum.Religion>(employee.Personal?.Religion, out var religion) ? religion : null,
             NomineeName = employee.Nominees.FirstOrDefault()?.NomineeName,
             NomineeRelation = employee.Nominees.FirstOrDefault()?.Relationship,
             NomineeNID = employee.Nominees.FirstOrDefault()?.NidNo,

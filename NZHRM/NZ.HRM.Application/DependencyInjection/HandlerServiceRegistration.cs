@@ -6,7 +6,6 @@ using NZ.HRM.Application.Departments.Handlers;
 using NZ.HRM.Application.Banks.Handlers;
 using NZ.HRM.Application.DepartmentSections.Handlers;
 using NZ.HRM.Application.Grades.Handlers;
-using NZ.HRM.Application.EmployeeNatures.Handlers;
 using NZ.HRM.Application.Shifts.Handlers;
 using NZ.HRM.Application.Sections.Handlers;
 using NZ.HRM.Application.SectionCells.Handlers;
@@ -63,10 +62,6 @@ namespace NZ.HRM.Application.DependencyInjection
             // Register Grade Handlers
             services.AddScoped<GradeCommandHandler>();
             services.AddScoped<GradeQueryHandler>();
-
-            // Register EmployeeNature Handlers
-            services.AddScoped<EmployeeNatureCommandHandler>();
-            services.AddScoped<EmployeeNatureQueryHandler>();
 
             // Register Shift Handlers
             services.AddScoped<ShiftCommandHandler>();

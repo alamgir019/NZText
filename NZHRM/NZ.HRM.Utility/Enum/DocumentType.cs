@@ -9,6 +9,12 @@ namespace NZ.HRM.Utility.Enum
         Photo,
         Biometric,
         FingerPrint,
-        Other
+        EducationCertificate,
+        PoliceClearance,
+        ExperienceCertificate,
+        PassportPhoto,
+        ChairmanCertificate,
+        Signature,
+        Other,
     }
 }

@@ -15,7 +15,6 @@ public class EmployeeMasterCommandHandler
     private readonly ISectionRepository _sectionRepository;
     private readonly IGradeRepository _gradeRepository;
     private readonly IShiftRepository _shiftRepository;
-    private readonly IEmployeeNatureRepository _employeeNatureRepository;
 
     public EmployeeMasterCommandHandler(
         IEmployeeMasterRepository employeeMasterRepository,
@@ -23,8 +22,7 @@ public class EmployeeMasterCommandHandler
         IDepartmentRepository departmentRepository,
         ISectionRepository sectionRepository,
         IGradeRepository gradeRepository,
-        IShiftRepository shiftRepository,
-        IEmployeeNatureRepository employeeNatureRepository)
+        IShiftRepository shiftRepository)
     {
         _employeeMasterRepository = employeeMasterRepository;
         _companyRepository = companyRepository;
@@ -32,7 +30,6 @@ public class EmployeeMasterCommandHandler
         _sectionRepository = sectionRepository;
         _gradeRepository = gradeRepository;
         _shiftRepository = shiftRepository;
-        _employeeNatureRepository = employeeNatureRepository;
     }
 
     public async Task<string> Handle(CreateEmployeeMasterCommand command, CancellationToken cancellationToken = default)
@@ -143,9 +140,5 @@ public class EmployeeMasterCommandHandler
         var shiftExists = await _shiftRepository.ExistsAsync(shiftId, cancellationToken);
         if (!shiftExists)
             throw new KeyNotFoundException($"Shift with ID {shiftId} not found");
-
-        var employeeNatureExists = await _employeeNatureRepository.ExistsAsync(employeeNatureId, cancellationToken);
-        if (!employeeNatureExists)
-            throw new KeyNotFoundException($"Employee nature with ID {employeeNatureId} not found");
     }
 }

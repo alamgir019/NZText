@@ -1,6 +1,6 @@
 namespace NZ.HRM.Utility.Enum
 {
-    public enum EmployeeType
+    public enum EmployeeNature
     {
         Worker,
         Staff,

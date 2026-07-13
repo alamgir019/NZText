@@ -27,7 +27,6 @@ namespace NZ.HRM.Domain.Entities
         public string? EmployeeCategoryId { get; set; }
         public string? ReportingTo { get; set; }
         public string? ProcessingGroupId { get; set; }
-        public string? EmployeeNatureId { get; set; }
         public string? WeeklyOffDay { get; set; }
 
 
@@ -43,6 +42,5 @@ namespace NZ.HRM.Domain.Entities
         [ForeignKey("ShiftId")] public MstShift? Shift { get; set; }
         [ForeignKey("EmployeeCategoryId")] public MstEmployeeCategory? EmployeeCategory { get; set; }
         [ForeignKey("ProcessingGroupId")] public MstPayrollProcessingGroup? ProcessingGroup { get; set; }
-        [ForeignKey("EmployeeNatureId")] public LookEmployeeNature? EmployeeNature { get; set; }
     }
 }

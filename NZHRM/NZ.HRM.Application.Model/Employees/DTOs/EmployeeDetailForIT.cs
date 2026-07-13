@@ -6,7 +6,7 @@ public class EmployeeDetailForIT : EmployeeDetailDto
 {
     public string? FatherName { get; set; }
     public DateOnly? DateOfBirth { get; set; }
-    public string? Religion { get; set; }
+    public Religion? Religion { get; set; }
     public string? NomineeName { get; set; }
     public string? NomineeRelation { get; set; }
     public string? NomineeNID { get; set; }

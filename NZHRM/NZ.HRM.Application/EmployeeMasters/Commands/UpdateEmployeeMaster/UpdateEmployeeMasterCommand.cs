@@ -31,7 +31,7 @@ public class UpdateEmployeeMasterCommand
     public string GradeId { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Employee type is required")]
-    public EmployeeType EmployeeType { get; set; }
+    public EmployeeNature EmployeeType { get; set; }
 
     [Required(ErrorMessage = "Shift is required")]
     public string ShiftId { get; set; } = string.Empty;

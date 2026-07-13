@@ -10,7 +10,7 @@ public class UpdateCandidateEntryCommand
 
     // Employment Details
     [Required(ErrorMessage = "Employee type is required")]
-    public EmployeeType EmployeeType { get; set; }
+    public EmployeeNature EmployeeType { get; set; }
 
     // Company & Organization
     [Required(ErrorMessage = "Unit ID is required")]

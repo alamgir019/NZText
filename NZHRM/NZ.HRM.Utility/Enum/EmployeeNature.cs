@@ -1,6 +1,6 @@
 namespace NZ.HRM.Utility.Enum
 {
-    public enum EmployeeNature
+    public enum EmployeeNature1
     {
         Provision,
         Permanent,

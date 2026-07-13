@@ -175,15 +175,135 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpPost("hr-executive-entry")]
+    [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(object), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> CreateEmployeeHRExecutive([FromBody] CreateEmployeeHRExecutiveCommand command)
+    public async Task<IActionResult> CreateEmployeeHRExecutive([FromForm] CreateEmployeeHRExecutiveCommand command)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
         try
         {
+            var targetFolder = Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles", command.EmployeeCode);
+            if (!Directory.Exists(targetFolder))
+                Directory.CreateDirectory(targetFolder);
+
+            var certificate = Request.Form.Files.FirstOrDefault(f =>
+                string.Equals(f.Name, "educationCertificate", StringComparison.OrdinalIgnoreCase));
+            var policeClearance = Request.Form.Files.FirstOrDefault(f =>
+                string.Equals(f.Name, "policeClearance", StringComparison.OrdinalIgnoreCase));
+            var experienceCertificate = Request.Form.Files.FirstOrDefault(f =>
+                string.Equals(f.Name, "experienceCertificate", StringComparison.OrdinalIgnoreCase));
+            var passportPhoto = Request.Form.Files.FirstOrDefault(f =>
+                string.Equals(f.Name, "passportPhoto", StringComparison.OrdinalIgnoreCase));
+            var chairmanCertificate = Request.Form.Files.FirstOrDefault(f =>
+                string.Equals(f.Name, "chairmanCertificate", StringComparison.OrdinalIgnoreCase));
+            var signature = Request.Form.Files.FirstOrDefault(f =>
+                string.Equals(f.Name, "signature", StringComparison.OrdinalIgnoreCase));
+            command.Documents = new List<EmployeeDocumentDto>();
+            if (certificate != null && certificate.Length > 0)
+            {
+                var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(certificate.FileName)}";
+                var filePath = Path.Combine(targetFolder, uniqueFileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await certificate.CopyToAsync(stream);
+                }
+                command.Documents.Add(new EmployeeDocumentDto
+                {
+                    DocumentType = Utility.Enum.DocumentType.EducationCertificate,
+                    FilePath = filePath,
+                    EmployeeId = command.EmployeeId,
+                    FileName = uniqueFileName,
+                });
+            }
+
+            if (policeClearance != null && policeClearance.Length > 0)
+            {
+                var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(policeClearance.FileName)}";
+                var filePath = Path.Combine(targetFolder, uniqueFileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await policeClearance.CopyToAsync(stream);
+                }
+                command.Documents.Add(new EmployeeDocumentDto
+                {
+                    DocumentType = Utility.Enum.DocumentType.PoliceClearance,
+                    FilePath = filePath,
+                    EmployeeId = command.EmployeeId,
+                    FileName = uniqueFileName,
+                });
+            }
+
+            if (experienceCertificate != null && experienceCertificate.Length > 0)
+            {
+                var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(experienceCertificate.FileName)}";
+                var filePath = Path.Combine(targetFolder, uniqueFileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await experienceCertificate.CopyToAsync(stream);
+                }
+                command.Documents.Add(new EmployeeDocumentDto
+                {
+                    DocumentType = Utility.Enum.DocumentType.ExperienceCertificate,
+                    FilePath = filePath,
+                    EmployeeId = command.EmployeeId,
+                    FileName= uniqueFileName,
+                });
+            }
+
+            if (passportPhoto != null && passportPhoto.Length > 0)
+            {
+                var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(passportPhoto.FileName)}";
+                var filePath = Path.Combine(targetFolder, uniqueFileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await passportPhoto.CopyToAsync(stream);
+                }
+                command.Documents.Add(new EmployeeDocumentDto
+                {
+                    DocumentType = Utility.Enum.DocumentType.PassportPhoto,
+                    FilePath = filePath,
+                    EmployeeId = command.EmployeeId,
+                    FileName = uniqueFileName,
+                });
+            }
+
+            if(chairmanCertificate != null && chairmanCertificate.Length > 0)
+            {
+                var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(chairmanCertificate.FileName)}";
+                var filePath = Path.Combine(targetFolder, uniqueFileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await chairmanCertificate.CopyToAsync(stream);
+                }
+                command.Documents.Add(new EmployeeDocumentDto
+                {
+                    DocumentType = Utility.Enum.DocumentType.ChairmanCertificate,
+                    FilePath = filePath,
+                    EmployeeId = command.EmployeeId,
+                    FileName = uniqueFileName,
+                });
+            }
+
+            if (signature != null && signature.Length > 0)
+            {
+                var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(signature.FileName)}";
+                var filePath = Path.Combine(targetFolder, uniqueFileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await signature.CopyToAsync(stream);
+                }
+                command.Documents.Add(new EmployeeDocumentDto
+                {
+                    DocumentType = Utility.Enum.DocumentType.Signature,
+                    FilePath = filePath,
+                    EmployeeId = command.EmployeeId,
+                    FileName = uniqueFileName,
+                });
+            }
+
             var employeeId = await _createCompleteEmployeeHandler.Handle(command, cancellationToken: default);
             return CreatedAtAction(
                 nameof(CreateEmployeeHRExecutive),

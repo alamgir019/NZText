@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Domain.Entities;
 using NZ.HRM.Infrastructure.Persistence;
-using NZ.HRM.Mapping.Employees;
 
 namespace NZ.HRM.Infrastructure.Repositories;
 
@@ -23,16 +22,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             return new List<HrmEmployeeMaster>();
 
         var result = _context.HrmEmployeeMasters
-            //.Include(e => e.Personal)
-            //.Include(e => e.MedicalFitnessCheck)
             .Include(e => e.Employment.Unit)
-            //.Include(e => e.Employment.Department)
-            //.Include(e => e.Employment.Section)
-            //.Include(e => e.Employment.Cell)
-            //.Include(e => e.Employment.Grade)
-            //.Include(e => e.Employment.Designation)
-            //.Include(e => e.Employment.Shift)
-            //.Include(e => e.Payroll).ThenInclude(p => p.SalaryAccount)
             .AsQueryable();
 
         if (!query.includeInactive)
@@ -63,9 +53,6 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Employment.Section)
             .Include(e => e.Employment.Grade)
             .Include(e => e.Employment.Shift)
-            //.Include(e => e.Employment.EmployeeNature)
-            //.Include(e => e.Employment.Holiday)
-            //.Include(e => e.VerificationInfo)
             .AsQueryable();
         if (!includeInactive)
         {
@@ -91,9 +78,6 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Employment.Section)
             .Include(e => e.Employment.Grade)
             .Include(e => e.Employment.Shift)
-            //.Include(e => e.Employment.EmployeeNature)
-            //.Include(e => e.Employment.Holiday)
-            //.Include(e => e.VerificationInfo)
             .AsQueryable();
         if (!includeInactive)
         {
@@ -132,7 +116,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Personal)
             .Include(e => e.Employment.Designation)
             .Include(e => e.Employment.Shift)
-            .Include(e => e.Employment.EmployeeNature)
+            .Include(e => e.Nominees)
             .Include(e => e.Payroll).ThenInclude(p => p.SalaryAccount).ThenInclude(sa => sa.Banking)
 
             .FirstOrDefaultAsync(e => e.Id == id && e.IsActive, cancellationToken);
@@ -146,8 +130,6 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Employment.Section)
             .Include(e => e.Employment.Grade)
             .Include(e => e.Employment.Shift)
-            //.Include(e => e.Employment.EmployeeNature)
-            //.Include(e => e.Employment.Holiday)
             .FirstOrDefaultAsync(e => e.EmployeeCode == employeeCode && e.IsActive, cancellationToken);
     }
 
@@ -159,8 +141,6 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Employment.Section)
             .Include(e => e.Employment.Grade)
             .Include(e => e.Employment.Shift)
-            //.Include(e => e.Employment.EmployeeNature)
-            //.Include(e => e.Employment.Holiday)
             .Where(e => e.Employment.UnitId == companyId && e.IsActive)
             .OrderBy(e => e.EmployeeCode)
             .ToListAsync(cancellationToken);
@@ -174,8 +154,6 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Employment.Section)
             .Include(e => e.Employment.Grade)
             .Include(e => e.Employment.Shift)
-            //.Include(e => e.Employment.EmployeeNature)
-            //.Include(e => e.Employment.Holiday)
             .Where(e => e.Employment.DepartmentId == departmentId && e.IsActive)
             .OrderBy(e => e.EmployeeCode)
             .ToListAsync(cancellationToken);

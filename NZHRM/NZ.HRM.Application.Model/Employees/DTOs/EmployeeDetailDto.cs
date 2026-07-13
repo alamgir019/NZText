@@ -22,5 +22,5 @@ public class EmployeeDetailDto
     public Gender? Gender { get; set; }
     public BloodGroup? BloodGroup { get; set; }
     public DateOnly? JoiningDate { get; set; }
-    public EmployeeType? EmployeeType { get; set; }
+    public EmployeeNature? EmployeeType { get; set; }
 }

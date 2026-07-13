@@ -21,7 +21,6 @@ namespace NZ.HRM.Infrastructure.DependencyInjection
             services.AddScoped<IDepartmentSectionRepository, DepartmentSectionRepository>();
             services.AddScoped<IGradeRepository, GradeRepository>();
             services.AddScoped<IShiftRepository, ShiftRepository>();
-            services.AddScoped<IEmployeeNatureRepository, EmployeeNatureRepository>();
             services.AddScoped<ISectionRepository, SectionRepository>();
             services.AddScoped<ISectionCellRepository, SectionCellRepository>();
             services.AddScoped<IDesignationRepository, DesignationRepository>();

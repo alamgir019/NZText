@@ -26,7 +26,6 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<LookDivision> Divisions => Set<LookDivision>();
         public DbSet<LookDistrict> Districts => Set<LookDistrict>();
         public DbSet<LookThana> Thanas => Set<LookThana>();
-        public DbSet<LookEmployeeNature> EmployeeNatures => Set<LookEmployeeNature>();
         public DbSet<LookBanking> Banks => Set<LookBanking>();
         public DbSet<LookKeyValue> LookupKeyValues => Set<LookKeyValue>();
 
@@ -324,7 +323,6 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<LookDistrict>().ToTable("district", "lookup");
             modelBuilder.Entity<LookThana>().ToTable("thana", "lookup");
             modelBuilder.Entity<LookBanking>().ToTable("banking", "lookup");
-            modelBuilder.Entity<LookEmployeeNature>().ToTable("employee_nature", "lookup");
             //modelBuilder.Entity<LookShift>().ToTable("shifts", "lookup");
             //modelBuilder.Entity<LookHoliday>().ToTable("holidays", "lookup");
 

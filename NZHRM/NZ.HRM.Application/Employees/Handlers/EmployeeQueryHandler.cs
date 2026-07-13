@@ -34,9 +34,9 @@ public class EmployeeQueryHandler
         var dto = new Queries.GetItActivationSummary.ItActivationSummaryDto
         {
             Total = itActivated.Count,
-            Workers = itActivated.Count(e => string.Equals(e.EmployeeType, EmployeeType.Worker.ToString(), StringComparison.OrdinalIgnoreCase)),
-            Staff = itActivated.Count(e => string.Equals(e.EmployeeType, EmployeeType.Staff.ToString(), StringComparison.OrdinalIgnoreCase)),
-            Management = itActivated.Count(e => string.Equals(e.EmployeeType, EmployeeType.Management.ToString(), StringComparison.OrdinalIgnoreCase))
+            Workers = itActivated.Count(e => string.Equals(e.EmployeeNature, EmployeeNature.Worker.ToString(), StringComparison.OrdinalIgnoreCase)),
+            Staff = itActivated.Count(e => string.Equals(e.EmployeeNature, EmployeeNature.Staff.ToString(), StringComparison.OrdinalIgnoreCase)),
+            Management = itActivated.Count(e => string.Equals(e.EmployeeNature, EmployeeNature.Management.ToString(), StringComparison.OrdinalIgnoreCase))
         };
         var groupedByCompany = itActivated.GroupBy(e => e.Employment?.Unit?.UnitName);
         foreach (var group in groupedByCompany)
@@ -45,9 +45,9 @@ public class EmployeeQueryHandler
             {
                 CompanyName = group.Key,
                 Total = group.Count(),
-                Workers = group.Count(e => string.Equals(e.EmployeeType, EmployeeType.Worker.ToString(), StringComparison.OrdinalIgnoreCase)),
-                Staff = group.Count(e => string.Equals(e.EmployeeType, EmployeeType.Staff.ToString(), StringComparison.OrdinalIgnoreCase)),
-                Management = group.Count(e => string.Equals(e.EmployeeType, EmployeeType.Management.ToString(), StringComparison.OrdinalIgnoreCase))
+                Workers = group.Count(e => string.Equals(e.EmployeeNature, EmployeeNature.Worker.ToString(), StringComparison.OrdinalIgnoreCase)),
+                Staff = group.Count(e => string.Equals(e.EmployeeNature, EmployeeNature.Staff.ToString(), StringComparison.OrdinalIgnoreCase)),
+                Management = group.Count(e => string.Equals(e.EmployeeNature, EmployeeNature.Management.ToString(), StringComparison.OrdinalIgnoreCase))
             };
             dto.CompanySummaries.Add(companySummary);
         }

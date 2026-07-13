@@ -1,4 +1,5 @@
 using NZ.HRM.Application.Interfaces.Repositories;
+using System.IO;
 using NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
 using NZ.HRM.Application.Model.Employees.DTOs;
 using NZ.HRM.Domain.Entities;
@@ -19,7 +20,6 @@ public class EmployeeCommandHandler
     private readonly IDepartmentRepository _departmentRepository;
     private readonly ISectionRepository _sectionRepository;
     private readonly IShiftRepository _shiftRepository;
-    private readonly IEmployeeNatureRepository _employeeNatureRepository;
     private readonly IEmployeeEmploymentRepository _employeeEmploymentRepository;
     private readonly IEmployeeDocumentRepository _employeeDocumentRepository;
     private readonly IEmployeeSalaryAccountRepository _employeeSalaryAccountRepository;
@@ -34,7 +34,6 @@ public class EmployeeCommandHandler
         IDepartmentRepository departmentRepository,
         ISectionRepository sectionRepository,
         IShiftRepository shiftRepository,
-        IEmployeeNatureRepository employeeNatureRepository,
         IEmployeeEmploymentRepository employeeEmploymentRepository,
         IEmployeeSalaryAccountRepository employeeSalaryAccountRepository,
         IEmployeeDocumentRepository employeeDocumentRepository,
@@ -50,7 +49,6 @@ public class EmployeeCommandHandler
         _shiftRepository = shiftRepository;
         _employeeSalaryAccountRepository = employeeSalaryAccountRepository;
         _employeeNomineeRepository = employeeNomineeRepository;
-        _employeeNatureRepository = employeeNatureRepository;
         _employeeEmploymentRepository = employeeEmploymentRepository;
         _employeeDocumentRepository = employeeDocumentRepository;
     }
@@ -66,7 +64,6 @@ public class EmployeeCommandHandler
         {
             EnrollmentId = next,
             EmployeeNameBangla = command.EmployeeNameBangla ?? string.Empty,
-            EmployeeType = command.EmployeeType.ToString(),
             Status = EmployeeStatus.CandidateEntry.ToString(),
             IsActive = true
         };
@@ -145,7 +142,7 @@ public class EmployeeCommandHandler
             throw new KeyNotFoundException($"Employee with ID {employeeId} not found");
 
         employeee.EmployeeNameBangla = command.EmployeeNameBangla ?? string.Empty;
-            employeee.EmployeeType = command.EmployeeType.ToString();
+            employeee.EmployeeNature = command.EmployeeType.ToString();
         employeee.Status = EmployeeStatus.CandidateEntry.ToString();
         employeee.IsActive = true;
         // Save EmployeeMaster first
@@ -215,13 +212,13 @@ public class EmployeeCommandHandler
 
         employeeMaster.EmployeeCode = command.EmployeeCode;
         employeeMaster.EmployeeName = command.EmployeeName ?? string.Empty;
-        employeeMaster.EmployeeType = command.EmployeeNatureId.ToString();
+        employeeMaster.EmployeeNature = command.EmployeeNatureId.ToString();
         employeeMaster.Status = EmployeeStatus.HRExecutive.ToString();
 
         await _employeeMasterRepository.UpdateAsync(employeeMaster, cancellationToken);
         // Validate related entities exist
-        await ValidateRelatedEntities(command.UnitId, command.DepartmentId, command.SectionId, command.ShiftId, null, cancellationToken);
-
+        await ValidateRelatedEntities(command.UnitId, command.DepartmentId, command.SectionId, command.ShiftId, cancellationToken);
+        //command.EmployeeTypeId = "123                       ";
         if (employeeMaster.Employment is null)
         {
             var employeeEmployment = new HrmEmployeeEmployment
@@ -259,7 +256,6 @@ public class EmployeeCommandHandler
             employeeMaster.Employment.GradeId = command.GradeId;
             employeeMaster.Employment.WeeklyOffDay = command.Holiday.ToString();
             employeeMaster.Employment.EmployeeCategoryId = command.EmployeeTypeId;
-            //employeeMaster.Employment.EmployeeNatureId = command.EmployeeNatureId;
             employeeMaster.Employment.ProbationPeriod = command.ProbationPeriod;
             employeeMaster.Employment.ReportingTo = command.ReportingTo;
             employeeMaster.Employment.JoiningDate = command.JoiningDate;
@@ -290,10 +286,8 @@ public class EmployeeCommandHandler
             EmployeeId = employeeMaster.Id,
             NomineeName = command.NomineeName,
             Relationship = command.NomineeRelation,
-            //DateOfBirth = command.DateOfBirth,
             NidNo = command.NomineeID,
             MobileNo = command.NomineeMobileNumber,
-            //Address = command.Address,
             //NominationPercentage = command.NominationPercentage,
             IsActive = true
         };
@@ -488,8 +482,6 @@ public class EmployeeCommandHandler
         string departmentId,
         string sectionId, 
         string? shiftId,
-        string? employeeNatureId,
-        //string locationId, 
         CancellationToken cancellationToken)
     {
         if (!string.IsNullOrWhiteSpace(unitId))
@@ -516,13 +508,6 @@ public class EmployeeCommandHandler
             var shiftExists = await _shiftRepository.ExistsAsync(shiftId, cancellationToken);
             if (!shiftExists)
                 throw new KeyNotFoundException($"Shift with ID {shiftId} not found");
-        }
-
-        if (!string.IsNullOrWhiteSpace(employeeNatureId))
-        {
-            var employeeNatureExists = await _employeeNatureRepository.ExistsAsync(employeeNatureId, cancellationToken);
-            if (!employeeNatureExists)
-                throw new KeyNotFoundException($"Employee nature with ID {employeeNatureId} not found");
         }
     }
 

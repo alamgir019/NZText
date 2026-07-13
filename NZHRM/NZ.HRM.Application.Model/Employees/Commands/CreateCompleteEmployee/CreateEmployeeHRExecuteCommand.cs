@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+// file upload paths (stored by WebAPI controller)
 using NZ.HRM.Application.Model.Employees.DTOs;
 using NZ.HRM.Utility.Enum;
 
@@ -30,7 +31,7 @@ public class CreateEmployeeHRExecutiveCommand : CreateCandidateEntryCommand
     public string ShiftId { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Employee nature is required")]
-    public EmployeeType EmployeeNatureId { get; set; }
+    public EmployeeNature EmployeeNatureId { get; set; }
 
     [Required(ErrorMessage = "Employee code is required")]
     public string EmployeeCode { get; set; } = string.Empty;
@@ -52,7 +53,7 @@ public class CreateEmployeeHRExecutiveCommand : CreateCandidateEntryCommand
     public bool SalaryAccountFlag { get; set; }
     public string? AccountType { get; set; } // e.g., "Savings", "Current", etc.
 
-    public List<EmployeeDocumentDto>? Documents { get; set; }
+    public List<EmployeeDocumentDto>? Documents { get; set; } = new List<EmployeeDocumentDto>();
 
     // Additional Information
     [MaxLength(50, ErrorMessage = "TIN number must not exceed 50 characters")]

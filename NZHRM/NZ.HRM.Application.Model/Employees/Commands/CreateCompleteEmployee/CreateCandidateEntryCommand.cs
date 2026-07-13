@@ -8,10 +8,6 @@ public class CreateCandidateEntryCommand
     [MaxLength(100, ErrorMessage = "Employee name (Bangla) must not exceed 100 characters")]
     public string? EmployeeNameBangla { get; set; }
 
-    // Employment Details
-    [Required(ErrorMessage = "Employee type is required")]
-    public EmployeeType EmployeeType { get; set; }
-
     // Company & Organization
     [Required(ErrorMessage = "Unit ID is required")]
     public string UnitId { get; set; } = string.Empty;
