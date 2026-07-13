@@ -1,11 +1,10 @@
 using System.ComponentModel.DataAnnotations;
-// file upload paths (stored by WebAPI controller)
 using NZ.HRM.Application.Model.Employees.DTOs;
 using NZ.HRM.Utility.Enum;
 
 namespace NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
 
-public class CreateEmployeeHRExecutiveCommand : CreateCandidateEntryCommand
+public class CreateEmployeeHRExecutiveCommand
 {
     // Basic Employment Information
     [Required(ErrorMessage = "Employee ID is required")]
@@ -21,17 +20,15 @@ public class CreateEmployeeHRExecutiveCommand : CreateCandidateEntryCommand
     [Required(ErrorMessage = "Subunit ID is required")]
     public string SubunitId { get; set; } = string.Empty;
 
-    public string? DesignationId { get; set; }
-
     public string? GradeId { get; set; }
 
-    public string? EmployeeTypeId { get; set; } = string.Empty;
+    public EmployeeCategory? EmployeeCategory { get; set; }
 
     [Required(ErrorMessage = "Shift is required")]
     public string ShiftId { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Employee nature is required")]
-    public EmployeeNature EmployeeNatureId { get; set; }
+    public EmployeeNature? EmployeeNature { get; set; }
 
     [Required(ErrorMessage = "Employee code is required")]
     public string EmployeeCode { get; set; } = string.Empty;
@@ -71,4 +68,9 @@ public class CreateEmployeeHRExecutiveCommand : CreateCandidateEntryCommand
     public string DepartmentId { get; set; } = string.Empty;
     public string SectionId { get; set; } = string.Empty;
     public string? CellId { get; set; }
+    public string UnitId { get; set; }
+    public string DesignationId { get; set; }
+    public DateOnly? JoiningDate { get; set; }
+    public decimal? ProposedMonthlySalary { get; set; }
+    public string MobileNumber { get; set; }
 }

@@ -85,9 +85,7 @@ public class EmployeeCommandHandler
             MobileNumber = command.MobileNumber,
             EmployeeReference = command.EmployeeReference,
             ReferenceType = command.ReferenceType?.ToString(),
-            ReferencePersonId = command.ReferencePersonId,
             ReferenceMobileNumber = command.ReferenceMobileNumber,
-            Relationship = command.Relationship?.ToString(),
             Religion = command.Religion.ToString(),
             PermanentVillageAreaRoad = command.PermanentVillageAreaRoad,
             PermanentPostOffice = command.PermanentPostOffice,
@@ -105,19 +103,16 @@ public class EmployeeCommandHandler
         // Save EmployeePersonal
         await _employeePersonalRepository.AddAsync(employeePersonal, cancellationToken);
 
-        var employeeVerification = new HrmEmployeeVerification
+
+
+        var employeeNominee = new HrmEmployeeNominee
         {
-            EmployeeId = employeeId,
-            SecurityClearanceBy = command.SecurityClearanceBy,
-            SecurityClearanceDate = command.SecurityClearanceDate,
-            EnrolledBy = command.EnrolledBy,
-            EnrolledDate = command.EnrolledDate,
-            BiometricEnrolledBy = command.BiometricEnrolledBy,
-            BiometricEnrolledDate = command.BiometricEnrolledDate,
+            EmployeeId = employeeMaster.Id,
+            NomineeNameBangla = command.NomineeNameBangla,
+            RelationshipBangla = command.NomineeRelationBangla,
             IsActive = true
         };
-
-        await _employeeVerificationRepository.AddAsync(employeeVerification, cancellationToken);
+        await _employeeNomineeRepository.AddAsync(employeeNominee, cancellationToken);
 
         var employeeEmployment = new HrmEmployeeEmployment
         {
@@ -142,7 +137,6 @@ public class EmployeeCommandHandler
             throw new KeyNotFoundException($"Employee with ID {employeeId} not found");
 
         employeee.EmployeeNameBangla = command.EmployeeNameBangla ?? string.Empty;
-            employeee.EmployeeNature = command.EmployeeType.ToString();
         employeee.Status = EmployeeStatus.CandidateEntry.ToString();
         employeee.IsActive = true;
         // Save EmployeeMaster first
@@ -161,9 +155,7 @@ public class EmployeeCommandHandler
             employeee.Personal.MobileNumber = command.MobileNumber;
             employeee.Personal.EmployeeReference = command.EmployeeReference;
             employeee.Personal.ReferenceType = command.ReferenceType?.ToString();
-            employeee.Personal.ReferencePersonId = command.ReferencePersonId;
             employeee.Personal.ReferenceMobileNumber = command.ReferenceMobileNumber;
-            employeee.Personal.Relationship = command.Relationship?.ToString();
             employeee.Personal.Religion = command.Religion.ToString();
             employeee.Personal.PermanentVillageAreaRoad = command.PermanentVillageAreaRoad;
             employeee.Personal.PermanentPostOffice = command.PermanentPostOffice;
@@ -179,18 +171,14 @@ public class EmployeeCommandHandler
 
             await _employeePersonalRepository.UpdateAsync(employeee.Personal, cancellationToken);
         }
-        if (employeee.Verification != null)
+        if (employeee.Nominees != null)
         {
-            employeee.Verification.EmployeeId = employeeId;
-            employeee.Verification.SecurityClearanceBy = command.SecurityClearanceBy;
-            employeee.Verification.SecurityClearanceDate = command.SecurityClearanceDate;
-            employeee.Verification.EnrolledBy = command.EnrolledBy;
-            employeee.Verification.EnrolledDate = command.EnrolledDate;
-            employeee.Verification.BiometricEnrolledBy = command.BiometricEnrolledBy;
-            employeee.Verification.BiometricEnrolledDate = command.BiometricEnrolledDate;
-            employeee.Verification.IsActive = true;
-            await _employeeVerificationRepository.UpdateAsync(employeee.Verification, cancellationToken);
+            employeee.Nominees.First().EmployeeId = employeeId;
+            employeee.Nominees.First().NomineeNameBangla = command.NomineeNameBangla;
+            employeee.Nominees.First().RelationshipBangla = command.NomineeRelationBangla;
+            await _employeeNomineeRepository.UpdateAsync(employeee.Nominees.First(), cancellationToken);
         }
+
         if (employeee.Employment != null)
         {
             employeee.Employment.EmployeeId = employeeId;
@@ -212,7 +200,7 @@ public class EmployeeCommandHandler
 
         employeeMaster.EmployeeCode = command.EmployeeCode;
         employeeMaster.EmployeeName = command.EmployeeName ?? string.Empty;
-        employeeMaster.EmployeeNature = command.EmployeeNatureId.ToString();
+        employeeMaster.EmployeeNature = command.EmployeeNature?.ToString() ?? string.Empty;
         employeeMaster.Status = EmployeeStatus.HRExecutive.ToString();
 
         await _employeeMasterRepository.UpdateAsync(employeeMaster, cancellationToken);
@@ -233,7 +221,7 @@ public class EmployeeCommandHandler
                 DesignationId = command.DesignationId,
                 GradeId = command.GradeId,
                 WeeklyOffDay = command.Holiday.ToString(),
-                EmployeeCategoryId = command.EmployeeTypeId,
+                EmployeeCategory = command.EmployeeCategory?.ToString() ?? string.Empty,
                 ProbationPeriod = command.ProbationPeriod,
                 ReportingTo = command.ReportingTo,
                 JoiningDate = command.JoiningDate,
@@ -255,7 +243,7 @@ public class EmployeeCommandHandler
             employeeMaster.Employment.DesignationId = command.DesignationId;
             employeeMaster.Employment.GradeId = command.GradeId;
             employeeMaster.Employment.WeeklyOffDay = command.Holiday.ToString();
-            employeeMaster.Employment.EmployeeCategoryId = command.EmployeeTypeId;
+            employeeMaster.Employment.EmployeeCategory = command.EmployeeCategory.ToString();
             employeeMaster.Employment.ProbationPeriod = command.ProbationPeriod;
             employeeMaster.Employment.ReportingTo = command.ReportingTo;
             employeeMaster.Employment.JoiningDate = command.JoiningDate;
@@ -280,11 +268,23 @@ public class EmployeeCommandHandler
 
     private async Task UpsertNominee(CreateEmployeeHRExecutiveCommand command, HrmEmployeeMaster employeeMaster, CancellationToken cancellationToken)
     {
-
+        if (employeeMaster.Nominees != null && employeeMaster.Nominees.Count > 0)
+        {
+            var nominee = employeeMaster.Nominees.First();
+            nominee.EmployeeId = employeeMaster.Id;
+            nominee.NomineeName = command.NomineeName;
+            nominee.Relationship = command.NomineeRelation;
+            nominee.NidNo = command.NomineeID;
+            nominee.MobileNo = command.NomineeMobileNumber;
+            //nominee.NominationPercentage = command.NominationPercentage;
+            nominee.IsActive = true;
+            await _employeeNomineeRepository.UpdateAsync(nominee, cancellationToken);
+            return;
+        }
         var employeeNominee = new HrmEmployeeNominee
         {
             EmployeeId = employeeMaster.Id,
-            NomineeName = command.NomineeName,
+            NomineeName  = command.NomineeName,
             Relationship = command.NomineeRelation,
             NidNo = command.NomineeID,
             MobileNo = command.NomineeMobileNumber,

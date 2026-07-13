@@ -8,10 +8,6 @@ public class UpdateCandidateEntryCommand
     [MaxLength(100, ErrorMessage = "Employee name (Bangla) must not exceed 100 characters")]
     public string? EmployeeNameBangla { get; set; }
 
-    // Employment Details
-    [Required(ErrorMessage = "Employee type is required")]
-    public EmployeeNature EmployeeType { get; set; }
-
     // Company & Organization
     [Required(ErrorMessage = "Unit ID is required")]
     public string UnitId { get; set; } = string.Empty;
@@ -58,13 +54,8 @@ public class UpdateCandidateEntryCommand
     [MaxLength(100, ErrorMessage = "Employee reference must not exceed 100 characters")]
     public string? EmployeeReference { get; set; }
 
-    [MaxLength(50, ErrorMessage = "Reference person ID must not exceed 50 characters")]
-    public string? ReferencePersonId { get; set; }
-
     [MaxLength(20, ErrorMessage = "Mobile number must not exceed 20 characters")]
     public string? ReferenceMobileNumber { get; set; }
-    public Relation? Relationship { get; set; }
-
 
 
     // Address Information
@@ -114,4 +105,6 @@ public class UpdateCandidateEntryCommand
     public string? BiometricEnrolledBy { get; set; }
 
     public DateOnly? BiometricEnrolledDate { get; set; }
+    public string? NomineeNameBangla { get; set; }
+    public string? NomineeRelationBangla { get; set; }
 }

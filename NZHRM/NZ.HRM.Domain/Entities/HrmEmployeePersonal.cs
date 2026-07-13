@@ -28,10 +28,7 @@ namespace NZ.HRM.Domain.Entities
         public string? PassportNo { get; set; }
         public string? ReferenceType { get; set; }
         public string? EmployeeReference { get; set; }
-        public string? ReferencePersonId { get; set; }
         public string? ReferenceMobileNumber { get; set; }
-        public string? Relationship { get; set; }
-
         [ForeignKey("EmployeeId")] public HrmEmployeeMaster? Employee { get; set; }
         public string? PermanentVillageAreaRoad { get; set; }
         public string? PermanentPostOffice { get; set; }

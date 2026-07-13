@@ -18,7 +18,6 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<MstDesignation> MstDesignations => Set<MstDesignation>();
         public DbSet<MstGrade> MstGrades => Set<MstGrade>();
         public DbSet<MstShift> MstShifts => Set<MstShift>();
-        public DbSet<MstEmployeeCategory> MstEmployeeCategories => Set<MstEmployeeCategory>();
         public DbSet<MstPayrollProcessingGroup> MstPayrollProcessingGroups => Set<MstPayrollProcessingGroup>();
         public DbSet<MstDepartmentUnitComplex> MstDepartmentUnitComplexes => Set<MstDepartmentUnitComplex>();
 
@@ -168,7 +167,6 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<MstDesignation>().ToTable("mst_designation", "master");
             modelBuilder.Entity<MstGrade>().ToTable("mst_grade", "master");
             modelBuilder.Entity<MstShift>().ToTable("mst_shift", "master");
-            modelBuilder.Entity<MstEmployeeCategory>().ToTable("mst_employee_category", "master");
             modelBuilder.Entity<MstPayrollProcessingGroup>().ToTable("payroll_processing_group", "master");
             modelBuilder.Entity<MstDepartmentUnitComplex>().ToTable("mst_department_unit_complex", "master");
             modelBuilder.Entity<MstGroupComplex>().ToTable("mst_group_complex", "master");

@@ -1,12 +1,9 @@
 namespace NZ.HRM.Utility.Enum
 {
-    public enum EmployeeNature1
+    public enum EmployeeNature
     {
-        Provision,
-        Permanent,
-        Contractual,
-        Temporary,
-        Probation,
-        Trainee
+        Worker,
+        Staff,
+        Management
     }
 }

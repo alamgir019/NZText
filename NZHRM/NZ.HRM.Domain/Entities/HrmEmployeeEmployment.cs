@@ -24,7 +24,7 @@ namespace NZ.HRM.Domain.Entities
         public string? DesignationId { get; set; }
         public string? GradeId { get; set; }
         public string? ShiftId { get; set; }
-        public string? EmployeeCategoryId { get; set; }
+        public string? EmployeeCategory { get; set; }
         public string? ReportingTo { get; set; }
         public string? ProcessingGroupId { get; set; }
         public string? WeeklyOffDay { get; set; }
@@ -40,7 +40,6 @@ namespace NZ.HRM.Domain.Entities
         [ForeignKey("DesignationId")] public MstDesignation? Designation { get; set; }
         [ForeignKey("GradeId")] public MstGrade? Grade { get; set; }
         [ForeignKey("ShiftId")] public MstShift? Shift { get; set; }
-        [ForeignKey("EmployeeCategoryId")] public MstEmployeeCategory? EmployeeCategory { get; set; }
         [ForeignKey("ProcessingGroupId")] public MstPayrollProcessingGroup? ProcessingGroup { get; set; }
     }
 }
