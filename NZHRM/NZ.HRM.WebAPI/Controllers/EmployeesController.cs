@@ -204,7 +204,8 @@ public class EmployeesController : ControllerBase
             command.Documents = new List<EmployeeDocumentDto>();
             if (certificate != null && certificate.Length > 0)
             {
-                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.EducationCertificate.ToString()}";
+                var extension = Path.GetExtension(certificate.FileName);
+                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.EducationCertificate.ToString()}{extension}";
                 var filePath = Path.Combine(targetFolder, uniqueFileName);
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
@@ -221,7 +222,8 @@ public class EmployeesController : ControllerBase
 
             if (policeClearance != null && policeClearance.Length > 0)
             {
-                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.PoliceClearance.ToString()}";
+                var extension = Path.GetExtension(policeClearance.FileName);
+                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.PoliceClearance.ToString()}{extension}";
                 var filePath = Path.Combine(targetFolder, uniqueFileName);
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
@@ -238,7 +240,8 @@ public class EmployeesController : ControllerBase
 
             if (experienceCertificate != null && experienceCertificate.Length > 0)
             {
-                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.ExperienceCertificate.ToString()}";
+                var extension = Path.GetExtension(experienceCertificate.FileName);
+                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.ExperienceCertificate.ToString()}{extension}";
                 var filePath = Path.Combine(targetFolder, uniqueFileName);
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
@@ -255,7 +258,8 @@ public class EmployeesController : ControllerBase
 
             if (passportPhoto != null && passportPhoto.Length > 0)
             {
-                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.PassportPhoto.ToString()}";
+                var extension = Path.GetExtension(passportPhoto.FileName);
+                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.PassportPhoto.ToString()}{extension}";
                 var filePath = Path.Combine(targetFolder, uniqueFileName);
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
@@ -272,7 +276,8 @@ public class EmployeesController : ControllerBase
 
             if(chairmanCertificate != null && chairmanCertificate.Length > 0)
             {
-                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.ChairmanCertificate.ToString()}";
+                var extension = Path.GetExtension(chairmanCertificate.FileName);
+                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.ChairmanCertificate.ToString()}{extension}";
                 var filePath = Path.Combine(targetFolder, uniqueFileName);
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
@@ -290,7 +295,8 @@ public class EmployeesController : ControllerBase
 
             if (signature != null && signature.Length > 0)
             {
-                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.Signature.ToString()}";
+                var extension = Path.GetExtension(signature.FileName);
+                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.Signature.ToString()}{extension}";
                 var filePath = Path.Combine(targetFolder, uniqueFileName);
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
