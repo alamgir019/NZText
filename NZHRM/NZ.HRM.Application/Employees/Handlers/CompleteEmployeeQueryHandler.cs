@@ -7,6 +7,7 @@ using NZ.HRM.Application.Model.Employees.DTOs;
 using NZ.HRM.Domain.Entities;
 using NZ.HRM.Mapping.Employees;
 using NZ.HRM.Utility.Enum;
+using NZ.HRM.Application.Employees.Queries.GetEmployeeDocuments;
 
 namespace NZ.HRM.Application.Employees.Handlers;
 
@@ -19,6 +20,24 @@ public class CompleteEmployeeQueryHandler
     {
         _employeeMasterRepository = employeeMasterRepository;
         _employeeDocumentRepository = employeeDocumentRepository;
+    }
+
+    public async Task<List<EmployeeDocumentDto>> Handle(GetEmployeeDocumentsQuery query, CancellationToken cancellationToken = default)
+    {
+        var docs = await _employeeDocumentRepository.GetByEmployeeIdAsync(query.EmployeeId, cancellationToken);
+        if (docs == null || !docs.Any())
+            return new List<EmployeeDocumentDto>();
+
+        return docs.Select(d => new EmployeeDocumentDto
+        {
+            EmployeeId = d.EmployeeId,
+            DocumentType = !string.IsNullOrWhiteSpace(d.DocumentType) && Enum.TryParse<NZ.HRM.Utility.Enum.DocumentType>(d.DocumentType, out var dt) ? dt : null,
+            DocumentNo = d.DocumentNo,
+            IssueDate = d.IssueDate,
+            ExpiryDate = d.ExpiryDate,
+            FileName = d.FileName,
+            FilePath = d.FilePath
+        }).ToList();
     }
 
     public async Task<EmployeeDetailDto?> Handle(GetEmployeeDetailQuery query, CancellationToken cancellationToken = default)

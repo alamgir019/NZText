@@ -204,7 +204,7 @@ public class EmployeesController : ControllerBase
             command.Documents = new List<EmployeeDocumentDto>();
             if (certificate != null && certificate.Length > 0)
             {
-                var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(certificate.FileName)}";
+                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.EducationCertificate.ToString()}";
                 var filePath = Path.Combine(targetFolder, uniqueFileName);
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
@@ -221,7 +221,7 @@ public class EmployeesController : ControllerBase
 
             if (policeClearance != null && policeClearance.Length > 0)
             {
-                var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(policeClearance.FileName)}";
+                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.PoliceClearance.ToString()}";
                 var filePath = Path.Combine(targetFolder, uniqueFileName);
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
@@ -238,7 +238,7 @@ public class EmployeesController : ControllerBase
 
             if (experienceCertificate != null && experienceCertificate.Length > 0)
             {
-                var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(experienceCertificate.FileName)}";
+                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.ExperienceCertificate.ToString()}";
                 var filePath = Path.Combine(targetFolder, uniqueFileName);
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
@@ -255,7 +255,7 @@ public class EmployeesController : ControllerBase
 
             if (passportPhoto != null && passportPhoto.Length > 0)
             {
-                var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(passportPhoto.FileName)}";
+                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.PassportPhoto.ToString()}";
                 var filePath = Path.Combine(targetFolder, uniqueFileName);
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
@@ -272,7 +272,7 @@ public class EmployeesController : ControllerBase
 
             if(chairmanCertificate != null && chairmanCertificate.Length > 0)
             {
-                var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(chairmanCertificate.FileName)}";
+                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.ChairmanCertificate.ToString()}";
                 var filePath = Path.Combine(targetFolder, uniqueFileName);
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
@@ -290,7 +290,7 @@ public class EmployeesController : ControllerBase
 
             if (signature != null && signature.Length > 0)
             {
-                var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(signature.FileName)}";
+                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.Signature.ToString()}";
                 var filePath = Path.Combine(targetFolder, uniqueFileName);
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
@@ -454,12 +454,12 @@ public class EmployeesController : ControllerBase
         }
     }
 
-    [HttpGet("view-files/{employeeEnrollmentId}")]
+    [HttpGet("view-files/{employee-code}")]
     [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult GetUploadedFiles(string employeeEnrollmentId)
+    public IActionResult GetUploadedFiles(string employeeCode)
     {
-        string targetFolder = Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles", employeeEnrollmentId);
+        string targetFolder = Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles", employeeCode);
 
         if (!Directory.Exists(targetFolder))
             return NotFound(new { message = "Target folder not found." });
@@ -483,9 +483,30 @@ public class EmployeesController : ControllerBase
 
         return Ok(new
         {
-            employeeEnrollmentId,
+            employeeCode,
             totalFiles = files.Count,
             files
+        });
+    }
+
+    [HttpGet("uploaded-documents/{employeeId}")]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetUploadedDocumentsByEmployee(string employeeId)
+    {
+        if (string.IsNullOrWhiteSpace(employeeId))
+            return BadRequest(new { message = "employeeId is required" });
+        var query = new Application.Employees.Queries.GetEmployeeDocuments.GetEmployeeDocumentsQuery { EmployeeId = employeeId };
+        var documents = await _getCompleteEmployeeHandler.Handle(query, cancellationToken: default);
+        if (documents == null || !documents.Any())
+            return NotFound(new { message = "No documents found for this employee." });
+
+        return Ok(new
+        {
+            employeeId,
+            totalFiles = documents.Count,
+            files = documents
         });
     }
 
