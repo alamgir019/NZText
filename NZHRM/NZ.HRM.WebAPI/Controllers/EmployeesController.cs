@@ -67,7 +67,7 @@ public class EmployeesController : ControllerBase
         }
         catch (KeyNotFoundException ex)
         {
-            return BadRequest(new { message = ex.Message });
+            return NotFound(new { message = ex.Message });
         }
         catch (Exception ex)
         {
@@ -98,7 +98,7 @@ public class EmployeesController : ControllerBase
         }
         catch (KeyNotFoundException ex)
         {
-            return BadRequest(new { message = ex.Message });
+            return NotFound(new { message = ex.Message });
         }
         catch (Exception ex)
         {

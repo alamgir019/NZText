@@ -152,9 +152,9 @@ public class EmployeeQueryHandler
 
             // Employment Information
             UnitId = employment?.UnitId ?? string.Empty,
-            UnitName = employment?.Unit?.UnitName ?? string.Empty,
+            UnitName = employment?.Unit?.UnitNameBangla ?? string.Empty,
             DesignationId = employment?.DesignationId,
-            DesignationName = employment?.Designation?.DesignationName,
+            DesignationName = employment?.Designation?.DesignationNameBangla,
             ProposedMonthlySalary = employee.Payroll?.ProposedSalary,
             JoiningDate = employment?.JoiningDate?.ToString("yyyy-MM-dd") ?? string.Empty,
 
@@ -180,21 +180,21 @@ public class EmployeeQueryHandler
             PermanentVillageAreaRoad = personal?.PermanentVillageAreaRoad,
             PermanentPostOffice = personal?.PermanentPostOffice,
             PermanentThanaId = personal?.PermanentThanaId,
-            PermanentThanaName = personal?.PermanentThana?.ThanaName,
+            PermanentThanaName = personal?.PermanentThana?.ThanaNameBangla,
             PermanentDistrictId = personal?.PermanentDistrictId,
-            PermanentDistrictName = personal?.PermanentDistrict?.DistrictName,
+            PermanentDistrictName = personal?.PermanentDistrict?.DistrictNameBangla,
             PermanentDivisionId = personal?.PermanentDivisionId,
-            PermanentDivisionName = personal?.PermanentDivision?.DivisionName,
+            PermanentDivisionName = personal?.PermanentDivision?.DivisionNameBangla,
 
             // Present Address
             PresentVillageAreaRoad = personal?.PresentVillageAreaRoad,
             PresentPostOffice = personal?.PresentPostOffice,
             PresentThanaId = personal?.PresentThanaId,
-            PresentThanaName = personal?.PresentThana?.ThanaName,
+            PresentThanaName = personal?.PresentThana?.ThanaNameBangla,
             PresentDistrictId = personal?.PresentDistrictId,
-            PresentDistrictName = personal?.PresentDistrict?.DistrictName,
+            PresentDistrictName = personal?.PresentDistrict?.DistrictNameBangla,
             PresentDivisionId = personal?.PresentDivisionId,
-            PresentDivisionName = personal?.PresentDivision?.DivisionName,
+            PresentDivisionName = personal?.PresentDivision?.DivisionNameBangla,
 
             // Nominee Information
             NomineeNameBangla = nominee?.NomineeNameBangla,

@@ -15,5 +15,6 @@ namespace NZ.HRM.Domain.Entities
         [ForeignKey("ComplexId")]
         public MstGroupComplex? Complex { get; set; }
         public ICollection<MstSubunit> Subunits { get; set; } = new HashSet<MstSubunit>();
+        public string? UnitNameBangla { get; set; }
     }
 }
