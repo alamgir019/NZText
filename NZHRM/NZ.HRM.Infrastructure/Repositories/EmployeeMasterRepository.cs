@@ -110,6 +110,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
     {
         return await _context.HrmEmployeeMasters
             .Include(e => e.MedicalFitnessCheck) // req for medical report generation
+            .Include(e => e.Documents) // req for medical report generation
             .Include(e => e.Employment.Unit)
             .Include(e => e.Employment.Subunit)
             .Include(e => e.Employment.Department)
@@ -120,7 +121,6 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Employment.Shift)
             .Include(e => e.Nominees)
             .Include(e => e.Payroll).ThenInclude(p => p.SalaryAccount).ThenInclude(sa => sa.Banking)
-
             .FirstOrDefaultAsync(e => e.Id == id && e.IsActive, cancellationToken);
     }
 
