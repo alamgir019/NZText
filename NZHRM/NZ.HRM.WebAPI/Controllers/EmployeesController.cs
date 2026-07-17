@@ -392,15 +392,120 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpPost("it-activation")]
+    [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(object), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ITActivation([FromBody] CreateITActivationCommand command)
+    public async Task<IActionResult> ITActivation([FromForm] CreateITActivationCommand command)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
         try
         {
+            var targetFolder = Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles", command.EmployeeCode);
+            if (!Directory.Exists(targetFolder))
+                Directory.CreateDirectory(targetFolder);
+
+            var appointmentLetter = Request.Form.Files.FirstOrDefault(f =>
+                string.Equals(f.Name, "appointmentLetter", StringComparison.OrdinalIgnoreCase));
+            var joiningLetter = Request.Form.Files.FirstOrDefault(f =>
+                string.Equals(f.Name, "joiningLetter", StringComparison.OrdinalIgnoreCase));
+            var medicalReport = Request.Form.Files.FirstOrDefault(f =>
+                string.Equals(f.Name, "medicalReport", StringComparison.OrdinalIgnoreCase));
+            var idCardBangla = Request.Form.Files.FirstOrDefault(f =>
+                string.Equals(f.Name, "idCardBangla", StringComparison.OrdinalIgnoreCase));
+            var idCardEnglish = Request.Form.Files.FirstOrDefault(f =>
+                string.Equals(f.Name, "idCardEnglish", StringComparison.OrdinalIgnoreCase));
+            command.Documents = new List<EmployeeDocumentDto>();
+            if (appointmentLetter != null && appointmentLetter.Length > 0)
+            {
+                var extension = Path.GetExtension(appointmentLetter.FileName);
+                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.AppointmentLetter.ToString()}{extension}";
+                var filePath = Path.Combine(targetFolder, uniqueFileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await appointmentLetter.CopyToAsync(stream);
+                }
+                command.Documents.Add(new EmployeeDocumentDto
+                {
+                    DocumentType = Utility.Enum.DocumentType.AppointmentLetter,
+                    FilePath = filePath,
+                    EmployeeId = command.EmployeeId,
+                    FileName = uniqueFileName,
+                });
+            }
+
+            if (joiningLetter != null && joiningLetter.Length > 0)
+            {
+                var extension = Path.GetExtension(joiningLetter.FileName);
+                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.JoiningLetter.ToString()}{extension}";
+                var filePath = Path.Combine(targetFolder, uniqueFileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await joiningLetter.CopyToAsync(stream);
+                }
+                command.Documents.Add(new EmployeeDocumentDto
+                {
+                    DocumentType = Utility.Enum.DocumentType.JoiningLetter,
+                    FilePath = filePath,
+                    EmployeeId = command.EmployeeId,
+                    FileName = uniqueFileName,
+                });
+            }
+
+            if (medicalReport != null && medicalReport.Length > 0)
+            {
+                var extension = Path.GetExtension(medicalReport.FileName);
+                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.MedicalReport.ToString()}{extension}";
+                var filePath = Path.Combine(targetFolder, uniqueFileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await medicalReport.CopyToAsync(stream);
+                }
+                command.Documents.Add(new EmployeeDocumentDto
+                {
+                    DocumentType = Utility.Enum.DocumentType.MedicalReport,
+                    FilePath = filePath,
+                    EmployeeId = command.EmployeeId,
+                    FileName = uniqueFileName,
+                });
+            }
+
+            if (idCardBangla != null && idCardBangla.Length > 0)
+            {
+                var extension = Path.GetExtension(idCardBangla.FileName);
+                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.IDCardBangla.ToString()}{extension}";
+                var filePath = Path.Combine(targetFolder, uniqueFileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await idCardBangla.CopyToAsync(stream);
+                }
+                command.Documents.Add(new EmployeeDocumentDto
+                {
+                    DocumentType = Utility.Enum.DocumentType.IDCardBangla,
+                    FilePath = filePath,
+                    EmployeeId = command.EmployeeId,
+                    FileName = uniqueFileName,
+                });
+            }
+
+            if (idCardEnglish != null && idCardEnglish.Length > 0)
+            {
+                var extension = Path.GetExtension(idCardEnglish.FileName);
+                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.IDCardEnglish.ToString()}{extension}";
+                var filePath = Path.Combine(targetFolder, uniqueFileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await idCardEnglish.CopyToAsync(stream);
+                }
+                command.Documents.Add(new EmployeeDocumentDto
+                {
+                    DocumentType = Utility.Enum.DocumentType.IDCardEnglish,
+                    FilePath = filePath,
+                    EmployeeId = command.EmployeeId,
+                    FileName = uniqueFileName,
+                });
+            }
             var employeeId = await _createCompleteEmployeeHandler.Handle(command, cancellationToken: default);
             return CreatedAtAction(
                 nameof(ITActivation),
@@ -423,9 +528,9 @@ public class EmployeesController : ControllerBase
 
     [HttpPost("upload-files")]
     [Consumes("multipart/form-data")]
-    public async Task<IActionResult> UploadFile(string employeeEnrollmentId, List<IFormFile> files)
+    public async Task<IActionResult> UploadFile(string employeeCode, List<IFormFile> files)
     {
-        string _targetFolder = Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles", employeeEnrollmentId);
+        string _targetFolder = Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles", employeeCode);
         // 1. Validate file existence
         if (files == null || files.Count == 0)
             return BadRequest("No file uploaded or file is empty.");
@@ -515,8 +620,6 @@ public class EmployeesController : ControllerBase
             files = documents
         });
     }
-
-
 
     /// <summary>
     /// Return an image file given a full file system path.

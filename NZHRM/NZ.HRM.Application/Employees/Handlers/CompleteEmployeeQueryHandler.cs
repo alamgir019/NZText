@@ -55,7 +55,7 @@ public class CompleteEmployeeQueryHandler
         var documents = await _employeeDocumentRepository.GetByEmployeeIdAsync(employeeId, cancellationToken);
         if (documents == null)
             return null;
-        var photoDocument = documents.LastOrDefault(d => d.DocumentType == "Photo");
+        var photoDocument = documents.LastOrDefault(d => d.DocumentType == Utility.Enum.DocumentType.Photo.ToString());
         return photoDocument;
     }
     

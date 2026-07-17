@@ -15,6 +15,13 @@ namespace NZ.HRM.Utility.Enum
         PassportPhoto,
         ChairmanCertificate,
         Signature,
+        AppointmentLetter,
+        JoiningLetter,
+        MedicalReport,
+        IDCardBangla,
+        IDCardEnglish,
+        AppliedCV,
+        NomineeNID,
         Other,
     }
 }

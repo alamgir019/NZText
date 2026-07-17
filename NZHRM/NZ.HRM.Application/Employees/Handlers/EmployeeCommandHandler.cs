@@ -2,6 +2,7 @@ using NZ.HRM.Application.Interfaces.Repositories;
 using System.IO;
 using NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
 using NZ.HRM.Application.Model.Employees.DTOs;
+using NZ.HRM.Application.Payroll.Services;
 using NZ.HRM.Domain.Entities;
 using NZ.HRM.Mapping.Employees;
 using NZ.HRM.Utility.Enum;
@@ -433,6 +434,11 @@ public class EmployeeCommandHandler
         if (employeeMaster == null || employeeMaster.EnrollmentId != command.EmployeeEnrollmentId)
             throw new KeyNotFoundException($"Employee with ID {command.EmployeeId} not found");
 
+        if (employeeMaster.Documents is null || employeeMaster.Documents.Count == 0)
+        {
+            AddEmployeeDocument(command.Documents, employeeMaster, cancellationToken).Wait(cancellationToken);
+        }
+
         employeeMaster.Status = EmployeeStatus.ITActivation.ToString();
         await _employeeMasterRepository.UpdateAsync(employeeMaster, cancellationToken);
 
@@ -449,7 +455,17 @@ public class EmployeeCommandHandler
         if (payroll != null)
         {
             payroll.ProposedSalary = command.ProposedMonthlySalary;
-            payroll.GrossSalary = command.ProposedMonthlySalary;
+            payroll.GrossSalary = command.GrossSalary ?? command.ProposedMonthlySalary;
+
+            // Calculate salary breakdown from gross salary based on employee nature
+            var salaryBreakdown = SalaryBreakdownService.CalculateSalaryBreakdown(payroll.GrossSalary ?? 0, command.EmployeeNature);
+
+            // Update payroll with calculated components
+            payroll.BasicSalary = salaryBreakdown.Basic;
+            payroll.ConveyanceAllowance = salaryBreakdown.Conveyance;
+            payroll.HouseRentAllowance = salaryBreakdown.HouseRent;
+            payroll.MedicalAllowance = salaryBreakdown.Medical;
+            payroll.FoodAllowance = salaryBreakdown.Food;
         }
 
         existingEmployee.Status = EmployeeStatus.DirectorReview.ToString();
