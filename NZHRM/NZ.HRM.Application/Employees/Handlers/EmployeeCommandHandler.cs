@@ -460,7 +460,7 @@ public class EmployeeCommandHandler
             payroll.GrossSalary = command.GrossSalary ?? command.ProposedMonthlySalary;
 
             // Calculate salary breakdown from gross salary based on employee nature
-            var salaryBreakdown = SalaryBreakdownService.CalculateSalaryBreakdown(payroll.GrossSalary ?? 0, command.EmployeeNature);
+            var salaryBreakdown = SalaryBreakdownService.CalculateSalaryBreakdown(payroll.GrossSalary ?? 0, Enum.TryParse<EmployeeNature>(existingEmployee.EmployeeNature, out var employeeNature) ? employeeNature : EmployeeNature.Worker);
 
             // Update payroll with calculated components
             payroll.BasicSalary = salaryBreakdown.Basic;
