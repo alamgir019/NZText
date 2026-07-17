@@ -109,6 +109,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
     public async Task<HrmEmployeeMaster?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
         return await _context.HrmEmployeeMasters
+            .Include(e => e.MedicalFitnessCheck) // req for medical report generation
             .Include(e => e.Employment.Unit)
             .Include(e => e.Employment.Subunit)
             .Include(e => e.Employment.Department)
