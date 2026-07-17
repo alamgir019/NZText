@@ -8,9 +8,9 @@ namespace NZ.HRM.Utility.Enum
     }
     public enum IDType
     {
+        Passport,
         NID,
         BirthCertificate,
-        Passport,
     }    
     public enum GuardianType
     {

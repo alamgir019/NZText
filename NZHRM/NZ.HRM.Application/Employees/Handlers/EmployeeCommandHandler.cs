@@ -97,6 +97,9 @@ public class EmployeeCommandHandler
             PresentThanaId = command.PresentThanaId,
             PresentDistrictId = command.PresentDistrictId,
             PresentDivisionId = command.PresentDivisionId,
+            
+            IdType = command.IDType,
+            IdNumber = command.IDNumber,
             IsActive = true
         };
 
@@ -137,7 +140,6 @@ public class EmployeeCommandHandler
             throw new KeyNotFoundException($"Employee with ID {employeeId} not found");
 
         employeee.EmployeeNameBangla = command.EmployeeNameBangla ?? string.Empty;
-        employeee.Status = EmployeeStatus.CandidateEntry.ToString();
         employeee.IsActive = true;
         // Save EmployeeMaster first
         await _employeeMasterRepository.UpdateAsync(employeee, cancellationToken);

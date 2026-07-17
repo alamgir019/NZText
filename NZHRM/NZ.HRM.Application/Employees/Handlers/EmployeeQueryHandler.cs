@@ -164,8 +164,8 @@ public class EmployeeQueryHandler
             Gender = personal?.Gender ?? string.Empty,
             Religion = personal?.Religion ?? string.Empty,
             BloodGroup = personal?.BloodGroup,
-            IDType = personal?.NidNo != null ? "NID" : personal?.PassportNo != null ? "Passport" : personal?.BirthCertificateNo != null ? "Birth Certificate" : null,
-            IDNumber = personal?.NidNo ?? personal?.PassportNo ?? personal?.BirthCertificateNo,
+            IDType = personal?.IdType,
+            IDNumber = personal?.IdNumber,
             MobileNumber = personal?.MobileNumber ?? string.Empty,
 
             // Family Information

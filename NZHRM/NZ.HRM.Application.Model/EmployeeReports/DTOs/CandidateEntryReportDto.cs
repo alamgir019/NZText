@@ -24,7 +24,7 @@ public class CandidateEntryReportDto
     public string Gender { get; set; } = string.Empty;
     public string Religion { get; set; } = string.Empty;
     public string? BloodGroup { get; set; }
-    public string? IDType { get; set; }
+    public IDType? IDType { get; set; }
     public string? IDNumber { get; set; }
     public string MobileNumber { get; set; } = string.Empty;
 

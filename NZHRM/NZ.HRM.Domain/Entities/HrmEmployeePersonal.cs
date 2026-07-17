@@ -23,7 +23,8 @@ namespace NZ.HRM.Domain.Entities
         public string? BloodGroup { get; set; }
         public string? Nationality { get; set; }
         public DateOnly? DateOfBirth { get; set; }
-        public string? NidNo { get; set; }
+        public IDType? IdType { get; set; }
+        public string? IdNumber { get; set; }
         public string? BirthCertificateNo { get; set; }
         public string? PassportNo { get; set; }
         public string? EmployeeReference { get; set; }
