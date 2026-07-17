@@ -124,7 +124,6 @@ public class EmployeesController : ControllerBase
         return Ok(employee);
     }
 
-
     [HttpGet("search")]
     [ProducesResponseType(typeof(List<EmployeeDetailDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
