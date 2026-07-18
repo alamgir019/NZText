@@ -99,18 +99,17 @@ public class EmployeeQueryHandler
             Age = age,
             Gender = personal?.Gender ?? string.Empty,
             BloodGroup = personal?.BloodGroup ?? string.Empty,
-            Village = personal?.PresentVillageAreaRoad ?? string.Empty,
-            PostOffice = personal?.PresentPostOffice ?? string.Empty,
-            PoliceStation = personal?.PresentThana?.ThanaName ?? string.Empty,
-            Upazila = personal?.PresentThana?.ThanaName ?? string.Empty,
-            District = personal?.PresentDistrict?.DistrictName ?? string.Empty,
-            Company = employment?.Unit?.UnitName ?? string.Empty,
-            Unit = employment?.Subunit?.SubunitName ?? string.Empty,
-            Department = employment?.Department?.DepartmentName ?? string.Empty,
-            Designation = employment?.Designation?.DesignationName ?? string.Empty,
+            Village = personal?.PresentVillageAreaRoadBangla ?? string.Empty,
+            PostOffice = personal?.PresentPostOfficeBangla ?? string.Empty,
+            PoliceStation = personal?.PresentThana?.ThanaNameBangla ?? string.Empty,
+            Upazila = personal?.PresentThana?.ThanaNameBangla ?? string.Empty,
+            District = personal?.PresentDistrict?.DistrictNameBangla ?? string.Empty,
+            Company = employment?.Unit?.UnitNameBangla ?? string.Empty,
+            Subunit = employment?.Subunit?.SubunitNameBangla ?? string.Empty,
+            Department = employment?.Department?.DepartmentNameBangla ?? string.Empty,
+            Designation = employment?.Designation?.DesignationNameBangla ?? string.Empty,
             Height = string.Empty, // Not available in current schema
             Weight = string.Empty, // Not available in current schema
-            TestedBloodGroup = string.Empty, // Not available in current schema
             IdentificationMark = medical.IdentificationSign ?? string.Empty,
             DoctorName = medical.ExaminedByDoctor ?? string.Empty,
             DoctorQualification = string.Empty, // Not available in current schema
@@ -131,17 +130,6 @@ public class EmployeeQueryHandler
         var verification = employee.Verification;
         var nominee = employee.Nominees?.FirstOrDefault();
 
-        // Calculate age
-        int? age = null;
-        if (personal?.DateOfBirth.HasValue == true)
-        {
-            var today = DateOnly.FromDateTime(DateTime.Today);
-            var ageYears = today.Year - personal.DateOfBirth.Value.Year;
-            if (personal.DateOfBirth.Value > today.AddYears(-ageYears))
-                ageYears--;
-            age = ageYears;
-        }
-
         return new CandidateEntryReportDto
         {
             // Employee Master
@@ -160,7 +148,6 @@ public class EmployeeQueryHandler
 
             // Personal Information
             DateOfBirth = personal?.DateOfBirth?.ToString("yyyy-MM-dd") ?? string.Empty,
-            Age = age,
             Gender = personal?.Gender != null && Enum.TryParse<Gender>(personal.Gender, out var gender) ? gender : null,
             Religion = personal?.Religion != null && Enum.TryParse<Religion>(personal.Religion, out var religion) ? religion : null,
             BloodGroup = personal?.BloodGroup != null && Enum.TryParse<BloodGroup>(personal.BloodGroup, out var bloodGroup) ? bloodGroup : null,
@@ -173,12 +160,15 @@ public class EmployeeQueryHandler
             GuardianNameBangla = personal?.GuardianNameBangla,
             FatherNameBangla = personal?.FatherNameBangla ?? string.Empty,
             MotherNameBangla = personal?.MotherNameBangla,
+            EmployeeReferenceBangla = personal?.EmployeeReferenceBangla,
             EmployeeReference = personal?.EmployeeReference,
             ReferenceMobileNumber = personal?.ReferenceMobileNumber,
 
             // Permanent Address
             PermanentVillageAreaRoad = personal?.PermanentVillageAreaRoad,
             PermanentPostOffice = personal?.PermanentPostOffice,
+            PermanentVillageAreaRoadBangla = personal?.PermanentVillageAreaRoadBangla,
+            PermanentPostOfficeBangla = personal?.PermanentPostOfficeBangla,
             PermanentThanaId = personal?.PermanentThanaId,
             PermanentThanaName = personal?.PermanentThana?.ThanaNameBangla,
             PermanentDistrictId = personal?.PermanentDistrictId,
@@ -189,6 +179,8 @@ public class EmployeeQueryHandler
             // Present Address
             PresentVillageAreaRoad = personal?.PresentVillageAreaRoad,
             PresentPostOffice = personal?.PresentPostOffice,
+            PresentVillageAreaRoadBangla = personal?.PresentVillageAreaRoadBangla,
+            PresentPostOfficeBangla = personal?.PresentPostOfficeBangla,
             PresentThanaId = personal?.PresentThanaId,
             PresentThanaName = personal?.PresentThana?.ThanaNameBangla,
             PresentDistrictId = personal?.PresentDistrictId,

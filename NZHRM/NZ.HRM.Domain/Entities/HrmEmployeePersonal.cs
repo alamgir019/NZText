@@ -28,6 +28,7 @@ namespace NZ.HRM.Domain.Entities
         public string? BirthCertificateNo { get; set; }
         public string? PassportNo { get; set; }
         public string? EmployeeReference { get; set; }
+        public string? EmployeeReferenceBangla { get; set; }
         public string? ReferenceMobileNumber { get; set; }
         [ForeignKey("EmployeeId")] public HrmEmployeeMaster? Employee { get; set; }
         public string? PermanentVillageAreaRoad { get; set; }
@@ -53,5 +54,9 @@ namespace NZ.HRM.Domain.Entities
         [ForeignKey(nameof(PresentDivisionId))]
         public LookDivision? PresentDivision { get; set; }
         public string? MobileNumber { get; set; }
+        public string? PresentVillageAreaRoadBangla { get; set; }
+        public string? PresentPostOfficeBangla { get; set; }
+        public string? PermanentPostOfficeBangla { get; set; }
+        public string? PermanentVillageAreaRoadBangla { get; set; }
     }
 }

@@ -11,4 +11,5 @@ public class UnitDto
     public string UpdatedBy { get; set; } = string.Empty;
     public bool IsActive { get; set; }
     public bool IsCompliant { get; set; }
+    public string? UnitNameBangla { get; internal set; }
 }

@@ -22,6 +22,7 @@ public class DesignationQueryHandler
             Id = d.Id,
             DesignationName = d.DesignationName,
             DesignationCode = d.DesignationCode,
+            DesignationNameBangla = d.DesignationNameBangla,
             //ParentId = d.ParentId,
             CreatedOn = d.CreatedOn,
             CreatedBy = d.CreatedBy,

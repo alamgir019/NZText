@@ -11,6 +11,7 @@ namespace NZ.HRM.Domain.Entities
     {
         public string DepartmentCode { get; set; } = string.Empty;
         public string DepartmentName { get; set; } = string.Empty;
+        public string? DepartmentNameBangla { get; set; }
 
         // Navigation
         public ICollection<MstDepartmentUnitComplex> DepartmentUnitComplexes { get; set; } = new HashSet<MstDepartmentUnitComplex>();

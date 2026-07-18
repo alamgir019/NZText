@@ -19,12 +19,11 @@ public class MedicalReportDto
     public string Upazila { get; set; } = string.Empty;
     public string District { get; set; } = string.Empty;
     public string Company { get; set; } = string.Empty;
-    public string Unit { get; set; } = string.Empty;
+    public string Subunit { get; set; } = string.Empty;
     public string Department { get; set; } = string.Empty;
     public string Designation { get; set; } = string.Empty;
     public string Height { get; set; } = string.Empty;
     public string Weight { get; set; } = string.Empty;
-    public string TestedBloodGroup { get; set; } = string.Empty;
     public string IdentificationMark { get; set; } = string.Empty;
     public string DoctorName { get; set; } = string.Empty;
     public string DoctorQualification { get; set; } = string.Empty;

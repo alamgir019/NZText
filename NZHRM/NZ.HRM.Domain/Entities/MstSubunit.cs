@@ -12,6 +12,7 @@ namespace NZ.HRM.Domain.Entities
         public string UnitId { get; set; } = string.Empty;
         public string SubunitCode { get; set; } = string.Empty;
         public string SubunitName { get; set; } = string.Empty;
+        public string? SubunitNameBangla { get; set; }
 
         // Navigation
         [ForeignKey("UnitId")]

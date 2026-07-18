@@ -20,7 +20,6 @@ public class CandidateEntryReportDto
 
     // Personal Information
     public string DateOfBirth { get; set; } = string.Empty;
-    public int? Age { get; set; }
     public Gender? Gender { get; set; }
     public Religion? Religion { get; set; }
     public BloodGroup? BloodGroup { get; set; }
@@ -73,4 +72,9 @@ public class CandidateEntryReportDto
     public string? CreatedBy { get; set; }
     public string? ModifiedOn { get; set; }
     public string? ModifiedBy { get; set; }
+    public string? EmployeeReferenceBangla { get; set; }
+    public string? PermanentVillageAreaRoadBangla { get; set; }
+    public string? PermanentPostOfficeBangla { get; set; }
+    public string? PresentVillageAreaRoadBangla { get; set; }
+    public string? PresentPostOfficeBangla { get; set; }
 }

@@ -22,6 +22,7 @@ public class UnitsQueryHandler
             Id = c.Id,
             UnitCode = c.UnitCode,
             UnitName = c.UnitName,
+            UnitNameBangla = c.UnitNameBangla,
             CreatedOn = c.CreatedOn,
             CreatedBy = c.CreatedBy,
             UpdatedOn = c.UpdatedOn,
