@@ -161,9 +161,9 @@ public class EmployeeQueryHandler
             // Personal Information
             DateOfBirth = personal?.DateOfBirth?.ToString("yyyy-MM-dd") ?? string.Empty,
             Age = age,
-            Gender = personal?.Gender ?? string.Empty,
-            Religion = personal?.Religion ?? string.Empty,
-            BloodGroup = personal?.BloodGroup,
+            Gender = personal?.Gender != null && Enum.TryParse<Gender>(personal.Gender, out var gender) ? gender : null,
+            Religion = personal?.Religion != null && Enum.TryParse<Religion>(personal.Religion, out var religion) ? religion : null,
+            BloodGroup = personal?.BloodGroup != null && Enum.TryParse<BloodGroup>(personal.BloodGroup, out var bloodGroup) ? bloodGroup : null,
             IDType = personal?.IdType,
             IDNumber = personal?.IdNumber,
             MobileNumber = personal?.MobileNumber ?? string.Empty,

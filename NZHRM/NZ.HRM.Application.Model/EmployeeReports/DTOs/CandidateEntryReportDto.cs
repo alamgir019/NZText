@@ -21,9 +21,9 @@ public class CandidateEntryReportDto
     // Personal Information
     public string DateOfBirth { get; set; } = string.Empty;
     public int? Age { get; set; }
-    public string Gender { get; set; } = string.Empty;
-    public string Religion { get; set; } = string.Empty;
-    public string? BloodGroup { get; set; }
+    public Gender? Gender { get; set; }
+    public Religion? Religion { get; set; }
+    public BloodGroup? BloodGroup { get; set; }
     public IDType? IDType { get; set; }
     public string? IDNumber { get; set; }
     public string MobileNumber { get; set; } = string.Empty;
