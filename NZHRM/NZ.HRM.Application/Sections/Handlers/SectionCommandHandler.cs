@@ -57,6 +57,7 @@ public class SectionCommandHandler
             throw new KeyNotFoundException($"Department with ID {command.DepartmentId} not found");
 
         section.SectionName = command.SectionName;
+        section.DepartmentId = command.DepartmentId;
 
         await _sectionRepository.UpdateAsync(section, cancellationToken);
 
