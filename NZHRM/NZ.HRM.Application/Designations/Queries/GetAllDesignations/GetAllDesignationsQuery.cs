@@ -1,3 +1,5 @@
+using NZ.HRM.Utility.Enum;
+
 namespace NZ.HRM.Application.Designations.Queries.GetAllDesignations;
 
 public class GetAllDesignationsQuery
@@ -17,4 +19,5 @@ public class DesignationDto
     public string UpdatedBy { get; set; } = string.Empty;
     public bool IsActive { get; set; }
     public string? DesignationNameBangla { get; internal set; }
+    public EmployeeNature? EmployeeNature { get; internal set; }
 }

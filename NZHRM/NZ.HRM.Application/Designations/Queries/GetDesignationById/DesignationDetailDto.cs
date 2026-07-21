@@ -1,3 +1,5 @@
+using NZ.HRM.Utility.Enum;
+
 namespace NZ.HRM.Application.Designations.Queries.GetDesignationById;
 
 public class DesignationDetailDto
@@ -11,4 +13,5 @@ public class DesignationDetailDto
     public DateTime UpdatedOn { get; set; }
     public string UpdatedBy { get; set; } = string.Empty;
     public bool IsActive { get; set; }
+    public EmployeeNature? EmployeeNature { get; internal set; }
 }

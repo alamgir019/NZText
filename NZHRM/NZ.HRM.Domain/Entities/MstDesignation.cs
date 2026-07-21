@@ -12,6 +12,7 @@ namespace NZ.HRM.Domain.Entities
         public string DesignationCode { get; set; } = string.Empty;
         public string DesignationName { get; set; } = string.Empty;
         public string? DesignationNameBangla { get; set; }
+        public string? EmployeeNature { get; set; }
         public bool OtEligible { get; set; }
     }
 }
