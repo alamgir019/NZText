@@ -1,5 +1,6 @@
 using NZ.HRM.Application.Employees.Queries.GetCandidateEntryReport;
 using NZ.HRM.Application.Employees.Queries.GetEmployeeDetailForIT;
+using NZ.HRM.Application.Employees.Queries.GetEmployeeMasterList;
 using NZ.HRM.Application.Employees.Queries.GetMedicalReport;
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Application.Model.Employees.DTOs;
@@ -205,6 +206,54 @@ public class EmployeeQueryHandler
             CreatedBy = employee.CreatedBy,
             ModifiedOn = employee.UpdatedOn.ToString("yyyy-MM-dd HH:mm:ss"),
             ModifiedBy = employee.UpdatedBy
+        };
+    }
+
+    public async Task<EmployeeMasterListResponseDto> Handle(GetEmployeeMasterListQuery query, CancellationToken cancellationToken = default)
+    {
+        // Create filter request object from query
+        var filterRequest = new EmployeeMasterListFilterRequest
+        {
+            UnitId = query.UnitId,
+            SubUnitId = query.SubUnitId,
+            DepartmentId = query.DepartmentId,
+            SectionId = query.SectionId,
+            CellId = query.CellId,
+            EmployeeNature = query.EmployeeNature,
+            JoiningFromDate = query.JoiningFromDate,
+            JoiningToDate = query.JoiningToDate,
+            PageNumber = query.PageNumber,
+            PageSize = query.PageSize,
+            IncludeInactive = query.IncludeInactive
+        };
+
+        // Call repository method with filter request object
+        var (employees, totalCount) = await _employeeMasterRepository.GetEmployeeMasterListAsync(filterRequest, cancellationToken);
+
+        // Map to DTOs
+        var employeeDtos = employees.Select(e => new EmployeeMasterListItemDto
+        {
+            EmployeeId = e.Id,
+            EmployeeCode = e.EmployeeCode ?? string.Empty,
+            EmployeeName = e.EmployeeName ?? e.EmployeeNameBangla ?? string.Empty,
+            DepartmentName = e.Employment?.Department?.DepartmentName ?? string.Empty,
+            SectionName = e.Employment?.Section?.SectionName ?? string.Empty,
+            CellName = e.Employment?.Cell?.CellName ?? string.Empty,
+            DesignationName = e.Employment?.Designation?.DesignationName ?? string.Empty,
+            EmployeeNature = e.EmployeeNature ?? string.Empty,
+            JoiningDate = e.Employment?.JoiningDate?.ToString("yyyy-MM-dd"),
+            IsActive = e.IsActive
+        }).ToList();
+
+        var validPageNumber = Math.Max(1, query.PageNumber);
+        var validPageSize = Math.Max(1, Math.Min(query.PageSize, 1000));
+
+        return new EmployeeMasterListResponseDto
+        {
+            Employees = employeeDtos,
+            TotalCount = totalCount,
+            PageNumber = validPageNumber,
+            PageSize = validPageSize
         };
     }
 }

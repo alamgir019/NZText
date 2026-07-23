@@ -1,3 +1,4 @@
+using NZ.HRM.Application.Employees.Queries.GetEmployeeMasterList;
 using NZ.HRM.Domain.Entities;
 
 namespace NZ.HRM.Application.Interfaces.Repositories;
@@ -15,6 +16,12 @@ public interface IEmployeeMasterRepository
     Task<List<HrmEmployeeMaster>> GetByStatusUpToDateAsync(Employees.Queries.GetItActivationSummary.GetItActivationSummaryQuery query, CancellationToken cancellationToken = default);
     Task<List<HrmEmployeeMaster>> SearchAsync(string searchText, CancellationToken cancellationToken = default);
     Task<List<HrmEmployeeMaster>> GetByDateAsync(DateTime onDatel, bool includeInactive = false, CancellationToken cancellationToken = default);
+    /// <summary>
+    /// Get employee master list with advanced filtering and pagination at database level.
+    /// </summary>
+    Task<(List<HrmEmployeeMaster> employees, int totalCount)> GetEmployeeMasterListAsync(
+        EmployeeMasterListFilterRequest filterRequest,
+        CancellationToken cancellationToken = default);
     Task<string> AddAsync(HrmEmployeeMaster employeeMaster, CancellationToken cancellationToken = default);
     Task UpdateAsync(HrmEmployeeMaster employeeMaster, CancellationToken cancellationToken = default);
     Task UpdateRangeAsync(List<HrmEmployeeMaster> employeeMasters, CancellationToken cancellationToken = default);

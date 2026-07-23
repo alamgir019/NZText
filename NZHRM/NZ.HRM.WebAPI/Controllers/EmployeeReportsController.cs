@@ -16,6 +16,49 @@ public class EmployeeReportsController : ControllerBase
         _employeeQueryHandler = employeeQueryHandler;
     }
 
+    [HttpGet("master-list")]
+    [ProducesResponseType(typeof(Application.Model.Employees.DTOs.EmployeeMasterListResponseDto), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetEmployeeMasterList(
+        [FromQuery] string? unitId = null,
+        [FromQuery] string? subUnitId = null,
+        [FromQuery] string? departmentId = null,
+        [FromQuery] string? sectionId = null,
+        [FromQuery] string? cellId = null,
+        [FromQuery] string? employeeNature = null,
+        [FromQuery] string? joiningFromDate = null,
+        [FromQuery] string? joiningToDate = null,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20,
+        [FromQuery] bool includeInactive = false)
+    {
+        var query = new Application.Employees.Queries.GetEmployeeMasterList.GetEmployeeMasterListQuery
+        {
+            UnitId = unitId,
+            SubUnitId = subUnitId,
+            DepartmentId = departmentId,
+            SectionId = sectionId,
+            CellId = cellId,
+            EmployeeNature = employeeNature,
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+            IncludeInactive = includeInactive
+        };
+
+        // Parse joining dates if provided
+        if (!string.IsNullOrWhiteSpace(joiningFromDate) && DateOnly.TryParse(joiningFromDate, out var fromDate))
+        {
+            query.JoiningFromDate = fromDate;
+        }
+
+        if (!string.IsNullOrWhiteSpace(joiningToDate) && DateOnly.TryParse(joiningToDate, out var toDate))
+        {
+            query.JoiningToDate = toDate;
+        }
+
+        var result = await _employeeQueryHandler.Handle(query, cancellationToken: default);
+        return Ok(result);
+    }
+
     [HttpGet("it-activation-summary")]
     [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetItActivationSummary([FromQuery] string unitId = "")
@@ -59,4 +102,5 @@ public class EmployeeReportsController : ControllerBase
 
         return Ok(result);
     }
+
 }

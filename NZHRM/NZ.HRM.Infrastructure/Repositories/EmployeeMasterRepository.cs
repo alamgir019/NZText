@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using NZ.HRM.Application.Employees.Queries.GetEmployeeMasterList;
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Domain.Entities;
 using NZ.HRM.Infrastructure.Persistence;
@@ -207,6 +208,97 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .OrderBy(e => e.EmployeeName)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<(List<HrmEmployeeMaster> employees, int totalCount)> GetEmployeeMasterListAsync(
+        EmployeeMasterListFilterRequest filterRequest,
+        CancellationToken cancellationToken = default)
+    {
+        if (filterRequest == null)
+        {
+            throw new ArgumentNullException(nameof(filterRequest));
+        }
+
+        var query = _context.HrmEmployeeMasters
+            .Include(e => e.Employment.Unit)
+            .Include(e => e.Employment.Subunit)
+            .Include(e => e.Employment.Department)
+            .Include(e => e.Employment.Section)
+            .Include(e => e.Employment.Cell)
+            .Include(e => e.Employment.Designation)
+            .AsQueryable();
+
+        // Apply active/inactive filter
+        if (!filterRequest.IncludeInactive)
+        {
+            query = query.Where(e => e.IsActive);
+        }
+
+        // Apply Unit filter
+        if (!string.IsNullOrEmpty(filterRequest.UnitId))
+        {
+            query = query.Where(e => e.Employment != null && e.Employment.UnitId == filterRequest.UnitId);
+        }
+
+        // Apply SubUnit filter
+        if (!string.IsNullOrEmpty(filterRequest.SubUnitId))
+        {
+            query = query.Where(e => e.Employment != null && e.Employment.SubunitId == filterRequest.SubUnitId);
+        }
+
+        // Apply Department filter
+        if (!string.IsNullOrEmpty(filterRequest.DepartmentId))
+        {
+            query = query.Where(e => e.Employment != null && e.Employment.DepartmentId == filterRequest.DepartmentId);
+        }
+
+        // Apply Section filter
+        if (!string.IsNullOrEmpty(filterRequest.SectionId))
+        {
+            query = query.Where(e => e.Employment != null && e.Employment.SectionId == filterRequest.SectionId);
+        }
+
+        // Apply Cell filter
+        if (!string.IsNullOrEmpty(filterRequest.CellId))
+        {
+            query = query.Where(e => e.Employment != null && e.Employment.CellId == filterRequest.CellId);
+        }
+
+        // Apply Employee Nature filter
+        if (!string.IsNullOrEmpty(filterRequest.EmployeeNature))
+        {
+            query = query.Where(e => e.EmployeeNature != null && EF.Functions.ILike(e.EmployeeNature, filterRequest.EmployeeNature));
+        }
+
+        // Apply Joining Date From filter
+        if (filterRequest.JoiningFromDate.HasValue)
+        {
+            query = query.Where(e => e.Employment != null && e.Employment.JoiningDate >= filterRequest.JoiningFromDate);
+        }
+
+        // Apply Joining Date To filter
+        if (filterRequest.JoiningToDate.HasValue)
+        {
+            query = query.Where(e => e.Employment != null && e.Employment.JoiningDate <= filterRequest.JoiningToDate);
+        }
+
+        // Get total count before pagination
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        // Apply pagination
+        var validPageNumber = Math.Max(1, filterRequest.PageNumber);
+        var validPageSize = Math.Max(1, Math.Min(filterRequest.PageSize, 1000)); // Cap at 1000
+        var skip = (validPageNumber - 1) * validPageSize;
+
+        var employees = await query
+            .OrderBy(e => e.EmployeeCode)
+            .Skip(skip)
+            .Take(validPageSize)
+            .ToListAsync(cancellationToken);
+
+        return (employees, totalCount);
+    }
+
+
 
     public async Task<string> AddAsync(HrmEmployeeMaster employeeMaster, CancellationToken cancellationToken = default)
     {
