@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NZ.HRM.Application.Employees.Handlers;
 using NZ.HRM.Application.Model.EmployeeReports.DTOs;
+using NZ.HRM.WebAPI.Services;
 
 namespace NZ.HRM.WebAPI.Controllers;
 
@@ -9,11 +10,14 @@ namespace NZ.HRM.WebAPI.Controllers;
 public class EmployeeReportsController : ControllerBase
 {
     private readonly EmployeeQueryHandler _employeeQueryHandler;
+    private readonly IEmployeeExcelExportService _excelExportService;
 
     public EmployeeReportsController(
-        EmployeeQueryHandler employeeQueryHandler)
+        EmployeeQueryHandler employeeQueryHandler,
+        IEmployeeExcelExportService excelExportService)
     {
         _employeeQueryHandler = employeeQueryHandler;
+        _excelExportService = excelExportService;
     }
 
     [HttpGet("master-list")]
@@ -57,6 +61,69 @@ public class EmployeeReportsController : ControllerBase
 
         var result = await _employeeQueryHandler.Handle(query, cancellationToken: default);
         return Ok(result);
+    }
+
+    [HttpGet("master-list/export")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ExportEmployeeMasterListToExcel(
+        [FromQuery] string? unitId = null,
+        [FromQuery] string? subUnitId = null,
+        [FromQuery] string? departmentId = null,
+        [FromQuery] string? sectionId = null,
+        [FromQuery] string? cellId = null,
+        [FromQuery] string? employeeNature = null,
+        [FromQuery] string? joiningFromDate = null,
+        [FromQuery] string? joiningToDate = null,
+        [FromQuery] bool includeInactive = false)
+    {
+        try
+        {
+            // Fetch all matching records without pagination for export
+            var query = new Application.Employees.Queries.GetEmployeeMasterList.GetEmployeeMasterListQuery
+            {
+                UnitId = unitId,
+                SubUnitId = subUnitId,
+                DepartmentId = departmentId,
+                SectionId = sectionId,
+                CellId = cellId,
+                EmployeeNature = employeeNature,
+                PageNumber = 1,
+                PageSize = 1000000, // Large number to get all records
+                IncludeInactive = includeInactive
+            };
+
+            // Parse joining dates if provided
+            if (!string.IsNullOrWhiteSpace(joiningFromDate) && DateOnly.TryParse(joiningFromDate, out var fromDate))
+            {
+                query.JoiningFromDate = fromDate;
+            }
+
+            if (!string.IsNullOrWhiteSpace(joiningToDate) && DateOnly.TryParse(joiningToDate, out var toDate))
+            {
+                query.JoiningToDate = toDate;
+            }
+
+            var result = await _employeeQueryHandler.Handle(query, cancellationToken: default);
+
+            if (result.Employees == null || result.Employees.Count == 0)
+            {
+                return BadRequest(new { message = "No records found for the specified filters" });
+            }
+
+            // Generate Excel file
+            var excelFileContents = await _excelExportService.GenerateEmployeeMasterListExcelAsync(result.Employees);
+
+            // Return Excel file for download
+            var fileName = $"EmployeeMasterList_{DateTime.UtcNow:yyyyMMdd_HHmmss}.xlsx";
+            return File(excelFileContents, 
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", 
+                fileName);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = "Error generating Excel file", error = ex.Message });
+        }
     }
 
     [HttpGet("it-activation-summary")]
