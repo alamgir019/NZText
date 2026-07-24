@@ -3,6 +3,7 @@ using NZ.HRM.Application.Employees.Queries.GetEmployeeMasterList;
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Domain.Entities;
 using NZ.HRM.Infrastructure.Persistence;
+using NZ.HRM.Utility.Enum;
 
 namespace NZ.HRM.Infrastructure.Repositories;
 
@@ -280,6 +281,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
         {
             query = query.Where(e => e.Employment != null && e.Employment.JoiningDate <= filterRequest.JoiningToDate);
         }
+        query = query.Where(e => e.Status == EmployeeStatus.ITActivation.ToString());
 
         // Get total count before pagination
         var totalCount = await query.CountAsync(cancellationToken);
