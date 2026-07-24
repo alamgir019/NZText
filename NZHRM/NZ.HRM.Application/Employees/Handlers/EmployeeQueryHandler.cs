@@ -2,6 +2,7 @@ using NZ.HRM.Application.Employees.Queries.GetCandidateEntryReport;
 using NZ.HRM.Application.Employees.Queries.GetEmployeeDetailForIT;
 using NZ.HRM.Application.Employees.Queries.GetEmployeeMasterList;
 using NZ.HRM.Application.Employees.Queries.GetMedicalReport;
+using NZ.HRM.Application.Employees.Queries.GetEmployeeDetailedProfile;
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Application.Model.Employees.DTOs;
 using NZ.HRM.Application.Model.EmployeeReports.DTOs;
@@ -255,6 +256,117 @@ public class EmployeeQueryHandler
             PageNumber = validPageNumber,
             PageSize = validPageSize
         };
+    }
+
+    public async Task<EmployeeDetailedProfileDto?> Handle(GetEmployeeDetailedProfileQuery query, CancellationToken cancellationToken = default)
+    {
+        var employee = await _employeeMasterRepository.GetByIdAsync(query.EmployeeId, cancellationToken);
+        if (employee == null)
+            return null;
+
+        var personal = employee.Personal;
+        var employment = employee.Employment;
+        var nominee = employee.Nominees?.FirstOrDefault();
+        var medical = employee.MedicalFitnessCheck;
+
+        // Build comprehensive profile DTO
+        var profileDto = new EmployeeDetailedProfileDto
+        {
+            // Left Panel Information
+            EmployeeId = employee.Id,
+            PermanentId = employee.EnrollmentId ?? string.Empty,
+            DateOfJoining = employment?.JoiningDate?.ToString("dd-MMM-yyyy"),
+            EmploymentType = employee.EmployeeNature,
+            Status = employee.IsActive ? "Active" : "Inactive",
+            IsActive = employee.IsActive,
+
+            // Personal Information
+            FullName = employee.EmployeeName ?? employee.EmployeeNameBangla ?? string.Empty,
+            FatherName = personal?.FatherName ?? personal?.FatherNameBangla,
+            DateOfBirth = personal?.DateOfBirth?.ToString("dd-MMM-yyyy"),
+            Gender = personal?.Gender,
+            BloodGroup = personal?.BloodGroup,
+            Religion = personal?.Religion,
+            Nationality = personal?.Nationality,
+            IDNumber = personal?.IdNumber,
+            Mobile = personal?.MobileNumber,
+
+            // Service Information
+            Company = employment?.Unit?.UnitName ?? employment?.Unit?.UnitNameBangla,
+            Department = employment?.Department?.DepartmentName ?? employment?.Department?.DepartmentNameBangla,
+            Section = employment?.Section?.SectionName,
+            Cell = employment?.Cell?.CellName,
+            Designation = employment?.Designation?.DesignationName,
+            Grade = employment?.Grade?.GradeName,
+            Shift = employment?.Shift?.ShiftName,
+            WeeklyOff = employment?.WeeklyOffDay,
+            ReportingTo = employment?.ReportingTo,
+
+            // Salary Information
+            BasicSalary = employee.Payroll?.BasicSalary,
+            HouseRent = employee.Payroll?.HouseRentAllowance,
+            OtherAllowances = employee.Payroll?.OtherAllowance, // Would need separate salary structure data
+            GrossSalary = employee.Payroll?.GrossSalary,
+            MonthlySalary = employee.Payroll?.ProposedSalary,
+
+            // Address Information
+            PresentAddress = new AddressInformationDto
+            {
+                VillageAreaRoad = personal?.PresentVillageAreaRoad,
+                PostOffice = personal?.PresentPostOffice,
+                ThanaName = personal?.PresentThana?.ThanaName,
+                DistrictName = personal?.PresentDistrict?.DistrictName,
+                DivisionName = personal?.PresentDivision?.DivisionName,
+                Country = "Bangladesh"
+            },
+            PermanentAddress = new AddressInformationDto
+            {
+                VillageAreaRoad = personal?.PermanentVillageAreaRoad,
+                PostOffice = personal?.PermanentPostOffice,
+                ThanaName = personal?.PermanentThana?.ThanaName,
+                DistrictName = personal?.PermanentDistrict?.DistrictName,
+                DivisionName = personal?.PermanentDivision?.DivisionName,
+                Country = "Bangladesh"
+            },
+
+            // Nominee Information
+            NomineeInfo = nominee != null ? new NomineeInformationDto
+            {
+                NomineeName = nominee.NomineeName,
+                Relation = nominee.Relationship,
+                Mobile = nominee.MobileNo,
+                Address = nominee.Address
+            } : null,
+
+            // Medical Information
+            MedicalInfo = medical != null ? new MedicalInformationDto
+            {
+                MedicalStatus = medical.Fitness,
+                DateOfMedical = medical.ExaminationDateTime.ToString("dd-MMM-yyyy"),
+                MedicalCenter = string.Empty,
+                BloodGroupMedical = personal?.BloodGroup
+            } : null,
+
+            // Documents Summary
+            Documents = employee.Documents?.Select(d => new DocumentSummaryDto
+            {
+                DocumentType = d.DocumentType,
+                Status = d.IsActive ? "Verified" : "Pending",
+                IsAvailable = !string.IsNullOrEmpty(d.FilePath)
+            }).ToList() ?? new List<DocumentSummaryDto>(),
+
+            //// Promotion / Transfer History
+            //PromotionTransferHistory = employee.EmployeeTransfers?.Select(t => new PromotionTransferHistoryDto
+            //{
+            //    Date = t.TransferDate?.ToString("dd-MMM-yyyy"),
+            //    Type = t.TransferType,
+            //    From = t.FromDesignation?.DesignationName ?? t.FromDesignation?.DesignationNameBangla ?? t.FromDepartment?.DepartmentName,
+            //    To = t.ToDesignation?.DesignationName ?? t.ToDesignation?.DesignationNameBangla ?? t.ToDepartment?.DepartmentName,
+            //    Remarks = t.Remarks
+            //}).ToList() ?? new List<PromotionTransferHistoryDto>()
+        };
+
+        return profileDto;
     }
 }
 
