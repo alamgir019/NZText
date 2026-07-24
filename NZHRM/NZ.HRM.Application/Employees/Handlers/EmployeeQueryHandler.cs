@@ -260,7 +260,7 @@ public class EmployeeQueryHandler
 
     public async Task<EmployeeDetailedProfileDto?> Handle(GetEmployeeDetailedProfileQuery query, CancellationToken cancellationToken = default)
     {
-        var employee = await _employeeMasterRepository.GetByIdAsync(query.EmployeeId, cancellationToken);
+        var employee = await _employeeMasterRepository.GetByEmployeeCodeAsync(query.EmployeeCode, cancellationToken);
         if (employee == null)
             return null;
 

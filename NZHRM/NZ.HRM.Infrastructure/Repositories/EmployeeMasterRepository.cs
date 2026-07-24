@@ -129,11 +129,18 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
     public async Task<HrmEmployeeMaster?> GetByEmployeeCodeAsync(string employeeCode, CancellationToken cancellationToken = default)
     {
         return await _context.HrmEmployeeMasters
+            .Include(e => e.MedicalFitnessCheck) // req for medical report generation
+            .Include(e => e.Documents) // req for medical report generation
             .Include(e => e.Employment.Unit)
+            .Include(e => e.Employment.Subunit)
             .Include(e => e.Employment.Department)
             .Include(e => e.Employment.Section)
             .Include(e => e.Employment.Grade)
+            .Include(e => e.Personal)
+            .Include(e => e.Employment.Designation)
             .Include(e => e.Employment.Shift)
+            .Include(e => e.Nominees)
+            .Include(e => e.Payroll)
             .FirstOrDefaultAsync(e => e.EmployeeCode == employeeCode && e.IsActive, cancellationToken);
     }
 

@@ -170,23 +170,23 @@ public class EmployeeReportsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("employee-detailed-profile/{employeeId}")]
+    [HttpGet("employee-detailed-profile/{employeeCode}")]
     [ProducesResponseType(typeof(Application.Model.Employees.DTOs.EmployeeDetailedProfileDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetEmployeeDetailedProfile(string employeeId)
+    public async Task<IActionResult> GetEmployeeDetailedProfile(string employeeCode)
     {
-        if (string.IsNullOrWhiteSpace(employeeId))
-            return BadRequest(new { message = "employeeId is required" });
+        if (string.IsNullOrWhiteSpace(employeeCode))
+            return BadRequest(new { message = "employeeCode is required" });
 
         var query = new Application.Employees.Queries.GetEmployeeDetailedProfile.GetEmployeeDetailedProfileQuery 
         { 
-            EmployeeId = employeeId 
+            EmployeeCode = employeeCode 
         };
         var result = await _employeeQueryHandler.Handle(query, cancellationToken: default);
 
         if (result == null)
-            return NotFound(new { message = $"Detailed profile not found for employee with ID {employeeId}" });
+            return NotFound(new { message = $"Detailed profile not found for employee with code {employeeCode}" });
 
         return Ok(result);
     }
