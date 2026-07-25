@@ -65,6 +65,7 @@ public class EmployeeCommandHandler
         {
             EnrollmentId = next,
             EmployeeNameBangla = command.EmployeeNameBangla ?? string.Empty,
+            EmployeeNature = EmployeeNature.Worker.ToString(),
             Status = EmployeeStatus.CandidateEntry.ToString(),
             IsActive = true
         };
@@ -139,6 +140,8 @@ public class EmployeeCommandHandler
             throw new KeyNotFoundException($"Employee with ID {employeeId} not found");
 
         employeee.EmployeeNameBangla = command.EmployeeNameBangla ?? string.Empty;
+        employeee.EmployeeNature = EmployeeNature.Worker.ToString();
+
         employeee.IsActive = true;
         // Save EmployeeMaster first
         await _employeeMasterRepository.UpdateAsync(employeee, cancellationToken);
