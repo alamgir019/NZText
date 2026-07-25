@@ -2,10 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using NZ.HRM.Infrastructure.Persistence;
 using NZ.HRM.Application.DependencyInjection;
 using NZ.HRM.Infrastructure.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
 using NZ.HRM.WebAPI.Services.PunchPolling;
-using NZ.HRM.WebAPI.Configuration;
 using NZ.HRM.Application.Services;
+using NZ.HRM.Domain.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 // Connection String in appsettings.json
