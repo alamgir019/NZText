@@ -3,8 +3,9 @@ using NZ.HRM.Infrastructure.Persistence;
 using NZ.HRM.Application.DependencyInjection;
 using NZ.HRM.Infrastructure.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
-using NZ.HRM.WebAPI.Services;
 using NZ.HRM.WebAPI.Services.PunchPolling;
+using NZ.HRM.WebAPI.Configuration;
+using NZ.HRM.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 // Connection String in appsettings.json
@@ -25,6 +26,13 @@ builder.Services.AddRepositories();
 builder.Services.AddScoped<IEmployeeExcelExportService, EmployeeExcelExportService>();
 builder.Services.Configure<PunchPollingOptions>(builder.Configuration.GetSection("PunchPolling"));
 builder.Services.AddHttpClient<IDevicePunchSource, VirdiApiDevicePunchSource>();
+
+// Register fingerprint device configuration and service
+var fingerprintConfig = new FingerprintDeviceConfiguration();
+builder.Configuration.GetSection("FingerprintDevice").Bind(fingerprintConfig);
+builder.Services.AddSingleton(fingerprintConfig);
+builder.Services.AddHttpClient<IFingerprintDeviceService, FingerprintDeviceService>();
+
 //builder.Services.AddHostedService<PunchPollingBackgroundService>();
 
 builder.Services.AddDistributedMemoryCache();

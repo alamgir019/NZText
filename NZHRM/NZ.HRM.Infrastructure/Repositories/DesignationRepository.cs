@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using NZ.HRM.Application.Designations.Queries.GetAllDesignations;
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Domain.Entities;
 using NZ.HRM.Infrastructure.Persistence;
@@ -14,14 +15,17 @@ public class DesignationRepository : IDesignationRepository
         _context = context;
     }
 
-    public async Task<List<MstDesignation>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<MstDesignation>> GetAllAsync(GetAllDesignationsQuery query, CancellationToken cancellationToken = default)
     {
-        var query = _context.MstDesignations.AsQueryable();
+        var designationsQuery = _context.MstDesignations.AsQueryable();
 
-        if (!includeInactive)
-            query = query.Where(d => d.IsActive);
+        if (!query.IncludeInactive)
+            designationsQuery = designationsQuery.Where(d => d.IsActive);
 
-        return await query.OrderBy(d => d.SortOrder).ToListAsync(cancellationToken);
+        if (!string.IsNullOrEmpty(query.GradeId))
+            designationsQuery = designationsQuery.Where(d => d.GradeId == query.GradeId);
+
+        return await designationsQuery.OrderBy(d => d.SortOrder).ToListAsync(cancellationToken);
     }
 
     public async Task<MstDesignation?> GetByIdAsync(string id, CancellationToken cancellationToken = default)

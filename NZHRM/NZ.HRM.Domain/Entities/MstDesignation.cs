@@ -13,6 +13,11 @@ namespace NZ.HRM.Domain.Entities
         public string DesignationName { get; set; } = string.Empty;
         public string? DesignationNameBangla { get; set; }
         public string? EmployeeNature { get; set; }
+        public string? GradeId { get; set; }
         public bool OtEligible { get; set; }
+
+        // Navigation
+        [ForeignKey("GradeId")]
+        public MstGrade? Grade { get; set; }
     }
 }

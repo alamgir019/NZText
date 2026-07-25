@@ -1,16 +1,7 @@
 using ClosedXML.Excel;
 using NZ.HRM.Application.Model.Employees.DTOs;
-using System.Drawing;
 
-namespace NZ.HRM.WebAPI.Services;
-
-public interface IEmployeeExcelExportService
-{
-    /// <summary>
-    /// Generate Excel file from employee master list data.
-    /// </summary>
-    Task<byte[]> GenerateEmployeeMasterListExcelAsync(List<EmployeeMasterListItemDto> employees);
-}
+namespace NZ.HRM.Application.Services;
 
 public class EmployeeExcelExportService : IEmployeeExcelExportService
 {

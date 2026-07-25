@@ -5,6 +5,7 @@ namespace NZ.HRM.Application.Designations.Queries.GetAllDesignations;
 public class GetAllDesignationsQuery
 {
     public bool IncludeInactive { get; set; } = false;
+    public string? GradeId { get; set; }
 }
 
 public class DesignationDto
@@ -20,4 +21,5 @@ public class DesignationDto
     public bool IsActive { get; set; }
     public string? DesignationNameBangla { get; internal set; }
     public EmployeeNature? EmployeeNature { get; internal set; }
+    public string? GradeId { get; internal set; }
 }

@@ -1,3 +1,5 @@
+using NZ.HRM.Utility.Enum;
+
 namespace NZ.HRM.Application.Grades.Queries.GetAllGrades;
 
 public class GradeDto
@@ -6,7 +8,7 @@ public class GradeDto
     public string GradeName { get; set; } = string.Empty;
     public decimal MinSalary { get; set; }
     public decimal MaxSalary { get; set; }
-    public string EmployeeType { get; set; } = string.Empty;
+    public EmployeeNature? EmployeeNature { get; set; }
     public DateTime CreatedOn { get; set; }
     public string CreatedBy { get; set; } = string.Empty;
     public DateTime UpdatedOn { get; set; }
