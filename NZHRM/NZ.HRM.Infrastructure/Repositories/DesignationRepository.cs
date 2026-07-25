@@ -21,7 +21,7 @@ public class DesignationRepository : IDesignationRepository
         if (!includeInactive)
             query = query.Where(d => d.IsActive);
 
-        return await query.OrderBy(d => d.DesignationName).ToListAsync(cancellationToken);
+        return await query.OrderBy(d => d.SortOrder).ToListAsync(cancellationToken);
     }
 
     public async Task<MstDesignation?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
