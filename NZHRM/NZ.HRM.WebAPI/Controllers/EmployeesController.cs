@@ -7,6 +7,8 @@ using NZ.HRM.Application.Employees.Queries.GetEmployeesByStatus;
 using NZ.HRM.Application.Employees.Queries.SearchEmployees;
 using NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
 using NZ.HRM.Application.Model.Employees.DTOs;
+using NZ.HRM.WebAPI.Services;
+using NZ.HRM.WebAPI.Configuration;
 
 namespace NZ.HRM.WebAPI.Controllers;
 
@@ -17,15 +19,21 @@ public class EmployeesController : ControllerBase
     private readonly EmployeeCommandHandler _createCompleteEmployeeHandler;
     private readonly CompleteEmployeeQueryHandler _getCompleteEmployeeHandler;
     private readonly EmployeeQueryHandler _employeeQueryHandler;
+    private readonly IFileStorageService _fileStorageService;
+    private readonly ILogger<EmployeesController> _logger;
 
     public EmployeesController(
         EmployeeCommandHandler createCompleteEmployeeHandler,
         CompleteEmployeeQueryHandler getCompleteEmployeeHandler,
-        EmployeeQueryHandler employeeQueryHandler)
+        EmployeeQueryHandler employeeQueryHandler,
+        IFileStorageService fileStorageService,
+        ILogger<EmployeesController> logger)
     {
         _createCompleteEmployeeHandler = createCompleteEmployeeHandler;
         _getCompleteEmployeeHandler = getCompleteEmployeeHandler;
         _employeeQueryHandler = employeeQueryHandler;
+        _fileStorageService = fileStorageService;
+        _logger = logger;
     }
 
     [HttpGet("employee-detail/{employeeId}")]
@@ -183,12 +191,10 @@ public class EmployeesController : ControllerBase
 
         try
         {
-            var targetFolder = Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles", command.EmployeeCode);
-            if (!Directory.Exists(targetFolder))
-                Directory.CreateDirectory(targetFolder);
-
             var certificate = Request.Form.Files.FirstOrDefault(f =>
                 string.Equals(f.Name, "educationCertificate", StringComparison.OrdinalIgnoreCase));
+            var nationalId = Request.Form.Files.FirstOrDefault(f =>
+                string.Equals(f.Name, "nationalId", StringComparison.OrdinalIgnoreCase));
             var policeClearance = Request.Form.Files.FirstOrDefault(f =>
                 string.Equals(f.Name, "policeClearance", StringComparison.OrdinalIgnoreCase));
             var experienceCertificate = Request.Form.Files.FirstOrDefault(f =>
@@ -202,111 +208,97 @@ public class EmployeesController : ControllerBase
             command.Documents = new List<EmployeeDocumentDto>();
             if (certificate != null && certificate.Length > 0)
             {
-                var extension = Path.GetExtension(certificate.FileName);
-                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.EducationCertificate.ToString()}{extension}";
-                var filePath = Path.Combine(targetFolder, uniqueFileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await certificate.CopyToAsync(stream);
-                }
-                command.Documents.Add(new EmployeeDocumentDto
+                var uploadedFiles = await _fileStorageService.UploadFilesAsync(command.EmployeeCode, new List<IFormFile>() { certificate }, Utility.Enum.DocumentType.EducationCertificate);
+                command.Documents.AddRange(uploadedFiles.Select(f => new EmployeeDocumentDto
                 {
                     DocumentType = Utility.Enum.DocumentType.EducationCertificate,
-                    FilePath = filePath,
+                    FilePath = f.FilePath,
                     EmployeeId = command.EmployeeId,
-                    FileName = uniqueFileName,
-                });
+                    FileName = f.FileName,
+                }));
             }
 
             if (policeClearance != null && policeClearance.Length > 0)
             {
-                var extension = Path.GetExtension(policeClearance.FileName);
-                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.PoliceClearance.ToString()}{extension}";
-                var filePath = Path.Combine(targetFolder, uniqueFileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await policeClearance.CopyToAsync(stream);
-                }
-                command.Documents.Add(new EmployeeDocumentDto
+                var uploadedFiles = await _fileStorageService.UploadFilesAsync(command.EmployeeCode, new List<IFormFile>() { policeClearance }, Utility.Enum.DocumentType.PoliceClearance);
+                command.Documents.AddRange(uploadedFiles.Select(f => new EmployeeDocumentDto
                 {
                     DocumentType = Utility.Enum.DocumentType.PoliceClearance,
-                    FilePath = filePath,
+                    FilePath = f.FilePath,
                     EmployeeId = command.EmployeeId,
-                    FileName = uniqueFileName,
-                });
+                    FileName = f.FileName,
+                }));
+            }
+
+            if (policeClearance != null && policeClearance.Length > 0)
+            {
+                var uploadedFiles = await _fileStorageService.UploadFilesAsync(command.EmployeeCode, new List<IFormFile>() { policeClearance }, Utility.Enum.DocumentType.PoliceClearance);
+                command.Documents.AddRange(uploadedFiles.Select(f => new EmployeeDocumentDto
+                {
+                    DocumentType = Utility.Enum.DocumentType.PoliceClearance,
+                    FilePath = f.FilePath,
+                    EmployeeId = command.EmployeeId,
+                    FileName = f.FileName,
+                }));
             }
 
             if (experienceCertificate != null && experienceCertificate.Length > 0)
             {
-                var extension = Path.GetExtension(experienceCertificate.FileName);
-                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.ExperienceCertificate.ToString()}{extension}";
-                var filePath = Path.Combine(targetFolder, uniqueFileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await experienceCertificate.CopyToAsync(stream);
-                }
-                command.Documents.Add(new EmployeeDocumentDto
+                var uploadedFiles = await _fileStorageService.UploadFilesAsync(command.EmployeeCode, new List<IFormFile>() { experienceCertificate }, Utility.Enum.DocumentType.ExperienceCertificate);
+                command.Documents.AddRange(uploadedFiles.Select(f => new EmployeeDocumentDto
                 {
                     DocumentType = Utility.Enum.DocumentType.ExperienceCertificate,
-                    FilePath = filePath,
+                    FilePath = f.FilePath,
                     EmployeeId = command.EmployeeId,
-                    FileName= uniqueFileName,
-                });
+                    FileName = f.FileName,
+                }));
             }
 
             if (passportPhoto != null && passportPhoto.Length > 0)
             {
-                var extension = Path.GetExtension(passportPhoto.FileName);
-                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.PassportPhoto.ToString()}{extension}";
-                var filePath = Path.Combine(targetFolder, uniqueFileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await passportPhoto.CopyToAsync(stream);
-                }
-                command.Documents.Add(new EmployeeDocumentDto
+                var uploadedFiles = await _fileStorageService.UploadFilesAsync(command.EmployeeCode, new List<IFormFile>() { passportPhoto }, Utility.Enum.DocumentType.PassportPhoto);
+                command.Documents.AddRange(uploadedFiles.Select(f => new EmployeeDocumentDto
                 {
                     DocumentType = Utility.Enum.DocumentType.PassportPhoto,
-                    FilePath = filePath,
+                    FilePath = f.FilePath,
                     EmployeeId = command.EmployeeId,
-                    FileName = uniqueFileName,
-                });
+                    FileName = f.FileName,
+                }));
             }
 
             if(chairmanCertificate != null && chairmanCertificate.Length > 0)
             {
-                var extension = Path.GetExtension(chairmanCertificate.FileName);
-                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.ChairmanCertificate.ToString()}{extension}";
-                var filePath = Path.Combine(targetFolder, uniqueFileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await chairmanCertificate.CopyToAsync(stream);
-                }
-                command.Documents.Add(new EmployeeDocumentDto
+                var uploadedFiles = await _fileStorageService.UploadFilesAsync(command.EmployeeCode, new List<IFormFile>() { chairmanCertificate }, Utility.Enum.DocumentType.ChairmanCertificate);
+                command.Documents.AddRange(uploadedFiles.Select(f => new EmployeeDocumentDto
                 {
                     DocumentType = Utility.Enum.DocumentType.ChairmanCertificate,
-                    FilePath = filePath,
+                    FilePath = f.FilePath,
                     EmployeeId = command.EmployeeId,
-                    FileName = uniqueFileName,
-                });
+                    FileName = f.FileName,
+                }));
             }
-
 
             if (signature != null && signature.Length > 0)
             {
-                var extension = Path.GetExtension(signature.FileName);
-                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.Signature.ToString()}{extension}";
-                var filePath = Path.Combine(targetFolder, uniqueFileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await signature.CopyToAsync(stream);
-                }
-                command.Documents.Add(new EmployeeDocumentDto
+                var uploadedFiles = await _fileStorageService.UploadFilesAsync(command.EmployeeCode, new List<IFormFile>() { signature }, Utility.Enum.DocumentType.Signature);
+                command.Documents.AddRange(uploadedFiles.Select(f => new EmployeeDocumentDto
                 {
                     DocumentType = Utility.Enum.DocumentType.Signature,
-                    FilePath = filePath,
+                    FilePath = f.FilePath,
                     EmployeeId = command.EmployeeId,
-                    FileName = uniqueFileName,
-                });
+                    FileName = f.FileName,
+                }));
+            }
+            if(nationalId != null && nationalId.Length > 0)
+            {
+                var uploadedFiles = await _fileStorageService.UploadFilesAsync(command.EmployeeCode, new List<IFormFile>() { nationalId }, Utility.Enum.DocumentType.NID);
+                command.Documents.AddRange(uploadedFiles.Select(f => new EmployeeDocumentDto
+                {
+                    DocumentType = Utility.Enum.DocumentType.NID,
+                    FilePath = f.FilePath,
+                    EmployeeId = command.EmployeeId,
+                    FileName = f.FileName,
+                }));
             }
 
             var employeeId = await _createCompleteEmployeeHandler.Handle(command, cancellationToken: default);
@@ -400,10 +392,6 @@ public class EmployeesController : ControllerBase
 
         try
         {
-            var targetFolder = Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles", command.EmployeeCode);
-            if (!Directory.Exists(targetFolder))
-                Directory.CreateDirectory(targetFolder);
-
             var appointmentLetter = Request.Form.Files.FirstOrDefault(f =>
                 string.Equals(f.Name, "appointmentLetter", StringComparison.OrdinalIgnoreCase));
             var joiningLetter = Request.Form.Files.FirstOrDefault(f =>
@@ -417,92 +405,62 @@ public class EmployeesController : ControllerBase
             command.Documents = new List<EmployeeDocumentDto>();
             if (appointmentLetter != null && appointmentLetter.Length > 0)
             {
-                var extension = Path.GetExtension(appointmentLetter.FileName);
-                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.AppointmentLetter.ToString()}{extension}";
-                var filePath = Path.Combine(targetFolder, uniqueFileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await appointmentLetter.CopyToAsync(stream);
-                }
-                command.Documents.Add(new EmployeeDocumentDto
+                var uploadedFiles = await _fileStorageService.UploadFilesAsync(command.EmployeeCode, new List<IFormFile>() { appointmentLetter}, Utility.Enum.DocumentType.AppointmentLetter);
+                command.Documents.AddRange(uploadedFiles.Select(f => new EmployeeDocumentDto
                 {
                     DocumentType = Utility.Enum.DocumentType.AppointmentLetter,
-                    FilePath = filePath,
+                    FilePath = f.FilePath,
                     EmployeeId = command.EmployeeId,
-                    FileName = uniqueFileName,
-                });
+                    FileName = f.FileName,
+                }));
             }
 
             if (joiningLetter != null && joiningLetter.Length > 0)
             {
-                var extension = Path.GetExtension(joiningLetter.FileName);
-                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.JoiningLetter.ToString()}{extension}";
-                var filePath = Path.Combine(targetFolder, uniqueFileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await joiningLetter.CopyToAsync(stream);
-                }
-                command.Documents.Add(new EmployeeDocumentDto
+                var uploadedFiles = await _fileStorageService.UploadFilesAsync(command.EmployeeCode, new List<IFormFile>() { joiningLetter }, Utility.Enum.DocumentType.JoiningLetter);
+                command.Documents.AddRange(uploadedFiles.Select(f => new EmployeeDocumentDto
                 {
                     DocumentType = Utility.Enum.DocumentType.JoiningLetter,
-                    FilePath = filePath,
+                    FilePath = f.FilePath,
                     EmployeeId = command.EmployeeId,
-                    FileName = uniqueFileName,
-                });
+                    FileName = f.FileName,
+                }));
             }
 
             if (medicalReport != null && medicalReport.Length > 0)
             {
-                var extension = Path.GetExtension(medicalReport.FileName);
-                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.MedicalReport.ToString()}{extension}";
-                var filePath = Path.Combine(targetFolder, uniqueFileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await medicalReport.CopyToAsync(stream);
-                }
-                command.Documents.Add(new EmployeeDocumentDto
+                var uploadedFiles = await _fileStorageService.UploadFilesAsync(command.EmployeeCode, new List<IFormFile>() { medicalReport }, Utility.Enum.DocumentType.MedicalReport);
+                command.Documents.AddRange(uploadedFiles.Select(f => new EmployeeDocumentDto
                 {
                     DocumentType = Utility.Enum.DocumentType.MedicalReport,
-                    FilePath = filePath,
+                    FilePath = f.FilePath,
                     EmployeeId = command.EmployeeId,
-                    FileName = uniqueFileName,
-                });
+                    FileName = f.FileName,
+                }));
             }
 
             if (idCardBangla != null && idCardBangla.Length > 0)
             {
-                var extension = Path.GetExtension(idCardBangla.FileName);
-                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.IDCardBangla.ToString()}{extension}";
-                var filePath = Path.Combine(targetFolder, uniqueFileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await idCardBangla.CopyToAsync(stream);
-                }
-                command.Documents.Add(new EmployeeDocumentDto
+                var uploadedFiles = await _fileStorageService.UploadFilesAsync(command.EmployeeCode, new List<IFormFile>() { idCardBangla }, Utility.Enum.DocumentType.IDCardBangla);
+                command.Documents.AddRange(uploadedFiles.Select(f => new EmployeeDocumentDto
                 {
                     DocumentType = Utility.Enum.DocumentType.IDCardBangla,
-                    FilePath = filePath,
+                    FilePath = f.FilePath,
                     EmployeeId = command.EmployeeId,
-                    FileName = uniqueFileName,
-                });
+                    FileName = f.FileName,
+                }));
             }
 
             if (idCardEnglish != null && idCardEnglish.Length > 0)
             {
-                var extension = Path.GetExtension(idCardEnglish.FileName);
-                var uniqueFileName = $"{command.EmployeeCode}_{Utility.Enum.DocumentType.IDCardEnglish.ToString()}{extension}";
-                var filePath = Path.Combine(targetFolder, uniqueFileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await idCardEnglish.CopyToAsync(stream);
-                }
-                command.Documents.Add(new EmployeeDocumentDto
+                var uploadedFiles = await _fileStorageService.UploadFilesAsync(command.EmployeeCode, new List<IFormFile>() { idCardEnglish }, Utility.Enum.DocumentType.IDCardEnglish);
+                command.Documents.AddRange(uploadedFiles.Select(f => new EmployeeDocumentDto
                 {
                     DocumentType = Utility.Enum.DocumentType.IDCardEnglish,
-                    FilePath = filePath,
+                    FilePath = f.FilePath,
                     EmployeeId = command.EmployeeId,
-                    FileName = uniqueFileName,
-                });
+                    FileName = f.FileName,
+                }));
             }
             var employeeId = await _createCompleteEmployeeHandler.Handle(command, cancellationToken: default);
             return CreatedAtAction(
@@ -526,76 +484,168 @@ public class EmployeesController : ControllerBase
 
     [HttpPost("upload-files")]
     [Consumes("multipart/form-data")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UploadFile(string employeeCode, List<IFormFile> files)
     {
-        string _targetFolder = Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles", employeeCode);
-        // 1. Validate file existence
+        // Validate input
+        if (string.IsNullOrWhiteSpace(employeeCode))
+            return BadRequest(new { message = "employeeCode is required" });
+
         if (files == null || files.Count == 0)
-            return BadRequest("No file uploaded or file is empty.");
+            return BadRequest(new { message = "No files uploaded or files are empty" });
 
         try
         {
-            // 2. Ensure target directory exists
-            if (!Directory.Exists(_targetFolder))
-                Directory.CreateDirectory(_targetFolder);
+            // Upload files using the persistent file storage service
+            var uploadedFiles = await _fileStorageService.UploadFilesAsync(employeeCode, files, Utility.Enum.DocumentType.Photo);
 
-            // 3. Generate safe unique file path
-            var uploadedFiles = new List<Tuple<string, string>>();
-            foreach (var file in files)
-            {
-                var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
-                var filePath = Path.Combine(_targetFolder, uniqueFileName);
+            _logger.LogInformation($"Successfully uploaded {uploadedFiles.Count} files for employee {employeeCode}");
 
-                // 4. Save file to disk
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
-
-                uploadedFiles.Add(Tuple.Create(uniqueFileName, filePath));
-            }
-
-            return Ok(new { message = "Upload successful", fileNames = uploadedFiles });
+            return Ok(new 
+            { 
+                message = "Upload successful", 
+                filesCount = uploadedFiles.Count,
+                files = uploadedFiles 
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            _logger.LogWarning($"Validation error during file upload for employee {employeeCode}: {ex.Message}");
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogWarning($"File validation error during upload for employee {employeeCode}: {ex.Message}");
+            return BadRequest(new { message = ex.Message });
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
+            _logger.LogError($"Error uploading files for employee {employeeCode}: {ex.Message}");
+            return StatusCode(500, new { message = "Internal server error during file upload", details = ex.Message });
         }
     }
 
     [HttpGet("view-files/{employee-code}")]
-    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult GetUploadedFiles(string employeeCode)
     {
-        string targetFolder = Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles", employeeCode);
+        if (string.IsNullOrWhiteSpace(employeeCode))
+            return BadRequest(new { message = "employeeCode is required" });
 
-        if (!Directory.Exists(targetFolder))
-            return NotFound(new { message = "Target folder not found." });
-
-        var files = Directory.GetFiles(targetFolder)
-            .Select(filePath =>
-            {
-                var fileInfo = new FileInfo(filePath);
-
-                return new
-                {
-                    filePath = fileInfo.FullName,
-                    fileName = fileInfo.Name,
-                    fileExtension = fileInfo.Extension,
-                    fileSize = fileInfo.Length,
-                    createdOn = fileInfo.CreationTime,
-                    lastModifiedOn = fileInfo.LastWriteTime
-                };
-            })
-            .ToList();
-
-        return Ok(new
+        try
         {
-            employeeCode,
-            totalFiles = files.Count,
-            files
-        });
+            var files = _fileStorageService.GetUploadedFiles(employeeCode).ToList();
+
+            if (!files.Any())
+                return NotFound(new { message = $"No files found for employee {employeeCode}" });
+
+            return Ok(new
+            {
+                employeeCode,
+                totalFiles = files.Count,
+                files
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error retrieving files for employee {employeeCode}: {ex.Message}");
+            return StatusCode(500, new { message = "Internal server error while retrieving files", details = ex.Message });
+        }
+    }
+
+    [HttpDelete("delete-file")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public IActionResult DeleteFile(string employeeCode, string fileName)
+    {
+        if (string.IsNullOrWhiteSpace(employeeCode))
+            return BadRequest(new { message = "employeeCode is required" });
+
+        if (string.IsNullOrWhiteSpace(fileName))
+            return BadRequest(new { message = "fileName is required" });
+
+        try
+        {
+            var deleted = _fileStorageService.DeleteFile(employeeCode, fileName);
+
+            if (!deleted)
+                return NotFound(new { message = $"File {fileName} not found for employee {employeeCode}" });
+
+            _logger.LogInformation($"File {fileName} deleted for employee {employeeCode}");
+            return Ok(new { message = "File deleted successfully" });
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            _logger.LogWarning($"Unauthorized file deletion attempt: {ex.Message}");
+            return BadRequest(new { message = "Invalid file path" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error deleting file {fileName} for employee {employeeCode}: {ex.Message}");
+            return StatusCode(500, new { message = "Internal server error while deleting file", details = ex.Message });
+        }
+    }
+
+    [HttpGet("download-file")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public IActionResult DownloadFile(string employeeCode, string fileName)
+    {
+        if (string.IsNullOrWhiteSpace(employeeCode))
+            return BadRequest(new { message = "employeeCode is required" });
+
+        if (string.IsNullOrWhiteSpace(fileName))
+            return BadRequest(new { message = "fileName is required" });
+
+        try
+        {
+            // Sanitize inputs to prevent directory traversal
+            var sanitizedEmployeeCode = new string(employeeCode.Where(c => !char.IsControl(c)).ToArray());
+            var sanitizedFileName = new string(fileName.Where(c => !char.IsControl(c)).ToArray());
+
+            var fileStorageConfig = new FileStorageConfiguration();
+            if (HttpContext.RequestServices.GetService(typeof(FileStorageConfiguration)) is FileStorageConfiguration config)
+                fileStorageConfig = config;
+
+            var filePath = Path.Combine(fileStorageConfig.UploadDirectory, sanitizedEmployeeCode, sanitizedFileName);
+            var fullPath = Path.GetFullPath(filePath);
+            var basePath = Path.GetFullPath(fileStorageConfig.UploadDirectory);
+
+            // Prevent directory traversal attacks
+            if (!fullPath.StartsWith(basePath))
+                return BadRequest(new { message = "Invalid file path" });
+
+            if (!System.IO.File.Exists(fullPath))
+                return NotFound(new { message = $"File not found" });
+
+            var fileBytes = System.IO.File.ReadAllBytes(fullPath);
+            var contentType = GetContentType(Path.GetExtension(fullPath));
+
+            _logger.LogInformation($"File {fileName} downloaded for employee {employeeCode}");
+
+            return File(fileBytes, contentType, Path.GetFileName(fullPath));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error downloading file {fileName} for employee {employeeCode}: {ex.Message}");
+            return StatusCode(500, new { message = "Internal server error while downloading file", details = ex.Message });
+        }
+    }
+
+    /// <summary>
+    /// Gets content type based on file extension
+    /// </summary>
+    private static string GetContentType(string extension)
+    {
+        var provider = new FileExtensionContentTypeProvider();
+        return provider.TryGetContentType(extension, out var contentType) ? contentType : "application/octet-stream";
     }
 
     [HttpGet("uploaded-documents/{employeeId}")]
