@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Spreadsheet;
 using NZ.HRM.Application.Designations.Queries.GetAllDesignations;
 using NZ.HRM.Application.Designations.Queries.GetDesignationById;
 using NZ.HRM.Application.Interfaces.Repositories;
@@ -16,7 +17,7 @@ public class DesignationQueryHandler
 
     public async Task<List<DesignationDto>> Handle(GetAllDesignationsQuery query, CancellationToken cancellationToken = default)
     {
-        var designations = await _designationRepository.GetAllAsync(query.IncludeInactive, cancellationToken);
+        var designations = await _designationRepository.GetAllAsync(query, cancellationToken);
 
         return designations.Select(static d => new DesignationDto
         {
@@ -25,6 +26,7 @@ public class DesignationQueryHandler
             DesignationCode = d.DesignationCode,
             DesignationNameBangla = d.DesignationNameBangla,
             EmployeeNature = d.EmployeeNature != null && Enum.TryParse<EmployeeNature>(d.EmployeeNature, out var nature) ? nature : null,
+            GradeId = d.GradeId,
             CreatedOn = d.CreatedOn,
             CreatedBy = d.CreatedBy,
             UpdatedOn = d.UpdatedOn,

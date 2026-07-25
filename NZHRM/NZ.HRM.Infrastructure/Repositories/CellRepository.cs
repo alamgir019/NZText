@@ -21,7 +21,7 @@ public class CellRepository : ICellRepository
         if (!includeInactive)
             query = query.Where(c => c.IsActive);
 
-        return await query.OrderBy(c => c.NameEnglish).ToListAsync(cancellationToken);
+        return await query.OrderBy(c => c.SortOrder).ToListAsync(cancellationToken);
     }
 
     public async Task<MstCell?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
@@ -44,7 +44,7 @@ public class CellRepository : ICellRepository
         }
 
         return await query
-            .OrderBy(c => c.NameEnglish)
+            .OrderBy(c => c.SortOrder)
             .Distinct()
             .ToListAsync(cancellationToken);
     }

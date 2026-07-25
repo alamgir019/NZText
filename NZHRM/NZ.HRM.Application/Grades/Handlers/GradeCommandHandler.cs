@@ -28,7 +28,7 @@ public class GradeCommandHandler
             GradeName = command.GradeName,
             //MinSalary = command.MinSalary,
             //MaxSalary = command.MaxSalary,
-            //EmployeeType = command.EmployeeType,
+            EmployeeNature = command.EmployeeNature?.ToString(),
             IsActive = true
         };
 
@@ -51,7 +51,7 @@ public class GradeCommandHandler
         grade.GradeName = command.GradeName;
         //grade.MinSalary = command.MinSalary;
         //grade.MaxSalary = command.MaxSalary;
-        //grade.EmployeeType = command.EmployeeType;
+        grade.EmployeeNature = command.EmployeeNature?.ToString();
 
         await _gradeRepository.UpdateAsync(grade, cancellationToken);
     }

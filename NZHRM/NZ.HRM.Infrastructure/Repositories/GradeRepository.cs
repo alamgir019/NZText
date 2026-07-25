@@ -14,7 +14,7 @@ public class GradeRepository : IGradeRepository
         _context = context;
     }
 
-    public async Task<List<MstGrade>> GetAllAsync(bool includeInactive = false, string? employeeType = null, CancellationToken cancellationToken = default)
+    public async Task<List<MstGrade>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default)
     {
         var query = _context.MstGrades.AsQueryable();
 
@@ -22,14 +22,8 @@ public class GradeRepository : IGradeRepository
         {
             query = query.Where(g => g.IsActive);
         }
-
-        //if (!string.IsNullOrWhiteSpace(employeeType))
-        //{
-        //    query = query.Where(g => g.EmployeeType == employeeType);
-        //}
-
         return await query
-            .OrderBy(g => g.GradeName)
+            .OrderBy(g => g.SortOrder)
             .ToListAsync(cancellationToken);
     }
 

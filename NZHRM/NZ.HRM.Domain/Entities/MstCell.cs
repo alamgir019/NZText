@@ -8,7 +8,6 @@ namespace NZ.HRM.Domain.Entities
     [Table("mst_cell", Schema = "master")]
     public class MstCell : BaseEntityWithSortOrder
     {
-        public string NameEnglish { get; set; } = string.Empty;
         public string SectionId { get; set; } = string.Empty;
         public string CellCode { get; set; } = string.Empty;
         public string CellName { get; set; } = string.Empty;

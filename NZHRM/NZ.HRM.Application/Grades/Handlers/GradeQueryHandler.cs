@@ -1,6 +1,7 @@
 using NZ.HRM.Application.Grades.Queries.GetAllGrades;
 using NZ.HRM.Application.Grades.Queries.GetGradeById;
 using NZ.HRM.Application.Interfaces.Repositories;
+using NZ.HRM.Utility.Enum;
 
 namespace NZ.HRM.Application.Grades.Handlers;
 
@@ -15,7 +16,7 @@ public class GradeQueryHandler
 
     public async Task<List<GradeDto>> Handle(GetAllGradesQuery query, CancellationToken cancellationToken = default)
     {
-        var grades = await _gradeRepository.GetAllAsync(query.IncludeInactive, query.EmployeeType, cancellationToken);
+        var grades = await _gradeRepository.GetAllAsync(query.IncludeInactive, cancellationToken);
 
         return grades.Select(g => new GradeDto
         {
@@ -23,7 +24,7 @@ public class GradeQueryHandler
             GradeName = g.GradeName,
             //MinSalary = g.MinSalary,
             //MaxSalary = g.MaxSalary,
-            //EmployeeType = g.EmployeeType,
+            EmployeeNature = g.EmployeeNature != null && Enum.TryParse<EmployeeNature>(g.EmployeeNature, out var nature) ? nature : null,
             CreatedOn = g.CreatedOn,
             CreatedBy = g.CreatedBy,
             UpdatedOn = g.UpdatedOn,
@@ -45,7 +46,7 @@ public class GradeQueryHandler
             GradeName = grade.GradeName,
             //MinSalary = grade.MinSalary,
             //MaxSalary = grade.MaxSalary,
-            //EmployeeType = grade.EmployeeType,
+            EmployeeNature = grade.EmployeeNature != null && Enum.TryParse<EmployeeNature>(grade.EmployeeNature, out var nature) ? nature : null,
             CreatedOn = grade.CreatedOn,
             CreatedBy = grade.CreatedBy,
             UpdatedOn = grade.UpdatedOn,

@@ -205,6 +205,8 @@ public class EmployeesController : ControllerBase
                 string.Equals(f.Name, "chairmanCertificate", StringComparison.OrdinalIgnoreCase));
             var signature = Request.Form.Files.FirstOrDefault(f =>
                 string.Equals(f.Name, "signature", StringComparison.OrdinalIgnoreCase));
+            var appliedCV = Request.Form.Files.FirstOrDefault(f =>
+                string.Equals(f.Name, "appliedCV", StringComparison.OrdinalIgnoreCase));
             command.Documents = new List<EmployeeDocumentDto>();
             if (certificate != null && certificate.Length > 0)
             {
@@ -289,12 +291,23 @@ public class EmployeesController : ControllerBase
                     FileName = f.FileName,
                 }));
             }
-            if(nationalId != null && nationalId.Length > 0)
+            if (nationalId != null && nationalId.Length > 0)
             {
                 var uploadedFiles = await _fileStorageService.UploadFilesAsync(command.EmployeeCode, new List<IFormFile>() { nationalId }, Utility.Enum.DocumentType.NID);
                 command.Documents.AddRange(uploadedFiles.Select(f => new EmployeeDocumentDto
                 {
                     DocumentType = Utility.Enum.DocumentType.NID,
+                    FilePath = f.FilePath,
+                    EmployeeId = command.EmployeeId,
+                    FileName = f.FileName,
+                }));
+            }
+            if (appliedCV != null && appliedCV.Length > 0)
+            {
+                var uploadedFiles = await _fileStorageService.UploadFilesAsync(command.EmployeeCode, new List<IFormFile>() { appliedCV }, Utility.Enum.DocumentType.AppliedCV);
+                command.Documents.AddRange(uploadedFiles.Select(f => new EmployeeDocumentDto
+                {
+                    DocumentType = Utility.Enum.DocumentType.AppliedCV,
                     FilePath = f.FilePath,
                     EmployeeId = command.EmployeeId,
                     FileName = f.FileName,

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NZ.HRM.Application.Employees.Handlers;
 using NZ.HRM.Application.Model.EmployeeReports.DTOs;
-using NZ.HRM.WebAPI.Services;
+using NZ.HRM.Application.Services;
 
 namespace NZ.HRM.WebAPI.Controllers;
 

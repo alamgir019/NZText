@@ -6,10 +6,10 @@ public class CreateCellCommand
 {
     [Required]
     [MaxLength(100)]
-    public string NameEnglish { get; set; } = string.Empty;
+    public string CellName { get; set; } = string.Empty;
 
     [MaxLength(100)]
-    public string? NameBangla { get; set; }
+    public string? CellNameBangla { get; set; }
 
     [Required]
     public string SectionId { get; set; } = string.Empty;

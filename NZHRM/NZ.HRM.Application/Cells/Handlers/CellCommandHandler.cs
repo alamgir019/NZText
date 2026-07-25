@@ -31,8 +31,8 @@ public class CellCommandHandler
 
         var cell = new MstCell
         {
-            NameEnglish = command.NameEnglish,
-            NameBangla = command.NameBangla,
+            CellName = command.CellName,
+            NameBangla = command.CellNameBangla,
             IsActive = true
         };
 
@@ -56,8 +56,8 @@ public class CellCommandHandler
         if (!sectionExists)
             throw new KeyNotFoundException($"Section with ID {command.SectionId} not found");
 
-        cell.NameEnglish = command.NameEnglish;
-        cell.NameBangla = command.NameBangla;
+        cell.CellName = command.CellName;
+        cell.NameBangla = command.CellNameBangla;
 
         await _cellRepository.UpdateAsync(cell, cancellationToken);
 

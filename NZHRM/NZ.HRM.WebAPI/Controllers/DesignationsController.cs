@@ -23,9 +23,9 @@ public class DesignationsController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(typeof(List<DesignationDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAll([FromQuery] bool includeInactive = false)
+    public async Task<IActionResult> GetAll([FromQuery] bool includeInactive = false, [FromQuery] string? gradeId = null)
     {
-        var query = new GetAllDesignationsQuery { IncludeInactive = includeInactive };
+        var query = new GetAllDesignationsQuery { IncludeInactive = includeInactive, GradeId = gradeId };
         var items = await _queryHandler.Handle(query);
         return Ok(items);
     }

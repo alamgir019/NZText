@@ -37,7 +37,7 @@ public class CellQueryHandler
             result.Add(new CellDto
             {
                 Id = cell.Id,
-                NameEnglish = cell.NameEnglish,
+                CellName = cell.CellName,
                 NameBangla = cell.NameBangla,
                 SectionId = sectionId,
                 SectionName = sectionName,
