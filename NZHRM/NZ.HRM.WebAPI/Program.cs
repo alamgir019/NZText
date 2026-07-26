@@ -3,8 +3,8 @@ using NZ.HRM.Infrastructure.Persistence;
 using NZ.HRM.Application.DependencyInjection;
 using NZ.HRM.Infrastructure.DependencyInjection;
 using NZ.HRM.WebAPI.Services.PunchPolling;
-using NZ.HRM.WebAPI.Configuration;
 using NZ.HRM.Application.Services;
+using NZ.HRM.Domain.Configuration;
 using NZ.HRM.WebAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);

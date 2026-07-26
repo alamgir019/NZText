@@ -1,4 +1,4 @@
-namespace NZ.HRM.WebAPI.Configuration;
+namespace NZ.HRM.Domain.Configuration;
 
 /// <summary>
 /// Configuration for file storage settings

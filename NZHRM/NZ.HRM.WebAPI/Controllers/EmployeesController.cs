@@ -8,7 +8,7 @@ using NZ.HRM.Application.Employees.Queries.SearchEmployees;
 using NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
 using NZ.HRM.Application.Model.Employees.DTOs;
 using NZ.HRM.WebAPI.Services;
-using NZ.HRM.WebAPI.Configuration;
+using NZ.HRM.Domain.Configuration;
 
 namespace NZ.HRM.WebAPI.Controllers;
 

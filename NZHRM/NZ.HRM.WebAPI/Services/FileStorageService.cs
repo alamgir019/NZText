@@ -1,6 +1,5 @@
-using Microsoft.AspNetCore.Http.HttpResults;
 using NZ.HRM.Application.Model.Employees.DTOs;
-using NZ.HRM.WebAPI.Configuration;
+using NZ.HRM.Domain.Configuration;
 using System.Text.RegularExpressions;
 
 namespace NZ.HRM.WebAPI.Services;
@@ -62,20 +61,14 @@ public class UploadedFileDto
 public class FileStorageService : IFileStorageService
 {
     private readonly FileStorageConfiguration _configuration;
-    private readonly IWebHostEnvironment _environment;
     private readonly ILogger<FileStorageService> _logger;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public FileStorageService(
         FileStorageConfiguration configuration,
-        IWebHostEnvironment environment,
-        ILogger<FileStorageService> logger,
-        IHttpContextAccessor httpContextAccessor)
+        ILogger<FileStorageService> logger)
     {
         _configuration = configuration;
-        _environment = environment;
         _logger = logger;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     /// <summary>

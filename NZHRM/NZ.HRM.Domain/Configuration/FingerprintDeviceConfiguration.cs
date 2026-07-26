@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace NZ.HRM.Domain.Configuration;
 
 /// <summary>
@@ -25,4 +27,21 @@ public class FingerprintDeviceConfiguration
     /// Gets or sets the delay between retry attempts in milliseconds
     /// </summary>
     public int RetryDelayMs { get; set; } = 500;
+
+    /// <summary>
+    /// Gets or sets the API key for the fingerprint device
+    /// </summary>
+    public string ApiKey { get; set; } = string.Empty;
+}
+
+public class FingerPrintApiResponse
+{
+    [JsonPropertyName("status")]
+    public string Status { get; set; } = string.Empty;
+
+    [JsonPropertyName("row_count")]
+    public int RowCount { get; set; }
+
+    [JsonPropertyName("data")]
+    public List<string> Data { get; set; } = new();
 }

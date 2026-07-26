@@ -35,17 +35,22 @@ public class FingerprintController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> VerifyEmployeeCode([FromQuery] string deviceId)
+    public async Task<IActionResult> VerifyEmployeeCode([FromQuery] string deviceId, [FromQuery] string unit)
     {
         if (string.IsNullOrWhiteSpace(deviceId))
         {
             _logger.LogWarning("VerifyEmployeeCode called without deviceId parameter");
             return BadRequest(new { message = "deviceId parameter is required" });
         }
+        if (string.IsNullOrWhiteSpace(unit))
+        {
+            _logger.LogWarning("VerifyEmployeeCode called without unit parameter");
+            return BadRequest(new { message = "unit parameter is required" });
+        }
 
         try
         {
-            var employeeCode = await _fingerprintService.VerifyEmployeeCodeAsync(deviceId);
+            var employeeCode = await _fingerprintService.VerifyEmployeeCodeAsync(deviceId, unit);
 
             if (string.IsNullOrWhiteSpace(employeeCode))
             {
