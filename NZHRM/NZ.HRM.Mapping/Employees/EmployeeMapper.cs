@@ -105,6 +105,7 @@ public static class EmployeeMapper
             ShiftName = baseDto.ShiftName,
             ShiftId = employee.Employment?.ShiftId,
             ProposedMonthlySalary = baseDto.ProposedMonthlySalary,
+            GrossSalary = employee.Payroll?.GrossSalary,
             Gender = baseDto.Gender,
             BloodGroup = baseDto.BloodGroup,
             JoiningDate = baseDto.JoiningDate,
@@ -124,7 +125,17 @@ public static class EmployeeMapper
             Department = employee.Employment?.Department?.DepartmentName,
             WeekOffDay = employee.Employment?.WeeklyOffDay,
             ProbationPeriod = employee.Employment?.ProbationPeriod,
-            ReportingTo = employee.Reportings.FirstOrDefault()?.ReportingEmployee?.EmployeeName,
+            PermanentDivisionId = employee.Personal?.PermanentDivisionId,
+            PermanentDistrictId = employee.Personal?.PermanentDistrictId,
+            PermanentUpazilaId = employee.Personal?.PermanentThanaId,
+            PermanentPostOffice = employee.Personal?.PermanentPostOffice,
+            PermanentVillageAreaRoad = employee.Personal?.PermanentVillageAreaRoad,
+            PresentDivisionId = employee.Personal?.PresentDivisionId,
+            PresentDistrictId = employee.Personal?.PresentDistrictId,
+            PresentUpazilaId = employee.Personal?.PresentThanaId,
+            PresentPostOffice = employee.Personal?.PresentPostOffice,
+            PresentVillageAreaRoad = employee.Personal?.PresentVillageAreaRoad,
+
             Documents = employee.Documents?.Select(d => new EmployeeDocumentDto
             {
                 EmployeeId = d.EmployeeId,

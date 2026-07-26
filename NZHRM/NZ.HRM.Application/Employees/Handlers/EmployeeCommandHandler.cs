@@ -386,6 +386,17 @@ public class EmployeeCommandHandler
                 MotherName = command.MotherName,
                 FatherName = command.FatherName,
                 MobileNumber = command.MobileNumber,
+                PermanentDivisionId = command.PermanentDivisionId,
+                PermanentDistrictId = command.PermanentDistrictId,
+                PermanentThanaId = command.PermanentUpazilaId,
+                PermanentPostOffice = command.PermanentPostOffice,
+                PermanentVillageAreaRoad = command.PermanentVillageAreaRoad,
+
+                PresentDivisionId = command.PresentDivisionId,
+                PresentDistrictId = command.PresentDistrictId,
+                PresentThanaId = command.PresentUpazilaId,
+                PresentPostOffice = command.PresentPostOffice,
+                PresentVillageAreaRoad = command.PresentVillageAreaRoad,
                 IsActive = true
             };
 
@@ -398,6 +409,17 @@ public class EmployeeCommandHandler
             personal.MotherName = command.MotherName;
             personal.FatherName = command.FatherName;
             personal.MobileNumber = command.MobileNumber;
+            personal.PermanentDivisionId = command.PermanentDivisionId;
+            personal.PermanentDistrictId = command.PermanentDistrictId;
+            personal.PermanentThanaId = command.PermanentUpazilaId;
+            personal.PermanentPostOffice = command.PermanentPostOffice;
+            personal.PermanentVillageAreaRoad = command.PermanentVillageAreaRoad;
+
+            personal.PresentDivisionId = command.PresentDivisionId;
+            personal.PresentDistrictId = command.PresentDistrictId;
+            personal.PresentThanaId = command.PresentUpazilaId;
+            personal.PresentPostOffice = command.PresentPostOffice;
+            personal.PresentVillageAreaRoad = command.PresentVillageAreaRoad;
             await _employeePersonalRepository.UpdateAsync(personal, cancellationToken);
         }
     }

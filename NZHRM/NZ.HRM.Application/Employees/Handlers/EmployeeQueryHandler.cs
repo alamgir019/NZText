@@ -317,7 +317,6 @@ public class EmployeeQueryHandler
                 ThanaName = personal?.PresentThana?.ThanaName,
                 DistrictName = personal?.PresentDistrict?.DistrictName,
                 DivisionName = personal?.PresentDivision?.DivisionName,
-                Country = "Bangladesh"
             },
             PermanentAddress = new AddressInformationDto
             {
@@ -326,7 +325,6 @@ public class EmployeeQueryHandler
                 ThanaName = personal?.PermanentThana?.ThanaName,
                 DistrictName = personal?.PermanentDistrict?.DistrictName,
                 DivisionName = personal?.PermanentDivision?.DivisionName,
-                Country = "Bangladesh"
             },
 
             // Nominee Information

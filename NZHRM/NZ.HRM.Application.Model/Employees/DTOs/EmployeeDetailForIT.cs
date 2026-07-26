@@ -16,7 +16,6 @@ public class EmployeeDetailForIT : EmployeeDetailDto
     public string? Department { get; set; }
     public string? WeekOffDay { get; set; }
     public decimal? ProbationPeriod { get; set; }
-    public string? ReportingTo { get; set; }
     public EmployeeDocumentDto[]? Documents { get; set; }
     public string? FatherNameBangla { get; set; }
     public string? MotherName { get; set; }
@@ -29,4 +28,15 @@ public class EmployeeDetailForIT : EmployeeDetailDto
     public string? GradeId { get; set; }
     public string? DesignationId { get; set; }
     public string? ShiftId { get; set; }
+    public decimal? GrossSalary { get; set; }
+    public string? PermanentDivisionId { get; set; }
+    public string? PermanentDistrictId { get; set; }
+    public string? PermanentUpazilaId { get; set; }
+    public string? PermanentPostOffice { get; set; }
+    public string? PermanentVillageAreaRoad { get; set; }
+    public string? PresentDivisionId { get; set; }
+    public string? PresentDistrictId { get; set; }
+    public string? PresentUpazilaId { get; set; }
+    public string? PresentPostOffice { get; set; }
+    public string? PresentVillageAreaRoad { get; set; }
 }

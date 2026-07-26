@@ -80,7 +80,6 @@ public class AddressInformationDto
     public string? ThanaName { get; set; }
     public string? DistrictName { get; set; }
     public string? DivisionName { get; set; }
-    public string? Country { get; set; }
 }
 
 public class NomineeInformationDto

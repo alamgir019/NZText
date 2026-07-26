@@ -73,4 +73,14 @@ public class CreateEmployeeHRExecutiveCommand
     public DateOnly? JoiningDate { get; set; }
     public decimal? ProposedMonthlySalary { get; set; }
     public string MobileNumber { get; set; }
+    public string? PermanentDivisionId { get; set; }
+    public string? PermanentDistrictId { get; set; }
+    public string? PermanentUpazilaId { get; set; }
+    public string? PermanentPostOffice { get; set; }
+    public string? PermanentVillageAreaRoad { get; set; }
+    public string? PresentDivisionId { get; set; }
+    public string? PresentDistrictId { get; set; }
+    public string? PresentUpazilaId { get; set; }
+    public string? PresentPostOffice { get; set; }
+    public string? PresentVillageAreaRoad { get; set; }
 }
