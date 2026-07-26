@@ -5,6 +5,7 @@ using NZ.HRM.Infrastructure.DependencyInjection;
 using NZ.HRM.WebAPI.Services.PunchPolling;
 using NZ.HRM.Application.Services;
 using NZ.HRM.Domain.Configuration;
+using NZ.HRM.WebAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 // Connection String in appsettings.json
@@ -23,6 +24,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHandlerServices();
 builder.Services.AddRepositories();
 builder.Services.AddScoped<IEmployeeExcelExportService, EmployeeExcelExportService>();
+
+// Register file storage configuration and service
+var fileStorageConfig = new FileStorageConfiguration();
+builder.Configuration.GetSection("FileStorage").Bind(fileStorageConfig);
+builder.Services.AddSingleton(fileStorageConfig);
+builder.Services.AddScoped<IFileStorageService, FileStorageService>();
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.Configure<PunchPollingOptions>(builder.Configuration.GetSection("PunchPolling"));
 builder.Services.AddHttpClient<IDevicePunchSource, VirdiApiDevicePunchSource>();
 
