@@ -54,11 +54,11 @@ public class SalaryBreakdownService
     /// </summary>
     private static SalaryBreakdownDto CalculateStaffSalary(decimal grossSalary)
     {
-        decimal conveyance = STAFF_CONVEYANCE;
+        decimal conveyance = Math.Round(STAFF_CONVEYANCE);
 
         // Calculate tentative Basic using standard divisor
-        decimal tentativeBasic = (grossSalary - conveyance) / 1.6m;
-        decimal tentativeHouseRent = tentativeBasic * STAFF_HOUSE_RENT_PERCENTAGE;
+        decimal tentativeBasic = Math.Round((grossSalary - conveyance) / 1.6m);
+        decimal tentativeHouseRent = Math.Round(tentativeBasic * STAFF_HOUSE_RENT_PERCENTAGE);
 
         // If house rent exceeds max, recalculate with different divisor
         decimal basic;
@@ -66,7 +66,7 @@ public class SalaryBreakdownService
 
         if (tentativeHouseRent > STAFF_HOUSE_RENT_MAX)
         {
-            basic = (grossSalary - conveyance) / 1.1m;
+            basic = Math.Round((grossSalary - conveyance) / 1.1m);
             houseRent = STAFF_HOUSE_RENT_MAX;
         }
         else
@@ -75,7 +75,7 @@ public class SalaryBreakdownService
             houseRent = tentativeHouseRent;
         }
 
-        decimal medical = basic * STAFF_MEDICAL_PERCENTAGE;
+        decimal medical = Math.Round(basic * STAFF_MEDICAL_PERCENTAGE);
 
         return new SalaryBreakdownDto
         {
@@ -98,13 +98,13 @@ public class SalaryBreakdownService
     /// </summary>
     private static SalaryBreakdownDto CalculateWorkerSalary(decimal grossSalary)
     {
-        decimal medical = WORKER_MEDICAL;
-        decimal conveyance = WORKER_CONVEYANCE;
-        decimal food = WORKER_FOOD;
+        decimal medical = Math.Round(WORKER_MEDICAL);
+        decimal conveyance = Math.Round(WORKER_CONVEYANCE);
+        decimal food = Math.Round(WORKER_FOOD);
 
-        decimal totalFixedAllowances = medical + conveyance + food;
-        decimal basic = (grossSalary - totalFixedAllowances) / 1.55m;
-        decimal houseRent = basic * WORKER_HOUSE_RENT_PERCENTAGE;
+        decimal totalFixedAllowances = Math.Round(medical + conveyance + food);
+        decimal basic = Math.Round((grossSalary - totalFixedAllowances) / 1.55m);
+        decimal houseRent = Math.Round(basic * WORKER_HOUSE_RENT_PERCENTAGE);
 
         return new SalaryBreakdownDto
         {
