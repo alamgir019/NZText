@@ -1,3 +1,5 @@
+using NZ.HRM.Utility.Enum;
+
 namespace NZ.HRM.Application.Model.EmployeeReports.DTOs;
 
 public class MedicalReportDto
@@ -11,11 +13,10 @@ public class MedicalReportDto
     public string MotherName { get; set; } = string.Empty;
     public string DateOfBirth { get; set; } = string.Empty;
     public string Age { get; set; } = string.Empty;
-    public string Gender { get; set; } = string.Empty;
-    public string BloodGroup { get; set; } = string.Empty;
+    public Gender? Gender { get; set; }
+    public BloodGroup? BloodGroup { get; set; }
     public string Village { get; set; } = string.Empty;
     public string PostOffice { get; set; } = string.Empty;
-    public string PoliceStation { get; set; } = string.Empty;
     public string Upazila { get; set; } = string.Empty;
     public string District { get; set; } = string.Empty;
     public string Company { get; set; } = string.Empty;
@@ -30,4 +31,5 @@ public class MedicalReportDto
     public bool IsFit { get; set; }
     public string Remarks { get; set; } = string.Empty;
     public string? PhotoUrl { get; set; }
+    public string? Division { get; set; }
 }

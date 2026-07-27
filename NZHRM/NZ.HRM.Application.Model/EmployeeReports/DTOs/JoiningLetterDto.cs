@@ -21,4 +21,5 @@ public class JoiningLetterDto
     public string ConveyanceAllowance { get; set; } = string.Empty;
     public string FoodAllowance { get; set; } = string.Empty;
     public string GrossSalary { get; set; } = string.Empty;
+    public string? EmployeeCode { get; set; }
 }
