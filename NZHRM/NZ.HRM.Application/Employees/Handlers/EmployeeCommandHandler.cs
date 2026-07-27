@@ -178,12 +178,23 @@ public class EmployeeCommandHandler
 
             await _employeePersonalRepository.UpdateAsync(employeee.Personal, cancellationToken);
         }
-        if (employeee.Nominees != null)
+        if (employeee.Nominees != null && employeee.Nominees.Any())
         {
             employeee.Nominees.First().EmployeeId = employeeId;
             employeee.Nominees.First().NomineeNameBangla = command.NomineeNameBangla;
             employeee.Nominees.First().RelationshipBangla = command.NomineeRelationBangla;
             await _employeeNomineeRepository.UpdateAsync(employeee.Nominees.First(), cancellationToken);
+        }
+        else
+        {
+            var employeeNominee = new HrmEmployeeNominee
+            {
+                EmployeeId = employeeId,
+                NomineeNameBangla = command.NomineeNameBangla,
+                RelationshipBangla = command.NomineeRelationBangla,
+                IsActive = true
+            };
+            await _employeeNomineeRepository.AddAsync(employeeNominee, cancellationToken);
         }
 
         if (employeee.Employment != null)
