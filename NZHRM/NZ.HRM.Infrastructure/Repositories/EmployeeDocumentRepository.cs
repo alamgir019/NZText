@@ -58,6 +58,12 @@ public class EmployeeDocumentRepository : IEmployeeDocumentRepository
         await _context.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task UpdateRangeAsync(List<HrmEmployeeDocument> employeeDocuments, CancellationToken cancellationToken = default)
+    {
+        _context.HrmEmployeeDocuments.UpdateRange(employeeDocuments);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
     public async Task DeleteAsync(HrmEmployeeDocument employeeDocument, CancellationToken cancellationToken = default)
     {
         _context.HrmEmployeeDocuments.Remove(employeeDocument);

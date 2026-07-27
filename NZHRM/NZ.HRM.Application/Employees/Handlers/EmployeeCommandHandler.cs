@@ -477,10 +477,7 @@ public class EmployeeCommandHandler
         if (employeeMaster == null || employeeMaster.EnrollmentId != command.EmployeeEnrollmentId)
             throw new KeyNotFoundException($"Employee with ID {command.EmployeeId} not found");
 
-        if (employeeMaster.Documents is null || employeeMaster.Documents.Count == 0)
-        {
-            AddEmployeeDocument(command.Documents, employeeMaster, cancellationToken).Wait(cancellationToken);
-        }
+        AddEmployeeDocument(command.Documents, employeeMaster, cancellationToken).Wait(cancellationToken);
 
         employeeMaster.Status = EmployeeStatus.ITActivation.ToString();
         await _employeeMasterRepository.UpdateAsync(employeeMaster, cancellationToken);
@@ -529,9 +526,32 @@ public class EmployeeCommandHandler
             FilePath = item.FilePath,
             IsActive = true
         }).ToList();
+        var insertedDocs = new List<HrmEmployeeDocument>();
+        var updatedDocs = new List<HrmEmployeeDocument>();
+        if (employeeMaster.Documents != null && employeeMaster.Documents.Any())
+        {
+            employeeDocuments.ForEach(doc => {
+                var existingDoc = employeeMaster.Documents.FirstOrDefault(d => d.DocumentType == doc.DocumentType);
+                if (existingDoc != null)
+                {
+                    existingDoc.DocumentNo = doc.DocumentNo;
+                    existingDoc.IssueDate = doc.IssueDate;
+                    existingDoc.ExpiryDate = doc.ExpiryDate;
+                    existingDoc.FileName = doc.FileName;
+                    existingDoc.FilePath = doc.FilePath;
+                    updatedDocs.Add(existingDoc);
+                }
+                else
+                {
+                    insertedDocs.Add(doc);
+                }
+            } );
+        }
 
-        if (employeeDocuments.Any())
-            await _employeeDocumentRepository.AddRangeAsync(employeeDocuments, cancellationToken);
+        if (insertedDocs.Any())
+            await _employeeDocumentRepository.AddRangeAsync(insertedDocs, cancellationToken);
+        if (updatedDocs.Any())
+            await _employeeDocumentRepository.UpdateRangeAsync(updatedDocs, cancellationToken);
     }
 
     private async Task ValidateRelatedEntities(

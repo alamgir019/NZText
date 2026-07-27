@@ -10,6 +10,7 @@ public interface IEmployeeDocumentRepository
     Task<string> AddAsync(HrmEmployeeDocument employeeDocument, CancellationToken cancellationToken = default);
     Task<string> AddRangeAsync(List<HrmEmployeeDocument> employeeDocuments, CancellationToken cancellationToken = default);
     Task UpdateAsync(HrmEmployeeDocument employeeDocument, CancellationToken cancellationToken = default);
+    Task UpdateRangeAsync(List<HrmEmployeeDocument> employeeDocuments, CancellationToken cancellationToken = default);
     Task DeleteAsync(HrmEmployeeDocument employeeDocument, CancellationToken cancellationToken = default);
     Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default);
 }
