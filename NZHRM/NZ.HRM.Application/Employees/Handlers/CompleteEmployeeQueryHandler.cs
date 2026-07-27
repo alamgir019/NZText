@@ -8,6 +8,7 @@ using NZ.HRM.Domain.Entities;
 using NZ.HRM.Mapping.Employees;
 using NZ.HRM.Utility.Enum;
 using NZ.HRM.Application.Employees.Queries.GetEmployeeDocuments;
+using NZ.HRM.Utility;
 
 namespace NZ.HRM.Application.Employees.Handlers;
 
@@ -91,6 +92,7 @@ public class CompleteEmployeeQueryHandler
         {
             EmployeeId = x.Id,
             EnrollmentId = x.EnrollmentId,
+            EmployeeCode = x.EmployeeCode,
             EmployeeName = string.IsNullOrWhiteSpace(x.EmployeeName) ? x.EmployeeNameBangla : x.EmployeeName,
             Age = CalculateAge(x.Personal?.DateOfBirth),
             ExaminationDate = x.MedicalFitnessCheck?.ExaminationDateTime,
@@ -99,12 +101,8 @@ public class CompleteEmployeeQueryHandler
                 : null,            
             DateOfJoining = x.Employment?.JoiningDate,
             DateOfBirth = x.Personal?.DateOfBirth,
-            BloodGroup = !string.IsNullOrWhiteSpace(x.Personal?.BloodGroup) && Enum.TryParse<BloodGroup>(x.Personal.BloodGroup, out var bloodGroup)
-                ? bloodGroup
-                : null,
-            Gender = !string.IsNullOrWhiteSpace(x.Personal?.Gender) && Enum.TryParse<Gender>(x.Personal.Gender, out var gender)
-                ? gender
-                : null,
+            BloodGroup = EnumHelper.TryParseEnum<BloodGroup>(x.Personal?.BloodGroup),
+            Gender = EnumHelper.TryParseEnum<Gender>(x.Personal?.Gender),
             Department = x.Employment?.Department?.DepartmentName,
             Section = x.Employment?.Section?.SectionName,
             Cell = x.Employment?.Cell?.CellName,

@@ -7,6 +7,7 @@ using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Application.Model.Employees.DTOs;
 using NZ.HRM.Application.Model.EmployeeReports.DTOs;
 using NZ.HRM.Mapping.Employees;
+using NZ.HRM.Utility;
 using NZ.HRM.Utility.Enum;
 
 namespace NZ.HRM.Application.Employees.Handlers;
@@ -150,15 +151,15 @@ public class EmployeeQueryHandler
 
             // Personal Information
             DateOfBirth = personal?.DateOfBirth?.ToString("yyyy-MM-dd") ?? string.Empty,
-            Gender = personal?.Gender != null && Enum.TryParse<Gender>(personal.Gender, out var gender) ? gender : null,
-            Religion = personal?.Religion != null && Enum.TryParse<Religion>(personal.Religion, out var religion) ? religion : null,
-            BloodGroup = personal?.BloodGroup != null && Enum.TryParse<BloodGroup>(personal.BloodGroup, out var bloodGroup) ? bloodGroup : null,
+            Gender = EnumHelper.TryParseEnum<Gender>(personal?.Gender),
+            Religion = EnumHelper.TryParseEnum<Religion>(personal?.Religion),
+            BloodGroup = EnumHelper.TryParseEnum<BloodGroup>(personal?.BloodGroup),
             IDType = personal?.IdType,
             IDNumber = personal?.IdNumber,
             MobileNumber = personal?.MobileNumber ?? string.Empty,
 
             // Family Information
-            GuardianType = personal?.GuardianType?.ToString(),
+            GuardianType = personal?.GuardianType,
             GuardianNameBangla = personal?.GuardianNameBangla,
             FatherNameBangla = personal?.FatherNameBangla ?? string.Empty,
             MotherNameBangla = personal?.MotherNameBangla,
@@ -284,9 +285,9 @@ public class EmployeeQueryHandler
             FullName = employee.EmployeeName ?? employee.EmployeeNameBangla ?? string.Empty,
             FatherName = personal?.FatherName ?? personal?.FatherNameBangla,
             DateOfBirth = personal?.DateOfBirth?.ToString("dd-MMM-yyyy"),
-            Gender = personal?.Gender,
-            BloodGroup = personal?.BloodGroup,
-            Religion = personal?.Religion,
+            Gender = EnumHelper.TryParseEnum<Gender>(personal?.Gender),
+            BloodGroup = EnumHelper.TryParseEnum<BloodGroup>(personal?.BloodGroup),
+            Religion = EnumHelper.TryParseEnum<Religion>(personal?.Religion),
             Nationality = personal?.Nationality,
             IDNumber = personal?.IdNumber,
             Mobile = personal?.MobileNumber,
@@ -305,6 +306,9 @@ public class EmployeeQueryHandler
             // Salary Information
             BasicSalary = employee.Payroll?.BasicSalary,
             HouseRent = employee.Payroll?.HouseRentAllowance,
+            ConveyanceAllowance = employee.Payroll?.ConveyanceAllowance,
+            MedicalAllowance = employee.Payroll?.MedicalAllowance,
+            FoodAllowance = employee.Payroll?.FoodAllowance,
             OtherAllowances = employee.Payroll?.OtherAllowance, // Would need separate salary structure data
             GrossSalary = employee.Payroll?.GrossSalary,
             MonthlySalary = employee.Payroll?.ProposedSalary,
@@ -350,6 +354,7 @@ public class EmployeeQueryHandler
             {
                 DocumentType = d.DocumentType,
                 Status = d.IsActive ? "Verified" : "Pending",
+                FilePath = d.FilePath,
                 IsAvailable = !string.IsNullOrEmpty(d.FilePath)
             }).ToList() ?? new List<DocumentSummaryDto>(),
 

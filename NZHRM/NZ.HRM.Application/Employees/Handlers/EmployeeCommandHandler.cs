@@ -174,6 +174,8 @@ public class EmployeeCommandHandler
             employeee.Personal.PresentThanaId = command.PresentThanaId;
             employeee.Personal.PresentDistrictId = command.PresentDistrictId;
             employeee.Personal.PresentDivisionId = command.PresentDivisionId;
+            employeee.Personal.IdType = command.IDType;
+            employeee.Personal.IdNumber = command.IDNumber;
             employeee.Personal.IsActive = true;
 
             await _employeePersonalRepository.UpdateAsync(employeee.Personal, cancellationToken);

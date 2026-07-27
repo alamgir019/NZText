@@ -1,3 +1,5 @@
+using NZ.HRM.Utility.Enum;
+
 namespace NZ.HRM.Application.Model.Employees.DTOs;
 
 /// <summary>
@@ -18,9 +20,9 @@ public class EmployeeDetailedProfileDto
     public string FullName { get; set; } = string.Empty;
     public string? FatherName { get; set; }
     public string? DateOfBirth { get; set; }
-    public string? Gender { get; set; }
-    public string? BloodGroup { get; set; }
-    public string? Religion { get; set; }
+    public Gender? Gender { get; set; }
+    public BloodGroup? BloodGroup { get; set; }
+    public Religion? Religion { get; set; }
     public string? Nationality { get; set; }
     public string? IDNumber { get; set; }
     public string? Mobile { get; set; }
@@ -70,6 +72,9 @@ public class EmployeeDetailedProfileDto
 
     #region Promotion / Transfer History
     public List<PromotionTransferHistoryDto> PromotionTransferHistory { get; set; } = new();
+    public decimal? MedicalAllowance { get; set; }
+    public decimal? FoodAllowance { get; set; }
+    public decimal? ConveyanceAllowance { get; set; }
     #endregion
 }
 
@@ -103,6 +108,7 @@ public class DocumentSummaryDto
     public string? DocumentType { get; set; }
     public string? Status { get; set; }
     public bool IsAvailable { get; set; }
+    public string? FilePath { get; set; }
 }
 
 public class PromotionTransferHistoryDto

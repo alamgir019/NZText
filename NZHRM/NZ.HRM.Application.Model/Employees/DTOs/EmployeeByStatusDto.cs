@@ -22,4 +22,5 @@ public class EmployeeByStatusDto
     public WeekOffDay? WeekOffDay { get; set; }
     public decimal? ProposedSalary { get; set; }
     public FitnessOption? MedicalResult { get; set; }
+    public string? EmployeeCode { get; set; }
 }

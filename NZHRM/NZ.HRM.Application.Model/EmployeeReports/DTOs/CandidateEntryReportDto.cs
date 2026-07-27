@@ -28,7 +28,7 @@ public class CandidateEntryReportDto
     public string MobileNumber { get; set; } = string.Empty;
 
     // Family Information
-    public string? GuardianType { get; set; }
+    public GuardianType? GuardianType { get; set; }
     public string? GuardianNameBangla { get; set; }
     public string FatherNameBangla { get; set; } = string.Empty;
     public string? MotherNameBangla { get; set; }
