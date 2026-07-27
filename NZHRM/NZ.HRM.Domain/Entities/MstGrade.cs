@@ -13,10 +13,10 @@ namespace NZ.HRM.Domain.Entities
         public string GradeCode { get; set; } = string.Empty;
         [MaxLength(200)]
         public string GradeName { get; set; } = string.Empty;
+        public string? GradeNameBangla { get; set; }
         public decimal MinimumSalary { get; set; }
         public decimal MaximumSalary { get; set; }
         public string? EmployeeNature { get; set; }
         public ICollection<MstDesignation> Designations { get; set; } = new HashSet<MstDesignation>();
-
     }
 }

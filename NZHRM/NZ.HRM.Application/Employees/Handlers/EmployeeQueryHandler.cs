@@ -3,6 +3,7 @@ using NZ.HRM.Application.Employees.Queries.GetEmployeeDetailForIT;
 using NZ.HRM.Application.Employees.Queries.GetEmployeeMasterList;
 using NZ.HRM.Application.Employees.Queries.GetMedicalReport;
 using NZ.HRM.Application.Employees.Queries.GetEmployeeDetailedProfile;
+using NZ.HRM.Application.Employees.Queries.GetJoiningLetter;
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Application.Model.Employees.DTOs;
 using NZ.HRM.Application.Model.EmployeeReports.DTOs;
@@ -362,6 +363,62 @@ public class EmployeeQueryHandler
         };
 
         return profileDto;
+    }
+
+    public async Task<JoiningLetterDto?> Handle(GetJoiningLetterQuery query, CancellationToken cancellationToken = default)
+    {
+        var employee = await _employeeMasterRepository.GetByIdAsync(query.EmployeeId, cancellationToken);
+        if (employee == null)
+            return null;
+
+        var personal = employee.Personal;
+        var employment = employee.Employment;
+        var payroll = employee.Payroll;
+
+        // Build present address
+        var presentAddress = string.Join(", ",
+            new[] {
+                personal?.PresentVillageAreaRoadBangla,
+                personal?.PresentPostOfficeBangla,
+                personal?.PresentThana?.ThanaNameBangla,
+                personal?.PresentDistrict?.DistrictNameBangla,
+                personal?.PresentDivision?.DivisionNameBangla
+            }.Where(x => !string.IsNullOrWhiteSpace(x))
+        );
+
+        // Build permanent address
+        var permanentAddress = string.Join(", ",
+            new[] {
+                personal?.PermanentVillageAreaRoadBangla,
+                personal?.PermanentPostOfficeBangla,
+                personal?.PermanentThana?.ThanaNameBangla,
+                personal?.PermanentDistrict?.DistrictNameBangla,
+                personal?.PermanentDivision?.DivisionNameBangla
+            }.Where(x => !string.IsNullOrWhiteSpace(x))
+        );
+
+        return new JoiningLetterDto
+        {
+            CurrentDate = DateTime.Now.ToString("dd-MMM-yyyy"),
+            EmployeeId = employee.Id,
+            EmployeeNameBangla = employee.EmployeeNameBangla ?? string.Empty,
+            FatherNameBangla = personal?.FatherNameBangla ?? string.Empty,
+            MotherNameBangla = personal?.MotherNameBangla ?? string.Empty,
+            SpouseNameBangla = personal?.SpouseNameBangla ?? personal?.SpouseName,
+            PresentAddressBangla = presentAddress,
+            PermanentAddressBangla = permanentAddress,
+            JoiningDate = employment?.JoiningDate?.ToString("dd-MMM-yyyy") ?? string.Empty,
+            GradeBangla = employment?.Grade?.GradeNameBangla ?? employment?.Grade?.GradeName,
+            DesignationBangla = employment?.Designation?.DesignationNameBangla ?? employment?.Designation?.DesignationName,
+            DepartmentBangla = employment?.Department?.DepartmentNameBangla ?? employment?.Department?.DepartmentName,
+            SectionBangla = employment?.Section?.SectionNameBangla ?? employment?.Section?.SectionName,
+            BasicSalary = payroll?.BasicSalary?.ToString("0.00") ?? "0.00",
+            HouseRent = payroll?.HouseRentAllowance?.ToString("0.00") ?? "0.00",
+            MedicalAllowance = payroll?.MedicalAllowance?.ToString("0.00") ?? "0.00",
+            ConveyanceAllowance = payroll?.ConveyanceAllowance?.ToString("0.00") ?? "0.00",
+            FoodAllowance = payroll?.FoodAllowance?.ToString("0.00") ?? "0.00",
+            GrossSalary = payroll?.GrossSalary?.ToString("0.00") ?? "0.00"
+        };
     }
 }
 

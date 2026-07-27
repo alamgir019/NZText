@@ -17,6 +17,7 @@ namespace NZ.HRM.Domain.Entities
         public string? GuardianNameBangla { get; set; }
         public GuardianType? GuardianType { get; set; }
         public string? SpouseName { get; set; }
+        public string? SpouseNameBangla { get; set; }
         public string? Gender { get; set; }
         public string? Religion { get; set; }
         public string? MaritalStatus { get; set; }

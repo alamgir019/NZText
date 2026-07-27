@@ -191,4 +191,22 @@ public class EmployeeReportsController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("joining-letter/{employeeId}")]
+    [ProducesResponseType(typeof(JoiningLetterDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetJoiningLetter([FromRoute] string employeeId)
+    {
+        var query = new Application.Employees.Queries.GetJoiningLetter.GetJoiningLetterQuery
+        {
+            EmployeeId = employeeId
+        };
+
+        var result = await _employeeQueryHandler.Handle(query, cancellationToken: default);
+
+        if (result == null)
+            return NotFound(new { message = $"Employee with ID {employeeId} not found" });
+
+        return Ok(result);
+    }
+
 }
