@@ -9,7 +9,7 @@ public class EmployeeDetailedProfileDto
 {
     #region Left Panel Information
     public string EmployeeId { get; set; } = string.Empty;
-    public string PermanentId { get; set; } = string.Empty;
+    public string EmployeeCode { get; set; } = string.Empty;
     public string? DateOfJoining { get; set; }
     public string? EmploymentType { get; set; }
     public string Status { get; set; } = string.Empty;
@@ -75,6 +75,7 @@ public class EmployeeDetailedProfileDto
     public decimal? MedicalAllowance { get; set; }
     public decimal? FoodAllowance { get; set; }
     public decimal? ConveyanceAllowance { get; set; }
+    public string? EnrollmentId { get; set; }
     #endregion
 }
 
@@ -105,7 +106,7 @@ public class MedicalInformationDto
 
 public class DocumentSummaryDto
 {
-    public string? DocumentType { get; set; }
+    public DocumentType? DocumentType { get; set; }
     public string? Status { get; set; }
     public bool IsAvailable { get; set; }
     public string? FilePath { get; set; }

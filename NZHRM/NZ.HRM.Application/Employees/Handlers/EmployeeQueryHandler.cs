@@ -275,7 +275,8 @@ public class EmployeeQueryHandler
         {
             // Left Panel Information
             EmployeeId = employee.Id,
-            PermanentId = employee.EnrollmentId ?? string.Empty,
+            EnrollmentId = employee.EnrollmentId ?? string.Empty,
+            EmployeeCode = employee.EmployeeCode ?? string.Empty,
             DateOfJoining = employment?.JoiningDate?.ToString("dd-MMM-yyyy"),
             EmploymentType = employee.EmployeeNature,
             Status = employee.IsActive ? "Active" : "Inactive",
@@ -352,21 +353,12 @@ public class EmployeeQueryHandler
             // Documents Summary
             Documents = employee.Documents?.Select(d => new DocumentSummaryDto
             {
-                DocumentType = d.DocumentType,
+                DocumentType = EnumHelper.TryParseEnum<DocumentType>(d.DocumentType),
                 Status = d.IsActive ? "Verified" : "Pending",
                 FilePath = d.FilePath,
                 IsAvailable = !string.IsNullOrEmpty(d.FilePath)
             }).ToList() ?? new List<DocumentSummaryDto>(),
 
-            //// Promotion / Transfer History
-            //PromotionTransferHistory = employee.EmployeeTransfers?.Select(t => new PromotionTransferHistoryDto
-            //{
-            //    Date = t.TransferDate?.ToString("dd-MMM-yyyy"),
-            //    Type = t.TransferType,
-            //    From = t.FromDesignation?.DesignationName ?? t.FromDesignation?.DesignationNameBangla ?? t.FromDepartment?.DepartmentName,
-            //    To = t.ToDesignation?.DesignationName ?? t.ToDesignation?.DesignationNameBangla ?? t.ToDepartment?.DepartmentName,
-            //    Remarks = t.Remarks
-            //}).ToList() ?? new List<PromotionTransferHistoryDto>()
         };
 
         return profileDto;
