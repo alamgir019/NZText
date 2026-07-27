@@ -277,12 +277,7 @@ public class EmployeeCommandHandler
         await UpsertPayroll(command, employeeMaster, cancellationToken);
 
         await UpsertNominee(command, employeeMaster, cancellationToken);
-
-        if (employeeMaster.Documents is null || employeeMaster.Documents.Count == 0)
-        {
-            AddEmployeeDocument(command.Documents, employeeMaster, cancellationToken).Wait(cancellationToken);
-        }
-
+        AddEmployeeDocument(command.Documents, employeeMaster, cancellationToken).Wait(cancellationToken);
         return command.EmployeeId;
     }
 
@@ -546,6 +541,10 @@ public class EmployeeCommandHandler
                     insertedDocs.Add(doc);
                 }
             } );
+        }
+        else
+        {
+            insertedDocs.AddRange(employeeDocuments);
         }
 
         if (insertedDocs.Any())

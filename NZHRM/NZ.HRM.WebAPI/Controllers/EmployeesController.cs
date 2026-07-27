@@ -232,18 +232,6 @@ public class EmployeesController : ControllerBase
                 }));
             }
 
-            if (policeClearance != null && policeClearance.Length > 0)
-            {
-                var uploadedFiles = await _fileStorageService.UploadFilesAsync(command.EmployeeCode, new List<IFormFile>() { policeClearance }, Utility.Enum.DocumentType.PoliceClearance);
-                command.Documents.AddRange(uploadedFiles.Select(f => new EmployeeDocumentDto
-                {
-                    DocumentType = Utility.Enum.DocumentType.PoliceClearance,
-                    FilePath = f.FilePath,
-                    EmployeeId = command.EmployeeId,
-                    FileName = f.FileName,
-                }));
-            }
-
             if (experienceCertificate != null && experienceCertificate.Length > 0)
             {
                 var uploadedFiles = await _fileStorageService.UploadFilesAsync(command.EmployeeCode, new List<IFormFile>() { experienceCertificate }, Utility.Enum.DocumentType.ExperienceCertificate);
