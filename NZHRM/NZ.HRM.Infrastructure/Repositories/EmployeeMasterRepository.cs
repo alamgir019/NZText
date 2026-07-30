@@ -91,6 +91,87 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<List<HrmEmployeeMaster>> GetAllAsync(
+        bool includeInactive = false,
+        bool includeEmployment = false,
+        bool includePersonal = false,
+        bool includePayroll = false,
+        bool includeNominees = false,
+        bool includeVerification = false,
+        bool includeMedical = false,
+        bool includeDocuments = false,
+        CancellationToken cancellationToken = default)
+    {
+        var query = _context.HrmEmployeeMasters.AsQueryable();
+
+        // Dynamically include child entities based on parameters
+        if (includeEmployment)
+        {
+            query = query.Include(e => e.Employment)
+                .ThenInclude(emp => emp.Unit)
+                .Include(e => e.Employment)
+                .ThenInclude(emp => emp.Department)
+                .Include(e => e.Employment)
+                .ThenInclude(emp => emp.Section)
+                .Include(e => e.Employment)
+                .ThenInclude(emp => emp.Grade)
+                .Include(e => e.Employment)
+                .ThenInclude(emp => emp.Shift)
+                .Include(e => e.Employment)
+                .ThenInclude(emp => emp.Designation);
+        }
+
+        if (includePersonal)
+        {
+            query = query.Include(e => e.Personal)
+                .ThenInclude(p => p.PermanentThana)
+                .Include(e => e.Personal)
+                .ThenInclude(p => p.PermanentDistrict)
+                .Include(e => e.Personal)
+                .ThenInclude(p => p.PermanentDivision)
+                .Include(e => e.Personal)
+                .ThenInclude(p => p.PresentThana)
+                .Include(e => e.Personal)
+                .ThenInclude(p => p.PresentDistrict)
+                .Include(e => e.Personal)
+                .ThenInclude(p => p.PresentDivision);
+        }
+
+        if (includePayroll)
+        {
+            query = query.Include(e => e.Payroll);
+        }
+
+        if (includeNominees)
+        {
+            query = query.Include(e => e.Nominees);
+        }
+
+        if (includeVerification)
+        {
+            query = query.Include(e => e.Verification);
+        }
+
+        if (includeMedical)
+        {
+            query = query.Include(e => e.MedicalFitnessCheck);
+        }
+
+        if (includeDocuments)
+        {
+            query = query.Include(e => e.Documents);
+        }
+
+        if (!includeInactive)
+        {
+            query = query.Where(e => e.IsActive);
+        }
+
+        return await query
+            .OrderBy(e => e.EmployeeCode)
+            .ToListAsync(cancellationToken);
+    }
+
 
     public async Task<List<HrmEmployeeMaster>> GetByDateAsync(DateTime onDate, bool includeInactive = false, CancellationToken cancellationToken = default)
     {
@@ -352,6 +433,17 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .AnyAsync(e => e.EmployeeCode == employeeCode, cancellationToken);
     }
 
+    public async Task<bool> IsEmployeeCodeUniqueAsync(string employeeCode, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(employeeCode))
+            return false;
+
+        var query = _context.HrmEmployeeMasters
+            .Where(e => e.EmployeeCode == employeeCode);
+
+        // Return true if NO matching code exists (code is unique)
+        return !await query.AnyAsync(cancellationToken);
+    }
     public async Task<bool> EnrollmentCodeExistsAsync(string enrollmentCode , CancellationToken cancellationToken = default)
     {
         return await _context.HrmEmployeeMasters

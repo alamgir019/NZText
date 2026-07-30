@@ -1,5 +1,6 @@
 using NZ.HRM.Application.EmployeeMasters.Queries.GetAllEmployeeMasters;
 using NZ.HRM.Application.EmployeeMasters.Queries.GetEmployeeMasterById;
+using NZ.HRM.Application.EmployeeMasters.Queries.VerifyEmployeeCodeUniqueness;
 using NZ.HRM.Application.Interfaces.Repositories;
 
 namespace NZ.HRM.Application.EmployeeMasters.Handlers;
@@ -98,6 +99,31 @@ public class EmployeeMasterQueryHandler
             UpdatedOn = employee.UpdatedOn,
             UpdatedBy = employee.UpdatedBy,
             IsActive = employee.IsActive
+        };
+    }
+
+    public async Task<EmployeeCodeUniquenessDto> Handle(VerifyEmployeeCodeUniquenessQuery query, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(query.EmployeeCode))
+        {
+            return new EmployeeCodeUniquenessDto
+            {
+                IsUnique = false,
+                Message = "Employee code cannot be empty"
+            };
+        }
+
+        // Check uniqueness at database level - efficient single query
+        var isUnique = await _employeeMasterRepository.IsEmployeeCodeUniqueAsync(
+            query.EmployeeCode,
+            cancellationToken);
+
+        return new EmployeeCodeUniquenessDto
+        {
+            IsUnique = isUnique,
+            Message = isUnique 
+                ? "Employee code is available" 
+                : $"Employee code '{query.EmployeeCode}' is already in use"
         };
     }
 }

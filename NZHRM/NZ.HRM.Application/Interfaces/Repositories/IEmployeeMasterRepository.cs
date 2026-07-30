@@ -7,6 +7,21 @@ public interface IEmployeeMasterRepository
 {
     // If onDate is provided, returns employees relevant to that date (e.g., created on that date). If null returns all.
     Task<List<HrmEmployeeMaster>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get all employees with dynamic child table inclusion to optimize query performance.
+    /// By default, includes minimal children. Set includeChildren flags to true to include specific child entities.
+    /// </summary>
+    Task<List<HrmEmployeeMaster>> GetAllAsync(
+        bool includeInactive = false,
+        bool includeEmployment = false,
+        bool includePersonal = false,
+        bool includePayroll = false,
+        bool includeNominees = false,
+        bool includeVerification = false,
+        bool includeMedical = false,
+        bool includeDocuments = false,
+        CancellationToken cancellationToken = default);
     Task<HrmEmployeeMaster?> GetByIdAsync(string id, CancellationToken cancellationToken = default);
     Task<HrmEmployeeMaster?> GetByEmployeeCodeAsync(string employeeCode, CancellationToken cancellationToken = default);
     Task<List<HrmEmployeeMaster>> GetByCompanyIdAsync(string companyId, CancellationToken cancellationToken = default);
@@ -28,6 +43,11 @@ public interface IEmployeeMasterRepository
     Task DeleteAsync(HrmEmployeeMaster employeeMaster, CancellationToken cancellationToken = default);
     Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default);
     Task<bool> EmployeeCodeExistsAsync(string employeeCode, CancellationToken cancellationToken = default);
+    /// <summary>
+    /// Check if an employee code is unique, optionally excluding a specific employee ID (for edit scenarios).
+    /// Filters at database level for optimal performance.
+    /// </summary>
+    Task<bool> IsEmployeeCodeUniqueAsync(string employeeCode, CancellationToken cancellationToken = default);
     Task<bool> EnrollmentCodeExistsAsync(string enrollmentCode, CancellationToken cancellationToken = default);
     // Generate a next unique enrollment id for the provided date (caller should pass UTC date).
     // Implementations should ensure uniqueness under concurrent callers.

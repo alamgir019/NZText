@@ -18,7 +18,7 @@ public class DivisionRepository : IDivisionRepository
     {
         return await _context.Divisions
             .Where(d => d.IsActive)
-            .OrderBy(d => d.DivisionName)
+            .OrderBy(d => d.SortOrder)
             .ToListAsync(cancellationToken);
     }
 

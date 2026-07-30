@@ -23,6 +23,13 @@ public class EmployeeReportsController : ControllerBase
     [HttpGet("master-list")]
     [ProducesResponseType(typeof(Application.Model.Employees.DTOs.EmployeeMasterListResponseDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetEmployeeMasterList(
+        [FromQuery] string? employeeCode = null,
+        [FromQuery] string? employeeMobile = null,
+        [FromQuery] string? religion = null,
+        [FromQuery] string? gender = null,
+        [FromQuery] string? grade = null,
+        [FromQuery] string? divisions = null,
+        [FromQuery] string? employeeNID = null,
         [FromQuery] string? unitId = null,
         [FromQuery] string? subUnitId = null,
         [FromQuery] string? departmentId = null,

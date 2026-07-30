@@ -4,9 +4,7 @@ using NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
 using NZ.HRM.Application.Model.Employees.DTOs;
 using NZ.HRM.Application.Payroll.Services;
 using NZ.HRM.Domain.Entities;
-using NZ.HRM.Mapping.Employees;
 using NZ.HRM.Utility.Enum;
-using System.Net.NetworkInformation;
 using System.Text.Json;
 
 namespace NZ.HRM.Application.Employees.Handlers;
@@ -16,7 +14,6 @@ public class EmployeeCommandHandler
     private readonly IEmployeeMasterRepository _employeeMasterRepository;
     private readonly IEmployeePersonalRepository _employeePersonalRepository;
     private readonly IPayrollRepository _employeePayrollRepository;
-    private readonly IEmployeeVerificationRepository _employeeVerificationRepository;
     private readonly IUnitRepository _unitRepository;
     private readonly IDepartmentRepository _departmentRepository;
     private readonly ISectionRepository _sectionRepository;
@@ -30,7 +27,6 @@ public class EmployeeCommandHandler
         IEmployeeMasterRepository employeeMasterRepository,
         IEmployeePersonalRepository employeePersonalRepository,
         IPayrollRepository employeePayrollRepository,
-        IEmployeeVerificationRepository employeeVerificationRepository,
         IUnitRepository unitRepository,
         IDepartmentRepository departmentRepository,
         ISectionRepository sectionRepository,
@@ -43,7 +39,6 @@ public class EmployeeCommandHandler
         _employeeMasterRepository = employeeMasterRepository;
         _employeePersonalRepository = employeePersonalRepository;
         _employeePayrollRepository = employeePayrollRepository;
-        _employeeVerificationRepository = employeeVerificationRepository;
         _unitRepository = unitRepository;
         _departmentRepository = departmentRepository;
         _sectionRepository = sectionRepository;
@@ -130,7 +125,6 @@ public class EmployeeCommandHandler
 
         return employeeId;
     }
-
 
     public async Task<string> Handle(string employeeId, UpdateCandidateEntryCommand command, CancellationToken cancellationToken = default)
     {
@@ -324,6 +318,7 @@ public class EmployeeCommandHandler
                 AccountType = command.AccountType,
                 IsActive = true
             };
+            //await _employeeSalaryAccountRepository.AddAsync(salaryAccount, cancellationToken);
 
             var employeePayroll = new HrmEmployeePayroll
             {
@@ -396,13 +391,13 @@ public class EmployeeCommandHandler
                 MobileNumber = command.MobileNumber,
                 PermanentDivisionId = command.PermanentDivisionId,
                 PermanentDistrictId = command.PermanentDistrictId,
-                PermanentThanaId = command.PermanentUpazilaId,
+                PermanentThanaId = command.PermanentThanaId,
                 PermanentPostOffice = command.PermanentPostOffice,
                 PermanentVillageAreaRoad = command.PermanentVillageAreaRoad,
 
                 PresentDivisionId = command.PresentDivisionId,
                 PresentDistrictId = command.PresentDistrictId,
-                PresentThanaId = command.PresentUpazilaId,
+                PresentThanaId = command.PresentThanaId,
                 PresentPostOffice = command.PresentPostOffice,
                 PresentVillageAreaRoad = command.PresentVillageAreaRoad,
                 IsActive = true
@@ -419,13 +414,13 @@ public class EmployeeCommandHandler
             personal.MobileNumber = command.MobileNumber;
             personal.PermanentDivisionId = command.PermanentDivisionId;
             personal.PermanentDistrictId = command.PermanentDistrictId;
-            personal.PermanentThanaId = command.PermanentUpazilaId;
+            personal.PermanentThanaId = command.PermanentThanaId;
             personal.PermanentPostOffice = command.PermanentPostOffice;
             personal.PermanentVillageAreaRoad = command.PermanentVillageAreaRoad;
 
             personal.PresentDivisionId = command.PresentDivisionId;
             personal.PresentDistrictId = command.PresentDistrictId;
-            personal.PresentThanaId = command.PresentUpazilaId;
+            personal.PresentThanaId = command.PresentThanaId;
             personal.PresentPostOffice = command.PresentPostOffice;
             personal.PresentVillageAreaRoad = command.PresentVillageAreaRoad;
             await _employeePersonalRepository.UpdateAsync(personal, cancellationToken);
