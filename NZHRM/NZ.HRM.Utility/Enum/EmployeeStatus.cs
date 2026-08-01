@@ -2,6 +2,14 @@ namespace NZ.HRM.Utility.Enum
 {
     public enum EmployeeStatus
     {
+        CandidateEntry,
+        Medical,
+        HRExecutive,
+        Biometric,
+        DirectorReview,
+        DirectorRejected,
+        ITActivation,
+        ITRejected,
         Draft,
         Active,
         Inactive,
@@ -9,11 +17,5 @@ namespace NZ.HRM.Utility.Enum
         Suspended,
         Terminated,
         Resigned,
-        CandidateEntry,
-        Medical,
-        HRExecutive,
-        Biometric,
-        DirectorReview,
-        ITActivation,
     }
 }

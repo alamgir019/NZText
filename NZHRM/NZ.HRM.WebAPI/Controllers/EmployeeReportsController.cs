@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using NZ.HRM.Application.Employees.Handlers;
 using NZ.HRM.Application.Model.EmployeeReports.DTOs;
 using NZ.HRM.Application.Services;
+using NZ.HRM.Utility.Enum;
 
 namespace NZ.HRM.WebAPI.Controllers;
 
@@ -25,10 +26,11 @@ public class EmployeeReportsController : ControllerBase
     public async Task<IActionResult> GetEmployeeMasterList(
         [FromQuery] string? employeeCode = null,
         [FromQuery] string? employeeMobile = null,
-        [FromQuery] string? religion = null,
-        [FromQuery] string? gender = null,
-        [FromQuery] string? grade = null,
-        [FromQuery] string? divisions = null,
+        [FromQuery] Religion? religion = null,
+        [FromQuery] Gender? gender = null,
+        [FromQuery] string? gradeId = null,
+        [FromQuery] string? shiftId = null,
+        [FromQuery] string? divisionId = null,
         [FromQuery] string? employeeNID = null,
         [FromQuery] string? unitId = null,
         [FromQuery] string? subUnitId = null,
@@ -36,35 +38,34 @@ public class EmployeeReportsController : ControllerBase
         [FromQuery] string? sectionId = null,
         [FromQuery] string? cellId = null,
         [FromQuery] string? employeeNature = null,
-        [FromQuery] string? joiningFromDate = null,
-        [FromQuery] string? joiningToDate = null,
+        [FromQuery] DateOnly? joiningFromDate = null,
+        [FromQuery] DateOnly? joiningToDate = null,
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 20,
         [FromQuery] bool includeInactive = false)
     {
         var query = new Application.Employees.Queries.GetEmployeeMasterList.GetEmployeeMasterListQuery
         {
+            EmployeeCode = employeeCode,
+            EmployeeMobile = employeeMobile,
+            Religion = religion,
+            Gender = gender,
+            GradeId = gradeId,
+            ShiftId = shiftId,
+            DivisionId = divisionId,
+            IdNumber = employeeNID,
             UnitId = unitId,
             SubUnitId = subUnitId,
             DepartmentId = departmentId,
             SectionId = sectionId,
             CellId = cellId,
             EmployeeNature = employeeNature,
+            JoiningFromDate = joiningFromDate,
+            JoiningToDate = joiningToDate,
             PageNumber = pageNumber,
             PageSize = pageSize,
             IncludeInactive = includeInactive
         };
-
-        // Parse joining dates if provided
-        if (!string.IsNullOrWhiteSpace(joiningFromDate) && DateOnly.TryParse(joiningFromDate, out var fromDate))
-        {
-            query.JoiningFromDate = fromDate;
-        }
-
-        if (!string.IsNullOrWhiteSpace(joiningToDate) && DateOnly.TryParse(joiningToDate, out var toDate))
-        {
-            query.JoiningToDate = toDate;
-        }
 
         var result = await _employeeQueryHandler.Handle(query, cancellationToken: default);
         return Ok(result);

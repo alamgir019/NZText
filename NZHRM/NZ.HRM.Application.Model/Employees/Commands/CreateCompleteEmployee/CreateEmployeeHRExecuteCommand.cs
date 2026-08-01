@@ -63,16 +63,23 @@ public class CreateEmployeeHRExecutiveCommand
     public string? FatherName { get; set; }
     public string? NomineeName { get; set; }
     public string? NomineeID { get; set; }
-    public string? NomineeRelation { get; set; }
+    public RelationshipType? NomineeRelation { get; set; }
     public string? NomineeMobileNumber { get; set; }
+    public string? NomineeNameBangla { get; set; }
+    public string? NomineeRelationBangla { get; set; }
+
+    public string? EmployeeReference { get; set; }
+    public string? EmployeeReferenceBangla { get; set; }
+
+    public string? ReferenceMobileNumber { get; set; }
     public string DepartmentId { get; set; } = string.Empty;
     public string SectionId { get; set; } = string.Empty;
     public string? CellId { get; set; }
-    public string UnitId { get; set; }
-    public string DesignationId { get; set; }
+    public string UnitId { get; set; } = string.Empty;
+    public string DesignationId { get; set; } = string.Empty;
     public DateOnly? JoiningDate { get; set; }
     public decimal? ProposedMonthlySalary { get; set; }
-    public string MobileNumber { get; set; }
+    public string MobileNumber { get; set; } = string.Empty;
     public string? PermanentDivisionId { get; set; }
     public string? PermanentDistrictId { get; set; }
     public string? PermanentThanaId { get; set; }

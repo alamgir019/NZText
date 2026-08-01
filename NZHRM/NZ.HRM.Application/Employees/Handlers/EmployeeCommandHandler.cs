@@ -80,8 +80,6 @@ public class EmployeeCommandHandler
             MotherNameBangla = command.MotherNameBangla,
             FatherNameBangla = command.FatherNameBangla,
             MobileNumber = command.MobileNumber,
-            EmployeeReferenceBangla = command.EmployeeReference,
-            ReferenceMobileNumber = command.ReferenceMobileNumber,
             Religion = command.Religion.ToString(),
             PermanentVillageAreaRoadBangla = command.PermanentVillageAreaRoad,
             PermanentPostOfficeBangla = command.PermanentPostOffice,
@@ -100,18 +98,6 @@ public class EmployeeCommandHandler
 
         // Save EmployeePersonal
         await _employeePersonalRepository.AddAsync(employeePersonal, cancellationToken);
-
-
-
-        var employeeNominee = new HrmEmployeeNominee
-        {
-            EmployeeId = employeeMaster.Id,
-            NomineeNameBangla = command.NomineeNameBangla,
-            RelationshipBangla = command.NomineeRelationBangla,
-            IsActive = true
-        };
-        await _employeeNomineeRepository.AddAsync(employeeNominee, cancellationToken);
-
         var employeeEmployment = new HrmEmployeeEmployment
         {
             EmployeeId = employeeId,
@@ -151,8 +137,6 @@ public class EmployeeCommandHandler
             employeee.Personal.MotherNameBangla = command.MotherNameBangla;
             employeee.Personal.FatherNameBangla = command.FatherNameBangla;
             employeee.Personal.MobileNumber = command.MobileNumber;
-            employeee.Personal.EmployeeReferenceBangla = command.EmployeeReference;
-            employeee.Personal.ReferenceMobileNumber = command.ReferenceMobileNumber;
             employeee.Personal.Religion = command.Religion.ToString();
             employeee.Personal.PermanentVillageAreaRoad = command.PermanentVillageAreaRoad;
             employeee.Personal.PermanentPostOffice = command.PermanentPostOffice;
@@ -178,7 +162,7 @@ public class EmployeeCommandHandler
         {
             employeee.Nominees.First().EmployeeId = employeeId;
             employeee.Nominees.First().NomineeNameBangla = command.NomineeNameBangla;
-            employeee.Nominees.First().RelationshipBangla = command.NomineeRelationBangla;
+            employeee.Nominees.First().Relationship = command.NomineeRelation.ToString();
             await _employeeNomineeRepository.UpdateAsync(employeee.Nominees.First(), cancellationToken);
         }
         else
@@ -187,7 +171,7 @@ public class EmployeeCommandHandler
             {
                 EmployeeId = employeeId,
                 NomineeNameBangla = command.NomineeNameBangla,
-                RelationshipBangla = command.NomineeRelationBangla,
+                Relationship = command.NomineeRelation.ToString(),
                 IsActive = true
             };
             await _employeeNomineeRepository.AddAsync(employeeNominee, cancellationToken);
@@ -282,7 +266,8 @@ public class EmployeeCommandHandler
             var nominee = employeeMaster.Nominees.First();
             nominee.EmployeeId = employeeMaster.Id;
             nominee.NomineeName = command.NomineeName;
-            nominee.Relationship = command.NomineeRelation;
+            nominee.NomineeNameBangla = command.NomineeNameBangla;
+            nominee.Relationship = command.NomineeRelation?.ToString();
             nominee.NidNo = command.NomineeID;
             nominee.MobileNo = command.NomineeMobileNumber;
             //nominee.NominationPercentage = command.NominationPercentage;
@@ -294,7 +279,8 @@ public class EmployeeCommandHandler
         {
             EmployeeId = employeeMaster.Id,
             NomineeName  = command.NomineeName,
-            Relationship = command.NomineeRelation,
+            NomineeNameBangla = command.NomineeNameBangla,
+            Relationship = command.NomineeRelation?.ToString(),
             NidNo = command.NomineeID,
             MobileNo = command.NomineeMobileNumber,
             //NominationPercentage = command.NominationPercentage,
@@ -318,7 +304,6 @@ public class EmployeeCommandHandler
                 AccountType = command.AccountType,
                 IsActive = true
             };
-            //await _employeeSalaryAccountRepository.AddAsync(salaryAccount, cancellationToken);
 
             var employeePayroll = new HrmEmployeePayroll
             {
@@ -389,6 +374,9 @@ public class EmployeeCommandHandler
                 MotherName = command.MotherName,
                 FatherName = command.FatherName,
                 MobileNumber = command.MobileNumber,
+                EmployeeReferenceBangla = command.EmployeeReferenceBangla,
+                EmployeeReference = command.EmployeeReference,
+                ReferenceMobileNumber = command.ReferenceMobileNumber,
                 PermanentDivisionId = command.PermanentDivisionId,
                 PermanentDistrictId = command.PermanentDistrictId,
                 PermanentThanaId = command.PermanentThanaId,
@@ -423,6 +411,10 @@ public class EmployeeCommandHandler
             personal.PresentThanaId = command.PresentThanaId;
             personal.PresentPostOffice = command.PresentPostOffice;
             personal.PresentVillageAreaRoad = command.PresentVillageAreaRoad;
+
+            personal.EmployeeReferenceBangla = command.EmployeeReferenceBangla;
+            personal.EmployeeReference = command.EmployeeReference;
+            personal.ReferenceMobileNumber = command.ReferenceMobileNumber;
             await _employeePersonalRepository.UpdateAsync(personal, cancellationToken);
         }
     }
@@ -468,10 +460,8 @@ public class EmployeeCommandHandler
             throw new KeyNotFoundException($"Employee with ID {command.EmployeeId} not found");
 
         AddEmployeeDocument(command.Documents, employeeMaster, cancellationToken).Wait(cancellationToken);
-
-        employeeMaster.Status = EmployeeStatus.ITActivation.ToString();
+        employeeMaster.Status = command.EmployeeStatus?.ToString() ?? EmployeeStatus.ITActivation.ToString();
         await _employeeMasterRepository.UpdateAsync(employeeMaster, cancellationToken);
-
         return command.EmployeeId;
     }
 
@@ -498,7 +488,7 @@ public class EmployeeCommandHandler
             payroll.FoodAllowance = salaryBreakdown.Food;
         }
 
-        existingEmployee.Status = EmployeeStatus.DirectorReview.ToString();
+        existingEmployee.Status = command.EmployeeStatus?.ToString() ?? EmployeeStatus.DirectorReview.ToString();
         return (payroll, existingEmployee);
     }
 

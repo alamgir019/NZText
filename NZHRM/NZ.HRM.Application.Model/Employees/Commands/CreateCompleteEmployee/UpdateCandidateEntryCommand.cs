@@ -14,12 +14,8 @@ public class UpdateCandidateEntryCommand
 
     public string? DesignationId { get; set; }
 
-    public decimal? ProposedMonthlySalary { get; set; }
-
     [Required(ErrorMessage = "Joining date is required")]
     public DateOnly JoiningDate { get; set; }
-
-    public DateOnly? ConfirmationDate { get; set; }
 
     // Personal Information
     [Required(ErrorMessage = "Date of birth is required")]
@@ -49,13 +45,6 @@ public class UpdateCandidateEntryCommand
 
     [MaxLength(100, ErrorMessage = "Mother's name (Bangla) must not exceed 100 characters")]
     public string? MotherNameBangla { get; set; }
-
-    [MaxLength(100, ErrorMessage = "Employee reference must not exceed 100 characters")]
-    public string? EmployeeReference { get; set; }
-
-    [MaxLength(20, ErrorMessage = "Mobile number must not exceed 20 characters")]
-    public string? ReferenceMobileNumber { get; set; }
-
 
     // Address Information
     [MaxLength(200, ErrorMessage = "Permanent village/area/road must not exceed 200 characters")]
@@ -88,22 +77,6 @@ public class UpdateCandidateEntryCommand
 
     [MaxLength(100, ErrorMessage = "Present division must not exceed 100 characters")]
     public string? PresentDivisionId { get; set; }
-
-    // Verification Information
-    [MaxLength(100, ErrorMessage = "Security clearance by must not exceed 100 characters")]
-    public string? SecurityClearanceBy { get; set; }
-
-    public DateOnly? SecurityClearanceDate { get; set; }
-
-    [MaxLength(100, ErrorMessage = "Enrolled by must not exceed 100 characters")]
-    public string? EnrolledBy { get; set; }
-
-    public DateOnly? EnrolledDate { get; set; }
-
-    [MaxLength(100, ErrorMessage = "Biometric enrolled by must not exceed 100 characters")]
-    public string? BiometricEnrolledBy { get; set; }
-
-    public DateOnly? BiometricEnrolledDate { get; set; }
     public string? NomineeNameBangla { get; set; }
-    public string? NomineeRelationBangla { get; set; }
+    public RelationshipType? NomineeRelation { get; set; }
 }

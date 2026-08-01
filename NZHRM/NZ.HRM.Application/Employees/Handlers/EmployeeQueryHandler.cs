@@ -194,7 +194,7 @@ public class EmployeeQueryHandler
 
             // Nominee Information
             NomineeNameBangla = nominee?.NomineeNameBangla,
-            NomineeRelationBangla = nominee?.RelationshipBangla,
+            NomineeRelation = EnumHelper.TryParseEnum<RelationshipType>(nominee?.Relationship),
 
             // Verification Information
             SecurityClearanceBy = verification?.SecurityClearanceBy,
@@ -214,24 +214,24 @@ public class EmployeeQueryHandler
 
     public async Task<EmployeeMasterListResponseDto> Handle(GetEmployeeMasterListQuery query, CancellationToken cancellationToken = default)
     {
-        // Create filter request object from query
-        var filterRequest = new EmployeeMasterListFilterRequest
-        {
-            UnitId = query.UnitId,
-            SubUnitId = query.SubUnitId,
-            DepartmentId = query.DepartmentId,
-            SectionId = query.SectionId,
-            CellId = query.CellId,
-            EmployeeNature = query.EmployeeNature,
-            JoiningFromDate = query.JoiningFromDate,
-            JoiningToDate = query.JoiningToDate,
-            PageNumber = query.PageNumber,
-            PageSize = query.PageSize,
-            IncludeInactive = query.IncludeInactive
-        };
+        //// Create filter request object from query
+        //var filterRequest = new EmployeeMasterListFilterRequest
+        //{
+        //    UnitId = query.UnitId,
+        //    SubUnitId = query.SubUnitId,
+        //    DepartmentId = query.DepartmentId,
+        //    SectionId = query.SectionId,
+        //    CellId = query.CellId,
+        //    EmployeeNature = query.EmployeeNature,
+        //    JoiningFromDate = query.JoiningFromDate,
+        //    JoiningToDate = query.JoiningToDate,
+        //    PageNumber = query.PageNumber,
+        //    PageSize = query.PageSize,
+        //    IncludeInactive = query.IncludeInactive
+        //};
 
         // Call repository method with filter request object
-        var (employees, totalCount) = await _employeeMasterRepository.GetEmployeeMasterListAsync(filterRequest, cancellationToken);
+        var (employees, totalCount) = await _employeeMasterRepository.GetEmployeeMasterListAsync(query, cancellationToken);
 
         // Map to DTOs
         var employeeDtos = employees.Select(e => new EmployeeMasterListItemDto

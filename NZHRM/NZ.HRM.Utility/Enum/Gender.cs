@@ -26,12 +26,15 @@ namespace NZ.HRM.Utility.Enum
         Professional,
         Other
     }
-    public enum Relation
+    public enum RelationshipType
     {
         Father,
         Mother,
         Spouse,
-        Sibling,
+        Brother,
+        Sister,
+        Son,
+        Daughter,
         Other
     }
 }

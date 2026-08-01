@@ -1,3 +1,5 @@
+using NZ.HRM.Utility.Enum;
+
 namespace NZ.HRM.Application.Employees.Queries.GetEmployeeMasterList;
 
 public class GetEmployeeMasterListQuery
@@ -56,4 +58,12 @@ public class GetEmployeeMasterListQuery
     /// Include inactive employees. Default is false.
     /// </summary>
     public bool IncludeInactive { get; set; } = false;
+    public Religion? Religion { get; set; }
+    public string? EmployeeCode { get; set; }
+    public string? EmployeeMobile { get; set; }
+    public Gender? Gender { get; set; }
+    public string? GradeId { get; set; }
+    public string? ShiftId { get; set; }
+    public string? DivisionId { get; set; }
+    public string? IdNumber { get; set; }
 }

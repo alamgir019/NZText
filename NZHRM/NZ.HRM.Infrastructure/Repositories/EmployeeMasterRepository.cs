@@ -311,7 +311,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
     }
 
     public async Task<(List<HrmEmployeeMaster> employees, int totalCount)> GetEmployeeMasterListAsync(
-        EmployeeMasterListFilterRequest filterRequest,
+        GetEmployeeMasterListQuery filterRequest,
         CancellationToken cancellationToken = default)
     {
         if (filterRequest == null)
@@ -332,6 +332,31 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
         if (!filterRequest.IncludeInactive)
         {
             query = query.Where(e => e.IsActive);
+        }
+
+        if (!string.IsNullOrEmpty(filterRequest.EmployeeCode))
+        {
+            query = query.Where(e => e.EmployeeCode != null && EF.Functions.ILike(e.EmployeeCode, filterRequest.EmployeeCode));
+        }
+
+        if (!string.IsNullOrEmpty(filterRequest.EmployeeMobile))
+        {
+            query = query.Where(e => e.Personal != null && e.Personal.MobileNumber != null && EF.Functions.ILike(e.Personal.MobileNumber, filterRequest.EmployeeMobile));
+        }
+
+        if (!string.IsNullOrEmpty(filterRequest.IdNumber))
+        {
+            query = query.Where(e => e.Personal != null && e.Personal.IdNumber != null && EF.Functions.ILike(e.Personal.IdNumber, filterRequest.IdNumber));
+        }
+
+        if (filterRequest.Religion.HasValue)
+        {
+            query = query.Where(e => e.Personal != null && e.Personal.Religion == filterRequest.Religion.ToString());
+        }
+
+        if (filterRequest.Gender.HasValue)
+        {
+            query = query.Where(e => e.Personal != null && e.Personal.Gender == filterRequest.Gender.ToString());
         }
 
         // Apply Unit filter
@@ -381,6 +406,22 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
         {
             query = query.Where(e => e.Employment != null && e.Employment.JoiningDate <= filterRequest.JoiningToDate);
         }
+
+        if(!string.IsNullOrEmpty(filterRequest.GradeId))
+        {
+            query = query.Where(e => e.Employment != null && e.Employment.GradeId == filterRequest.GradeId);
+        }
+
+        if(!string.IsNullOrEmpty(filterRequest.ShiftId))
+        {
+            query = query.Where(e => e.Employment != null && e.Employment.ShiftId == filterRequest.ShiftId);
+        }
+
+        if (!string.IsNullOrEmpty(filterRequest.DivisionId))
+        {
+            query = query.Where(e => e.Personal != null && e.Personal.PermanentDivisionId == filterRequest.DivisionId);
+        }
+
         query = query.Where(e => e.Status == EmployeeStatus.ITActivation.ToString());
 
         // Get total count before pagination

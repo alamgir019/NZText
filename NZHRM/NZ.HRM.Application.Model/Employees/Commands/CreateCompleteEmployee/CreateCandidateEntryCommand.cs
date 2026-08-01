@@ -15,8 +15,6 @@ public class CreateCandidateEntryCommand
     //[Required(ErrorMessage = "Department ID is required")]
     public string? DesignationId { get; set; }
 
-    public decimal? ProposedMonthlySalary { get; set; }
-
     [Required(ErrorMessage = "Joining date is required")]
     public DateOnly JoiningDate { get; set; }
 
@@ -49,14 +47,6 @@ public class CreateCandidateEntryCommand
     [MaxLength(100, ErrorMessage = "Mother's name (Bangla) must not exceed 100 characters")]
     public string? MotherNameBangla { get; set; }
 
-    [MaxLength(100, ErrorMessage = "Employee reference must not exceed 100 characters")]
-    public string? EmployeeReference { get; set; }
-
-    [MaxLength(20, ErrorMessage = "Mobile number must not exceed 20 characters")]
-    public string? ReferenceMobileNumber { get; set; }
-
-
-
     // Address Information
     [MaxLength(200, ErrorMessage = "Permanent village/area/road must not exceed 200 characters")]
     public string? PermanentVillageAreaRoad { get; set; }
@@ -88,6 +78,4 @@ public class CreateCandidateEntryCommand
 
     [MaxLength(100, ErrorMessage = "Present division must not exceed 100 characters")]
     public string? PresentDivisionId { get; set; }
-    public string? NomineeNameBangla { get; set; }
-    public string? NomineeRelationBangla { get; set; }
 }

@@ -57,7 +57,7 @@ public class CandidateEntryReportDto
 
     // Nominee Information
     public string? NomineeNameBangla { get; set; }
-    public string? NomineeRelationBangla { get; set; }
+    public RelationshipType? NomineeRelation { get; set; }
 
     // Verification Information
     public string? SecurityClearanceBy { get; set; }

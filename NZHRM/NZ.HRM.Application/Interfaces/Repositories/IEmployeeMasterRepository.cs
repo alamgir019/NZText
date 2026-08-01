@@ -35,7 +35,7 @@ public interface IEmployeeMasterRepository
     /// Get employee master list with advanced filtering and pagination at database level.
     /// </summary>
     Task<(List<HrmEmployeeMaster> employees, int totalCount)> GetEmployeeMasterListAsync(
-        EmployeeMasterListFilterRequest filterRequest,
+        GetEmployeeMasterListQuery filterRequest,
         CancellationToken cancellationToken = default);
     Task<string> AddAsync(HrmEmployeeMaster employeeMaster, CancellationToken cancellationToken = default);
     Task UpdateAsync(HrmEmployeeMaster employeeMaster, CancellationToken cancellationToken = default);
