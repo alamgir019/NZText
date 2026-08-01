@@ -24,7 +24,8 @@ public class UnitRepository : IUnitRepository
         }
 
         return await query
-            .OrderBy(c => c.UnitName)
+            .OrderBy(c => c.SortOrder)
+            .ThenBy(c => c.UnitName)
             .ToListAsync(cancellationToken);
     }
 
