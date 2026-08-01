@@ -24,7 +24,8 @@ public class SectionRepository : ISectionRepository
         }
 
         return await query
-            .OrderBy(s => s.SectionName)
+            .OrderBy(s => s.SortOrder)
+            .ThenBy(s => s.SectionName)
             .ToListAsync(cancellationToken);
     }
 
@@ -42,7 +43,8 @@ public class SectionRepository : ISectionRepository
         }
 
         return await query
-            .OrderBy(s => s.SectionName)
+            .OrderBy(s => s.SortOrder)
+            .ThenBy(s => s.SectionName)
             .Distinct()
             .ToListAsync(cancellationToken);
     }

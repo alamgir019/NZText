@@ -24,7 +24,8 @@ public class DepartmentRepository : IDepartmentRepository
         }
 
         return await query
-            .OrderBy(d => d.DepartmentName)
+            .OrderBy(d => d.SortOrder)
+            .ThenBy(d => d.DepartmentName)
             .ToListAsync(cancellationToken);
     }
 

@@ -7,15 +7,13 @@ namespace NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
 public class CreateEmployeeHRExecutiveCommand
 {
     // Basic Employment Information
-    [Required(ErrorMessage = "Employee ID is required")]
-    public string EmployeeId { get; set; } = string.Empty;
+    public string? EmployeeId { get; set; }
 
     // Basic Employment Information
     public string? EmployeeName { get; set; }
 
-    [Required(ErrorMessage = "Employee enrollment ID is required")]
     [MaxLength(50, ErrorMessage = "Employee enrollment ID must not exceed 50 characters")]
-    public string EmployeeEnrollmentId { get; set; } = string.Empty;
+    public string? EmployeeEnrollmentId { get; set; }
 
     [Required(ErrorMessage = "Subunit ID is required")]
     public string SubunitId { get; set; } = string.Empty;
