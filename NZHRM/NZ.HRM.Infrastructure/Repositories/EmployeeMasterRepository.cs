@@ -3,6 +3,7 @@ using NZ.HRM.Application.Employees.Queries.GetEmployeeMasterList;
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Domain.Entities;
 using NZ.HRM.Infrastructure.Persistence;
+using NZ.HRM.Utility;
 using NZ.HRM.Utility.Enum;
 
 namespace NZ.HRM.Infrastructure.Repositories;
@@ -327,7 +328,10 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .Include(e => e.Employment.Cell)
             .Include(e => e.Employment.Designation)
             .AsQueryable();
-
+        if (filterRequest.RegisterType.Equals(RegisterType.Medical))
+        {
+            query = query.Include(e => e.MedicalFitnessCheck);
+        }
         // Apply active/inactive filter
         if (!filterRequest.IncludeInactive)
         {
@@ -422,10 +426,59 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             query = query.Where(e => e.Personal != null && e.Personal.PermanentDivisionId == filterRequest.DivisionId);
         }
 
-        query = query.Where(e => e.Status == EmployeeStatus.ITActivation.ToString());
+        if (filterRequest.FromDate.HasValue || filterRequest.ToDate.HasValue)
+        {
+            var fromDate = filterRequest.FromDate.HasValue
+                ? DateTime.SpecifyKind(filterRequest.FromDate.Value.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc)
+                : (DateTime?)null;
+            var toDateExclusive = filterRequest.ToDate.HasValue
+                ? DateTime.SpecifyKind(filterRequest.ToDate.Value.AddDays(1).ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc)
+                : (DateTime?)null;
+
+            if (filterRequest.RegisterType.Equals(RegisterType.Medical))
+            {
+                var medicalStatuses = new[]
+                {
+                    EmployeeStatus.Medical.ToString(),
+                    EmployeeStatus.HRExecutive.ToString(),
+                    EmployeeStatus.Biometric.ToString(),
+                    EmployeeStatus.DirectorReview.ToString(),
+                    EmployeeStatus.DirectorRejected.ToString(),
+                    EmployeeStatus.ITActivation.ToString(),
+                    EmployeeStatus.ITRejected.ToString()
+                };
+
+                if (fromDate.HasValue)
+                {
+                    query = query.Where(e => e.MedicalFitnessCheck != null && e.MedicalFitnessCheck.UpdatedOn >= fromDate.Value);
+                }
+
+                if (toDateExclusive.HasValue)
+                {
+                    query = query.Where(e => e.MedicalFitnessCheck != null && e.MedicalFitnessCheck.UpdatedOn < toDateExclusive.Value);
+                }
+
+                query = query.Where(e => e.Status != null && medicalStatuses.Contains(e.Status));
+
+            }
+            else
+            {
+                if (fromDate.HasValue)
+                {
+                    query = query.Where(e => e.UpdatedOn >= fromDate.Value);
+                }
+
+                if (toDateExclusive.HasValue)
+                {
+                    query = query.Where(e => e.UpdatedOn < toDateExclusive.Value);
+                }
+                query = query.Where(e => e.Status == EmployeeStatus.ITActivation.ToString());
+            }
+        }
+
 
         // Get total count before pagination
-        var totalCount = await query.CountAsync(cancellationToken);
+            var totalCount = await query.CountAsync(cancellationToken);
 
         // Apply pagination
         var validPageNumber = Math.Max(1, filterRequest.PageNumber);

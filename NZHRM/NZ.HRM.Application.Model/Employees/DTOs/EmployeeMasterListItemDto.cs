@@ -51,4 +51,8 @@ public class EmployeeMasterListItemDto
     /// Active status
     /// </summary>
     public bool IsActive { get; set; }
+    public string EnrollmentId { get; set; }
+    public string IdentificationSign { get; set; }
+    public string Fitness { get; set; }
+    public DateTime? MedicalUpdatedOn { get; set; }
 }

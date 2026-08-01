@@ -6,3 +6,12 @@
         Contract,
     }
 }
+
+namespace NZ.HRM.Utility
+{
+    public enum RegisterType
+    {
+        Master,
+        Medical
+    }
+}

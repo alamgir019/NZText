@@ -1,3 +1,4 @@
+using NZ.HRM.Utility;
 using NZ.HRM.Utility.Enum;
 
 namespace NZ.HRM.Application.Employees.Queries.GetEmployeeMasterList;
@@ -66,4 +67,7 @@ public class GetEmployeeMasterListQuery
     public string? ShiftId { get; set; }
     public string? DivisionId { get; set; }
     public string? IdNumber { get; set; }
+    public RegisterType RegisterType { get; set; } = RegisterType.Master;
+    public DateOnly? FromDate { get; set; }
+    public DateOnly? ToDate { get; set; }
 }

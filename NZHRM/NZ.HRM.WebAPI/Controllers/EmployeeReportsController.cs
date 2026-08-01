@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using NZ.HRM.Application.Employees.Handlers;
 using NZ.HRM.Application.Model.EmployeeReports.DTOs;
 using NZ.HRM.Application.Services;
+using NZ.HRM.Utility;
 using NZ.HRM.Utility.Enum;
 
 namespace NZ.HRM.WebAPI.Controllers;
@@ -41,8 +42,11 @@ public class EmployeeReportsController : ControllerBase
         [FromQuery] string? sectionId = null,
         [FromQuery] string? cellId = null,
         [FromQuery] string? employeeNature = null,
+        [FromQuery] RegisterType? registerType = null,
         [FromQuery] DateOnly? joiningFromDate = null,
         [FromQuery] DateOnly? joiningToDate = null,
+        [FromQuery] DateOnly? fromDate = null,
+        [FromQuery] DateOnly? toDate = null,
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 20,
         [FromQuery] bool includeInactive = false)
@@ -63,8 +67,11 @@ public class EmployeeReportsController : ControllerBase
             SectionId = sectionId,
             CellId = cellId,
             EmployeeNature = employeeNature,
+            RegisterType = registerType ?? RegisterType.Master,
             JoiningFromDate = joiningFromDate,
             JoiningToDate = joiningToDate,
+            FromDate = fromDate,
+            ToDate = toDate,
             PageNumber = pageNumber,
             PageSize = pageSize,
             IncludeInactive = includeInactive

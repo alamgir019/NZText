@@ -222,6 +222,11 @@ public class EmployeeQueryHandler
         {
             EmployeeId = e.Id,
             EmployeeCode = e.EmployeeCode ?? string.Empty,
+            EnrollmentId = e.EnrollmentId ?? string.Empty,
+            IdentificationSign = e.MedicalFitnessCheck?.IdentificationSign ?? string.Empty,
+            Fitness = e.MedicalFitnessCheck?.Fitness ?? string.Empty,
+            Remarks = e.MedicalFitnessCheck?.Remarks ?? string.Empty,
+            MedicalUpdatedOn = e.MedicalFitnessCheck?.UpdatedOn,
             EmployeeName = e.EmployeeName ?? e.EmployeeNameBangla ?? string.Empty,
             DepartmentName = e.Employment?.Department?.DepartmentName ?? string.Empty,
             SectionName = e.Employment?.Section?.SectionName ?? string.Empty,
