@@ -1,6 +1,7 @@
 using NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
 using NZ.HRM.Application.Model.Employees.DTOs;
 using NZ.HRM.Domain.Entities;
+using NZ.HRM.Utility;
 using NZ.HRM.Utility.Enum;
 
 namespace NZ.HRM.Mapping.Employees;
@@ -88,6 +89,8 @@ public static class EmployeeMapper
             EmployeeNameEnglish = baseDto.EmployeeNameEnglish,
             EmployeeNameBangla = baseDto.EmployeeNameBangla,
             EmployeeName = baseDto.EmployeeName,
+            IdType = employee.Personal?.IdType,
+            IdNumber = employee.Personal?.IdNumber,
             UnitName = baseDto.UnitName,
             UnitId = employee.Employment?.UnitId,
             SubUnitName = baseDto.SubUnitName,
@@ -117,7 +120,7 @@ public static class EmployeeMapper
             DateOfBirth = employee.Personal?.DateOfBirth,
             Religion = string.IsNullOrWhiteSpace(employee.Personal?.Religion) ? null : Enum.TryParse<Utility.Enum.Religion>(employee.Personal?.Religion, out var religion) ? religion : null,
             NomineeName = employee.Nominees.FirstOrDefault()?.NomineeName,
-            NomineeRelation = employee.Nominees.FirstOrDefault()?.Relationship,
+            NomineeRelation = EnumHelper.TryParseEnum<RelationshipType>(employee.Nominees.FirstOrDefault()?.Relationship),
             NomineeNID = employee.Nominees.FirstOrDefault()?.NidNo,
             NomineeMobile = employee.Nominees.FirstOrDefault()?.MobileNo,
             Mobile = employee.Personal?.MobileNumber,

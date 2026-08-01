@@ -8,7 +8,7 @@ public class EmployeeDetailForIT : EmployeeDetailDto
     public DateOnly? DateOfBirth { get; set; }
     public Religion? Religion { get; set; }
     public string? NomineeName { get; set; }
-    public string? NomineeRelation { get; set; }
+    public RelationshipType? NomineeRelation { get; set; }
     public string? NomineeNID { get; set; }
     public string? NomineeMobile { get; set; }
     public string? Mobile { get; set; } = null;
@@ -39,4 +39,6 @@ public class EmployeeDetailForIT : EmployeeDetailDto
     public string? PresentUpazilaId { get; set; }
     public string? PresentPostOffice { get; set; }
     public string? PresentVillageAreaRoad { get; set; }
+    public string? IdNumber { get; set; }
+    public IDType? IdType { get; set; }
 }

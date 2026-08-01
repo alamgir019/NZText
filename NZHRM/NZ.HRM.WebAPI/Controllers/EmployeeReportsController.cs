@@ -1,3 +1,6 @@
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Vml.Office;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Mvc;
 using NZ.HRM.Application.Employees.Handlers;
 using NZ.HRM.Application.Model.EmployeeReports.DTOs;
@@ -75,14 +78,24 @@ public class EmployeeReportsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ExportEmployeeMasterListToExcel(
+        [FromQuery] string? employeeCode = null,
+        [FromQuery] string? employeeMobile = null,
+        [FromQuery] Religion? religion = null,
+        [FromQuery] Gender? gender = null,
+        [FromQuery] string? gradeId = null,
+        [FromQuery] string? shiftId = null,
+        [FromQuery] string? divisionId = null,
+        [FromQuery] string? employeeNID = null,
         [FromQuery] string? unitId = null,
         [FromQuery] string? subUnitId = null,
         [FromQuery] string? departmentId = null,
         [FromQuery] string? sectionId = null,
         [FromQuery] string? cellId = null,
         [FromQuery] string? employeeNature = null,
-        [FromQuery] string? joiningFromDate = null,
-        [FromQuery] string? joiningToDate = null,
+        [FromQuery] DateOnly? joiningFromDate = null,
+        [FromQuery] DateOnly? joiningToDate = null,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20,
         [FromQuery] bool includeInactive = false)
     {
         try
@@ -90,28 +103,26 @@ public class EmployeeReportsController : ControllerBase
             // Fetch all matching records without pagination for export
             var query = new Application.Employees.Queries.GetEmployeeMasterList.GetEmployeeMasterListQuery
             {
+                EmployeeCode = employeeCode,
+                EmployeeMobile = employeeMobile,
+                Religion = religion,
+                Gender = gender,
+                GradeId = gradeId,
+                ShiftId = shiftId,
+                DivisionId = divisionId,
+                IdNumber = employeeNID,
                 UnitId = unitId,
                 SubUnitId = subUnitId,
                 DepartmentId = departmentId,
                 SectionId = sectionId,
                 CellId = cellId,
                 EmployeeNature = employeeNature,
+                JoiningFromDate = joiningFromDate,
+                JoiningToDate = joiningToDate,
                 PageNumber = 1,
-                PageSize = 1000000, // Large number to get all records
+                PageSize = 1000,
                 IncludeInactive = includeInactive
             };
-
-            // Parse joining dates if provided
-            if (!string.IsNullOrWhiteSpace(joiningFromDate) && DateOnly.TryParse(joiningFromDate, out var fromDate))
-            {
-                query.JoiningFromDate = fromDate;
-            }
-
-            if (!string.IsNullOrWhiteSpace(joiningToDate) && DateOnly.TryParse(joiningToDate, out var toDate))
-            {
-                query.JoiningToDate = toDate;
-            }
-
             var result = await _employeeQueryHandler.Handle(query, cancellationToken: default);
 
             if (result.Employees == null || result.Employees.Count == 0)

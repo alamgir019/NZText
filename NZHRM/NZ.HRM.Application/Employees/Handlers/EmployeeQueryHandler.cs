@@ -214,22 +214,6 @@ public class EmployeeQueryHandler
 
     public async Task<EmployeeMasterListResponseDto> Handle(GetEmployeeMasterListQuery query, CancellationToken cancellationToken = default)
     {
-        //// Create filter request object from query
-        //var filterRequest = new EmployeeMasterListFilterRequest
-        //{
-        //    UnitId = query.UnitId,
-        //    SubUnitId = query.SubUnitId,
-        //    DepartmentId = query.DepartmentId,
-        //    SectionId = query.SectionId,
-        //    CellId = query.CellId,
-        //    EmployeeNature = query.EmployeeNature,
-        //    JoiningFromDate = query.JoiningFromDate,
-        //    JoiningToDate = query.JoiningToDate,
-        //    PageNumber = query.PageNumber,
-        //    PageSize = query.PageSize,
-        //    IncludeInactive = query.IncludeInactive
-        //};
-
         // Call repository method with filter request object
         var (employees, totalCount) = await _employeeMasterRepository.GetEmployeeMasterListAsync(query, cancellationToken);
 
