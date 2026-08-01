@@ -25,7 +25,7 @@ public class DesignationRepository : IDesignationRepository
         if (!string.IsNullOrEmpty(query.GradeId))
             designationsQuery = designationsQuery.Where(d => d.GradeId == query.GradeId);
 
-        return await designationsQuery.OrderBy(d => d.SortOrder).ToListAsync(cancellationToken);
+        return await designationsQuery.OrderBy(d => d.SortOrder).ThenBy(d => d.DesignationName).ToListAsync(cancellationToken);
     }
 
     public async Task<MstDesignation?> GetByIdAsync(string id, CancellationToken cancellationToken = default)

@@ -19,6 +19,7 @@ public class DivisionRepository : IDivisionRepository
         return await _context.Divisions
             .Where(d => d.IsActive)
             .OrderBy(d => d.SortOrder)
+            .ThenBy(d => d.DivisionName)
             .ToListAsync(cancellationToken);
     }
 

@@ -18,7 +18,7 @@ public class GroupComplexRepository : IGroupComplexRepository
     {
         var query = _context.MstGroupComplexes.AsQueryable();
         if (!includeInactive) query = query.Where(g => g.IsActive);
-        return await query.OrderBy(g => g.ComplexName).ToListAsync(cancellationToken);
+        return await query.OrderBy(g => g.SortOrder).ThenBy(g => g.ComplexName).ToListAsync(cancellationToken);
     }
 
     public async Task<MstGroupComplex?> GetByIdAsync(string id, CancellationToken cancellationToken = default)

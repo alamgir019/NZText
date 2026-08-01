@@ -19,7 +19,8 @@ public class DistrictRepository : IDistrictRepository
         return await _context.Districts
             .Include(d => d.Division)
             .Where(d => d.IsActive)
-            .OrderBy(d => d.DistrictName)
+            .OrderBy(d => d.SortOrder)
+            .ThenBy(d => d.DistrictName)
             .ToListAsync(cancellationToken);
     }
 

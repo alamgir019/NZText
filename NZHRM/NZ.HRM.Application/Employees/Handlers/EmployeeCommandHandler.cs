@@ -396,6 +396,7 @@ public class EmployeeCommandHandler
                 MotherName = command.MotherName,
                 FatherName = command.FatherName,
                 MobileNumber = command.MobileNumber,
+                DateOfBirth = command.DateOfBirth,
                 EmployeeReferenceBangla = command.EmployeeReferenceBangla,
                 EmployeeReference = command.EmployeeReference,
                 ReferenceMobileNumber = command.ReferenceMobileNumber,
@@ -422,6 +423,7 @@ public class EmployeeCommandHandler
             personal.MotherName = command.MotherName;
             personal.FatherName = command.FatherName;
             personal.MobileNumber = command.MobileNumber;
+            personal.DateOfBirth = command.DateOfBirth;
             personal.PermanentDivisionId = command.PermanentDivisionId;
             personal.PermanentDistrictId = command.PermanentDistrictId;
             personal.PermanentThanaId = command.PermanentThanaId;

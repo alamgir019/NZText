@@ -24,6 +24,7 @@ public class GradeRepository : IGradeRepository
         }
         return await query
             .OrderBy(g => g.SortOrder)
+            .ThenBy(g => g.GradeName)
             .ToListAsync(cancellationToken);
     }
 

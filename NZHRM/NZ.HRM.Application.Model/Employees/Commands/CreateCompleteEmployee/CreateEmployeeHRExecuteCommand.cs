@@ -65,7 +65,9 @@ public class CreateEmployeeHRExecutiveCommand
     public string? NomineeMobileNumber { get; set; }
     public string? NomineeNameBangla { get; set; }
     public string? NomineeRelationBangla { get; set; }
-
+    // Personal Information
+    [Required(ErrorMessage = "Date of birth is required")]
+    public DateOnly DateOfBirth { get; set; }
     public string? EmployeeReference { get; set; }
     public string? EmployeeReferenceBangla { get; set; }
 
