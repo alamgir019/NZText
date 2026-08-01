@@ -192,19 +192,41 @@ public class EmployeeCommandHandler
     public async Task<string> Handle(CreateEmployeeHRExecutiveCommand command, CancellationToken cancellationToken = default)
     {
         var employeeMaster = await _employeeMasterRepository.GetByIdAsync(command.EmployeeId, cancellationToken);
-
-        if (employeeMaster == null || employeeMaster.EnrollmentId != command.EmployeeEnrollmentId)
+        if (employeeMaster == null && command.EmployeeNature.Equals(EmployeeNature.Worker))
+        {
             throw new KeyNotFoundException($"Employee with ID {command.EmployeeId} not found");
+        }
 
-        employeeMaster.EmployeeCode = command.EmployeeCode;
-        employeeMaster.EmployeeName = command.EmployeeName ?? string.Empty;
-        employeeMaster.EmployeeNature = command.EmployeeNature?.ToString() ?? string.Empty;
-        employeeMaster.Status = EmployeeStatus.HRExecutive.ToString();
+        if (employeeMaster == null)
+        {
+            // Use the provided date (caller should pass UTC DateTime)
+            var today = DateTime.UtcNow;
+            var next = await _employeeMasterRepository.GetNextEnrollmentIdAsync(today, cancellationToken: cancellationToken);
 
-        await _employeeMasterRepository.UpdateAsync(employeeMaster, cancellationToken);
+            // Create EmployeeMaster
+            employeeMaster = new HrmEmployeeMaster
+            {
+                EnrollmentId = next,
+                EmployeeCode = command.EmployeeCode,
+                EmployeeName = command.EmployeeName ?? string.Empty,
+                EmployeeNature = command.EmployeeNature?.ToString() ?? string.Empty,
+                Status = EmployeeStatus.HRExecutive.ToString(),
+                IsActive = true
+            };
+            await _employeeMasterRepository.AddAsync(employeeMaster, cancellationToken);
+        }
+        else
+        {
+            // If employee exists, update the existing one
+            employeeMaster.EmployeeCode = command.EmployeeCode;
+            employeeMaster.EmployeeName = command.EmployeeName ?? string.Empty;
+            employeeMaster.EmployeeNature = command.EmployeeNature?.ToString() ?? string.Empty;
+            employeeMaster.Status = EmployeeStatus.HRExecutive.ToString();
+            await _employeeMasterRepository.UpdateAsync(employeeMaster, cancellationToken);
+        }
+
         // Validate related entities exist
         await ValidateRelatedEntities(command.UnitId, command.DepartmentId, command.SectionId, command.ShiftId, cancellationToken);
-        //command.EmployeeTypeId = "123                       ";
         if (employeeMaster.Employment is null)
         {
             var employeeEmployment = new HrmEmployeeEmployment

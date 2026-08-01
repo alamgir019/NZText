@@ -55,4 +55,5 @@ public class EmployeeMasterListItemDto
     public string IdentificationSign { get; set; }
     public string Fitness { get; set; }
     public DateTime? MedicalUpdatedOn { get; set; }
+    public string Remarks { get; set; }
 }
