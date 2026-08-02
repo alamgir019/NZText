@@ -411,12 +411,12 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             query = query.Where(e => e.Employment != null && e.Employment.JoiningDate <= filterRequest.JoiningToDate);
         }
 
-        if(!string.IsNullOrEmpty(filterRequest.GradeId))
+        if (!string.IsNullOrEmpty(filterRequest.GradeId))
         {
             query = query.Where(e => e.Employment != null && e.Employment.GradeId == filterRequest.GradeId);
         }
 
-        if(!string.IsNullOrEmpty(filterRequest.ShiftId))
+        if (!string.IsNullOrEmpty(filterRequest.ShiftId))
         {
             query = query.Where(e => e.Employment != null && e.Employment.ShiftId == filterRequest.ShiftId);
         }
@@ -478,7 +478,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
 
 
         // Get total count before pagination
-            var totalCount = await query.CountAsync(cancellationToken);
+        var totalCount = await query.CountAsync(cancellationToken);
 
         // Apply pagination
         var validPageNumber = Math.Max(1, filterRequest.PageNumber);
@@ -533,12 +533,12 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             return false;
 
         var query = _context.HrmEmployeeMasters
-            .Where(e => e.EmployeeCode == employeeCode);
+            .Where(e => e.OldCardNo == employeeCode);
 
         // Return true if NO matching code exists (code is unique)
         return !await query.AnyAsync(cancellationToken);
     }
-    public async Task<bool> EnrollmentCodeExistsAsync(string enrollmentCode , CancellationToken cancellationToken = default)
+    public async Task<bool> EnrollmentCodeExistsAsync(string enrollmentCode, CancellationToken cancellationToken = default)
     {
         return await _context.HrmEmployeeMasters
             .AnyAsync(e => e.EnrollmentId == enrollmentCode, cancellationToken);
@@ -555,7 +555,20 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
         var datePart = todayUtc.Date.ToString("ddMMyy");
         var key = $"lastEnrollmentId:{datePart}";
 
+        return await GenerateNextValue(datePart, key, cancellationToken);
+    }
+
+    public async Task<string> GetNextEmployeeCodeAsync(string unitCode, CancellationToken cancellationToken = default)
+    {
+        var datePart = DateTime.UtcNow.Date.ToString("ddMMyy");
+        var key = $"lastEmployeeCode:{datePart}";
+
         // Use a transaction to read/update the lookup key/value row for today
+        return await GenerateNextValue(datePart, key, cancellationToken);
+    }
+
+    private async Task<string> GenerateNextValue(string datePart, string key, CancellationToken cancellationToken)
+    {
         await using var transaction = await _context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken);
 
         var kv = await _context.Set<LookKeyValue>()
@@ -604,10 +617,10 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        var nextEnrollmentId = kv.Value!;
+        var nextEmployeeCode = kv.Value!;
 
         await transaction.CommitAsync(cancellationToken);
 
-        return nextEnrollmentId;
+        return nextEmployeeCode;
     }
 }

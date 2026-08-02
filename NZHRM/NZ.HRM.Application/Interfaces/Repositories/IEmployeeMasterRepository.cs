@@ -52,4 +52,5 @@ public interface IEmployeeMasterRepository
     // Generate a next unique enrollment id for the provided date (caller should pass UTC date).
     // Implementations should ensure uniqueness under concurrent callers.
     Task<string> GetNextEnrollmentIdAsync(DateTime todayUtc, CancellationToken cancellationToken = default);
+    Task<string> GetNextEmployeeCodeAsync(string unitCode, CancellationToken cancellationToken = default);
 }

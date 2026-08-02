@@ -191,11 +191,27 @@ public class EmployeeCommandHandler
 
     public async Task<string> Handle(CreateEmployeeHRExecutiveCommand command, CancellationToken cancellationToken = default)
     {
-        var employeeMaster = await _employeeMasterRepository.GetByIdAsync(command.EmployeeId, cancellationToken);
-        if (employeeMaster == null && command.EmployeeNature.Equals(EmployeeNature.Worker))
+        HrmEmployeeMaster? employeeMaster = null;
+        if (string.IsNullOrEmpty(command.EmployeeId) && command.EmployeeNature.Equals(EmployeeNature.Worker))
         {
             throw new KeyNotFoundException($"Employee with ID {command.EmployeeId} not found");
         }
+        else if (!string.IsNullOrEmpty(command.EmployeeId))
+        {
+            employeeMaster = await _employeeMasterRepository.GetByIdAsync(command.EmployeeId, cancellationToken);
+        }
+
+        var unit = employeeMaster?.Employment?.Unit;
+        if (unit == null)
+        {
+            unit = await _unitRepository.GetByIdAsync(command.UnitId, cancellationToken);
+            if (unit == null)
+            {
+                throw new KeyNotFoundException($"Unit with ID {command.UnitId} not found");
+            }
+        }
+
+        var newEmployeeCode = await _employeeMasterRepository.GetNextEmployeeCodeAsync(unit.UnitCode, cancellationToken: cancellationToken);
 
         if (employeeMaster == null)
         {
@@ -207,7 +223,8 @@ public class EmployeeCommandHandler
             employeeMaster = new HrmEmployeeMaster
             {
                 EnrollmentId = next,
-                EmployeeCode = command.EmployeeCode,
+                EmployeeCode = newEmployeeCode,
+                OldCardNo = command.EmployeeCode,
                 EmployeeName = command.EmployeeName ?? string.Empty,
                 EmployeeNature = command.EmployeeNature?.ToString() ?? string.Empty,
                 Status = EmployeeStatus.HRExecutive.ToString(),
@@ -218,7 +235,8 @@ public class EmployeeCommandHandler
         else
         {
             // If employee exists, update the existing one
-            employeeMaster.EmployeeCode = command.EmployeeCode;
+            employeeMaster.EmployeeCode = newEmployeeCode;
+            employeeMaster.OldCardNo = command.EmployeeCode;
             employeeMaster.EmployeeName = command.EmployeeName ?? string.Empty;
             employeeMaster.EmployeeNature = command.EmployeeNature?.ToString() ?? string.Empty;
             employeeMaster.Status = EmployeeStatus.HRExecutive.ToString();
@@ -263,7 +281,7 @@ public class EmployeeCommandHandler
             employeeMaster.Employment.DesignationId = command.DesignationId;
             employeeMaster.Employment.GradeId = command.GradeId;
             employeeMaster.Employment.WeeklyOffDay = command.Holiday.ToString();
-            employeeMaster.Employment.EmployeeCategory = command.EmployeeCategory.ToString();
+            employeeMaster.Employment.EmployeeCategory = command.EmployeeCategory?.ToString() ?? string.Empty;
             employeeMaster.Employment.ProbationPeriod = command.ProbationPeriod;
             employeeMaster.Employment.ReportingTo = command.ReportingTo;
             employeeMaster.Employment.JoiningDate = command.JoiningDate;
@@ -278,7 +296,7 @@ public class EmployeeCommandHandler
 
         await UpsertNominee(command, employeeMaster, cancellationToken);
         AddEmployeeDocument(command.Documents, employeeMaster, cancellationToken).Wait(cancellationToken);
-        return command.EmployeeId;
+        return employeeMaster.Id;
     }
 
     private async Task UpsertNominee(CreateEmployeeHRExecutiveCommand command, HrmEmployeeMaster employeeMaster, CancellationToken cancellationToken)

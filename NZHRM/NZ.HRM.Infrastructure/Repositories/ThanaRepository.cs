@@ -19,7 +19,8 @@ public class ThanaRepository : IThanaRepository
         return await _context.Thanas
             .Include(t => t.District)
             .Where(t => t.IsActive)
-            .OrderBy(t => t.ThanaName)
+            .OrderBy(t => t.SortOrder)
+            .ThenBy(t => t.ThanaName)
             .ToListAsync(cancellationToken);
     }
 
