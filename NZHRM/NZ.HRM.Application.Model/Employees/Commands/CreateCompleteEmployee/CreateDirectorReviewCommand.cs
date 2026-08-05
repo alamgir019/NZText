@@ -11,6 +11,6 @@ public class CreateDirectorReviewCommand
 
     public decimal? GrossSalary { get; set; }
     public decimal? ProposedMonthlySalary { get; set; }
-    public EmployeeStatus? EmployeeStatus { get; set; }
+    public string? EmployeeStatus { get; set; }
 
 }

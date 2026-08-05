@@ -543,7 +543,7 @@ public class EmployeeCommandHandler
             payroll.FoodAllowance = salaryBreakdown.Food;
         }
 
-        existingEmployee.Status = command.EmployeeStatus?.ToString() ?? EmployeeStatus.DirectorReview.ToString();
+        existingEmployee.Status = (command.EmployeeStatus??string.Empty).Equals(EmployeeStatus.DirectorRejected.ToString()) ? EmployeeStatus.DirectorRejected.ToString() : EmployeeStatus.DirectorReview.ToString();
         return (payroll, existingEmployee);
     }
 
