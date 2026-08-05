@@ -33,7 +33,7 @@ public class GetEmployeeMasterListQuery
     /// <summary>
     /// Employee Nature filter (e.g., Worker, Staff, Management). If not provided, includes all natures.
     /// </summary>
-    public string? EmployeeNature { get; set; }
+    public EmployeeNature? EmployeeNature { get; set; }
 
     /// <summary>
     /// Joining date from filter (inclusive). If not provided, no lower bound.

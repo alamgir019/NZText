@@ -394,9 +394,9 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
         }
 
         // Apply Employee Nature filter
-        if (!string.IsNullOrEmpty(filterRequest.EmployeeNature))
+        if (filterRequest.EmployeeNature.HasValue)
         {
-            query = query.Where(e => e.EmployeeNature != null && EF.Functions.ILike(e.EmployeeNature, filterRequest.EmployeeNature));
+            query = query.Where(e => e.EmployeeNature != null && e.EmployeeNature == filterRequest.EmployeeNature.ToString());
         }
 
         // Apply Joining Date From filter
