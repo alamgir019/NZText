@@ -102,6 +102,7 @@ public class EmployeeCommandHandler
         {
             EmployeeId = employeeId,
             UnitId = command.UnitId,
+            GradeId = command.GradeId,
             DesignationId = command.DesignationId,
             JoiningDate = command.JoiningDate,
             IsActive = true
@@ -181,6 +182,7 @@ public class EmployeeCommandHandler
         {
             employeee.Employment.EmployeeId = employeeId;
             employeee.Employment.UnitId = command.UnitId;
+            employeee.Employment.GradeId = command.GradeId;
             employeee.Employment.DesignationId = command.DesignationId;
             employeee.Employment.JoiningDate = command.JoiningDate;
             employeee.Employment.IsActive = true;
@@ -415,6 +417,11 @@ public class EmployeeCommandHandler
                 FatherName = command.FatherName,
                 MobileNumber = command.MobileNumber,
                 DateOfBirth = command.DateOfBirth,
+                IdType = command.IDType,
+                IdNumber = command.IDNumber,
+                Gender = command.Gender.ToString(),
+                Religion = command.Religion.ToString(),
+                BloodGroup = command.BloodGroup.ToString(),
                 EmployeeReferenceBangla = command.EmployeeReferenceBangla,
                 EmployeeReference = command.EmployeeReference,
                 ReferenceMobileNumber = command.ReferenceMobileNumber,
@@ -442,6 +449,12 @@ public class EmployeeCommandHandler
             personal.FatherName = command.FatherName;
             personal.MobileNumber = command.MobileNumber;
             personal.DateOfBirth = command.DateOfBirth;
+            personal.IdType = command.IDType;
+            personal.IdNumber = command.IDNumber;
+            personal.Gender = command.Gender.ToString();
+            personal.Religion = command.Religion.ToString();
+            personal.BloodGroup = command.BloodGroup.ToString();
+
             personal.PermanentDivisionId = command.PermanentDivisionId;
             personal.PermanentDistrictId = command.PermanentDistrictId;
             personal.PermanentThanaId = command.PermanentThanaId;

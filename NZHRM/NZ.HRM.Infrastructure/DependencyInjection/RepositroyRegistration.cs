@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using NZ.HRM.Application.Interface;
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Infrastructure.Repositories;
 

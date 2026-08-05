@@ -1,6 +1,5 @@
 using NZ.HRM.Application.Departments.Queries.GetAllDepartments;
 using NZ.HRM.Application.Departments.Queries.GetDepartmentById;
-using NZ.HRM.Application.Interface;
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Application.ComplexUnitDepartments.Queries.GetAllComplexUnitDepartments;
 using NZ.HRM.Application.Departments.Queries.GetDepartmentsByComplexUnit;

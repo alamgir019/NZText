@@ -12,6 +12,7 @@ public class UpdateCandidateEntryCommand
     [Required(ErrorMessage = "Unit ID is required")]
     public string UnitId { get; set; } = string.Empty;
 
+    public string? GradeId { get; set; }
     public string? DesignationId { get; set; }
 
     [Required(ErrorMessage = "Joining date is required")]

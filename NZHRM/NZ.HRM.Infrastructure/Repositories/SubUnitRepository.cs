@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using NZ.HRM.Application.Interface;
+using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Domain.Entities;
 using NZ.HRM.Infrastructure.Persistence;
 

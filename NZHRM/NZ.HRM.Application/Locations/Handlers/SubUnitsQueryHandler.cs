@@ -1,4 +1,4 @@
-using NZ.HRM.Application.Interface;
+using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Application.SubUnits.Queries;
 using NZ.HRM.Domain.Entities;
 

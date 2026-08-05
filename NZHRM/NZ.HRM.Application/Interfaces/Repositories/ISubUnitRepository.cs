@@ -1,6 +1,6 @@
 using NZ.HRM.Domain.Entities;
 
-namespace NZ.HRM.Application.Interface
+namespace NZ.HRM.Application.Interfaces.Repositories
 {
     public interface ISubUnitRepository
     {

@@ -12,7 +12,6 @@ using NZ.HRM.Application.SectionCells.Handlers;
 using NZ.HRM.Application.Cells.Handlers;
 using NZ.HRM.Application.Designations.Handlers;
 using NZ.HRM.Application.EmployeeMasters.Handlers;
-using NZ.HRM.Application.EmployeePersonals.Handlers;
 using NZ.HRM.Application.Employees.Handlers;
 using NZ.HRM.Application.Divisions.Handlers;
 using NZ.HRM.Application.Districts.Handlers;
@@ -85,10 +84,6 @@ namespace NZ.HRM.Application.DependencyInjection
             services.AddScoped<EmployeeMasterCommandHandler>();
             services.AddScoped<EmployeeMasterQueryHandler>();
             services.AddScoped<GetEnrollmentIdQueryHandler>();
-
-            // Register EmployeePersonal Handlers
-            services.AddScoped<EmployeePersonalCommandHandler>();
-            services.AddScoped<EmployeePersonalQueryHandler>();
 
             // Register Complete Employee Handlers
             services.AddScoped<EmployeeCommandHandler>();

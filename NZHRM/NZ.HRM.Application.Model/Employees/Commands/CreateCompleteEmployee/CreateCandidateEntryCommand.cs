@@ -12,7 +12,7 @@ public class CreateCandidateEntryCommand
     [Required(ErrorMessage = "Unit ID is required")]
     public string UnitId { get; set; } = string.Empty;
 
-    //[Required(ErrorMessage = "Department ID is required")]
+    public string? GradeId { get; set; }
     public string? DesignationId { get; set; }
 
     [Required(ErrorMessage = "Joining date is required")]

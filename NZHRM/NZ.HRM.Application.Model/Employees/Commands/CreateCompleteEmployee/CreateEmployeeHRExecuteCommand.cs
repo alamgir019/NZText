@@ -65,13 +65,7 @@ public class CreateEmployeeHRExecutiveCommand
     public string? NomineeMobileNumber { get; set; }
     public string? NomineeNameBangla { get; set; }
     public string? NomineeRelationBangla { get; set; }
-    // Personal Information
-    [Required(ErrorMessage = "Date of birth is required")]
-    public DateOnly DateOfBirth { get; set; }
-    public string? EmployeeReference { get; set; }
-    public string? EmployeeReferenceBangla { get; set; }
-
-    public string? ReferenceMobileNumber { get; set; }
+   
     public string DepartmentId { get; set; } = string.Empty;
     public string SectionId { get; set; } = string.Empty;
     public string? CellId { get; set; }
@@ -90,4 +84,15 @@ public class CreateEmployeeHRExecutiveCommand
     public string? PresentThanaId { get; set; }
     public string? PresentPostOffice { get; set; }
     public string? PresentVillageAreaRoad { get; set; }
+
+    // Personal Information
+    public IDType? IDType { get; set; }
+    public string? IDNumber { get; set; }
+    public BloodGroup? BloodGroup { get; set; }
+    public Religion? Religion { get; set; }
+    public Gender? Gender { get; set; }
+    public DateOnly? DateOfBirth { get; set; }
+    public string? EmployeeReference { get; set; }
+    public string? EmployeeReferenceBangla { get; set; }
+    public string? ReferenceMobileNumber { get; set; }
 }

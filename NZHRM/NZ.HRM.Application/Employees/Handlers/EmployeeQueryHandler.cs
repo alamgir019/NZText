@@ -3,13 +3,13 @@ using NZ.HRM.Application.Employees.Queries.GetEmployeeDetailForIT;
 using NZ.HRM.Application.Employees.Queries.GetEmployeeMasterList;
 using NZ.HRM.Application.Employees.Queries.GetMedicalReport;
 using NZ.HRM.Application.Employees.Queries.GetEmployeeDetailedProfile;
-using NZ.HRM.Application.Employees.Queries.GetJoiningLetter;
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Application.Model.Employees.DTOs;
 using NZ.HRM.Application.Model.EmployeeReports.DTOs;
 using NZ.HRM.Mapping.Employees;
 using NZ.HRM.Utility;
 using NZ.HRM.Utility.Enum;
+using NZ.HRM.Application.Employees.Queries.GetJoiningLetter;
 
 namespace NZ.HRM.Application.Employees.Handlers;
 
