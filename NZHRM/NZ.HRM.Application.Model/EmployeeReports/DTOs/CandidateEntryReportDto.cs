@@ -13,6 +13,7 @@ public class CandidateEntryReportDto
     // Employment Information
     public string UnitId { get; set; } = string.Empty;
     public string UnitName { get; set; } = string.Empty;
+    public string? GradeId { get; set; }
     public string? DesignationId { get; set; }
     public string? DesignationName { get; set; }
     public decimal? ProposedMonthlySalary { get; set; }

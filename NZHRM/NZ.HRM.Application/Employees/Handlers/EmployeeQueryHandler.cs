@@ -145,6 +145,7 @@ public class EmployeeQueryHandler
             // Employment Information
             UnitId = employment?.UnitId ?? string.Empty,
             UnitName = employment?.Unit?.UnitNameBangla ?? string.Empty,
+            GradeId = employment?.GradeId,
             DesignationId = employment?.DesignationId,
             DesignationName = employment?.Designation?.DesignationNameBangla,
             ProposedMonthlySalary = employee.Payroll?.ProposedSalary,

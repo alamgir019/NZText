@@ -562,12 +562,12 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
     {
         var datePart = DateTime.UtcNow.Date.ToString("ddMMyy");
         var key = $"lastEmployeeCode:{datePart}";
-
+        var prefix = $"{unitCode}{datePart}";
         // Use a transaction to read/update the lookup key/value row for today
-        return await GenerateNextValue(datePart, key, cancellationToken);
+        return await GenerateNextValue(prefix, key, cancellationToken);
     }
 
-    private async Task<string> GenerateNextValue(string datePart, string key, CancellationToken cancellationToken)
+    private async Task<string> GenerateNextValue(string prefix, string key, CancellationToken cancellationToken)
     {
         await using var transaction = await _context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken);
 
@@ -577,7 +577,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
         int nextSeq = 1;
         if (kv == null)
         {
-            var value = $"{datePart}{nextSeq:D3}";
+            var value = $"{prefix}{nextSeq:D3}";
             kv = new LookKeyValue
             {
                 Key = key,
@@ -593,9 +593,9 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
         {
             // parse existing value's sequence suffix
             var existing = kv.Value ?? string.Empty;
-            if (existing.Length >= datePart.Length + 1 && existing.StartsWith(datePart))
+            if (existing.Length >= prefix.Length + 1 && existing.StartsWith(prefix))
             {
-                var seqPart = existing.Substring(datePart.Length);
+                var seqPart = existing.Substring(prefix.Length);
                 if (int.TryParse(seqPart, out var seq))
                 {
                     nextSeq = seq + 1;
@@ -610,7 +610,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
                 nextSeq = 1;
             }
 
-            kv.Value = $"{datePart}{nextSeq:D3}";
+            kv.Value = $"{prefix}{nextSeq:D3}";
             kv.UpdatedOn = DateTime.UtcNow;
             _context.Set<LookKeyValue>().Update(kv);
         }
