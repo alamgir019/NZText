@@ -45,56 +45,11 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<HrmEmployeeSalaryAccount> HrmEmployeeBankAccounts => Set<HrmEmployeeSalaryAccount>();
         public DbSet<HrmEmployeeReporting> HrmEmployeeReportings => Set<HrmEmployeeReporting>();
 
-        // Attendance
-        public DbSet<AttDeviceMaster> AttDeviceMasters => Set<AttDeviceMaster>();
-        public DbSet<AttDeviceSyncLog> AttDeviceSyncLogs => Set<AttDeviceSyncLog>();
-        public DbSet<AttRawPunch> AttRawPunches => Set<AttRawPunch>();
-        public DbSet<AttProcessedPunch> AttProcessedPunches => Set<AttProcessedPunch>();
-        public DbSet<AttShiftRoster> AttShiftRosters => Set<AttShiftRoster>();
-        public DbSet<AttOtAuthorization> AttOtAuthorizations => Set<AttOtAuthorization>();
-        public DbSet<AttProcessedAttendance> AttProcessedAttendances => Set<AttProcessedAttendance>();
-        public DbSet<AttAttendanceException> AttAttendanceExceptions => Set<AttAttendanceException>();
-        public DbSet<AttAttendanceAdjustment> AttAttendanceAdjustments => Set<AttAttendanceAdjustment>();
-        public DbSet<AttAttendanceLock> AttAttendanceLocks => Set<AttAttendanceLock>();
-        public DbSet<AttProcessingLog> AttProcessingLogs => Set<AttProcessingLog>();
-        public DbSet<AttInsideFactoryStatus> AttInsideFactoryStatuses => Set<AttInsideFactoryStatus>();
-        public DbSet<AttWeeklyOffPattern> AttWeeklyOffPatterns => Set<AttWeeklyOffPattern>();
+        // Attendance — now owned by NZ.Attendance.Infrastructure (AttendanceDbContext)
 
-        // Leave
-        public DbSet<LevLeaveType> LevLeaveTypes => Set<LevLeaveType>();
-        public DbSet<LevLeaveBalance> LevLeaveBalances => Set<LevLeaveBalance>();
-        public DbSet<LevLeaveApplication> LevLeaveApplications => Set<LevLeaveApplication>();
-        public DbSet<LevLeaveApplicationDetails> LevLeaveApplicationDetails => Set<LevLeaveApplicationDetails>();
-        public DbSet<LevLeaveAdjustment> LevLeaveAdjustments => Set<LevLeaveAdjustment>();
-        public DbSet<LevLeaveOpeningBalance> LevLeaveOpeningBalances => Set<LevLeaveOpeningBalance>();
-        public DbSet<LevLeaveEncashment> LevLeaveEncashments => Set<LevLeaveEncashment>();
-        public DbSet<LevLeaveAccrual> LevLeaveAccruals => Set<LevLeaveAccrual>();
-        public DbSet<LevHolidayCalendar> LevHolidayCalendars => Set<LevHolidayCalendar>();
-        public DbSet<LevLeaveApprovalHistory> LevLeaveApprovalHistories => Set<LevLeaveApprovalHistory>();
-        public DbSet<LevLeaveCancellation> LevLeaveCancellations => Set<LevLeaveCancellation>();
-        public DbSet<LevLeaveYear> LevLeaveYears => Set<LevLeaveYear>();
-        public DbSet<LevLeavePolicy> LevLeavePolicies => Set<LevLeavePolicy>();
+        // Leave — now owned by NZ.Leave.Infrastructure (LeaveDbContext)
 
-        // Payroll
-        public DbSet<PaySalaryStructure> PaySalaryStructures => Set<PaySalaryStructure>();
-        public DbSet<PayIncrementHistory> PayIncrementHistories => Set<PayIncrementHistory>();
-        public DbSet<PayPayrollHeader> PayPayrollHeaders => Set<PayPayrollHeader>();
-        public DbSet<PayPayrollDetails> PayPayrollDetails => Set<PayPayrollDetails>();
-        public DbSet<PayOtDetails> PayOtDetails => Set<PayOtDetails>();
-        public DbSet<PayDeduction> PayDeductions => Set<PayDeduction>();
-        public DbSet<PayArrear> PayArrears => Set<PayArrear>();
-        public DbSet<PayBonus> PayBonuses => Set<PayBonus>();
-        public DbSet<PayTax> PayTaxes => Set<PayTax>();
-        public DbSet<PayLoanRecovery> PayLoanRecoveries => Set<PayLoanRecovery>();
-        public DbSet<PayBankTransfer> PayBankTransfers => Set<PayBankTransfer>();
-        public DbSet<PayPayslip> PayPayslips => Set<PayPayslip>();
-        public DbSet<PayPayrollAdjustment> PayPayrollAdjustments => Set<PayPayrollAdjustment>();
-        public DbSet<PayPayrollLock> PayPayrollLocks => Set<PayPayrollLock>();
-        public DbSet<PayPayrollProcessLog> PayPayrollProcessLogs => Set<PayPayrollProcessLog>();
-        public DbSet<PayPartialSalaryPayment> PayPartialSalaryPayments => Set<PayPartialSalaryPayment>();
-        public DbSet<PaySpecialPayrollPolicy> PaySpecialPayrollPolicies => Set<PaySpecialPayrollPolicy>();
-        public DbSet<PaySpecialPayrollBand> PaySpecialPayrollBands => Set<PaySpecialPayrollBand>();
-        public DbSet<PayPayrollException> PayPayrollExceptions => Set<PayPayrollException>();
+        // Payroll processing — now owned by NZ.Payroll.Infrastructure (PayrollDbContext)
 
         // Workflow
         public DbSet<WfWorkflowMaster> WfWorkflowMasters => Set<WfWorkflowMaster>();

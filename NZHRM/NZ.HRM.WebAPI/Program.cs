@@ -2,46 +2,45 @@ using Microsoft.EntityFrameworkCore;
 using NZ.HRM.Infrastructure.Persistence;
 using NZ.HRM.Application.DependencyInjection;
 using NZ.HRM.Infrastructure.DependencyInjection;
-using NZ.HRM.WebAPI.Services.PunchPolling;
 using NZ.HRM.Application.Services;
-using NZ.HRM.Domain.Configuration;
 using NZ.HRM.WebAPI.Services;
+using NZ.Attendance.Infrastructure.DependencyInjection;
+using NZ.Leave.Infrastructure.DependencyInjection;
+using NZ.Payroll.Infrastructure.DependencyInjection;
+using NZ.HRM.Domain.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
-// Connection String in appsettings.json
-// "DefaultConnection": "Host=localhost;Database=NZHRM_Db;Username=postgres;Password=yourpassword"
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
     m => m.MigrationsAssembly("NZ.HRM.Infrastructure")));
-// Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// ── HRM / Recruitment Module ───────────────────────────────────────────────
 builder.Services.AddHandlerServices();
 builder.Services.AddRepositories();
 builder.Services.AddScoped<IEmployeeExcelExportService, EmployeeExcelExportService>();
 
-// Register file storage configuration and service
+// File storage
 var fileStorageConfig = new FileStorageConfiguration();
 builder.Configuration.GetSection("FileStorage").Bind(fileStorageConfig);
 builder.Services.AddSingleton(fileStorageConfig);
 builder.Services.AddScoped<IFileStorageService, FileStorageService>();
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.Configure<PunchPollingOptions>(builder.Configuration.GetSection("PunchPolling"));
-builder.Services.AddHttpClient<IDevicePunchSource, VirdiApiDevicePunchSource>();
-
-// Register fingerprint device configuration and service
+// Fingerprint device
 var fingerprintConfig = new FingerprintDeviceConfiguration();
 builder.Configuration.GetSection("FingerprintDevice").Bind(fingerprintConfig);
 builder.Services.AddSingleton(fingerprintConfig);
 builder.Services.AddHttpClient<IFingerprintDeviceService, FingerprintDeviceService>();
 
-//builder.Services.AddHostedService<PunchPollingBackgroundService>();
+// ── Feature Modules ────────────────────────────────────────────────────────
+builder.Services.AddAttendanceModule(builder.Configuration);
+builder.Services.AddLeaveModule(builder.Configuration);
+builder.Services.AddPayrollModule(builder.Configuration);
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
