@@ -1,5 +1,4 @@
 using NZ.HRM.Domain.Entities;
-using NZ.HRM.Utility.Enum;
 
 namespace NZ.HRM.Domain.Services
 {

@@ -1,30 +1,31 @@
 using Microsoft.Extensions.DependencyInjection;
-using NZ.HRM.Application.Companies.Handlers;
-using NZ.HRM.Application.LocationDepartments.Handlers;
-using NZ.HRM.Application.SubUnits.Handlers;
-using NZ.HRM.Application.Departments.Handlers;
 using NZ.HRM.Application.Banks.Handlers;
-using NZ.HRM.Application.DepartmentSections.Handlers;
-using NZ.HRM.Application.Grades.Handlers;
-using NZ.HRM.Application.Shifts.Handlers;
-using NZ.HRM.Application.Sections.Handlers;
-using NZ.HRM.Application.SectionCells.Handlers;
 using NZ.HRM.Application.Cells.Handlers;
+using NZ.HRM.Application.Companies.Handlers;
+using NZ.HRM.Application.Departments.Handlers;
+using NZ.HRM.Application.DepartmentSections.Handlers;
 using NZ.HRM.Application.Designations.Handlers;
+using NZ.HRM.Application.Districts.Handlers;
+using NZ.HRM.Application.Divisions.Handlers;
 using NZ.HRM.Application.EmployeeMasters.Handlers;
 using NZ.HRM.Application.Employees.Handlers;
-using NZ.HRM.Application.Divisions.Handlers;
-using NZ.HRM.Application.Districts.Handlers;
-using NZ.HRM.Application.MedicalFitnessChecks.Handlers;
 using NZ.HRM.Application.FinancialDetails.Handlers;
+using NZ.HRM.Application.Grades.Handlers;
+using NZ.HRM.Application.GroupComplexes.Handlers;
+using NZ.HRM.Application.LocationDepartments.Handlers;
+using NZ.HRM.Application.MedicalFitnessChecks.Handlers;
+using NZ.HRM.Application.Permissions.Handlers;
 using NZ.HRM.Application.PhysicalExaminationSettings.Handlers;
 using NZ.HRM.Application.RawPunches.Handlers;
-using NZ.HRM.Application.Thanas.Handlers;
-using NZ.HRM.Application.GroupComplexes.Handlers;
-using NZ.HRM.Application.Units.Handlers;
 using NZ.HRM.Application.RolePermissions.Handlers;
-using NZ.HRM.Application.Permissions.Handlers;
+using NZ.HRM.Application.SectionCells.Handlers;
+using NZ.HRM.Application.Sections.Handlers;
+using NZ.HRM.Application.Shifts.Handlers;
+using NZ.HRM.Application.SubUnits.Handlers;
+using NZ.HRM.Application.Thanas.Handlers;
+using NZ.HRM.Application.Units.Handlers;
 using NZ.HRM.Application.UserRoles.Handlers;
+using NZ.HRM.Domain.Services;
 
 namespace NZ.HRM.Application.DependencyInjection
 {
@@ -120,8 +121,8 @@ namespace NZ.HRM.Application.DependencyInjection
 
             // Register RawPunch Handlers
             services.AddScoped<RawPunchCommandHandler>();
-            services.AddScoped<Domain.Services.PunchProcessingService>();
-            services.AddScoped<Domain.Services.AttendanceProcessingService>();
+            services.AddScoped<PunchProcessingService>();
+            // Note: PunchProcessingService and AttendanceProcessingService are registered by AddAttendanceModule()
 
             // UserRole Handlers
             services.AddScoped<UserRoleCommandHandler>();

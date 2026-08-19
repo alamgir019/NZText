@@ -37,8 +37,7 @@ namespace NZ.HRM.Infrastructure.DependencyInjection
             services.AddScoped<IGroupComplexRepository, GroupComplexRepository>();
             services.AddScoped<IMedicalFitnessCheckRepository, MedicalFitnessCheckRepository>();
             services.AddScoped<IPhysicalExaminationSettingRepository, PhysicalExaminationSettingRepository>();
-            services.AddScoped<IRawPunchRepository, RawPunchRepository>();
-            services.AddScoped<IProcessedPunchRepository, ProcessedPunchRepository>();
+            // IRawPunchRepository and IProcessedPunchRepository are registered by AddAttendanceModule()
             services.AddScoped<IEmployeeEmploymentRepository, EmployeeEmploymentRepository>();
             services.AddScoped<IEmployeeDocumentRepository, EmployeeDocumentRepository>();
             services.AddScoped<IEmployeeSalaryAccountRepository, EmployeeSalaryAccountRepository>();
