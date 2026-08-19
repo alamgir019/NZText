@@ -27,6 +27,7 @@
     <ProjectReference Include="..\NZ.HRM.Infrastructure\NZ.HRM.Infrastructure.csproj" />
     <ProjectReference Include="..\NZ.Leave.Infrastructure\NZ.Leave.Infrastructure.csproj" />
     <ProjectReference Include="..\NZ.Payroll.Infrastructure\NZ.Payroll.Infrastructure.csproj" />
+    <ProjectReference Include="..\NZ.Shared.Contracts\NZ.Shared.Contracts.csproj" />
     <ProjectReference Include="..\NZ.Shared.Events\NZ.Shared.Events.csproj" />
   </ItemGroup>
 

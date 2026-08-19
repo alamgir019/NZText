@@ -25,4 +25,32 @@ public class AttendanceDbContext : DbContext
     public DbSet<HrmEmployeeMaster> HrmEmployeeMasters => Set<HrmEmployeeMaster>();
     public DbSet<MstShift> MstShifts => Set<MstShift>();
     public DbSet<LevHolidayCalendar> LevHolidayCalendars => Set<LevHolidayCalendar>();
+    public DbSet<HrmEmployeeEmployment> HrmEmployeeEmployments => Set<HrmEmployeeEmployment>();
+    public DbSet<MstDepartment> MstDepartments => Set<MstDepartment>();
+    // C#
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    base.OnModelCreating(modelBuilder);
+
+    // HrmEmployeeMaster is only a read-only cross-module reference here.
+    // Ignore navigations that would otherwise pull in unrelated HRM entity graphs
+    // and cause ambiguous relationship errors (e.g., HrmEmployeeReporting has
+    // two FKs to HrmEmployeeMaster: Employee/EmployeeId and ReportingEmployee/ReportingEmployeeId).
+    modelBuilder.Entity<HrmEmployeeMaster>(entity =>
+    {
+        entity.Ignore(e => e.Personal);
+        entity.Ignore(e => e.Employment);
+        entity.Ignore(e => e.Payroll);
+        entity.Ignore(e => e.Verification);
+        entity.Ignore(e => e.MedicalFitnessCheck);
+        entity.Ignore(e => e.Documents);
+        entity.Ignore(e => e.Nominees);
+        entity.Ignore(e => e.Educations);
+        entity.Ignore(e => e.Experiences);
+        entity.Ignore(e => e.Trainings);
+        entity.Ignore(e => e.FamilyMembers);
+        entity.Ignore(e => e.BankAccounts);
+        entity.Ignore(e => e.Reportings);
+    });
+}
 }

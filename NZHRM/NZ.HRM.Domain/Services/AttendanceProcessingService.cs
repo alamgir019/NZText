@@ -27,7 +27,7 @@ public class AttendanceProcessingService
             .ToDictionary(
                 g => g.Key,
                 g => g.OrderBy(p => p.Time)
-                      .Select(p => p.Date.ToDateTime(p.Time))
+                      .Select(p => p.Date.ToDateTime(p.Time, DateTimeKind.Utc))
                       .ToList());
 
         // Step 2 – Handle overnight shifts

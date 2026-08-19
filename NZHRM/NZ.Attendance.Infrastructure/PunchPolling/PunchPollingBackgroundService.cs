@@ -30,7 +30,7 @@ public class PunchPollingBackgroundService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (!stoppingToken.IsCancellationRequested)
+         while (!stoppingToken.IsCancellationRequested)
         {
             var options = _options.Value;
 
@@ -119,7 +119,7 @@ public class PunchPollingBackgroundService : BackgroundService
                             new {
                             EmployeeCode = p.EmployeeCode,
                             PunchDate = p.PunchDate,
-                            PunchTime = p.PunchTime
+                            PunchTime = p.PunchTime,
                         }))
                         .Select(punch => new AttRawPunch
                         {
@@ -255,6 +255,34 @@ public class PunchPollingBackgroundService : BackgroundService
             var shiftByDate = shiftRosters
                 .Where(r => r.EmployeeId == employeeId)
                 .ToDictionary(r => r.RosterDate, r => r.ShiftId);
+
+            // If no roster is available for this employee, try to use the employee's assigned shift
+            if (shiftByDate == null || shiftByDate.Count == 0)
+            {
+                var empEmployment = await dbContext.Set< HrmEmployeeEmployment >()
+                    .Where(e => e.EmployeeId == employeeId)
+                    .Select(e => e.ShiftId)
+                    .FirstOrDefaultAsync(cancellationToken);
+
+                if (!string.IsNullOrWhiteSpace(empEmployment))
+                {
+                    shiftByDate = new Dictionary<DateOnly, string> { { dateRange[0], empEmployment! } };
+                }
+                else
+                {
+                    // Fallback: pick any configured shift from master if employee has no assigned shift
+                    var anyShift = await dbContext.MstShifts.Select(s => s.Id).Take(1).FirstOrDefaultAsync(cancellationToken);
+                    if (!string.IsNullOrWhiteSpace(anyShift))
+                    {
+                        shiftByDate = new Dictionary<DateOnly, string> { { dateRange[0], anyShift } };
+                    }
+                    else
+                    {
+                        // Last resort: keep dictionary empty; processor may handle missing shift
+                        shiftByDate = new Dictionary<DateOnly, string>();
+                    }
+                }
+            }
 
             var records = processor.Process(
                 employeeId,

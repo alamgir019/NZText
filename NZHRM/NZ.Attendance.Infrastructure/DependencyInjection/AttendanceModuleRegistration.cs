@@ -23,6 +23,8 @@ public static class AttendanceModuleRegistration
         services.AddScoped<IRawPunchRepository, AttRawPunchRepository>();
         services.AddScoped<IProcessedPunchRepository, AttProcessedPunchRepository>();
         services.AddScoped<IAttendanceSummaryQuery, AttendanceSummaryQueryService>();
+        // Dashboard query for API
+        services.AddScoped< Contracts.IAttendanceDashboardQuery, AttendanceSummaryQueryService>();
 
         services.Configure<PunchPollingOptions>(configuration.GetSection("PunchPolling"));
         services.AddHttpClient<IDevicePunchSource, VirdiApiDevicePunchSource>();
