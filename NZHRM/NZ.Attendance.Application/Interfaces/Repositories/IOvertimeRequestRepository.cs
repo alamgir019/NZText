@@ -21,6 +21,8 @@ namespace NZ.Attendance.Application.Interfaces.Repositories
         Task ApproveAsync(List<ApproveOvertimeRequestCommand> commands, CancellationToken cancellationToken = default);
         // Update approval for a specific item (employee-level)
         Task UpdateEmployeeApprovalAsync(string itemId, string approvedBy, bool approved = true);
+        // Get employees assigned to a shift (via shift roster) with employment/designation/department info
+        Task<List<EmployeeByShiftDto>> GetEmployeesByShiftAsync(string shiftId, CancellationToken cancellationToken = default);
         // Additional methods (Update, RemoveEmployee, Submit) can be added later
     }
 }

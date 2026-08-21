@@ -29,6 +29,7 @@ public class AttendanceDbContext : DbContext
     public DbSet<LevHolidayCalendar> LevHolidayCalendars => Set<LevHolidayCalendar>();
     public DbSet<HrmEmployeeEmployment> HrmEmployeeEmployments => Set<HrmEmployeeEmployment>();
     public DbSet<MstDepartment> MstDepartments => Set<MstDepartment>();
+    public DbSet<MstDesignation> MstDesignations => Set<MstDesignation>();
     // C#
     protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
@@ -53,6 +54,21 @@ public class AttendanceDbContext : DbContext
         entity.Ignore(e => e.FamilyMembers);
         entity.Ignore(e => e.BankAccounts);
         entity.Ignore(e => e.Reportings);
+    });
+
+    // HrmEmployeeEmployment is also only a read-only cross-module reference here.
+    // Ignore navigations to unrelated master entities not mapped in this DbContext.
+    modelBuilder.Entity<HrmEmployeeEmployment>(entity =>
+    {
+        entity.Ignore(e => e.Employee);
+        entity.Ignore(e => e.Group);
+        entity.Ignore(e => e.Unit);
+        entity.Ignore(e => e.Subunit);
+        entity.Ignore(e => e.Section);
+        entity.Ignore(e => e.Cell);
+        entity.Ignore(e => e.Grade);
+        entity.Ignore(e => e.Shift);
+        entity.Ignore(e => e.ProcessingGroup);
     });
 }
 }

@@ -32,6 +32,7 @@ public static class AttendanceModuleRegistration
         services.AddScoped<Application.OvertimeRequests.Handlers.OvertimeRequestCommandHandler>();
         services.AddScoped<Application.OvertimeRequests.Queries.GetOvertimeRequestById.GetOvertimeRequestByIdQueryHandler>();
         services.AddScoped<Application.OvertimeRequests.Queries.GetAllOvertimeRequests.GetAllOvertimeRequestsQueryHandler>();
+        services.AddScoped<Application.OvertimeRequests.Queries.GetEmployeesByShift.GetEmployeesByShiftQueryHandler>();
 
         services.Configure<PunchPollingOptions>(configuration.GetSection("PunchPolling"));
         services.AddHttpClient<IDevicePunchSource, VirdiApiDevicePunchSource>();

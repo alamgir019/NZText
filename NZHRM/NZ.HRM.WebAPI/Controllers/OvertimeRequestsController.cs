@@ -3,7 +3,7 @@ using NZ.Attendance.Application.OvertimeRequests.Queries.GetOvertimeRequestById;
 using NZ.Attendance.Application.OvertimeRequests.Commands.CreateOvertimeRequest;
 using NZ.Attendance.Application.OvertimeRequests.Handlers;
 using NZ.Attendance.Application.OvertimeRequests.Queries.GetAllOvertimeRequests;
-using NZ.Attendance.Application.OvertimeRequests.Commands.AddOvertimeEmployee;
+using NZ.Attendance.Application.OvertimeRequests.Queries.GetEmployeesByShift;
 
 namespace NZ.Attendance.WebAPI.Controllers;
 
@@ -14,15 +14,18 @@ public class OvertimeRequestsController : ControllerBase
     private readonly OvertimeRequestCommandHandler _commandHandler;
     private readonly GetOvertimeRequestByIdQueryHandler _getByIdHandler;
     private readonly GetAllOvertimeRequestsQueryHandler _getAllHandler;
+    private readonly GetEmployeesByShiftQueryHandler _getEmployeesByShiftHandler;
 
     public OvertimeRequestsController(
         OvertimeRequestCommandHandler commandHandler,
         GetOvertimeRequestByIdQueryHandler getByIdHandler,
-        GetAllOvertimeRequestsQueryHandler getAllHandler)
+        GetAllOvertimeRequestsQueryHandler getAllHandler,
+        GetEmployeesByShiftQueryHandler getEmployeesByShiftHandler)
     {
         _commandHandler = commandHandler;
         _getByIdHandler = getByIdHandler;
         _getAllHandler = getAllHandler;
+        _getEmployeesByShiftHandler = getEmployeesByShiftHandler;
     }
 
     [HttpPost]
@@ -67,5 +70,13 @@ public class OvertimeRequestsController : ControllerBase
         if (commands == null || !commands.Any()) return BadRequest("No commands provided");
         await _commandHandler.Handle(commands);
         return NoContent();
+    }
+
+    [HttpGet("employees-by-shift/{shiftId}")]
+    public async Task<IActionResult> GetEmployeesByShift(string shiftId)
+    {
+        var query = new GetEmployeesByShiftQuery { ShiftId = shiftId };
+        var employees = await _getEmployeesByShiftHandler.Handle(query);
+        return Ok(employees);
     }
 }
