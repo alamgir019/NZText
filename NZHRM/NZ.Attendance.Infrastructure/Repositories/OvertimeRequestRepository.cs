@@ -206,5 +206,42 @@ namespace NZ.Attendance.Infrastructure.Repositories
             item.ApprovalDate = DateTime.UtcNow;
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<EmployeeByShiftDto>> GetEmployeesByShiftAsync(string shiftId, CancellationToken cancellationToken = default)
+        {
+            // Get distinct employee ids assigned to the shift via the shift roster
+            var employeeIds = await _context.AttShiftRosters
+                .Where(r => r.ShiftId == shiftId)
+                .Select(r => r.EmployeeId)
+                .Distinct()
+                .ToListAsync(cancellationToken);
+
+            if (employeeIds.Count == 0)
+                return new List<EmployeeByShiftDto>();
+
+            // Join employment + employee master + designation + department
+            var result = await (
+                from emp in _context.HrmEmployeeEmployments
+                where employeeIds.Contains(emp.EmployeeId) || (!employeeIds.Contains(emp.EmployeeId) && emp.ShiftId == shiftId)
+                join master in _context.HrmEmployeeMasters on emp.EmployeeId equals master.Id
+                join designation in _context.MstDesignations on emp.DesignationId equals designation.Id into designationJoin
+                from designation in designationJoin.DefaultIfEmpty()
+                join department in _context.MstDepartments on emp.DepartmentId equals department.Id into departmentJoin
+                from department in departmentJoin.DefaultIfEmpty()
+                select new EmployeeByShiftDto
+                {
+                    EmployeeId = master.Id,
+                    EmployeeName = master.EmployeeName,
+                    EmployeeCode = master.EmployeeCode,
+                    DesignationId = emp.DesignationId,
+                    DesignationName = designation != null ? designation.DesignationName : string.Empty,
+                    DepartmentId = emp.DepartmentId,
+                    DepartmentName = department != null ? department.DepartmentName : string.Empty
+                }
+            ).ToListAsync(cancellationToken);
+
+            return result;
+        }
     }
 }
+
