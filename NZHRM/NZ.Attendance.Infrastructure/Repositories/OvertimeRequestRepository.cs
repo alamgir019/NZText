@@ -216,9 +216,6 @@ namespace NZ.Attendance.Infrastructure.Repositories
                 .Distinct()
                 .ToListAsync(cancellationToken);
 
-            if (employeeIds.Count == 0)
-                return new List<EmployeeByShiftDto>();
-
             // Join employment + employee master + designation + department
             var result = await (
                 from emp in _context.HrmEmployeeEmployments
