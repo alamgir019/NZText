@@ -12,4 +12,5 @@ public class ShiftDto
     public DateTime UpdatedOn { get; set; }
     public string UpdatedBy { get; set; } = string.Empty;
     public bool IsActive { get; set; }
+    public string ShiftType { get; internal set; }
 }
