@@ -1,8 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\NZ.Attendance.Application\NZ.Attendance.Application.csproj" />
+    <ProjectReference Include="..\NZ.Attendance.Domain\NZ.Attendance.Domain.csproj" />
     <ProjectReference Include="..\NZ.HRM.Domain\NZ.HRM.Domain.csproj" />
+    <!-- Attendance infrastructure uses HRM domain project for shared entities -->
     <ProjectReference Include="..\NZ.HRM.Application\NZ.HRM.Application.csproj" />
+    <ProjectReference Include="..\SynExis.Attendance.Application\NZ.Attendance.Application.csproj" />
     <ProjectReference Include="..\NZ.Shared.Contracts\NZ.Shared.Contracts.csproj" />
     <ProjectReference Include="..\NZ.Shared.Events\NZ.Shared.Events.csproj" />
   </ItemGroup>

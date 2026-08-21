@@ -7,12 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NZ.HRM.Utility\NZ.HRM.Utility.csproj" />
+    <ProjectReference Include="..\NZ.HRM.Domain\NZ.HRM.Domain.csproj" />
     <ProjectReference Include="..\NZ.Shared.Domain\NZ.Shared.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Using Include="NZ.Shared.Domain.Common" />
   </ItemGroup>
 
 </Project>

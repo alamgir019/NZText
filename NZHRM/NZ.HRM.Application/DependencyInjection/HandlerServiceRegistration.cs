@@ -10,13 +10,13 @@ using NZ.HRM.Application.Divisions.Handlers;
 using NZ.HRM.Application.EmployeeMasters.Handlers;
 using NZ.HRM.Application.Employees.Handlers;
 using NZ.HRM.Application.FinancialDetails.Handlers;
+// Overtime request handlers moved to Attendance module
 using NZ.HRM.Application.Grades.Handlers;
 using NZ.HRM.Application.GroupComplexes.Handlers;
 using NZ.HRM.Application.LocationDepartments.Handlers;
 using NZ.HRM.Application.MedicalFitnessChecks.Handlers;
 using NZ.HRM.Application.Permissions.Handlers;
 using NZ.HRM.Application.PhysicalExaminationSettings.Handlers;
-using NZ.HRM.Application.RawPunches.Handlers;
 using NZ.HRM.Application.RolePermissions.Handlers;
 using NZ.HRM.Application.SectionCells.Handlers;
 using NZ.HRM.Application.Sections.Handlers;
@@ -25,7 +25,6 @@ using NZ.HRM.Application.SubUnits.Handlers;
 using NZ.HRM.Application.Thanas.Handlers;
 using NZ.HRM.Application.Units.Handlers;
 using NZ.HRM.Application.UserRoles.Handlers;
-using NZ.HRM.Domain.Services;
 
 namespace NZ.HRM.Application.DependencyInjection
 {
@@ -119,11 +118,6 @@ namespace NZ.HRM.Application.DependencyInjection
             services.AddScoped<FinancialDetailCommandHandler>();
             services.AddScoped<FinancialDetailQueryHandler>();
 
-            // Register RawPunch Handlers
-            services.AddScoped<RawPunchCommandHandler>();
-            services.AddScoped<PunchProcessingService>();
-            // Note: PunchProcessingService and AttendanceProcessingService are registered by AddAttendanceModule()
-
             // UserRole Handlers
             services.AddScoped<UserRoleCommandHandler>();
             services.AddScoped<UserRoleQueryHandler>();
@@ -133,6 +127,8 @@ namespace NZ.HRM.Application.DependencyInjection
             // RolePermission Handlers
             services.AddScoped<RolePermissionCommandHandler>();
             services.AddScoped<RolePermissionQueryHandler>();
+
+            // Overtime Request Handlers moved to Attendance module
 
             return services;
         }

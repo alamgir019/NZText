@@ -5,14 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\NZ.HRM.Utility\NZ.HRM.Utility.csproj" />
-    <ProjectReference Include="..\NZ.Shared.Domain\NZ.Shared.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Using Include="NZ.Shared.Domain.Common" />
+    <ProjectReference Include="..\NZ.Attendance.Domain\NZ.Attendance.Domain.csproj" />
+    <ProjectReference Include="..\NZ.HRM.Application\NZ.HRM.Application.csproj" />
   </ItemGroup>
 
 </Project>

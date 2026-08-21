@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using NZ.Attendance.Domain.Entities;
 using NZ.HRM.Domain.Entities;
 
 namespace NZ.Attendance.Infrastructure.Persistence;
@@ -20,6 +21,7 @@ public class AttendanceDbContext : DbContext
     public DbSet<AttProcessingLog> AttProcessingLogs => Set<AttProcessingLog>();
     public DbSet<AttInsideFactoryStatus> AttInsideFactoryStatuses => Set<AttInsideFactoryStatus>();
     public DbSet<AttWeeklyOffPattern> AttWeeklyOffPatterns => Set<AttWeeklyOffPattern>();
+    public DbSet<AttOtRequestItem> AttOtRequestItems => Set<AttOtRequestItem>();
 
     // Cross-module read-only references (owned by HRM module)
     public DbSet<HrmEmployeeMaster> HrmEmployeeMasters => Set<HrmEmployeeMaster>();

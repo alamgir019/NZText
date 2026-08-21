@@ -38,8 +38,8 @@ builder.Services.AddSingleton(fingerprintConfig);
 builder.Services.AddHttpClient<IFingerprintDeviceService, FingerprintDeviceService>();
 
 // ── Feature Modules ────────────────────────────────────────────────────────
-builder.Services.AddAttendanceModule(builder.Configuration);
 builder.Services.AddLeaveModule(builder.Configuration);
+builder.Services.AddAttendanceModule(builder.Configuration);
 builder.Services.AddPayrollModule(builder.Configuration);
 
 builder.Services.AddDistributedMemoryCache();

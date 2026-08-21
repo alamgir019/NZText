@@ -3,9 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NZ.Attendance.Domain.Entities;
+using NZ.Attendance.Domain.Services;
 using NZ.Attendance.Infrastructure.Persistence;
 using NZ.HRM.Domain.Entities;
-using NZ.HRM.Domain.Services;
 
 namespace NZ.Attendance.Infrastructure.PunchPolling;
 

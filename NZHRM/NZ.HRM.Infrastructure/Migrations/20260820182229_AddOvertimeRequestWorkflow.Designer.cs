@@ -2,18 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NZ.HRM.Infrastructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace NZ.HRM.Infrastructure.Migrations
+namespace NZ.HRM.Infrastructure.NZ.HRM.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260820182229_AddOvertimeRequestWorkflow")]
+    partial class AddOvertimeRequestWorkflow
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +25,7 @@ namespace NZ.HRM.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("NZ.Attendance.Domain.Entities.AttAttendanceAdjustment", b =>
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.AttAttendanceAdjustment", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
@@ -91,7 +94,7 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.ToTable("attendance_adjustment", "attendance");
                 });
 
-            modelBuilder.Entity("NZ.Attendance.Domain.Entities.AttAttendanceException", b =>
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.AttAttendanceException", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
@@ -149,137 +152,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("attendance_exception", "attendance");
-                });
-
-            modelBuilder.Entity("NZ.Attendance.Domain.Entities.AttDeviceSyncLog", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("CHAR(26)")
-                        .HasColumnName("Id");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.Property<string>("DeviceId")
-                        .IsRequired()
-                        .HasColumnType("CHAR(26)");
-
-                    b.Property<string>("ErrorMessage")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("PunchCount")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("SyncEndTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("SyncStartTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("SyncStatus")
-                        .HasColumnType("text");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceId");
-
-                    b.ToTable("device_sync_log", "attendance");
-                });
-
-            modelBuilder.Entity("NZ.Attendance.Domain.Entities.AttProcessedAttendance", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("CHAR(26)")
-                        .HasColumnName("Id");
-
-                    b.Property<DateTime?>("ActualInTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("ActualOutTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateOnly>("AttendanceDate")
-                        .HasColumnType("date");
-
-                    b.Property<string>("AttendanceStatus")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.Property<string>("EmployeeId")
-                        .IsRequired()
-                        .HasColumnType("CHAR(26)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<decimal>("OtPayableHours")
-                        .HasColumnType("numeric");
-
-                    b.Property<decimal>("OtWorkedHours")
-                        .HasColumnType("numeric");
-
-                    b.Property<DateTime?>("PayableInTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("PayableOutTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("ProcessedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ProcessingStatus")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ShiftId")
-                        .HasColumnType("CHAR(26)");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.Property<decimal>("WorkedHours")
-                        .HasColumnType("numeric");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("ShiftId");
-
-                    b.ToTable("processed_attendance", "attendance");
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.AttAttendanceLock", b =>
@@ -403,6 +275,60 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.ToTable("device_master", "attendance");
                 });
 
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.AttDeviceSyncLog", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("CHAR(26)")
+                        .HasColumnName("Id");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("DeviceId")
+                        .IsRequired()
+                        .HasColumnType("CHAR(26)");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("PunchCount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("SyncEndTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("SyncStartTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("SyncStatus")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceId");
+
+                    b.ToTable("device_sync_log", "attendance");
+                });
+
             modelBuilder.Entity("NZ.HRM.Domain.Entities.AttInsideFactoryStatus", b =>
                 {
                     b.Property<string>("Id")
@@ -520,7 +446,7 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.ToTable("ot_authorization", "attendance");
                 });
 
-            modelBuilder.Entity("NZ.HRM.Domain.Entities.AttOtRequestItem", b =>
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.AttOtRequest", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
@@ -531,6 +457,7 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("ApprovedBy")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedBy")
@@ -542,17 +469,11 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW()");
 
-                    b.Property<string>("CurrentShiftId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("CurrentShiftId")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("DepartmentId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("EmployeeId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -560,20 +481,19 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.Property<DateOnly>("OtDate")
                         .HasColumnType("date");
 
-                    b.Property<TimeSpan>("OtHours")
-                        .HasColumnType("interval");
-
                     b.Property<string>("Reason")
-                        .HasColumnType("text");
-
-                    b.Property<string>("RequestId")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Status")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("SubmittedBy")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("SubmittedOn")
@@ -590,7 +510,132 @@ namespace NZ.HRM.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ot_request_item", "attendance");
+                    b.ToTable("ot_request", "attendance");
+                });
+
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.AttOtRequestEmployee", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("CHAR(26)")
+                        .HasColumnName("Id");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("CHAR(26)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<TimeSpan>("OtHours")
+                        .HasColumnType("interval");
+
+                    b.Property<string>("OvertimeRequestId")
+                        .IsRequired()
+                        .HasColumnType("CHAR(26)");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("OvertimeRequestId");
+
+                    b.ToTable("ot_request_employee", "attendance");
+                });
+
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.AttProcessedAttendance", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("CHAR(26)")
+                        .HasColumnName("Id");
+
+                    b.Property<DateTime?>("ActualInTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ActualOutTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateOnly>("AttendanceDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("AttendanceStatus")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("CHAR(26)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<decimal>("OtPayableHours")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("OtWorkedHours")
+                        .HasColumnType("numeric");
+
+                    b.Property<DateTime?>("PayableInTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("PayableOutTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ProcessedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ProcessingStatus")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ShiftId")
+                        .HasColumnType("CHAR(26)");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<decimal>("WorkedHours")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("ShiftId");
+
+                    b.ToTable("processed_attendance", "attendance");
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.AttProcessedPunch", b =>
@@ -6742,7 +6787,7 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.ToTable("workflow_transaction", "workflow");
                 });
 
-            modelBuilder.Entity("NZ.Attendance.Domain.Entities.AttAttendanceAdjustment", b =>
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.AttAttendanceAdjustment", b =>
                 {
                     b.HasOne("NZ.HRM.Domain.Entities.HrmEmployeeMaster", "Employee")
                         .WithMany()
@@ -6753,7 +6798,7 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("NZ.Attendance.Domain.Entities.AttAttendanceException", b =>
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.AttAttendanceException", b =>
                 {
                     b.HasOne("NZ.HRM.Domain.Entities.HrmEmployeeMaster", "Employee")
                         .WithMany()
@@ -6762,34 +6807,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("NZ.Attendance.Domain.Entities.AttDeviceSyncLog", b =>
-                {
-                    b.HasOne("NZ.HRM.Domain.Entities.AttDeviceMaster", "Device")
-                        .WithMany()
-                        .HasForeignKey("DeviceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Device");
-                });
-
-            modelBuilder.Entity("NZ.Attendance.Domain.Entities.AttProcessedAttendance", b =>
-                {
-                    b.HasOne("NZ.HRM.Domain.Entities.HrmEmployeeMaster", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("NZ.HRM.Domain.Entities.MstShift", "Shift")
-                        .WithMany()
-                        .HasForeignKey("ShiftId");
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("Shift");
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.AttAttendanceLock", b =>
@@ -6808,6 +6825,17 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasForeignKey("UnitId");
 
                     b.Navigation("Unit");
+                });
+
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.AttDeviceSyncLog", b =>
+                {
+                    b.HasOne("NZ.HRM.Domain.Entities.AttDeviceMaster", "Device")
+                        .WithMany()
+                        .HasForeignKey("DeviceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Device");
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.AttInsideFactoryStatus", b =>
@@ -6830,6 +6858,42 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.AttOtRequestEmployee", b =>
+                {
+                    b.HasOne("NZ.HRM.Domain.Entities.HrmEmployeeMaster", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("NZ.HRM.Domain.Entities.AttOtRequest", "OvertimeRequest")
+                        .WithMany("Employees")
+                        .HasForeignKey("OvertimeRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("OvertimeRequest");
+                });
+
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.AttProcessedAttendance", b =>
+                {
+                    b.HasOne("NZ.HRM.Domain.Entities.HrmEmployeeMaster", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("NZ.HRM.Domain.Entities.MstShift", "Shift")
+                        .WithMany()
+                        .HasForeignKey("ShiftId");
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Shift");
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.AttProcessedPunch", b =>
@@ -7984,6 +8048,11 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("WorkflowMaster");
+                });
+
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.AttOtRequest", b =>
+                {
+                    b.Navigation("Employees");
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.HrmEmployeeMaster", b =>
