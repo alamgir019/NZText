@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NZ.Attendance.Application\NZ.Attendance.Application.csproj" />
     <ProjectReference Include="..\NZ.Attendance.Infrastructure\NZ.Attendance.Infrastructure.csproj" />
     <ProjectReference Include="..\NZ.HRM.Application\NZ.HRM.Application.csproj" />
     <ProjectReference Include="..\NZ.HRM.Application.Model\NZ.HRM.Application.Model.csproj" />

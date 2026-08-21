@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using NZ.HRM.Application.RawPunches.Commands.CreateRawPunch;
-using NZ.HRM.Application.RawPunches.Handlers;
+using NZ.Attendance.Application.RawPunches.Handlers;
 
 namespace NZ.HRM.WebAPI.Controllers;
 

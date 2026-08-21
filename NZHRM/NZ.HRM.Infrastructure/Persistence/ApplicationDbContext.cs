@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NZ.Attendance.Domain.Entities;
 using NZ.HRM.Domain.Entities;
 
 namespace NZ.HRM.Infrastructure.Persistence
@@ -198,6 +199,7 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<AttProcessingLog>().ToTable("processing_log", "attendance");
             modelBuilder.Entity<AttInsideFactoryStatus>().ToTable("inside_factory_status", "attendance");
             modelBuilder.Entity<AttWeeklyOffPattern>().ToTable("weekly_off_pattern", "attendance");
+            modelBuilder.Entity<AttOtRequestItem>().ToTable("ot_request_item", "attendance");
 
             // Leave
             modelBuilder.Entity<LevLeaveType>().ToTable("leave_type", "leave_mgmt");

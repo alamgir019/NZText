@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NZ.Attendance.Application.RawPunches.Handlers;
+using NZ.Attendance.Domain.Services;
 using NZ.Attendance.Infrastructure.Persistence;
 using NZ.Attendance.Infrastructure.PunchPolling;
 using NZ.Attendance.Infrastructure.Repositories;
@@ -25,10 +27,22 @@ public static class AttendanceModuleRegistration
         services.AddScoped<IAttendanceSummaryQuery, AttendanceSummaryQueryService>();
         // Dashboard query for API
         services.AddScoped< Contracts.IAttendanceDashboardQuery, AttendanceSummaryQueryService>();
+        // Overtime request handlers and repository
+        services.AddScoped<Application.Interfaces.Repositories.IOvertimeRequestRepository, OvertimeRequestRepository>();
+        services.AddScoped<Application.OvertimeRequests.Handlers.OvertimeRequestCommandHandler>();
+        services.AddScoped<Application.OvertimeRequests.Queries.GetOvertimeRequestById.GetOvertimeRequestByIdQueryHandler>();
+        services.AddScoped<Application.OvertimeRequests.Queries.GetAllOvertimeRequests.GetAllOvertimeRequestsQueryHandler>();
 
         services.Configure<PunchPollingOptions>(configuration.GetSection("PunchPolling"));
         services.AddHttpClient<IDevicePunchSource, VirdiApiDevicePunchSource>();
         services.AddHostedService<PunchPollingBackgroundService>();
+
+
+        // Register RawPunch Handlers
+        services.AddScoped<RawPunchCommandHandler>();
+        services.AddScoped<PunchProcessingService>();
+        // Note: PunchProcessingService and AttendanceProcessingService are registered by AddAttendanceModule()
+
 
         return services;
     }
