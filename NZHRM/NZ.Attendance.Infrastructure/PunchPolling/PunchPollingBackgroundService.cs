@@ -34,7 +34,7 @@ public class PunchPollingBackgroundService : BackgroundService
          while (!stoppingToken.IsCancellationRequested)
         {
             var options = _options.Value;
-
+            var deviceId = string.Empty;
             if (!options.Enabled)
             {
                 await Task.Delay(TimeSpan.FromSeconds(Math.Max(10, 10)), stoppingToken);
@@ -82,7 +82,7 @@ public class PunchPollingBackgroundService : BackgroundService
                         continue;
                     }
 
-                    var deviceId = device.Id;
+                    deviceId = device.Id;
 
                     var syncLog = new AttDeviceSyncLog
                     {
@@ -139,6 +139,7 @@ public class PunchPollingBackgroundService : BackgroundService
                         .ToList();
 
                     var newEmployeeCodes = newPunches.Select(p => p.EmployeeCode).Distinct().ToList();
+                    _logger.LogInformation("Found {NewPunchCount} new punches for unit {Unit}. Fetching employee IDs for {EmployeeCount} unique employee codes.", newPunches.Count, unit, string.Join(",", newEmployeeCodes));
                     var employeeIdMap = await dbContext.HrmEmployeeMasters
                         .Where(e => newEmployeeCodes.Contains(e.EmployeeCode))
                         .Select(e => new { e.EmployeeCode, e.Id })
@@ -167,7 +168,7 @@ public class PunchPollingBackgroundService : BackgroundService
                     var dbContext = scope.ServiceProvider.GetRequiredService<AttendanceDbContext>();
                     dbContext.AttDeviceSyncLogs.Add(new AttDeviceSyncLog
                     {
-                        DeviceId = _options.Value.DeviceName,
+                        DeviceId = deviceId,
                         SyncStartTime = DateTime.UtcNow,
                         SyncEndTime = DateTime.UtcNow,
                         SyncStatus = "Failed",
