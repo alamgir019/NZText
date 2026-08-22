@@ -207,7 +207,7 @@ namespace NZ.Attendance.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<EmployeeByShiftDto>> GetEmployeesByShiftAsync(string shiftId, CancellationToken cancellationToken = default)
+        public async Task<List<EmployeeByShiftDto>> GetEmployeesByShiftAndDepartmentAsync(string shiftId, string departmentId, CancellationToken cancellationToken = default)
         {
             // Get distinct employee ids assigned to the shift via the shift roster
             var employeeIds = await _context.AttShiftRosters
@@ -219,7 +219,8 @@ namespace NZ.Attendance.Infrastructure.Repositories
             // Join employment + employee master + designation + department
             var result = await (
                 from emp in _context.HrmEmployeeEmployments
-                where employeeIds.Contains(emp.EmployeeId) || (!employeeIds.Contains(emp.EmployeeId) && emp.ShiftId == shiftId)
+                where (employeeIds.Contains(emp.EmployeeId) || (!employeeIds.Contains(emp.EmployeeId) && emp.ShiftId == shiftId))
+                && emp.DepartmentId == departmentId
                 join master in _context.HrmEmployeeMasters on emp.EmployeeId equals master.Id
                 join designation in _context.MstDesignations on emp.DesignationId equals designation.Id into designationJoin
                 from designation in designationJoin.DefaultIfEmpty()

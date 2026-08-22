@@ -12,12 +12,15 @@ namespace NZ.Attendance.Application.OvertimeRequests.Queries.GetEmployeesByShift
             _repository = repository;
         }
 
-        public async Task<List<EmployeeByShiftDto>> Handle(GetEmployeesByShiftQuery query, CancellationToken cancellationToken = default)
+        public async Task<List<EmployeeByShiftDto>> Handle(GetEmployeesByShiftAndDepartmentQuery query, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(query.ShiftId))
                 throw new ArgumentException("ShiftId is required");
 
-            return await _repository.GetEmployeesByShiftAsync(query.ShiftId, cancellationToken);
+            if (string.IsNullOrWhiteSpace(query.DepartmentId))
+                throw new ArgumentException("DepartmentId is required");
+
+            return await _repository.GetEmployeesByShiftAndDepartmentAsync(query.ShiftId, query.DepartmentId, cancellationToken);
         }
     }
 }

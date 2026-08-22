@@ -22,7 +22,7 @@ namespace NZ.Attendance.Application.Interfaces.Repositories
         // Update approval for a specific item (employee-level)
         Task UpdateEmployeeApprovalAsync(string itemId, string approvedBy, bool approved = true);
         // Get employees assigned to a shift (via shift roster) with employment/designation/department info
-        Task<List<EmployeeByShiftDto>> GetEmployeesByShiftAsync(string shiftId, CancellationToken cancellationToken = default);
+        Task<List<EmployeeByShiftDto>> GetEmployeesByShiftAndDepartmentAsync(string shiftId, string departmentId, CancellationToken cancellationToken = default);
         // Additional methods (Update, RemoveEmployee, Submit) can be added later
     }
 }

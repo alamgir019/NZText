@@ -72,10 +72,10 @@ public class OvertimeRequestsController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("employees-by-shift/{shiftId}")]
-    public async Task<IActionResult> GetEmployeesByShift(string shiftId)
+    [HttpGet("employees/shift/{shiftId}/department/{departmentId}")]
+    public async Task<IActionResult> GetEmployeesByShift(string shiftId, string departmentId)
     {
-        var query = new GetEmployeesByShiftQuery { ShiftId = shiftId };
+        var query = new GetEmployeesByShiftAndDepartmentQuery { ShiftId = shiftId, DepartmentId = departmentId };
         var employees = await _getEmployeesByShiftHandler.Handle(query);
         return Ok(employees);
     }
