@@ -145,6 +145,20 @@ public class EmployeesController : ControllerBase
         return Ok(employees);
     }
 
+    [HttpGet("basic")]
+    [ProducesResponseType(typeof(EmployeeBasicInfoDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetEmployeeBasicInfo([FromQuery] string employeeId)
+    {
+        if (string.IsNullOrWhiteSpace(employeeId))
+            return BadRequest(new { message = "employeeId is required" });
+
+        var query = new GetEmployeeBasicQuery { EmployeeId = employeeId };
+        var employee = await _getCompleteEmployeeHandler.Handle(query, cancellationToken: default);
+
+        return Ok(employee);
+    }
+
     [HttpGet("confirmation-date")]
     [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

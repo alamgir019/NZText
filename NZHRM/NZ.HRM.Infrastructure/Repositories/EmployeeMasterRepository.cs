@@ -238,30 +238,13 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .FirstOrDefaultAsync(e => e.EmployeeCode == employeeCode && e.IsActive, cancellationToken);
     }
 
-    public async Task<List<HrmEmployeeMaster>> GetByCompanyIdAsync(string companyId, CancellationToken cancellationToken = default)
+    public async Task<HrmEmployeeMaster?> GetEmployeeBasicInfoAsync(string employeeId, CancellationToken cancellationToken = default)
     {
         return await _context.HrmEmployeeMasters
             .Include(e => e.Employment.Unit)
             .Include(e => e.Employment.Department)
-            .Include(e => e.Employment.Section)
-            .Include(e => e.Employment.Grade)
             .Include(e => e.Employment.Shift)
-            .Where(e => e.Employment.UnitId == companyId && e.IsActive)
-            .OrderBy(e => e.EmployeeCode)
-            .ToListAsync(cancellationToken);
-    }
-
-    public async Task<List<HrmEmployeeMaster>> GetByDepartmentIdAsync(string departmentId, CancellationToken cancellationToken = default)
-    {
-        return await _context.HrmEmployeeMasters
-            .Include(e => e.Employment.Unit)
-            .Include(e => e.Employment.Department)
-            .Include(e => e.Employment.Section)
-            .Include(e => e.Employment.Grade)
-            .Include(e => e.Employment.Shift)
-            .Where(e => e.Employment.DepartmentId == departmentId && e.IsActive)
-            .OrderBy(e => e.EmployeeCode)
-            .ToListAsync(cancellationToken);
+            .FirstOrDefaultAsync(e => e.Id == employeeId && e.IsActive, cancellationToken);
     }
 
     public async Task<List<HrmEmployeeMaster>> GetByStatusAsync(string status, CancellationToken cancellationToken = default)
@@ -300,12 +283,12 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
         var searchPattern = $"%{searchTerm}%";
 
         return await _context.HrmEmployeeMasters
-            //.Include(e => e.PersonalInfo)
+            .Include(e => e.Employment)
             .Where(e => e.IsActive &&
                        (EF.Functions.Like(e.EnrollmentId ?? string.Empty, searchPattern)
                         || EF.Functions.ILike(e.EmployeeName, searchPattern)
                         || (e.EmployeeNameBangla != null) && EF.Functions.ILike(e.EmployeeNameBangla, searchPattern)
-                        //|| (e.PersonalInfo != null && EF.Functions.Like(e.PersonalInfo.MobileNumber, searchPattern))
+                        || (e.EmployeeCode != null && EF.Functions.Like(e.EmployeeCode, searchPattern))
                         ))
             .OrderBy(e => e.EmployeeName)
             .ToListAsync(cancellationToken);

@@ -42,7 +42,7 @@ public class PunchPollingBackgroundService : BackgroundService
             }
 
             try
-            {
+                {
                 var rangeEnd = DateTime.Today;
                 var rangeStart = rangeEnd;
 

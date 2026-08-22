@@ -60,17 +60,48 @@ public class CompleteEmployeeQueryHandler
         return photoDocument;
     }
     
-    public async Task<List<EmployeeSearchDto>> Handle(SearchEmployeesQuery query, CancellationToken cancellationToken = default)
+    public async Task<List<EmployeeBasicInfoDto>> Handle(SearchEmployeesQuery query, CancellationToken cancellationToken = default)
     {
         var employees = await _employeeMasterRepository.SearchAsync(query.SearchText, cancellationToken);
 
         return employees.Select(x => 
-        new EmployeeSearchDto() {
+        new EmployeeBasicInfoDto() {
             Id = x.Id,
             EmployeeNameEnglish = x.EmployeeName,
             EmployeeNameBangla = x.EmployeeNameBangla,
             EnrollmentId = x.EnrollmentId,
+            EmployeeCode = x.EmployeeCode,
+            DesignationId = x.Employment?.DesignationId,
+            DesignationName = x.Employment?.Designation?.DesignationName,
+            DepartmentId = x.Employment?.DepartmentId,
+            DepartmentName = x.Employment?.Department?.DepartmentName,
         }).ToList();
+    }
+
+
+
+    public async Task<List<EmployeeBasicInfoDto>> Handle(GetEmployeeBasicQuery query, CancellationToken cancellationToken = default)
+    {
+        var employee = await _employeeMasterRepository.GetEmployeeBasicInfoAsync(query.EmployeeId, cancellationToken);
+
+        if (employee == null)
+            return new List<EmployeeBasicInfoDto>();
+
+        return new List<EmployeeBasicInfoDto>
+        {
+            new EmployeeBasicInfoDto
+            {
+                Id = employee.Id,
+                EmployeeNameEnglish = employee.EmployeeName,
+                EmployeeNameBangla = employee.EmployeeNameBangla,
+                EnrollmentId = employee.EnrollmentId,
+                EmployeeCode = employee.EmployeeCode,
+                DesignationId = employee.Employment?.DesignationId,
+                DesignationName = employee.Employment?.Designation?.DesignationName,
+                DepartmentId = employee.Employment?.DepartmentId,
+                DepartmentName = employee.Employment?.Department?.DepartmentName,
+            }
+        };
     }
 
     public async Task<DateTime?> Handle(GetEmployeeConfirmationDateQuery query, CancellationToken cancellationToken = default)
