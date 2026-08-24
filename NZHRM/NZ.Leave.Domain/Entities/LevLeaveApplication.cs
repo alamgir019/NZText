@@ -1,9 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using NZ.HRM.Domain.Common;
+using NZ.HRM.Domain.Entities;
+using NZ.Shared.Domain.Common;
 
-namespace NZ.HRM.Domain.Entities
+namespace NZ.Leave.Domain.Entities
 {
     [Table("leave_application", Schema = "leave_mgmt")]
     public class LevLeaveApplication : BaseEntityWithSortOrder
@@ -19,6 +18,8 @@ namespace NZ.HRM.Domain.Entities
         public string? LeaveStatus { get; set; }
         public string? ApprovedBy { get; set; }
         public DateTime? ApprovalDate { get; set; }
+        public string? ForwardedBy { get; set; }
+        public DateTime? ForwardedDate { get; set; }
 
         [ForeignKey("EmployeeId")] public HrmEmployeeMaster? Employee { get; set; }
         [ForeignKey("LeaveTypeId")] public LevLeaveType? LeaveType { get; set; }
