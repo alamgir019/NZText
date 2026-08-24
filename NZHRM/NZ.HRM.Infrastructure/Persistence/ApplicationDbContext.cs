@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NZ.Attendance.Domain.Entities;
 using NZ.HRM.Domain.Entities;
+using NZ.Leave.Domain.Entities;
 
 namespace NZ.HRM.Infrastructure.Persistence
 {
