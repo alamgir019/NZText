@@ -9,6 +9,7 @@ using NZ.HRM.Application.Districts.Handlers;
 using NZ.HRM.Application.Divisions.Handlers;
 using NZ.HRM.Application.EmployeeMasters.Handlers;
 using NZ.HRM.Application.Employees.Handlers;
+using NZ.HRM.Application.Employees.Queries.GetEmployeeBasicInformation;
 using NZ.HRM.Application.FinancialDetails.Handlers;
 // Overtime request handlers moved to Attendance module
 using NZ.HRM.Application.Grades.Handlers;
@@ -89,6 +90,7 @@ namespace NZ.HRM.Application.DependencyInjection
             services.AddScoped<EmployeeCommandHandler>();
             services.AddScoped<CompleteEmployeeQueryHandler>();
             services.AddScoped<EmployeeQueryHandler>();
+            services.AddScoped<GetEmployeeBasicInformationQueryHandler>();
 
             // Register Geo Handlers
             services.AddScoped<DivisionQueryHandler>();

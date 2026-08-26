@@ -24,6 +24,7 @@ public interface IEmployeeMasterRepository
         CancellationToken cancellationToken = default);
     Task<HrmEmployeeMaster?> GetByIdAsync(string id, CancellationToken cancellationToken = default);
     Task<HrmEmployeeMaster?> GetByEmployeeCodeAsync(string employeeCode, CancellationToken cancellationToken = default);
+    Task<HrmEmployeeMaster?> GetBasicByEmployeeCodeAsync(string employeeCode, CancellationToken cancellationToken = default);
     Task<HrmEmployeeMaster?> GetEmployeeBasicInfoAsync(string employeeId, CancellationToken cancellationToken = default);
     Task<List<HrmEmployeeMaster>> GetByStatusAsync(string status, CancellationToken cancellationToken = default);
     // Get employees by status up to a specified UTC date (inclusive). When includeInactive is false, only active employees are returned.

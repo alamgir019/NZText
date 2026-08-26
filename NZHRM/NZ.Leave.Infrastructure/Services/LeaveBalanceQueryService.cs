@@ -13,6 +13,43 @@ public class LeaveBalanceQueryService : ILeaveBalanceQuery
         _context = context;
     }
 
+    public async Task<IReadOnlyList<EmployeeLeaveBalanceResult>> GetAllBalancesAsync(
+        string employeeId,
+        CancellationToken cancellationToken = default)
+    {
+        var currentLeaveYear = await _context.LevLeaveYears
+            .AsNoTracking()
+            .Where(year => year.IsCurrentYear)
+            .Select(year => (int?)year.LeaveYearValue)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (!currentLeaveYear.HasValue)
+            return Array.Empty<EmployeeLeaveBalanceResult>();
+
+        var rows = await (
+            from leaveType in _context.LevLeaveTypes.AsNoTracking()
+            where leaveType.Status
+            join balance in _context.LevLeaveBalances.AsNoTracking()
+                .Where(balance => balance.EmployeeId == employeeId && balance.YearId == currentLeaveYear.Value)
+                on leaveType.Id equals balance.LeaveTypeId into balances
+            from balance in balances.DefaultIfEmpty()
+            orderby leaveType.LeaveCode
+            select new
+            {
+                leaveType.LeaveCode,
+                leaveType.LeaveName,
+                ClosingBalance = balance == null ? 0m : balance.ClosingBalance
+            })
+            .ToListAsync(cancellationToken);
+
+        return rows
+            .Select(row => new EmployeeLeaveBalanceResult(
+                row.LeaveCode,
+                row.LeaveName,
+                row.ClosingBalance))
+            .ToList();
+    }
+
     public async Task<LeaveBalanceResult?> GetBalanceAsync(
         string employeeId,
         string leaveTypeCode,

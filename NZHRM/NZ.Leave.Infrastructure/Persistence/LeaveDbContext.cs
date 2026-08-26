@@ -23,4 +23,21 @@ public class LeaveDbContext : DbContext
 
     // Cross-module read-only reference (owned by HRM module)
     public DbSet<HrmEmployeeMaster> HrmEmployeeMasters => Set<HrmEmployeeMaster>();
+
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
+	{
+		base.OnModelCreating(modelBuilder);
+
+		modelBuilder.Entity<HrmEmployeeReporting>()
+			.HasOne(r => r.ReportingEmployee)
+			.WithMany(e => e.Reportings)
+			.HasForeignKey(r => r.ReportingEmployeeId)
+			.OnDelete(DeleteBehavior.Restrict);
+
+		modelBuilder.Entity<HrmEmployeeReporting>()
+			.HasOne(r => r.Employee)
+			.WithMany()
+			.HasForeignKey(r => r.EmployeeId)
+			.OnDelete(DeleteBehavior.Cascade);
+	}
 }
