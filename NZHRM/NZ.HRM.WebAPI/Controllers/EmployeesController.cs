@@ -5,7 +5,6 @@ using NZ.HRM.Application.Employees.Queries.GetEmployeeConfirmationDate;
 using NZ.HRM.Application.Employees.Queries.GetEmployeeDetail;
 using NZ.HRM.Application.Employees.Queries.GetEmployeesByStatus;
 using NZ.HRM.Application.Employees.Queries.SearchEmployees;
-using NZ.HRM.Application.Employees.Queries.GetEmployeeBasicInformation;
 using NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
 using NZ.HRM.Application.Model.Employees.DTOs;
 using NZ.HRM.WebAPI.Services;
@@ -20,7 +19,7 @@ public class EmployeesController : ControllerBase
     private readonly EmployeeCommandHandler _createCompleteEmployeeHandler;
     private readonly CompleteEmployeeQueryHandler _getCompleteEmployeeHandler;
     private readonly EmployeeQueryHandler _employeeQueryHandler;
-    private readonly GetEmployeeBasicInformationQueryHandler _basicEmployeeInformationHandler;
+    
     private readonly IFileStorageService _fileStorageService;
     private readonly ILogger<EmployeesController> _logger;
 
@@ -28,39 +27,19 @@ public class EmployeesController : ControllerBase
         EmployeeCommandHandler createCompleteEmployeeHandler,
         CompleteEmployeeQueryHandler getCompleteEmployeeHandler,
         EmployeeQueryHandler employeeQueryHandler,
-        GetEmployeeBasicInformationQueryHandler basicEmployeeInformationHandler,
+        
         IFileStorageService fileStorageService,
         ILogger<EmployeesController> logger)
     {
         _createCompleteEmployeeHandler = createCompleteEmployeeHandler;
         _getCompleteEmployeeHandler = getCompleteEmployeeHandler;
         _employeeQueryHandler = employeeQueryHandler;
-        _basicEmployeeInformationHandler = basicEmployeeInformationHandler;
+        
         _fileStorageService = fileStorageService;
         _logger = logger;
     }
 
-    [HttpGet("{employeeCode}/basic-information")]
-    [ProducesResponseType(typeof(BasicEmployeeInformationDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetBasicEmployeeInformation(string employeeCode)
-    {
-        if (string.IsNullOrWhiteSpace(employeeCode))
-            return BadRequest(new { message = "employeeCode is required" });
 
-        var query = new GetEmployeeBasicInformationQuery
-        {
-            EmployeeCode = employeeCode
-        };
-
-        var result = await _basicEmployeeInformationHandler.Handle(query, HttpContext.RequestAborted);
-
-        if (result == null)
-            return NotFound(new { message = $"Employee with code {employeeCode} not found" });
-
-        return Ok(result);
-    }
 
     [HttpGet("employee-detail/{employeeId}")]
     [ProducesResponseType(typeof(EmployeeDetailForIT), StatusCodes.Status200OK)]
