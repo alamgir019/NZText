@@ -16,6 +16,8 @@
   <ItemGroup>
     <ProjectReference Include="..\NZ.Attendance.Domain\NZ.Attendance.Domain.csproj" />
     <ProjectReference Include="..\NZ.HRM.Application\NZ.HRM.Application.csproj" />
+    <ProjectReference Include="..\NZ.Leave.Domain\NZ.Leave.Domain.csproj" />
+    <ProjectReference Include="..\NZ.Payroll.Domain\NZ.Payroll.Domain.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

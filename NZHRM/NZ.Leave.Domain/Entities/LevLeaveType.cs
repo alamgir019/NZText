@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using NZ.HRM.Domain.Common;
+using NZ.Shared.Domain.Common;
 
-namespace NZ.HRM.Domain.Entities
+namespace NZ.Leave.Domain.Entities
 {
     [Table("leave_type", Schema = "leave_mgmt")]
     public class LevLeaveType : BaseEntityWithSortOrder

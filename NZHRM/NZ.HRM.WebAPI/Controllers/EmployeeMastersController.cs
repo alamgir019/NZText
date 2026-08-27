@@ -1,10 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using NZ.HRM.Application.EmployeeMasters.Commands.CreateEmployeeMaster;
-using NZ.HRM.Application.EmployeeMasters.Commands.DeleteEmployeeMaster;
-using NZ.HRM.Application.EmployeeMasters.Commands.UpdateEmployeeMaster;
 using NZ.HRM.Application.EmployeeMasters.Handlers;
-using NZ.HRM.Application.EmployeeMasters.Queries.GetAllEmployeeMasters;
-using NZ.HRM.Application.EmployeeMasters.Queries.GetEmployeeMasterById;
 using NZ.HRM.Application.Employees.Handlers;
 using NZ.HRM.Application.Employees.Queries.GetEmployeeBasicInformation;
 using NZ.HRM.Application.Model.Employees.DTOs;
