@@ -2,6 +2,10 @@ namespace NZ.Shared.Contracts.Leave;
 
 public interface ILeaveBalanceQuery
 {
+    Task<IReadOnlyList<EmployeeLeaveBalanceResult>> GetAllBalancesAsync(
+        string employeeId,
+        CancellationToken cancellationToken = default);
+
     Task<LeaveBalanceResult?> GetBalanceAsync(
         string employeeId,
         string leaveTypeCode,

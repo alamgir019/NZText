@@ -19,6 +19,7 @@ public class EmployeesController : ControllerBase
     private readonly EmployeeCommandHandler _createCompleteEmployeeHandler;
     private readonly CompleteEmployeeQueryHandler _getCompleteEmployeeHandler;
     private readonly EmployeeQueryHandler _employeeQueryHandler;
+    
     private readonly IFileStorageService _fileStorageService;
     private readonly ILogger<EmployeesController> _logger;
 
@@ -26,15 +27,19 @@ public class EmployeesController : ControllerBase
         EmployeeCommandHandler createCompleteEmployeeHandler,
         CompleteEmployeeQueryHandler getCompleteEmployeeHandler,
         EmployeeQueryHandler employeeQueryHandler,
+        
         IFileStorageService fileStorageService,
         ILogger<EmployeesController> logger)
     {
         _createCompleteEmployeeHandler = createCompleteEmployeeHandler;
         _getCompleteEmployeeHandler = getCompleteEmployeeHandler;
         _employeeQueryHandler = employeeQueryHandler;
+        
         _fileStorageService = fileStorageService;
         _logger = logger;
     }
+
+
 
     [HttpGet("employee-detail/{employeeId}")]
     [ProducesResponseType(typeof(EmployeeDetailForIT), StatusCodes.Status200OK)]
