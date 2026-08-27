@@ -2,5 +2,5 @@ namespace NZ.HRM.Application.Employees.Queries.GetEmployeeBasicInformation;
 
 public class GetEmployeeBasicInformationQuery
 {
-	public string EmployeeCode { get; set; } = string.Empty;
+	public string SearchText { get; set; } = string.Empty;
 }

@@ -1,8 +1,9 @@
-using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using NZ.HRM.Domain.Common;
+using NZ.HRM.Domain.Entities;
+using NZ.Shared.Domain.Common;
 
-namespace NZ.HRM.Domain.Entities
+
+namespace NZ.Leave.Domain.Entities
 {
     [Table("leave_balance", Schema = "leave_mgmt")]
     public class LevLeaveBalance : BaseEntityWithSortOrder

@@ -238,11 +238,12 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .FirstOrDefaultAsync(e => e.EmployeeCode == employeeCode && e.IsActive, cancellationToken);
     }
 
-    public async Task<HrmEmployeeMaster?> GetBasicByEmployeeCodeAsync(string employeeCode, CancellationToken cancellationToken = default)
+    public async Task<HrmEmployeeMaster?> GetBasicByEmployeeCodeAsync(string searchText, CancellationToken cancellationToken = default)
     {
+        var searchPattern = $"%{searchText}%";
         return await _context.HrmEmployeeMasters
             .AsNoTracking()
-            .Where(e => e.EmployeeCode == employeeCode)
+            .Where(e => EF.Functions.ILike(e.EmployeeCode, searchPattern) || EF.Functions.ILike(e.EmployeeName, searchPattern))
             .Select(e => new HrmEmployeeMaster
             {
                 Id = e.Id,
