@@ -24,20 +24,25 @@ public class LeaveDbContext : DbContext
     // Cross-module read-only reference (owned by HRM module)
     public DbSet<HrmEmployeeMaster> HrmEmployeeMasters => Set<HrmEmployeeMaster>();
 
-	protected override void OnModelCreating(ModelBuilder modelBuilder)
-	{
-		base.OnModelCreating(modelBuilder);
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
 
-		modelBuilder.Entity<HrmEmployeeReporting>()
-			.HasOne(r => r.ReportingEmployee)
-			.WithMany(e => e.Reportings)
-			.HasForeignKey(r => r.ReportingEmployeeId)
-			.OnDelete(DeleteBehavior.Restrict);
-
-		modelBuilder.Entity<HrmEmployeeReporting>()
-			.HasOne(r => r.Employee)
-			.WithMany()
-			.HasForeignKey(r => r.EmployeeId)
-			.OnDelete(DeleteBehavior.Cascade);
-	}
+        modelBuilder.Entity<HrmEmployeeMaster>(entity =>
+        {
+            entity.Ignore(e => e.Personal);
+            entity.Ignore(e => e.Employment);
+            entity.Ignore(e => e.Payroll);
+            entity.Ignore(e => e.Verification);
+            entity.Ignore(e => e.MedicalFitnessCheck);
+            entity.Ignore(e => e.Documents);
+            entity.Ignore(e => e.Nominees);
+            entity.Ignore(e => e.Educations);
+            entity.Ignore(e => e.Experiences);
+            entity.Ignore(e => e.Trainings);
+            entity.Ignore(e => e.FamilyMembers);
+            entity.Ignore(e => e.BankAccounts);
+            entity.Ignore(e => e.Reportings);
+        });
+    }
 }

@@ -6,4 +6,5 @@ public class BasicEmployeeInformationDto
 	public string EmployeeName { get; set; } = string.Empty;
 	public string? EmployeeNameBangla { get; set; }
 	public List<EmployeeLeaveBalanceDto> Leaves { get; set; } = new();
+    public string EmployeeId { get; set; } = string.Empty;
 }

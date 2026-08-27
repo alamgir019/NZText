@@ -1,8 +1,10 @@
+using NZ.HRM.Application.Employees.Queries.GetEmployeeBasicInformation;
 using NZ.HRM.Application.Interfaces.Repositories;
+using NZ.HRM.Application.MedicalFitnessChecks.Queries.GetMedicalFitnessHistoryByEmployeeId;
 using NZ.HRM.Application.Model.Employees.DTOs;
 using NZ.Shared.Contracts.Leave;
 
-namespace NZ.HRM.Application.Employees.Queries.GetEmployeeBasicInformation;
+namespace NZ.HRM.Application.Employees.Handlers;
 
 public class GetEmployeeBasicInformationQueryHandler
 {
@@ -22,7 +24,7 @@ public class GetEmployeeBasicInformationQueryHandler
 		CancellationToken cancellationToken = default)
 	{
 		var employee = await _employeeMasterRepository.GetBasicByEmployeeCodeAsync(
-			query.EmployeeCode,
+			query.SearchText,
 			cancellationToken);
 
 		if (employee == null)
@@ -34,6 +36,7 @@ public class GetEmployeeBasicInformationQueryHandler
 
 		return new BasicEmployeeInformationDto
 		{
+			EmployeeId = employee.Id,
 			EmployeeCode = employee.EmployeeCode,
 			EmployeeName = employee.EmployeeName,
 			EmployeeNameBangla = employee.EmployeeNameBangla,
