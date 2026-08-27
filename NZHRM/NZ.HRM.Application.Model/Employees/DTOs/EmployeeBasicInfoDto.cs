@@ -12,4 +12,19 @@ public class EmployeeBasicInfoDto
     public string? DesignationId { get; set; }
     public string? EmployeeCode { get; set; }
     public string? DesignationName { get; set; }
+
+	public string? SectionId { get; set; }
+	public string? SectionName { get; set; }
+
+	public string? GradeId { get; set; }
+	public string? GradeName { get; set; }
+
+	public string? ShiftId { get; set; }
+	public string? ShiftName { get; set; }
+
+	public DateOnly? DateOfJoining { get; set; }
+
+	public decimal? BasicSalary { get; set; }
+	public decimal? GrossSalary { get; set; }
+	public string? EmployeeType { get; set; }
 }

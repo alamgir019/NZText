@@ -299,7 +299,19 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
         var searchPattern = $"%{searchTerm}%";
 
         return await _context.HrmEmployeeMasters
-            .Include(e => e.Employment)
+			.Include(e => e.Personal)
+			.Include(e => e.Employment)
+		        .ThenInclude(employment => employment.Department)
+	        .Include(e => e.Employment)
+		        .ThenInclude(employment => employment.Designation)
+	        .Include(e => e.Employment)
+		        .ThenInclude(employment => employment.Section)
+	        .Include(e => e.Employment)
+		        .ThenInclude(employment => employment.Grade)
+	        .Include(e => e.Employment)
+		        .ThenInclude(employment => employment.Shift)
+			.Include(e => e.Payroll)
+            
             .Where(e => e.IsActive &&
                        (EF.Functions.Like(e.EnrollmentId ?? string.Empty, searchPattern)
                         || EF.Functions.ILike(e.EmployeeName, searchPattern)

@@ -67,15 +67,36 @@ public class CompleteEmployeeQueryHandler
         return employees.Select(x => 
         new EmployeeBasicInfoDto() {
             Id = x.Id,
+
             EmployeeNameEnglish = x.EmployeeName,
             EmployeeNameBangla = x.EmployeeNameBangla,
-            EnrollmentId = x.EnrollmentId,
+			MobileNumber = x.Personal?.MobileNumber,
+
+			EnrollmentId = x.EnrollmentId,
             EmployeeCode = x.EmployeeCode,
-            DesignationId = x.Employment?.DesignationId,
+
+			EmployeeType = x.EmployeeNature,
+
+			DesignationId = x.Employment?.DesignationId,
             DesignationName = x.Employment?.Designation?.DesignationName,
+
             DepartmentId = x.Employment?.DepartmentId,
             DepartmentName = x.Employment?.Department?.DepartmentName,
-        }).ToList();
+
+			SectionId = x.Employment?.SectionId,
+			SectionName = x.Employment?.Section?.SectionName,
+
+			GradeId = x.Employment?.GradeId,
+			GradeName = x.Employment?.Grade?.GradeName,
+
+			ShiftId = x.Employment?.ShiftId,
+			ShiftName = x.Employment?.Shift?.ShiftName,
+
+			DateOfJoining = x.Employment?.JoiningDate,
+
+			BasicSalary = x.Payroll?.BasicSalary,
+			GrossSalary = x.Payroll?.GrossSalary
+		}).ToList();
     }
 
 
