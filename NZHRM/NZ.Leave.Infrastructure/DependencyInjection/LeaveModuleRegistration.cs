@@ -2,6 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NZ.Leave.Application.Interfaces.Repositories;
+using NZ.Leave.Application.LeaveEncashmentRequests.Commands.CreateLeaveEncashmentRequests;
+using NZ.Leave.Application.LeaveEncashmentRequests.Commands.DeleteLeaveEncashmentRequest;
+using NZ.Leave.Application.LeaveEncashmentRequests.Commands.UpdateLeaveEncashmentRequest;
+using NZ.Leave.Application.LeaveEncashmentRequests.Queries.GetLeaveEncashmentRequests;
 using NZ.Leave.Application.LeaveRequests.Commands.CreateLeaveRequests;
 using NZ.Leave.Application.LeaveRequests.Commands.DeleteLeaveRequest;
 using NZ.Leave.Application.LeaveRequests.Commands.UpdateLeaveRequest;
@@ -34,6 +38,12 @@ public static class LeaveModuleRegistration
         services.AddScoped<UpdateLeaveRequestCommandHandler>();
         services.AddScoped<DeleteLeaveRequestCommandHandler>();
         services.AddScoped<GetLeaveRequestsQueryHandler>();
+
+        services.AddScoped<ILeaveEncashmentRequestRepository, LeaveEncashmentRequestRepository>();
+        services.AddScoped<CreateLeaveEncashmentRequestsCommandHandler>();
+        services.AddScoped<UpdateLeaveEncashmentRequestCommandHandler>();
+        services.AddScoped<DeleteLeaveEncashmentRequestCommandHandler>();
+        services.AddScoped<GetLeaveEncashmentRequestsQueryHandler>();
 
         return services;
     }

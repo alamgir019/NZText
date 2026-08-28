@@ -19,7 +19,7 @@ public class GetEmployeeBasicInformationQueryHandler
 		_leaveBalanceQuery = leaveBalanceQuery;
 	}
 
-	public async Task<BasicEmployeeInformationDto?> Handle(
+	public async Task<List<BasicEmployeeInformationDto>?> Handle(
 		GetEmployeeBasicInformationQuery query,
 		CancellationToken cancellationToken = default)
 	{
@@ -31,21 +31,22 @@ public class GetEmployeeBasicInformationQueryHandler
 			return null;
 
 		var leaveBalances = await _leaveBalanceQuery.GetAllBalancesAsync(
-			employee.Id,
+			employee.Select(e => e.Id).ToList(),
 			cancellationToken);
 
-		return new BasicEmployeeInformationDto
+		return employee.Select( x => new BasicEmployeeInformationDto
 		{
-			EmployeeId = employee.Id,
-			EmployeeCode = employee.EmployeeCode,
-			EmployeeName = employee.EmployeeName,
-			EmployeeNameBangla = employee.EmployeeNameBangla,
-			Leaves = leaveBalances.Select(leave => new EmployeeLeaveBalanceDto
-			{
-				LeaveCode = leave.LeaveCode,
-				LeaveName = leave.LeaveName,
-				ClosingBalance = leave.ClosingBalance
-			}).ToList()
-		};
+			EmployeeId = x.Id,
+			EmployeeCode = x.EmployeeCode,
+			EmployeeName = x.EmployeeName,
+			EmployeeNameBangla = x.EmployeeNameBangla,
+			Leaves = leaveBalances.Where(leave => leave.EmployeeId == x.Id).Select(
+				leave => new EmployeeLeaveBalanceDto
+				{
+					LeaveCode = leave.LeaveCode,
+					LeaveName = leave.LeaveName,
+					ClosingBalance = leave.ClosingBalance
+				}).ToList()
+		}).ToList();
 	}
 }

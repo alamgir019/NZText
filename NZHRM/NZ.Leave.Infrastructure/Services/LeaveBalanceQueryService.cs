@@ -14,7 +14,7 @@ public class LeaveBalanceQueryService : ILeaveBalanceQuery
     }
 
     public async Task<IReadOnlyList<EmployeeLeaveBalanceResult>> GetAllBalancesAsync(
-        string employeeId,
+        List<string> employeeIds,
         CancellationToken cancellationToken = default)
     {
         var currentLeaveYear = await _context.LevLeaveYears
@@ -30,12 +30,13 @@ public class LeaveBalanceQueryService : ILeaveBalanceQuery
             from leaveType in _context.LevLeaveTypes.AsNoTracking()
             where leaveType.Status
             join balance in _context.LevLeaveBalances.AsNoTracking()
-                .Where(balance => balance.EmployeeId == employeeId && balance.YearId == currentLeaveYear.Value)
+                .Where(balance => employeeIds.Contains(balance.EmployeeId) && balance.YearId == currentLeaveYear.Value)
                 on leaveType.Id equals balance.LeaveTypeId into balances
             from balance in balances.DefaultIfEmpty()
             orderby leaveType.LeaveCode
             select new
             {
+                balance.EmployeeId,
                 leaveType.LeaveCode,
                 leaveType.LeaveName,
                 ClosingBalance = balance == null ? 0m : balance.ClosingBalance
@@ -44,6 +45,7 @@ public class LeaveBalanceQueryService : ILeaveBalanceQuery
 
         return rows
             .Select(row => new EmployeeLeaveBalanceResult(
+                row.EmployeeId,
                 row.LeaveCode,
                 row.LeaveName,
                 row.ClosingBalance))
