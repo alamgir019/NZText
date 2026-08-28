@@ -238,7 +238,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .FirstOrDefaultAsync(e => e.EmployeeCode == employeeCode && e.IsActive, cancellationToken);
     }
 
-    public async Task<HrmEmployeeMaster?> GetBasicByEmployeeCodeAsync(string searchText, CancellationToken cancellationToken = default)
+    public async Task<List<HrmEmployeeMaster>> GetBasicByEmployeeCodeAsync(string searchText, CancellationToken cancellationToken = default)
     {
         var searchPattern = $"%{searchText}%";
         return await _context.HrmEmployeeMasters
@@ -251,8 +251,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
                 EmployeeName = e.EmployeeName,
                 EmployeeNameBangla = e.EmployeeNameBangla,
                 IsActive = e.IsActive
-            })
-            .FirstOrDefaultAsync(cancellationToken);
+            }).ToListAsync(cancellationToken);
     }
 
     public async Task<HrmEmployeeMaster?> GetEmployeeBasicInfoAsync(string employeeId, CancellationToken cancellationToken = default)
