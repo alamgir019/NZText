@@ -9,12 +9,15 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Dto
         public DateOnly EncashDate { get; set; }
         public decimal EncashDays { get; set; }
         public string Reason { get; set; } = string.Empty;
-        public string Status { get; set; } = string.Empty;
+        public string? Instalment { get; set; }
         public string? CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
         public string? ModifiedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
         public string? ForwardedBy { get; set; }
         public DateTime? ForwardedDate { get; set; }
+        public DateOnly? FromDate { get; set; }
+        public DateOnly? ToDate { get; set; }
+        public string? Status { get; set; }
     }
 }

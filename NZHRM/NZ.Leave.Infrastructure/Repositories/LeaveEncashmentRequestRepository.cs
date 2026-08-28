@@ -30,9 +30,12 @@ namespace NZ.Leave.Infrastructure.Repositories
                 EncashDate = dto.EncashDate.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc),
                 EncashDays = dto.EncashDays,
                 Reason = dto.Reason,
+                Instalment = dto.Instalment,
                 Status = dto.Status,
                 ForwardedBy = dto.ForwardedBy,
                 ForwardedDate = dto.ForwardedDate,
+                FromDate = dto.FromDate,
+                ToDate = dto.ToDate,
                 CreatedBy = dto.CreatedBy ?? string.Empty
             };
 
@@ -64,7 +67,7 @@ namespace NZ.Leave.Infrastructure.Repositories
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(status))
-                query = query.Where(a => a.Status == status);
+                query = query.Where(a => a.Instalment == status);
 
             var total = await query.CountAsync(cancellationToken);
 
@@ -124,7 +127,10 @@ namespace NZ.Leave.Infrastructure.Repositories
             EncashDate = entity.EncashDate.HasValue ? DateOnly.FromDateTime(entity.EncashDate.Value) : default,
             EncashDays = entity.EncashDays,
             Reason = entity.Reason ?? string.Empty,
+            Instalment = entity.Instalment ?? string.Empty,
             Status = entity.Status ?? string.Empty,
+            FromDate = entity.FromDate,
+            ToDate = entity.ToDate,
             CreatedBy = entity.CreatedBy,
             CreatedDate = entity.CreatedOn,
             ModifiedBy = entity.UpdatedBy,
