@@ -10,6 +10,8 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.CreateLeaveEncas
         public string Reason { get; set; } = string.Empty;
         public string? ForwardedBy { get; set; }
         public DateOnly? ForwardedDate { get; set; }
+        public DateOnly? FromDate { get; set; }
+        public DateOnly? ToDate { get; set; }
     }
 
     public class CreateLeaveEncashmentRequestsCommand

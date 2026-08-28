@@ -15,9 +15,12 @@ namespace NZ.Leave.Domain.Entities
         public string? ApprovedBy { get; set; }
         public DateTime? EncashDate { get; set; }
         public string? Reason { get; set; }
-        public string? Status { get; set; }
+        public string? Instalment { get; set; }
         public string? ForwardedBy { get; set; }
         public DateTime? ForwardedDate { get; set; }
+        public DateOnly? FromDate { get; set; }
+        public DateOnly? ToDate { get; set; }
+        public string? Status { get; set; }
 
         [ForeignKey("EmployeeId")] public HrmEmployeeMaster? Employee { get; set; }
         [ForeignKey("LeaveTypeId")] public LevLeaveType? LeaveType { get; set; }

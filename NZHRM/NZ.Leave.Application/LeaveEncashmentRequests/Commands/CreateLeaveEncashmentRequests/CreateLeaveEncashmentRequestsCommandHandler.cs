@@ -85,6 +85,8 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.CreateLeaveEncas
                     EncashDays = req.EncashDays,
                     Reason = req.Reason,
                     Status = LeaveEncashmentRequestStatus.Forwarded,
+                    FromDate = req.FromDate,
+                    ToDate = req.ToDate,
                     CreatedBy = command.CreatedBy,
                     CreatedDate = DateTime.UtcNow,
                     ForwardedBy = req.ForwardedBy,
