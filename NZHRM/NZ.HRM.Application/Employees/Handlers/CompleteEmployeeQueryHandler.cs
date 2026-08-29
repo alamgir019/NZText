@@ -67,17 +67,63 @@ public class CompleteEmployeeQueryHandler
         return employees.Select(x => 
         new EmployeeBasicInfoDto() {
             Id = x.Id,
+
             EmployeeNameEnglish = x.EmployeeName,
             EmployeeNameBangla = x.EmployeeNameBangla,
-            EnrollmentId = x.EnrollmentId,
+			EnrollmentId = x.EnrollmentId,
             EmployeeCode = x.EmployeeCode,
             DesignationId = x.Employment?.DesignationId,
             DesignationName = x.Employment?.Designation?.DesignationName,
             DepartmentId = x.Employment?.DepartmentId,
             DepartmentName = x.Employment?.Department?.DepartmentName,
-        }).ToList();
+
+		}).ToList();
     }
 
+
+    public async Task<List<EmployeeBasicInfoExdDto>> Handle(SearchEmployeesExdQuery query, CancellationToken cancellationToken = default)
+    {
+        var employees = await _employeeMasterRepository.SearchExdAsync(query.SearchText, cancellationToken);
+
+        return employees.Select(x =>
+        new EmployeeBasicInfoExdDto()
+        {
+            Id = x.Id,
+
+            EmployeeNameEnglish = x.EmployeeName,
+            EmployeeNameBangla = x.EmployeeNameBangla,
+            //MobileNumber = x.Personal?.MobileNumber,
+
+            EnrollmentId = x.EnrollmentId,
+            EmployeeCode = x.EmployeeCode,
+
+            EmployeeType = x.EmployeeNature,
+
+            DesignationId = x.Employment?.DesignationId,
+            DesignationName = x.Employment?.Designation?.DesignationName,
+
+            DepartmentId = x.Employment?.DepartmentId,
+            DepartmentName = x.Employment?.Department?.DepartmentName,
+
+            SectionId = x.Employment?.SectionId,
+            SectionName = x.Employment?.Section?.SectionName,
+
+            GradeId = x.Employment?.GradeId,
+            GradeName = x.Employment?.Grade?.GradeName,
+
+            ShiftId = x.Employment?.ShiftId,
+            ShiftName = x.Employment?.Shift?.ShiftName,
+
+            DateOfJoining = x.Employment?.JoiningDate,
+
+            BasicSalary = x.Payroll?.BasicSalary,
+            GrossSalary = x.Payroll?.GrossSalary,
+
+			EffectiveDate = x.PayIncrementHistories.OrderByDescending(i => i.EffectiveDate).FirstOrDefault()?.EffectiveDate,
+			IncrementAmount = x.PayIncrementHistories.OrderByDescending(i => i.EffectiveDate).FirstOrDefault()?.IncrementAmount,
+			IncrementPercentage = x.PayIncrementHistories.OrderByDescending(i => i.EffectiveDate).FirstOrDefault()?.IncrementPercent
+		}).ToList();
+    }
 
 
     public async Task<List<EmployeeBasicInfoDto>> Handle(GetEmployeeBasicQuery query, CancellationToken cancellationToken = default)

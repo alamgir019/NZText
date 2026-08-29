@@ -12,4 +12,7 @@ public class EmployeeBasicInfoDto
     public string? DesignationId { get; set; }
     public string? EmployeeCode { get; set; }
     public string? DesignationName { get; set; }
+
+
+
 }

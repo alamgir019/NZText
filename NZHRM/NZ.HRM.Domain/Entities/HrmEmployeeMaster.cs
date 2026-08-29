@@ -32,5 +32,7 @@ namespace NZ.HRM.Domain.Entities
         public ICollection<HrmEmployeeFamily> FamilyMembers { get; set; } = new HashSet<HrmEmployeeFamily>();
         public ICollection<HrmEmployeeSalaryAccount> BankAccounts { get; set; } = new HashSet<HrmEmployeeSalaryAccount>();
         public ICollection<HrmEmployeeReporting> Reportings { get; set; } = new HashSet<HrmEmployeeReporting>();
-    }
+
+		public ICollection<PayIncrementHistory> PayIncrementHistories { get; set; } = new HashSet<PayIncrementHistory>();
+	}
 }
