@@ -83,7 +83,7 @@ public class CompleteEmployeeQueryHandler
 
     public async Task<List<EmployeeBasicInfoExdDto>> Handle(SearchEmployeesExdQuery query, CancellationToken cancellationToken = default)
     {
-        var employees = await _employeeMasterRepository.SearchAsync(query.SearchText, cancellationToken);
+        var employees = await _employeeMasterRepository.SearchExdAsync(query.SearchText, cancellationToken);
 
         return employees.Select(x =>
         new EmployeeBasicInfoExdDto()
@@ -92,7 +92,7 @@ public class CompleteEmployeeQueryHandler
 
             EmployeeNameEnglish = x.EmployeeName,
             EmployeeNameBangla = x.EmployeeNameBangla,
-            MobileNumber = x.Personal?.MobileNumber,
+            //MobileNumber = x.Personal?.MobileNumber,
 
             EnrollmentId = x.EnrollmentId,
             EmployeeCode = x.EmployeeCode,
@@ -117,8 +117,12 @@ public class CompleteEmployeeQueryHandler
             DateOfJoining = x.Employment?.JoiningDate,
 
             BasicSalary = x.Payroll?.BasicSalary,
-            GrossSalary = x.Payroll?.GrossSalary
-        }).ToList();
+            GrossSalary = x.Payroll?.GrossSalary,
+
+			EffectiveDate = x.PayIncrementHistories.OrderByDescending(i => i.EffectiveDate).FirstOrDefault()?.EffectiveDate,
+			IncrementAmount = x.PayIncrementHistories.OrderByDescending(i => i.EffectiveDate).FirstOrDefault()?.IncrementAmount,
+			IncrementPercentage = x.PayIncrementHistories.OrderByDescending(i => i.EffectiveDate).FirstOrDefault()?.IncrementPercent
+		}).ToList();
     }
 
 

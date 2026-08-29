@@ -305,13 +305,6 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
 		        .ThenInclude(employment => employment.Department)
 	        .Include(e => e.Employment)
 		        .ThenInclude(employment => employment.Designation)
-	        .Include(e => e.Employment)
-		        .ThenInclude(employment => employment.Section)
-	        .Include(e => e.Employment)
-		        .ThenInclude(employment => employment.Grade)
-	        .Include(e => e.Employment)
-		        .ThenInclude(employment => employment.Shift)
-			.Include(e => e.Payroll)
             
             .Where(e => e.IsActive &&
                        (EF.Functions.Like(e.EnrollmentId ?? string.Empty, searchPattern)
@@ -323,7 +316,42 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<(List<HrmEmployeeMaster> employees, int totalCount)> GetEmployeeMasterListAsync(
+	public async Task<List<HrmEmployeeMaster>> SearchExdAsync(string searchText, CancellationToken cancellationToken = default)
+	{
+		var searchTerm = searchText.Trim();
+		if (string.IsNullOrWhiteSpace(searchTerm))
+		{
+			return new List<HrmEmployeeMaster>();
+		}
+
+		var searchPattern = $"%{searchTerm}%";
+
+		return await _context.HrmEmployeeMasters
+			.Include(e => e.Personal)
+			.Include(e => e.Employment)
+				.ThenInclude(employment => employment.Department)
+			.Include(e => e.Employment)
+				.ThenInclude(employment => employment.Designation)
+			.Include(e => e.Employment)
+				.ThenInclude(employment => employment.Section)
+			.Include(e => e.Employment)
+				.ThenInclude(employment => employment.Grade)
+			.Include(e => e.Employment)
+				.ThenInclude(employment => employment.Shift)
+			.Include(e => e.Payroll)
+			.Include(e => e.PayIncrementHistories)
+
+			.Where(e => e.IsActive &&
+					   (EF.Functions.Like(e.EnrollmentId ?? string.Empty, searchPattern)
+						|| EF.Functions.ILike(e.EmployeeName, searchPattern)
+						|| (e.EmployeeNameBangla != null) && EF.Functions.ILike(e.EmployeeNameBangla, searchPattern)
+						|| (e.EmployeeCode != null && EF.Functions.Like(e.EmployeeCode, searchPattern))
+						))
+			.OrderBy(e => e.EmployeeName)
+			.ToListAsync(cancellationToken);
+	}
+
+	public async Task<(List<HrmEmployeeMaster> employees, int totalCount)> GetEmployeeMasterListAsync(
         GetEmployeeMasterListQuery filterRequest,
         CancellationToken cancellationToken = default)
     {

@@ -30,7 +30,8 @@ public interface IEmployeeMasterRepository
     // Get employees by status up to a specified UTC date (inclusive). When includeInactive is false, only active employees are returned.
     Task<List<HrmEmployeeMaster>> GetByStatusUpToDateAsync(Employees.Queries.GetItActivationSummary.GetItActivationSummaryQuery query, CancellationToken cancellationToken = default);
     Task<List<HrmEmployeeMaster>> SearchAsync(string searchText, CancellationToken cancellationToken = default);
-    Task<List<HrmEmployeeMaster>> GetByDateAsync(DateTime onDatel, bool includeInactive = false, CancellationToken cancellationToken = default);
+	Task<List<HrmEmployeeMaster>> SearchExdAsync(string searchText, CancellationToken cancellationToken = default);
+	Task<List<HrmEmployeeMaster>> GetByDateAsync(DateTime onDatel, bool includeInactive = false, CancellationToken cancellationToken = default);
     /// <summary>
     /// Get employee master list with advanced filtering and pagination at database level.
     /// </summary>

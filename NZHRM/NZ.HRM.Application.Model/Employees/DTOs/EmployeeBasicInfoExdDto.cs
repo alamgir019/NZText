@@ -28,9 +28,9 @@ public class EmployeeBasicInfoExdDto
 	public decimal? GrossSalary { get; set; }
 	public string? EmployeeType { get; set; }
 
-	public string? ForwardedBy { get; set; }
+	public decimal? IncrementPercentage { get; set; }
 
-	public DateOnly? ForwardedDate { get; set; }
+	public DateOnly? EffectiveDate { get; set; }
 
-	public string? IncrementType { get; set; }
+	public decimal? IncrementAmount { get; set; }
 }
