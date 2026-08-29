@@ -70,35 +70,56 @@ public class CompleteEmployeeQueryHandler
 
             EmployeeNameEnglish = x.EmployeeName,
             EmployeeNameBangla = x.EmployeeNameBangla,
-			MobileNumber = x.Personal?.MobileNumber,
-
 			EnrollmentId = x.EnrollmentId,
             EmployeeCode = x.EmployeeCode,
+            DesignationId = x.Employment?.DesignationId,
+            DesignationName = x.Employment?.Designation?.DesignationName,
+            DepartmentId = x.Employment?.DepartmentId,
+            DepartmentName = x.Employment?.Department?.DepartmentName,
 
-			EmployeeType = x.EmployeeNature,
+		}).ToList();
+    }
 
-			DesignationId = x.Employment?.DesignationId,
+
+    public async Task<List<EmployeeBasicInfoDto>> Handle(SearchEmployeesExdQuery query, CancellationToken cancellationToken = default)
+    {
+        var employees = await _employeeMasterRepository.SearchAsync(query.SearchText, cancellationToken);
+
+        return employees.Select(x =>
+        new EmployeeBasicInfoDto()
+        {
+            Id = x.Id,
+
+            EmployeeNameEnglish = x.EmployeeName,
+            EmployeeNameBangla = x.EmployeeNameBangla,
+            MobileNumber = x.Personal?.MobileNumber,
+
+            EnrollmentId = x.EnrollmentId,
+            EmployeeCode = x.EmployeeCode,
+
+            EmployeeType = x.EmployeeNature,
+
+            DesignationId = x.Employment?.DesignationId,
             DesignationName = x.Employment?.Designation?.DesignationName,
 
             DepartmentId = x.Employment?.DepartmentId,
             DepartmentName = x.Employment?.Department?.DepartmentName,
 
-			SectionId = x.Employment?.SectionId,
-			SectionName = x.Employment?.Section?.SectionName,
+            SectionId = x.Employment?.SectionId,
+            SectionName = x.Employment?.Section?.SectionName,
 
-			GradeId = x.Employment?.GradeId,
-			GradeName = x.Employment?.Grade?.GradeName,
+            GradeId = x.Employment?.GradeId,
+            GradeName = x.Employment?.Grade?.GradeName,
 
-			ShiftId = x.Employment?.ShiftId,
-			ShiftName = x.Employment?.Shift?.ShiftName,
+            ShiftId = x.Employment?.ShiftId,
+            ShiftName = x.Employment?.Shift?.ShiftName,
 
-			DateOfJoining = x.Employment?.JoiningDate,
+            DateOfJoining = x.Employment?.JoiningDate,
 
-			BasicSalary = x.Payroll?.BasicSalary,
-			GrossSalary = x.Payroll?.GrossSalary
-		}).ToList();
+            BasicSalary = x.Payroll?.BasicSalary,
+            GrossSalary = x.Payroll?.GrossSalary
+        }).ToList();
     }
-
 
 
     public async Task<List<EmployeeBasicInfoDto>> Handle(GetEmployeeBasicQuery query, CancellationToken cancellationToken = default)

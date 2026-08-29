@@ -150,7 +150,21 @@ public class EmployeesController : ControllerBase
         return Ok(employees);
     }
 
-    [HttpGet("basic")]
+	[HttpGet("searchExd")]
+	[ProducesResponseType(typeof(List<EmployeeDetailDto>), StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest)]
+	public async Task<IActionResult> SearchEmployeesExd([FromQuery] string searchText)
+	{
+		if (string.IsNullOrWhiteSpace(searchText))
+			return BadRequest(new { message = "searchText is required" });
+
+		var query = new SearchEmployeesExdQuery { SearchText = searchText };
+		var employees = await _getCompleteEmployeeHandler.Handle(query, cancellationToken: default);
+
+		return Ok(employees);
+	}
+
+	[HttpGet("basic")]
     [ProducesResponseType(typeof(EmployeeBasicInfoDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetEmployeeBasicInfo([FromQuery] string employeeId)
