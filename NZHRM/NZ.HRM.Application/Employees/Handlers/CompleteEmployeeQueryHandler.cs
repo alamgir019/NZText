@@ -81,12 +81,12 @@ public class CompleteEmployeeQueryHandler
     }
 
 
-    public async Task<List<EmployeeBasicInfoDto>> Handle(SearchEmployeesExdQuery query, CancellationToken cancellationToken = default)
+    public async Task<List<EmployeeBasicInfoExdDto>> Handle(SearchEmployeesExdQuery query, CancellationToken cancellationToken = default)
     {
         var employees = await _employeeMasterRepository.SearchAsync(query.SearchText, cancellationToken);
 
         return employees.Select(x =>
-        new EmployeeBasicInfoDto()
+        new EmployeeBasicInfoExdDto()
         {
             Id = x.Id,
 
