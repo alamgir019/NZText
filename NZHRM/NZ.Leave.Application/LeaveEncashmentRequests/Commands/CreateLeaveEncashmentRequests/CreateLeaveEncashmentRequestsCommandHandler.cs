@@ -30,21 +30,6 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.CreateLeaveEncas
                 };
             }
 
-            // VAL-010: Reject duplicate employees within the same request batch
-            var seen = new HashSet<string>();
-            foreach (var req in command.Requests)
-            {
-                if (!seen.Add(req.EmployeeId))
-                {
-                    return new CreateLeaveEncashmentRequestsResult
-                    {
-                        Success = false,
-                        ErrorCode = "VAL-010",
-                        Message = "Duplicate employee found in request list."
-                    };
-                }
-            }
-
             var validationError = ValidateRequests(command.Requests);
             if (validationError != null)
                 return validationError;
