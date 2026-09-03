@@ -46,6 +46,7 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<HrmEmployeeFamily> HrmEmployeeFamilies => Set<HrmEmployeeFamily>();
         public DbSet<HrmEmployeeSalaryAccount> HrmEmployeeBankAccounts => Set<HrmEmployeeSalaryAccount>();
         public DbSet<HrmEmployeeReporting> HrmEmployeeReportings => Set<HrmEmployeeReporting>();
+        public DbSet<HrmLearnerConfirmationRequest> HrmLearnerConfirmationRequests => Set<HrmLearnerConfirmationRequest>();
 
         // Attendance — now owned by NZ.Attendance.Infrastructure (AttendanceDbContext)
 
@@ -144,6 +145,7 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<HrmEmployeeSalaryAccount>().ToTable("employee_salary_account", "hrm");
             modelBuilder.Entity<HrmEmployeeReporting>().ToTable("employee_reporting", "hrm");
             modelBuilder.Entity<HrmEmployeeVerification>().ToTable("employee_verification", "hrm");
+            modelBuilder.Entity<HrmLearnerConfirmationRequest>().ToTable("learner_confirmation_request", "hrm");
             modelBuilder.Entity<LookKeyValue>().ToTable("lookup_key_value", "lookup");
             modelBuilder.Entity<HrmMedicalFitnessCheck>().ToTable("medical_fitness_check", "hrm");
             modelBuilder.Entity<HrmPhysicalExaminationSetting>().ToTable("physical_examination_setting", "hrm");
@@ -188,10 +190,24 @@ namespace NZ.HRM.Infrastructure.Persistence
 
 			// PayIncrementHistory relationship with HrmEmployeeMaster
 			modelBuilder.Entity<HrmEmployeeMaster>()
-	            .HasMany(e => e.PayIncrementHistories)
-	            .WithOne(i => i.Employee)
-	            .HasForeignKey(i => i.EmployeeId)
-	            .OnDelete(DeleteBehavior.Restrict);
+				.HasMany(e => e.PayIncrementHistories)
+				.WithOne(i => i.Employee)
+				.HasForeignKey(i => i.EmployeeId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			// Learner permanency (confirmation) requests
+			modelBuilder.Entity<HrmLearnerConfirmationRequest>(entity =>
+			{
+				entity.Ignore(r => r.IsPending);
+				entity.Property(r => r.CurrentGrossSalary).HasColumnType("numeric(18,2)");
+				entity.Property(r => r.StandardGrossSalary).HasColumnType("numeric(18,2)");
+				entity.Property(r => r.AdjustmentAmount).HasColumnType("numeric(18,2)");
+				entity.HasIndex(r => new { r.EmployeeId, r.Status });
+				entity.HasOne(r => r.Employee)
+					  .WithMany()
+					  .HasForeignKey(r => r.EmployeeId)
+					  .OnDelete(DeleteBehavior.Cascade);
+			});
 
 			// Attendance
 			modelBuilder.Entity<AttDeviceMaster>().ToTable("device_master", "attendance");

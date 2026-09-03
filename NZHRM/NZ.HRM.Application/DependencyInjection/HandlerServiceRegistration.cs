@@ -13,6 +13,7 @@ using NZ.HRM.Application.FinancialDetails.Handlers;
 // Overtime request handlers moved to Attendance module
 using NZ.HRM.Application.Grades.Handlers;
 using NZ.HRM.Application.GroupComplexes.Handlers;
+using NZ.HRM.Application.LearnerAdjustments.Handlers;
 using NZ.HRM.Application.LocationDepartments.Handlers;
 using NZ.HRM.Application.MedicalFitnessChecks.Handlers;
 using NZ.HRM.Application.Permissions.Handlers;
@@ -20,6 +21,7 @@ using NZ.HRM.Application.PhysicalExaminationSettings.Handlers;
 using NZ.HRM.Application.RolePermissions.Handlers;
 using NZ.HRM.Application.SectionCells.Handlers;
 using NZ.HRM.Application.Sections.Handlers;
+using NZ.HRM.Application.Services;
 using NZ.HRM.Application.Shifts.Handlers;
 using NZ.HRM.Application.SubUnits.Handlers;
 using NZ.HRM.Application.Thanas.Handlers;
@@ -128,6 +130,11 @@ namespace NZ.HRM.Application.DependencyInjection
             // RolePermission Handlers
             services.AddScoped<RolePermissionCommandHandler>();
             services.AddScoped<RolePermissionQueryHandler>();
+
+            // Register Eligible Learner Adjustment Handlers
+            services.AddScoped<EligibleLearnerQueryHandler>();
+            services.AddScoped<LearnerConfirmationCommandHandler>();
+            services.AddScoped<IEligibleLearnerExcelExportService, EligibleLearnerExcelExportService>();
 
             // Overtime Request Handlers moved to Attendance module
 
