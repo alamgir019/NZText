@@ -32,4 +32,22 @@ public class PayrollDbContext : DbContext
     public DbSet<HrmEmployeePayroll> HrmEmployeePayrolls => Set<HrmEmployeePayroll>();
     public DbSet<MstPayrollProcessingGroup> MstPayrollProcessingGroups => Set<MstPayrollProcessingGroup>();
     public DbSet<MstGrade> MstGrades => Set<MstGrade>();
+
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
+	{
+		base.OnModelCreating(modelBuilder);
+
+		modelBuilder.Entity<HrmEmployeeReporting>(entity =>
+		{
+			entity.HasOne(reporting => reporting.Employee)
+				.WithMany(employee => employee.Reportings)
+				.HasForeignKey(reporting => reporting.EmployeeId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			entity.HasOne(reporting => reporting.ReportingEmployee)
+				.WithMany()
+				.HasForeignKey(reporting => reporting.ReportingEmployeeId)
+				.OnDelete(DeleteBehavior.Restrict);
+		});
+	}
 }

@@ -186,15 +186,22 @@ namespace NZ.HRM.Infrastructure.Persistence
                 .HasForeignKey(r => r.EmployeeId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-			// PayIncrementHistory relationship with HrmEmployeeMaster
-			modelBuilder.Entity<HrmEmployeeMaster>()
-	            .HasMany(e => e.PayIncrementHistories)
-	            .WithOne(i => i.Employee)
-	            .HasForeignKey(i => i.EmployeeId)
-	            .OnDelete(DeleteBehavior.Restrict);
 
-			// Attendance
-			modelBuilder.Entity<AttDeviceMaster>().ToTable("device_master", "attendance");
+
+            // PayIncrementHistory relationship with HrmEmployeeMaster
+            modelBuilder.Entity<HrmEmployeeMaster>()
+                      .HasMany(e => e.PayIncrementHistories)
+                      .WithOne(i => i.Employee)
+                      .HasForeignKey(i => i.EmployeeId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<PayIncrementHistory>()
+            //    .HasOne(r => r.Employee)
+            //    .WithMany()
+            //    .HasForeignKey(r => r.EmployeeId)
+            //    .OnDelete(DeleteBehavior.Cascade);
+
+            // Attendance
+            modelBuilder.Entity<AttDeviceMaster>().ToTable("device_master", "attendance");
             modelBuilder.Entity<AttDeviceSyncLog>().ToTable("device_sync_log", "attendance");
             modelBuilder.Entity<AttRawPunch>().ToTable("raw_punch", "attendance");
             modelBuilder.Entity<AttProcessedPunch>().ToTable("processed_punches", "attendance");

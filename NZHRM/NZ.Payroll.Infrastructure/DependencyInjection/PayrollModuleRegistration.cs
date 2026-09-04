@@ -2,8 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NZ.Payroll.Application.Interfaces;
+using NZ.Payroll.Application.Interfaces.Repositories;
+using NZ.Payroll.Application.PayIncrementHistories.Handlers;
 using NZ.Payroll.Application.Services;
 using NZ.Payroll.Infrastructure.Persistence;
+using NZ.Payroll.Infrastructure.Repositories;
 using NZ.Payroll.Infrastructure.Services;
 using NZ.Shared.Contracts.HRM;
 
@@ -22,6 +25,10 @@ public static class PayrollModuleRegistration
         // Application services
         services.AddScoped<IPayrollCalculationService, PayrollCalculationService>();
         services.AddScoped<IPayrollProcessingService, PayrollProcessingService>();
+
+        // Pay increment history
+        services.AddScoped<IPayIncrementHistoryRepository, PayIncrementHistoryRepository>();
+        services.AddScoped<CreatePayIncrementHistoryHandler>();
 
         // HRM cross-module contract implementation (reads from shared DB)
         services.AddScoped<IEmployeeQuery, EmployeeQueryService>();
