@@ -45,8 +45,10 @@ public class GetEmployeeBasicInformationQueryHandler
 				{
 					LeaveCode = leave.LeaveCode,
 					LeaveName = leave.LeaveName,
-					ClosingBalance = leave.ClosingBalance
-				}).ToList()
+					ClosingBalance = leave.ClosingBalance,
+					EarnedLeave = leave.EarnedLeave,
+					AccruedLeave = leave.EarnedLeaveAccrued
+                }).ToList()
 		}).ToList();
 	}
 }

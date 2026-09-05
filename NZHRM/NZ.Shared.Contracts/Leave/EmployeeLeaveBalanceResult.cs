@@ -4,4 +4,6 @@ public record EmployeeLeaveBalanceResult(
 	string EmployeeId,
 	string LeaveCode,
 	string LeaveName,
-	decimal ClosingBalance);
+	decimal ClosingBalance,
+	decimal EarnedLeave,
+	decimal EarnedLeaveAccrued);
