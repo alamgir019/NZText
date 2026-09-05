@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NZ.HRM.Application.Interfaces.Repositories;
+using NZ.HRM.Domain.Services;
 using NZ.HRM.Infrastructure.Repositories;
+using NZ.HRM.Infrastructure.Services;
 
 namespace NZ.HRM.Infrastructure.DependencyInjection
 {
@@ -45,6 +47,10 @@ namespace NZ.HRM.Infrastructure.DependencyInjection
             // Security repositories
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
             services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
+            // Eligible learner adjustment
+            services.AddScoped<IEligibleLearnerRepository, EligibleLearnerRepository>();
+            services.AddScoped<ILearnerConfirmationRepository, LearnerConfirmationRepository>();
+            services.AddScoped<IBusinessCalendar, ServerBusinessCalendar>();
             return services;
         }
     }

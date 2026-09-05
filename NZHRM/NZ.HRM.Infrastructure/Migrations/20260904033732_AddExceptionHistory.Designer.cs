@@ -2,18 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NZ.HRM.Infrastructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace NZ.HRM.Infrastructure.Migrations
+namespace NZ.HRM.Infrastructure.NZ.HRM.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260904033732_AddExceptionHistory")]
+    partial class AddExceptionHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3622,20 +3625,11 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("CHAR(26)");
 
-                    b.Property<DateTime?>("ForwardDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ForwardedBy")
-                        .HasColumnType("text");
-
                     b.Property<decimal?>("IncrementAmount")
                         .HasColumnType("numeric");
 
                     b.Property<decimal?>("IncrementPercent")
                         .HasColumnType("numeric");
-
-                    b.Property<string>("IncrementType")
-                        .HasColumnType("text");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");

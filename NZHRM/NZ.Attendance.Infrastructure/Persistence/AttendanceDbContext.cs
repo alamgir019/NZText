@@ -17,6 +17,7 @@ public class AttendanceDbContext : DbContext
     public DbSet<AttOtAuthorization> AttOtAuthorizations => Set<AttOtAuthorization>();
     public DbSet<AttProcessedAttendance> AttProcessedAttendances => Set<AttProcessedAttendance>();
     public DbSet<AttAttendanceException> AttAttendanceExceptions => Set<AttAttendanceException>();
+    public DbSet<AttAttendanceExceptionHistory> AttAttendanceExceptionHistories => Set<AttAttendanceExceptionHistory>();
     public DbSet<AttAttendanceAdjustment> AttAttendanceAdjustments => Set<AttAttendanceAdjustment>();
     public DbSet<AttAttendanceLock> AttAttendanceLocks => Set<AttAttendanceLock>();
     public DbSet<AttProcessingLog> AttProcessingLogs => Set<AttProcessingLog>();
@@ -70,6 +71,42 @@ public class AttendanceDbContext : DbContext
         entity.Ignore(e => e.Grade);
         entity.Ignore(e => e.Shift);
         entity.Ignore(e => e.ProcessingGroup);
+    });
+
+    // Attendance exception workflow: status stored as text, audit trail cascades.
+    modelBuilder.Entity<AttAttendanceException>(entity =>
+    {
+        entity.Property(e => e.Status)
+              .HasConversion<string>()
+              .HasMaxLength(20)
+              .IsRequired();
+
+        entity.Property(e => e.ExceptionType).HasMaxLength(50);
+        entity.Property(e => e.Severity).HasMaxLength(20);
+        entity.Property(e => e.Remarks).HasMaxLength(500);
+
+        entity.HasIndex(e => new { e.Status, e.AttendanceDate });
+        entity.HasIndex(e => new { e.EmployeeId, e.AttendanceDate });
+
+        entity.HasOne(e => e.Employee)
+              .WithMany()
+              .HasForeignKey(e => e.EmployeeId)
+              .OnDelete(DeleteBehavior.Restrict);
+
+        entity.HasMany(e => e.History)
+              .WithOne(h => h.AttendanceException!)
+              .HasForeignKey(h => h.AttendanceExceptionId)
+              .OnDelete(DeleteBehavior.Cascade);
+    });
+
+    modelBuilder.Entity<AttAttendanceExceptionHistory>(entity =>
+    {
+        entity.Property(h => h.FromStatus).HasConversion<string>().HasMaxLength(20);
+        entity.Property(h => h.ToStatus).HasConversion<string>().HasMaxLength(20);
+        entity.Property(h => h.ActionBy).HasMaxLength(50).IsRequired();
+        entity.Property(h => h.Comments).HasMaxLength(500);
+
+        entity.HasIndex(h => new { h.AttendanceExceptionId, h.ActionOn });
     });
 }
 }

@@ -2,18 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NZ.HRM.Infrastructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace NZ.HRM.Infrastructure.Migrations
+namespace NZ.HRM.Infrastructure.NZ.HRM.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260903181617_AddLearnerConfirmationRequest")]
+    partial class AddLearnerConfirmationRequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -123,13 +126,16 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.Property<string>("Remarks")
                         .HasColumnType("text");
 
+                    b.Property<string>("ResolvedBy")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("ResolvedFlag")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Severity")
                         .HasColumnType("text");
 
                     b.Property<int>("SortOrder")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Status")
                         .HasColumnType("integer");
 
                     b.Property<string>("UpdatedBy")
@@ -146,64 +152,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("attendance_exception", "attendance");
-                });
-
-            modelBuilder.Entity("NZ.Attendance.Domain.Entities.AttAttendanceExceptionHistory", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("CHAR(26)")
-                        .HasColumnName("Id");
-
-                    b.Property<string>("ActionBy")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("ActionOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("AttendanceExceptionId")
-                        .IsRequired()
-                        .HasColumnType("CHAR(26)");
-
-                    b.Property<string>("Comments")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.Property<int>("FromStatus")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ToStatus")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AttendanceExceptionId");
-
-                    b.ToTable("attendance_exception_history", "attendance");
                 });
 
             modelBuilder.Entity("NZ.Attendance.Domain.Entities.AttDeviceSyncLog", b =>
@@ -3622,20 +3570,11 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("CHAR(26)");
 
-                    b.Property<DateTime?>("ForwardDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ForwardedBy")
-                        .HasColumnType("text");
-
                     b.Property<decimal?>("IncrementAmount")
                         .HasColumnType("numeric");
 
                     b.Property<decimal?>("IncrementPercent")
                         .HasColumnType("numeric");
-
-                    b.Property<string>("IncrementType")
-                        .HasColumnType("text");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -6935,17 +6874,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("NZ.Attendance.Domain.Entities.AttAttendanceExceptionHistory", b =>
-                {
-                    b.HasOne("NZ.Attendance.Domain.Entities.AttAttendanceException", "AttendanceException")
-                        .WithMany("History")
-                        .HasForeignKey("AttendanceExceptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AttendanceException");
-                });
-
             modelBuilder.Entity("NZ.Attendance.Domain.Entities.AttDeviceSyncLog", b =>
                 {
                     b.HasOne("NZ.HRM.Domain.Entities.AttDeviceMaster", "Device")
@@ -8177,11 +8105,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("LeaveType");
-                });
-
-            modelBuilder.Entity("NZ.Attendance.Domain.Entities.AttAttendanceException", b =>
-                {
-                    b.Navigation("History");
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.HrmEmployeeMaster", b =>
