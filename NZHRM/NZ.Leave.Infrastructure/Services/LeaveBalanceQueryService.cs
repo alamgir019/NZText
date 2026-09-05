@@ -67,7 +67,7 @@ public class LeaveBalanceQueryService : ILeaveBalanceQuery
 
         foreach (var employeeId in employeeIds)
         {
-            foreach (var row in rows)
+            foreach (var row in rows.Where(r => r.EmployeeId == employeeId))
             {
                 // If we got a row matching this employee, use it; otherwise create empty placeholder defaults
                 var isRowForThisEmployee = row.EmployeeId == employeeId;
