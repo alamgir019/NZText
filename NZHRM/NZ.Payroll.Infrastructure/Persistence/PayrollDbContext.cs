@@ -32,4 +32,22 @@ public class PayrollDbContext : DbContext
     public DbSet<HrmEmployeePayroll> HrmEmployeePayrolls => Set<HrmEmployeePayroll>();
     public DbSet<MstPayrollProcessingGroup> MstPayrollProcessingGroups => Set<MstPayrollProcessingGroup>();
     public DbSet<MstGrade> MstGrades => Set<MstGrade>();
+
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
+	{
+		base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<HrmEmployeeEmployment>(entity =>
+        {
+            entity.Ignore(e => e.Employee);
+            entity.Ignore(e => e.Group);
+            entity.Ignore(e => e.Unit);
+            entity.Ignore(e => e.Subunit);
+            entity.Ignore(e => e.Section);
+            entity.Ignore(e => e.Cell);
+            entity.Ignore(e => e.Grade);
+            entity.Ignore(e => e.Shift);
+            entity.Ignore(e => e.ProcessingGroup);
+        });
+    }
 }

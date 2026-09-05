@@ -16,6 +16,11 @@ namespace NZ.HRM.Domain.Entities
         public string? ApprovedBy { get; set; }
         public DateTime? ApprovalDate { get; set; }
 
-        [ForeignKey("EmployeeId")] public HrmEmployeeMaster? Employee { get; set; }
+		public string? ForwardedBy { get; set; }
+		public DateTime? ForwardDate { get; set; }
+
+		public string? IncrementType { get; set; }
+
+		[ForeignKey("EmployeeId")] public HrmEmployeeMaster? Employee { get; set; }
     }
 }
