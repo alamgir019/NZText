@@ -10,7 +10,6 @@ namespace NZ.Leave.Domain.Entities
         public int WorkflowStepNo { get; set; }
         public string? ApproverId { get; set; }
         public string? ActionTaken { get; set; }
-        public DateTime? ActionDate { get; set; }
         public string? Remarks { get; set; }
 
         [ForeignKey("LeaveApplicationId")] public LevLeaveApplication? LeaveApplication { get; set; }
