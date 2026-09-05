@@ -28,7 +28,7 @@ namespace NZ.Leave.Infrastructure.Repositories
                     CarryForwardAllowed = lt.CarryForwardAllowed,
                     MaxCarryForwardDays = lt.MaxCarryForwardDays,
                     ApprovalRequired = lt.ApprovalRequired,
-                    Status = lt.Status
+                    Status = lt.IsActive
                 })
                 .ToListAsync(cancellationToken);
         }

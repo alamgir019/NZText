@@ -10,6 +10,5 @@ namespace NZ.Leave.Domain.Entities
         public string HolidayName { get; set; } = string.Empty;
         public string? HolidayType { get; set; }
         public string? UnitId { get; set; }
-        public bool Status { get; set; }
     }
 }

@@ -20,17 +20,16 @@ public class LeaveBalanceQueryService : ILeaveBalanceQuery
         var currentLeaveYear = await _context.LevLeaveYears
             .AsNoTracking()
             .Where(year => year.IsCurrentYear)
-            .Select(year => (int?)year.LeaveYearValue)
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (!currentLeaveYear.HasValue)
+        if (currentLeaveYear == null)
             return Array.Empty<EmployeeLeaveBalanceResult>();
 
         var rows = await (
             from leaveType in _context.LevLeaveTypes.AsNoTracking()
-            where leaveType.Status
+            where leaveType.IsActive
             join balance in _context.LevLeaveBalances.AsNoTracking()
-                .Where(balance => employeeIds.Contains(balance.EmployeeId) && balance.YearId == currentLeaveYear.Value)
+                .Where(balance => employeeIds.Contains(balance.EmployeeId) && balance.YearId == currentLeaveYear.Id)
                 on leaveType.Id equals balance.LeaveTypeId into balances
             from balance in balances.DefaultIfEmpty()
             orderby leaveType.LeaveCode

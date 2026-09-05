@@ -211,7 +211,7 @@ public class PunchPollingBackgroundService : BackgroundService
             .ToListAsync(cancellationToken);
 
         var holidayDates = await dbContext.LevHolidayCalendars
-            .Where(h => h.HolidayDate >= from && h.HolidayDate <= to && h.Status)
+            .Where(h => h.HolidayDate >= from && h.HolidayDate <= to && h.IsActive)
             .Select(h => h.HolidayDate)
             .ToHashSetAsync(cancellationToken);
 

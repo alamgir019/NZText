@@ -17,8 +17,6 @@ namespace NZ.Leave.Domain.Entities
         public bool CarryForwardAllowed { get; set; }
         public decimal MaxCarryForwardDays { get; set; }
         public bool ApprovalRequired { get; set; }
-        public bool Status { get; set; }
-
         public ICollection<LevLeaveBalance> Balances { get; set; } = new HashSet<LevLeaveBalance>();
         public ICollection<LevLeaveApplication> Applications { get; set; } = new HashSet<LevLeaveApplication>();
         public ICollection<LevLeavePolicy> Policies { get; set; } = new HashSet<LevLeavePolicy>();
