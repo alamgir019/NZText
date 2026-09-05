@@ -37,17 +37,17 @@ public class PayrollDbContext : DbContext
 	{
 		base.OnModelCreating(modelBuilder);
 
-		modelBuilder.Entity<HrmEmployeeReporting>(entity =>
-		{
-			entity.HasOne(reporting => reporting.Employee)
-				.WithMany(employee => employee.Reportings)
-				.HasForeignKey(reporting => reporting.EmployeeId)
-				.OnDelete(DeleteBehavior.Restrict);
-
-			entity.HasOne(reporting => reporting.ReportingEmployee)
-				.WithMany()
-				.HasForeignKey(reporting => reporting.ReportingEmployeeId)
-				.OnDelete(DeleteBehavior.Restrict);
-		});
-	}
+        modelBuilder.Entity<HrmEmployeeEmployment>(entity =>
+        {
+            entity.Ignore(e => e.Employee);
+            entity.Ignore(e => e.Group);
+            entity.Ignore(e => e.Unit);
+            entity.Ignore(e => e.Subunit);
+            entity.Ignore(e => e.Section);
+            entity.Ignore(e => e.Cell);
+            entity.Ignore(e => e.Grade);
+            entity.Ignore(e => e.Shift);
+            entity.Ignore(e => e.ProcessingGroup);
+        });
+    }
 }

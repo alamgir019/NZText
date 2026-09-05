@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NZ.HRM.Infrastructure.NZ.HRM.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260902184227_AddColumnToPayIncrementHistory")]
-    partial class AddColumnToPayIncrementHistory
+    [Migration("20260905085120_AddColumnToIncreamentHistory")]
+    partial class AddColumnToIncreamentHistory
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -126,16 +126,13 @@ namespace NZ.HRM.Infrastructure.NZ.HRM.Infrastructure.Migrations
                     b.Property<string>("Remarks")
                         .HasColumnType("text");
 
-                    b.Property<string>("ResolvedBy")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("ResolvedFlag")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("Severity")
                         .HasColumnType("text");
 
                     b.Property<int>("SortOrder")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
                         .HasColumnType("integer");
 
                     b.Property<string>("UpdatedBy")
@@ -152,6 +149,64 @@ namespace NZ.HRM.Infrastructure.NZ.HRM.Infrastructure.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("attendance_exception", "attendance");
+                });
+
+            modelBuilder.Entity("NZ.Attendance.Domain.Entities.AttAttendanceExceptionHistory", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("CHAR(26)")
+                        .HasColumnName("Id");
+
+                    b.Property<string>("ActionBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("ActionOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("AttendanceExceptionId")
+                        .IsRequired()
+                        .HasColumnType("CHAR(26)");
+
+                    b.Property<string>("Comments")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<int>("FromStatus")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ToStatus")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttendanceExceptionId");
+
+                    b.ToTable("attendance_exception_history", "attendance");
                 });
 
             modelBuilder.Entity("NZ.Attendance.Domain.Entities.AttDeviceSyncLog", b =>
@@ -2229,6 +2284,86 @@ namespace NZ.HRM.Infrastructure.NZ.HRM.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("employee_verification", "hrm");
+                });
+
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.HrmLearnerConfirmationRequest", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("CHAR(26)")
+                        .HasColumnName("Id");
+
+                    b.Property<decimal>("AdjustmentAmount")
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<DateTime?>("ApprovalDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ApprovedBy")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<decimal>("CurrentGrossSalary")
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<DateOnly>("DateOfJoining")
+                        .HasColumnType("date");
+
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("CHAR(26)");
+
+                    b.Property<string>("ForwardedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("ForwardedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateOnly>("ProbationCompletedOn")
+                        .HasColumnType("date");
+
+                    b.Property<int>("ProbationPeriodMonths")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Remarks")
+                        .HasColumnType("text");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("StandardGrossSalary")
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId", "Status");
+
+                    b.ToTable("learner_confirmation_request", "hrm");
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.HrmMedicalFitnessCheck", b =>
@@ -6803,6 +6938,17 @@ namespace NZ.HRM.Infrastructure.NZ.HRM.Infrastructure.Migrations
                     b.Navigation("Employee");
                 });
 
+            modelBuilder.Entity("NZ.Attendance.Domain.Entities.AttAttendanceExceptionHistory", b =>
+                {
+                    b.HasOne("NZ.Attendance.Domain.Entities.AttAttendanceException", "AttendanceException")
+                        .WithMany("History")
+                        .HasForeignKey("AttendanceExceptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AttendanceException");
+                });
+
             modelBuilder.Entity("NZ.Attendance.Domain.Entities.AttDeviceSyncLog", b =>
                 {
                     b.HasOne("NZ.HRM.Domain.Entities.AttDeviceMaster", "Device")
@@ -7244,6 +7390,17 @@ namespace NZ.HRM.Infrastructure.NZ.HRM.Infrastructure.Migrations
                     b.HasOne("NZ.HRM.Domain.Entities.HrmEmployeeMaster", "Employee")
                         .WithOne("Verification")
                         .HasForeignKey("NZ.HRM.Domain.Entities.HrmEmployeeVerification", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.HrmLearnerConfirmationRequest", b =>
+                {
+                    b.HasOne("NZ.HRM.Domain.Entities.HrmEmployeeMaster", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -8023,6 +8180,11 @@ namespace NZ.HRM.Infrastructure.NZ.HRM.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("LeaveType");
+                });
+
+            modelBuilder.Entity("NZ.Attendance.Domain.Entities.AttAttendanceException", b =>
+                {
+                    b.Navigation("History");
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.HrmEmployeeMaster", b =>

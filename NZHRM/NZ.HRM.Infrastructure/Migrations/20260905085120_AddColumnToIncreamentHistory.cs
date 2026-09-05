@@ -6,16 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace NZ.HRM.Infrastructure.NZ.HRM.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddColumnToPayIncrementHistory : Migration
+    public partial class AddColumnToIncreamentHistory : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_increment_history_employee_master_EmployeeId",
-                schema: "payroll",
-                table: "increment_history");
-
             migrationBuilder.AddColumn<DateTime>(
                 name: "ForwardDate",
                 schema: "payroll",
@@ -36,26 +31,11 @@ namespace NZ.HRM.Infrastructure.NZ.HRM.Infrastructure.Migrations
                 table: "increment_history",
                 type: "text",
                 nullable: true);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_increment_history_employee_master_EmployeeId",
-                schema: "payroll",
-                table: "increment_history",
-                column: "EmployeeId",
-                principalSchema: "hrm",
-                principalTable: "employee_master",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_increment_history_employee_master_EmployeeId",
-                schema: "payroll",
-                table: "increment_history");
-
             migrationBuilder.DropColumn(
                 name: "ForwardDate",
                 schema: "payroll",
@@ -70,16 +50,6 @@ namespace NZ.HRM.Infrastructure.NZ.HRM.Infrastructure.Migrations
                 name: "IncrementType",
                 schema: "payroll",
                 table: "increment_history");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_increment_history_employee_master_EmployeeId",
-                schema: "payroll",
-                table: "increment_history",
-                column: "EmployeeId",
-                principalSchema: "hrm",
-                principalTable: "employee_master",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
         }
     }
 }
