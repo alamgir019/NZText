@@ -53,7 +53,7 @@ public static class EmployeeMapper
             Id = employee.Id,
             EnrollmentId = employee.EnrollmentId ?? string.Empty,
             EmployeeCode = employee.EmployeeCode,
-            EmployeeNameEnglish = employee.EmployeeName,
+            EmployeeName = employee.EmployeeName,
             EmployeeNameBangla = employee.EmployeeNameBangla,
             Gender = employee.Personal?.Gender != null && Enum.TryParse<Gender>(employee.Personal.Gender, out var gender)
             ? gender : null,
@@ -62,7 +62,6 @@ public static class EmployeeMapper
             JoiningDate = employee.Employment?.JoiningDate,
             EmployeeType = employee.EmployeeNature != null && Enum.TryParse<EmployeeNature>(employee.EmployeeNature, out var employeeType)
             ? employeeType : null,
-            EmployeeName = employee.EmployeeName,
             UnitName = employee.Employment?.Unit?.UnitName ?? string.Empty,
             SubUnitName = employee.Employment?.Subunit?.SubunitName ?? string.Empty,
             CellName = employee.Employment?.Cell?.CellName ?? string.Empty,
@@ -86,9 +85,8 @@ public static class EmployeeMapper
             Id = baseDto.Id,
             EnrollmentId = baseDto.EnrollmentId,
             EmployeeCode = baseDto.EmployeeCode,
-            EmployeeNameEnglish = baseDto.EmployeeNameEnglish,
-            EmployeeNameBangla = baseDto.EmployeeNameBangla,
             EmployeeName = baseDto.EmployeeName,
+            EmployeeNameBangla = baseDto.EmployeeNameBangla,
             IdType = employee.Personal?.IdType,
             IdNumber = employee.Personal?.IdNumber,
             UnitName = baseDto.UnitName,

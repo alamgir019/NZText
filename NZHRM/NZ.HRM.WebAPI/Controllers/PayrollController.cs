@@ -28,17 +28,17 @@ public class PayrollController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status409Conflict)]
 	public async Task<IActionResult> CreateIncrementHistory(
-		[FromBody] CreatePayIncrementHistoryCommand command)
+		[FromBody] CreateIncrementRequestsCommand command)
 	{
 		if (!ModelState.IsValid)
 			return BadRequest(ModelState);
 		try
 		{
-			var Id = await _createPayIncrementHistoryHandler.Handle(command, cancellationToken: default);
+			var Ids = await _createPayIncrementHistoryHandler.Handle(command, cancellationToken: default);
 			return CreatedAtAction(
 				nameof(CreateIncrementHistory),
-				new { id = Id },
-				new { id = Id, message = "Pay Increment History created" });
+				new { id = Ids },
+				new { id = Ids, message = "Pay Increment History created" });
 		}
 		catch (ArgumentException ex)
 		{

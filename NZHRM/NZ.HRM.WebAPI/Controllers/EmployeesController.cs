@@ -150,7 +150,7 @@ public class EmployeesController : ControllerBase
         return Ok(employees);
     }
 
-	[HttpGet("searchExd")]
+	[HttpGet("search-extention")]
 	[ProducesResponseType(typeof(List<EmployeeDetailDto>), StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> SearchEmployeesExd([FromQuery] string searchText)

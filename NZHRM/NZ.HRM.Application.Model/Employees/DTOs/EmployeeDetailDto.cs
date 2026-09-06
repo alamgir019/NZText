@@ -7,7 +7,6 @@ public class EmployeeDetailDto
     public string Id { get; set; } = string.Empty;
     public string EnrollmentId { get; set; } = string.Empty;
     public string EmployeeCode { get; set; } = string.Empty;
-    public string EmployeeNameEnglish { get; set; } = string.Empty;
     public string? EmployeeNameBangla { get; set; }
     public string? EmployeeName { get; set; } = string.Empty;
     public string UnitName { get; set; } = string.Empty;

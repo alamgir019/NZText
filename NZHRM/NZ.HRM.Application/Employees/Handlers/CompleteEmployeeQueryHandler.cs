@@ -90,9 +90,8 @@ public class CompleteEmployeeQueryHandler
         {
             Id = x.Id,
 
-            EmployeeNameEnglish = x.EmployeeName,
+            EmployeeName = x.EmployeeName,
             EmployeeNameBangla = x.EmployeeNameBangla,
-            //MobileNumber = x.Personal?.MobileNumber,
 
             EnrollmentId = x.EnrollmentId,
             EmployeeCode = x.EmployeeCode,

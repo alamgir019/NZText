@@ -4,7 +4,7 @@ public class EmployeeBasicInfoExdDto
 {
 	public string Id { get; set; } = string.Empty;
 	public string? EnrollmentId { get; set; }
-	public string EmployeeNameEnglish { get; set; } = string.Empty;
+	public string EmployeeName { get; set; } = string.Empty;
 	public string? MobileNumber { get; set; }
 	public string? EmployeeNameBangla { get; set; }
 	public string? DepartmentId { get; set; }

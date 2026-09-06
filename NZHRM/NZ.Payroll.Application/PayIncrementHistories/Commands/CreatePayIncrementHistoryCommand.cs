@@ -1,9 +1,8 @@
-using NZ.Payroll.Application.PayIncrementHistories.DTOs;
 using System.ComponentModel.DataAnnotations;
 
 namespace NZ.Payroll.Application.PayIncrementHistories.Commands;
 
-public class CreatePayIncrementHistoryCommand
+public class CreateIncrementRequestItem
 {
 	[Required(ErrorMessage = "Employee ID is required")]
 	[MaxLength(50, ErrorMessage = "Employee ID must not exceed 50 characters")]
@@ -24,16 +23,16 @@ public class CreatePayIncrementHistoryCommand
 	[Range(0, 100, ErrorMessage = "Increment percent must be between 0 and 100")]
 	public decimal? IncrementPercent { get; set; }
 
-	[MaxLength(100, ErrorMessage = "Approved by must not exceed 100 characters")]
-	public string? ApprovedBy { get; set; }
-
-	public DateTime? ApprovalDate { get; set; }
-
-	[MaxLength(100, ErrorMessage = "Forwarded by must not exceed 100 characters")]
-	public string? ForwardedBy { get; set; }
-
-	public DateTime? ForwardDate { get; set; }
-
 	[MaxLength(50, ErrorMessage = "Increment type must not exceed 50 characters")]
 	public string? IncrementType { get; set; }
+}
+
+
+public class CreateIncrementRequestsCommand
+{
+    public List<CreateIncrementRequestItem> Requests { get; set; } = new List<CreateIncrementRequestItem>();
+    public string? CreatedBy { get; set; }
+    public string? ForwardedBy { get; set; }
+
+    public DateTime? ForwardDate { get; set; }
 }

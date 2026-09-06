@@ -17,40 +17,40 @@ public class CreatePayIncrementHistoryHandler
 		_employeeQuery = employeeQuery;
 	}
 
-	public async Task<String> Handle(CreatePayIncrementHistoryCommand command, CancellationToken cancellationToken = default)
+	public async Task<List<string>> Handle(CreateIncrementRequestsCommand command, CancellationToken cancellationToken = default)
 	{
-		
-
-		if (string.IsNullOrWhiteSpace(command.EmployeeId))
-			throw new ArgumentException("Employee ID is required", nameof(command.EmployeeId));
-
-		var employee = await _employeeQuery.GetByIdAsync(command.EmployeeId, cancellationToken);
-		if (employee is null)
-			throw new KeyNotFoundException($"Employee with ID '{command.EmployeeId}' not found");
-
-		var duplicateExists = await _repository.ExistsByEmployeeAndEffectiveDateAsync(command.EmployeeId, command.EffectiveDate, cancellationToken);
-		if (duplicateExists)
-			throw new InvalidOperationException($"An increment history record already exists for employee '{command.EmployeeId}' with effective date '{command.EffectiveDate}'");
-
-		var entity = new PayIncrementHistory
+		var histories = new List<PayIncrementHistory>();
+		foreach (var request in command.Requests)
 		{
-			EmployeeId = command.EmployeeId,
-			EffectiveDate = command.EffectiveDate,
-			OldGrossSalary = command.OldGrossSalary,
-			NewGrossSalary = command.NewGrossSalary,
-			IncrementAmount = command.IncrementAmount,
-			IncrementPercent = command.IncrementPercent,
-			ApprovedBy = command.ApprovedBy,
-			ApprovalDate = command.ApprovalDate,
-			ForwardedBy = command.ForwardedBy,
-			ForwardDate = command.ForwardDate,
-			IncrementType = command.IncrementType,
-			IsActive = true
-		};
+			if (string.IsNullOrWhiteSpace(request.EmployeeId))
+				throw new ArgumentException("Employee ID is required", nameof(request.EmployeeId));
 
+			var employee = await _employeeQuery.GetByIdAsync(request.EmployeeId, cancellationToken);
+			if (employee is null)
+				throw new KeyNotFoundException($"Employee with ID '{request.EmployeeId}' not found");
 
-		// Save PayIncrementHistory entity to the database
-		var savedEntity = await _repository.AddAsync(entity, cancellationToken);
-		return savedEntity.Id;
+			var duplicateExists = await _repository.ExistsByEmployeeAndEffectiveDateAsync(request.EmployeeId, request.EffectiveDate, cancellationToken);
+			if (duplicateExists)
+				throw new InvalidOperationException($"An increment history record already exists for employee '{request.EmployeeId}' with effective date '{request.EffectiveDate}'");
+
+			var entity = new PayIncrementHistory
+			{
+				EmployeeId = request.EmployeeId,
+				EffectiveDate = request.EffectiveDate,
+				OldGrossSalary = request.OldGrossSalary,
+				NewGrossSalary = request.NewGrossSalary,
+				IncrementAmount = request.IncrementAmount,
+				IncrementPercent = request.IncrementPercent,
+				ForwardedBy = command.ForwardedBy,
+				ForwardDate = command.ForwardDate,
+				IncrementType = request.IncrementType,
+				IsActive = true
+			};
+			histories.Add(entity);
+		}
+
+		// Save PayIncrementHistory entities to the database
+		var savedEntities = await _repository.AddRangeAsync(histories, cancellationToken);
+		return savedEntities.Select(e => e.Id).ToList();
 	}
 }

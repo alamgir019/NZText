@@ -27,4 +27,10 @@ public class PayIncrementHistoryRepository : IPayIncrementHistoryRepository
 			history => history.EmployeeId == employeeId && history.EffectiveDate == effectiveDate,
 			cancellationToken);
 	}
+	public async Task<IEnumerable<PayIncrementHistory>> AddRangeAsync(IEnumerable<PayIncrementHistory> entities, CancellationToken cancellationToken = default)
+	{
+		await _context.PayIncrementHistories.AddRangeAsync(entities, cancellationToken);
+		await _context.SaveChangesAsync(cancellationToken);
+		return entities;
+	}
 }
