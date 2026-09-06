@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\NZ.HRM.Infrastructure\NZ.HRM.Infrastructure.csproj" />
     <ProjectReference Include="..\NZ.Payroll.Application\NZ.Payroll.Application.csproj" />
     <ProjectReference Include="..\NZ.HRM.Domain\NZ.HRM.Domain.csproj" />
     <ProjectReference Include="..\NZ.Shared.Contracts\NZ.Shared.Contracts.csproj" />

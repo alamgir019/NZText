@@ -11,14 +11,11 @@ namespace NZ.HRM.WebAPI.Controllers;
 [Route("api/payroll")]
 public class PayrollController : ControllerBase
 {
-	private readonly IPayrollProcessingService _payrollProcessingService;
 	private readonly CreatePayIncrementHistoryHandler _createPayIncrementHistoryHandler;
 
 	public PayrollController(
-		IPayrollProcessingService payrollProcessingService,
 		CreatePayIncrementHistoryHandler createPayIncrementHistoryHandler)
 	{
-		_payrollProcessingService = payrollProcessingService;
 		_createPayIncrementHistoryHandler = createPayIncrementHistoryHandler;
 	}
 

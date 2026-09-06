@@ -577,6 +577,7 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
         // Return true if NO matching code exists (code is unique)
         return !await query.AnyAsync(cancellationToken);
     }
+
     public async Task<bool> EnrollmentCodeExistsAsync(string enrollmentCode, CancellationToken cancellationToken = default)
     {
         return await _context.HrmEmployeeMasters

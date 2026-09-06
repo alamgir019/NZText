@@ -37,17 +37,21 @@ public class PayrollDbContext : DbContext
 	{
 		base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<HrmEmployeeEmployment>(entity =>
+        modelBuilder.Entity<HrmEmployeeMaster>(entity =>
         {
-            entity.Ignore(e => e.Employee);
-            entity.Ignore(e => e.Group);
-            entity.Ignore(e => e.Unit);
-            entity.Ignore(e => e.Subunit);
-            entity.Ignore(e => e.Section);
-            entity.Ignore(e => e.Cell);
-            entity.Ignore(e => e.Grade);
-            entity.Ignore(e => e.Shift);
-            entity.Ignore(e => e.ProcessingGroup);
+            entity.Ignore(e => e.Personal);
+            entity.Ignore(e => e.Employment);
+            entity.Ignore(e => e.Payroll);
+            entity.Ignore(e => e.Verification);
+            entity.Ignore(e => e.MedicalFitnessCheck);
+            entity.Ignore(e => e.Documents);
+            entity.Ignore(e => e.Nominees);
+            entity.Ignore(e => e.Educations);
+            entity.Ignore(e => e.Experiences);
+            entity.Ignore(e => e.Trainings);
+            entity.Ignore(e => e.FamilyMembers);
+            entity.Ignore(e => e.BankAccounts);
+            entity.Ignore(e => e.Reportings);
         });
     }
 }

@@ -1,17 +1,16 @@
+using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Domain.Entities;
 using NZ.Payroll.Application.Interfaces.Repositories;
 using NZ.Payroll.Application.PayIncrementHistories.Commands;
-using NZ.Payroll.Application.PayIncrementHistories.DTOs;
-using NZ.Shared.Contracts.HRM;
 
 namespace NZ.Payroll.Application.PayIncrementHistories.Handlers;
 
 public class CreatePayIncrementHistoryHandler
 {
 	private readonly IPayIncrementHistoryRepository _repository;
-	private readonly IEmployeeQuery _employeeQuery;
+	private readonly IEmployeeMasterRepository _employeeQuery;
 
-	public CreatePayIncrementHistoryHandler(IPayIncrementHistoryRepository repository, IEmployeeQuery employeeQuery)
+	public CreatePayIncrementHistoryHandler(IPayIncrementHistoryRepository repository, IEmployeeMasterRepository employeeQuery)
 	{
 		_repository = repository;
 		_employeeQuery = employeeQuery;
@@ -25,8 +24,8 @@ public class CreatePayIncrementHistoryHandler
 			if (string.IsNullOrWhiteSpace(request.EmployeeId))
 				throw new ArgumentException("Employee ID is required", nameof(request.EmployeeId));
 
-			var employee = await _employeeQuery.GetByIdAsync(request.EmployeeId, cancellationToken);
-			if (employee is null)
+			var employeeExists = await _employeeQuery.ExistsAsync(request.EmployeeId, cancellationToken);
+			if (!employeeExists)
 				throw new KeyNotFoundException($"Employee with ID '{request.EmployeeId}' not found");
 
 			var duplicateExists = await _repository.ExistsByEmployeeAndEffectiveDateAsync(request.EmployeeId, request.EffectiveDate, cancellationToken);

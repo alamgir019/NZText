@@ -1,5 +1,3 @@
-using NZ.HRM.Application.EmployeeMasters.Queries.GetAllEmployeeMasters;
-using NZ.HRM.Application.EmployeeMasters.Queries.GetEmployeeMasterById;
 using NZ.HRM.Application.EmployeeMasters.Queries.VerifyEmployeeCodeUniqueness;
 using NZ.HRM.Application.Interfaces.Repositories;
 
