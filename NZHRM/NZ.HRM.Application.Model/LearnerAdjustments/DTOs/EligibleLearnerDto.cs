@@ -5,6 +5,7 @@ public class EligibleLearnerDto
     public string EmployeeId { get; set; } = string.Empty;
     public string EmployeeName { get; set; } = string.Empty;
     public string DepartmentName { get; set; } = string.Empty;
+    public string SectionName { get; set; } = string.Empty;
     public string Designation { get; set; } = string.Empty;
     public DateOnly DateOfJoining { get; set; }
     public DateOnly ProbationCompletedOn { get; set; }

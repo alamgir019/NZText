@@ -13,6 +13,4 @@ public class ForwardLearnersForConfirmationCommand
     public int ProbationPeriodMonths { get; set; }
 
     public string ForwardedBy { get; set; } = string.Empty;
-
-    public string? Remarks { get; set; }
 }

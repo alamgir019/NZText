@@ -86,7 +86,7 @@ public class LearnerConfirmationRepository : ILearnerConfirmationRepository
                 decimal.Round(standardGrossSalary.Value, 2, MidpointRounding.AwayFromZero),
                 ProbationAdjustmentPolicy.CalculateAdjustmentAmount(standardGrossSalary.Value, currentGrossSalary.Value),
                 command.ForwardedBy,
-                command.Remarks);
+                string.Empty);
 
             request.CreatedBy = command.ForwardedBy;
             request.UpdatedBy = command.ForwardedBy;

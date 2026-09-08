@@ -53,6 +53,7 @@ public class EligibleLearnerRepository : IEligibleLearnerRepository
                 EmployeeId = employee.EmployeeCode,
                 employee.EmployeeName,
                 DepartmentName = employment.Department != null ? employment.Department.DepartmentName : string.Empty,
+                SectionName = employment.Section != null ? employment.Section.SectionName : string.Empty,
                 Designation = employment.Designation!.DesignationName,
                 DateOfJoining = employment.JoiningDate!.Value,
                 CurrentGrossSalary = payroll.GrossSalary!.Value
@@ -71,6 +72,7 @@ public class EligibleLearnerRepository : IEligibleLearnerRepository
                 EmployeeId = x.EmployeeId,
                 EmployeeName = x.EmployeeName,
                 DepartmentName = x.DepartmentName,
+                SectionName = x.SectionName,
                 Designation = x.Designation,
                 DateOfJoining = x.DateOfJoining,
                 ProbationCompletedOn = ProbationAdjustmentPolicy
