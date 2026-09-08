@@ -82,7 +82,7 @@ public class EligibleLearnerQueryHandler
                 "Selected probation period is not valid.");
 
         var pageNumber = query.PageNumber <= 0 ? 1 : query.PageNumber;
-        var pageSize = query.PageSize <= 0 ? 10 : query.PageSize;
+        var pageSize = query.PageSize <= 0 ? 1000 : query.PageSize;
 
         return new EligibleLearnerFilter(
             query.JoiningDateFrom.Value,

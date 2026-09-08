@@ -14,7 +14,7 @@ namespace NZ.HRM.Domain.Services
         /// <summary>
         /// Probation periods (in months) supported by the system.
         /// </summary>
-        public static readonly int[] SupportedProbationPeriods = { 1, 2, 3, 6, 12 };
+        public static readonly int[] SupportedProbationPeriods = { 1, 2, 3, 4, 5, 6, 12 };
 
         public static bool IsSupportedProbationPeriod(int months)
             => SupportedProbationPeriods.Contains(months);
