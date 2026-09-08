@@ -9,7 +9,7 @@ namespace NZ.HRM.Domain.Services
     {
         public const string LearnerDesignationName = "Learner";
         public const string StandardWorkerDesignationName = "Worker";
-        public const string ActiveStatus = "Active";
+        public const string ActiveStatus = "ITActivation";
 
         /// <summary>
         /// Probation periods (in months) supported by the system.

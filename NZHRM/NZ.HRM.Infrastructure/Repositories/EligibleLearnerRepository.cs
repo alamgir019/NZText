@@ -19,10 +19,10 @@ public class EligibleLearnerRepository : IEligibleLearnerRepository
     public async Task<(List<EligibleLearnerDto> Learners, int TotalRecords, decimal TotalAdjustmentAmount)>
         GetEligibleLearnersAsync(EligibleLearnerFilter filter, CancellationToken cancellationToken = default)
     {
-        // Standard worker gross salary is maintained in salary master data (grade of the Worker designation).
+        //Standard worker gross salary is maintained in salary master data(grade of the Worker designation).
         var standardGrossSalary = await _context.MstDesignations
             .AsNoTracking()
-            .Where(d => d.DesignationName.ToLower() == ProbationAdjustmentPolicy.StandardWorkerDesignationName.ToLower()
+            .Where(d => d.DesignationName.ToLower() == ProbationAdjustmentPolicy.LearnerDesignationName.ToLower()
                         && d.Grade != null)
             .Select(d => (decimal?)d.Grade!.MinimumSalary)
             .FirstOrDefaultAsync(cancellationToken);
@@ -40,7 +40,7 @@ public class EligibleLearnerRepository : IEligibleLearnerRepository
             join payroll in _context.HrmEmployeePayrolls.AsNoTracking()
                 on employee.Id equals payroll.EmployeeId
             where employee.IsActive
-                  && employee.Status.ToLower() == activeStatus
+                  && employee.Status.ToLower() == activeStatus.ToLower()
                   && employment.Designation != null
                   && employment.Designation.DesignationName.ToLower() == learnerDesignation
                   && employment.JoiningDate != null
