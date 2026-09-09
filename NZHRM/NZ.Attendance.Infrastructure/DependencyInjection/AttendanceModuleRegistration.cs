@@ -50,7 +50,7 @@ public static class AttendanceModuleRegistration
         services.AddScoped<RawPunchCommandHandler>();
         services.AddScoped<PunchProcessingService>();
         // Note: PunchProcessingService and AttendanceProcessingService are registered by AddAttendanceModule()
-
+        services.AddScoped<QueryHandler>();
 
         return services;
     }

@@ -6,7 +6,7 @@ using NZ.Shared.Domain.Common;
 
 namespace NZ.HRM.Domain.Entities
 {
-    [Table("employee_documents", Schema = "hrm")]
+    [Table("employee_document", Schema = "hrm")]
     public class HrmEmployeeDocument : BaseEntityWithSortOrder
     {
         public string EmployeeId { get; set; } = string.Empty;

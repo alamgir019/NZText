@@ -32,6 +32,7 @@ public class AttendanceDbContext : DbContext
     public DbSet<HrmEmployeeEmployment> HrmEmployeeEmployments => Set<HrmEmployeeEmployment>();
     public DbSet<MstDepartment> MstDepartments => Set<MstDepartment>();
     public DbSet<MstDesignation> MstDesignations => Set<MstDesignation>();
+    public DbSet<HrmEmployeeDocument> HrmEmployeeDocuments => Set<HrmEmployeeDocument>();
     // C#
     protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
@@ -48,7 +49,6 @@ public class AttendanceDbContext : DbContext
         entity.Ignore(e => e.Payroll);
         entity.Ignore(e => e.Verification);
         entity.Ignore(e => e.MedicalFitnessCheck);
-        entity.Ignore(e => e.Documents);
         entity.Ignore(e => e.Nominees);
         entity.Ignore(e => e.Educations);
         entity.Ignore(e => e.Experiences);
@@ -72,7 +72,10 @@ public class AttendanceDbContext : DbContext
         entity.Ignore(e => e.Shift);
         entity.Ignore(e => e.ProcessingGroup);
     });
-
+    modelBuilder.Entity<HrmEmployeeDocument>(entity =>
+    {
+        entity.Ignore(e => e.Employee);
+    });
     // Attendance exception workflow: status stored as text, audit trail cascades.
     modelBuilder.Entity<AttAttendanceException>(entity =>
     {
@@ -107,6 +110,11 @@ public class AttendanceDbContext : DbContext
         entity.Property(h => h.Comments).HasMaxLength(500);
 
         entity.HasIndex(h => new { h.AttendanceExceptionId, h.ActionOn });
+    });
+
+    modelBuilder.Entity<HrmEmployeeDocument>(entity =>
+    {
+        entity.Ignore(e => e.Employee);
     });
 }
 }

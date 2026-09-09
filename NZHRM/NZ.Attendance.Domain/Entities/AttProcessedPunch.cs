@@ -1,10 +1,10 @@
 using NZ.HRM.Domain.Common;
-using NZ.HRM.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NZ.HRM.Domain.Entities
 {
+    [Table("processed_punches", Schema = "attendance")]
     public class AttProcessedPunch : BaseEntity
     {
         [Required]

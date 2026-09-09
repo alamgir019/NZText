@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using NZ.Attendance.Application.RawPunches.Queries.GetProcessedPunches;
 using NZ.Attendance.Infrastructure.Persistence;
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Domain.Entities;
@@ -33,5 +34,44 @@ public class AttProcessedPunchRepository : IProcessedPunchRepository
             .Where(x => x.EmployeeId == employeeId && x.PunchDate == date)
             .OrderBy(x => x.AdjustedPunchTime)
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<ProcessedPunchListItemDto>> GetProcessedPunchesAsync(
+        string shiftId,
+        string companyId,
+        string punchType,
+        CancellationToken cancellationToken = default)
+    {
+        var normalizedPunchType = punchType.Trim();
+
+        var result = await (
+            from processedPunch in _context.AttProcessedPunches.AsNoTracking()
+            join employee in _context.HrmEmployeeMasters.AsNoTracking()
+                on processedPunch.EmployeeId equals employee.Id
+            join employment in _context.HrmEmployeeEmployments.AsNoTracking()
+                on processedPunch.EmployeeId equals employment.EmployeeId
+            where processedPunch.ShiftId == shiftId
+                && employment.UnitId == companyId
+                && processedPunch.PunchType == normalizedPunchType
+            orderby processedPunch.PunchDate, processedPunch.AdjustedPunchTime
+            select new ProcessedPunchListItemDto
+            {
+                EmployeeId = processedPunch.EmployeeId,
+                EmployeeName = employee.EmployeeName,
+                EmployeePhotoUrl = _context.HrmEmployeeDocuments
+                    .Where(document =>
+                        document.EmployeeId == processedPunch.EmployeeId
+                        && (document.DocumentType == "Photo" || document.DocumentType == "PassportPhoto"))
+                    .OrderByDescending(document => document.CreatedOn)
+                    .Select(document => document.FilePath)
+                    .FirstOrDefault(),
+                PunchDate = processedPunch.PunchDate,
+                AdjustedPunchTime = processedPunch.AdjustedPunchTime,
+                RawPunchTime = processedPunch.RawPunchTime,
+                PunchType = processedPunch.PunchType
+            })
+            .ToListAsync(cancellationToken);
+
+        return result;
     }
 }
