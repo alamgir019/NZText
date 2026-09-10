@@ -19,7 +19,7 @@ namespace NZ.Attendance.Infrastructure.Repositories
         public async Task<string> CreateAsync(OvertimeRequestDto dto)
         {
             // Create a request id and insert one item row per employee with duplicated request header fields.
-            var requestId = NZ.HRM.Domain.Helper.IdentityGenerator.Next();
+            var requestId = HRM.Domain.Helper.IdentityGenerator.Next();
 
             var items = new List<AttOtRequestItem>();
             foreach (var emp in dto.Employees)
@@ -43,6 +43,7 @@ namespace NZ.Attendance.Infrastructure.Repositories
                 RequestId = requestId,
                 CurrentShiftId = dto.CurrentShiftId,
                 OtDate = DateOnly.FromDateTime(dto.OTDate),
+                UnitId = dto.UnitId,
                 DepartmentId = dto.DepartmentId,
                 Reason = dto.Reason,
                 EmployeeId = emp.EmployeeId,
@@ -116,62 +117,103 @@ namespace NZ.Attendance.Infrastructure.Repositories
         }
 
         public async Task<(List<OvertimeRequestDto> Items, int Total)> GetAllAsync(
-            int pageNumber = 1,
-            int pageSize = 20,
-            string? shiftId = null,
-            string? departmentId = null,
-            DateTime? from = null,
-            DateTime? to = null,
-            string? status = null,
-            CancellationToken cancellationToken = default)
+    int pageNumber = 1,
+    int pageSize = 20,
+    string? unitId = null,
+    string? shiftId = null,
+    string? departmentId = null,
+    DateTime? from = null,
+    DateTime? to = null,
+    string? status = null,
+    CancellationToken cancellationToken = default)
         {
-            // Work over item rows, apply filters, then group by RequestId to return one dto per request
             var itemsQuery = _context.AttOtRequestItems.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(shiftId)) itemsQuery = itemsQuery.Where(r => r.CurrentShiftId == shiftId);
             if (!string.IsNullOrWhiteSpace(departmentId)) itemsQuery = itemsQuery.Where(r => r.DepartmentId == departmentId);
             if (from.HasValue) itemsQuery = itemsQuery.Where(r => r.OtDate >= DateOnly.FromDateTime(from.Value));
             if (to.HasValue) itemsQuery = itemsQuery.Where(r => r.OtDate <= DateOnly.FromDateTime(to.Value));
+            if (!string.IsNullOrWhiteSpace(unitId)) itemsQuery = itemsQuery.Where(r => r.UnitId == unitId);
+            if (!string.IsNullOrWhiteSpace(shiftId)) itemsQuery = itemsQuery.Where(r => r.CurrentShiftId == shiftId);
+            if (!string.IsNullOrWhiteSpace(departmentId)) itemsQuery = itemsQuery.Where(r => r.DepartmentId == departmentId);
+            if (from.HasValue) itemsQuery = itemsQuery.Where(r => r.OtDate >= DateOnly.FromDateTime(from.Value));
+            if (to.HasValue) itemsQuery = itemsQuery.Where(r => r.OtDate <= DateOnly.FromDateTime(to.Value));
             if (!string.IsNullOrWhiteSpace(status)) itemsQuery = itemsQuery.Where(r => r.Status == status);
 
-            var grouped = itemsQuery
+            // total distinct requests
+            var total = await itemsQuery.Select(i => i.RequestId).Distinct().CountAsync(cancellationToken);
+
+            // get the paged RequestIds ordered by the latest CreatedOn per request (server-side)
+            var pageRequestIds = await itemsQuery
                 .GroupBy(i => i.RequestId)
-                .Select(g => new
-                {
-                    RequestId = g.Key,
-                    Latest = g.OrderByDescending(x => x.CreatedOn).FirstOrDefault(),
-                    Items = g
-                });
-
-            var total = await grouped.CountAsync(cancellationToken);
-
-            var page = await grouped
-                .OrderByDescending(g => g.Latest.CreatedOn)
+                .Select(g => new { RequestId = g.Key, LatestCreatedOn = g.Max(x => x.CreatedOn) })
+                .OrderByDescending(g => g.LatestCreatedOn)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
+                .Select(g => g.RequestId)
                 .ToListAsync(cancellationToken);
 
+            // fetch items for the selected page of requests with employee & department names (server-side)
+            var pageItems = await (
+                from item in itemsQuery
+                where pageRequestIds.Contains(item.RequestId)
+                join master in _context.HrmEmployeeMasters on item.EmployeeId equals master.Id into mJoin
+                from master in mJoin.DefaultIfEmpty()
+                join dept in _context.MstDepartments on item.DepartmentId equals dept.Id into dJoin
+                from dept in dJoin.DefaultIfEmpty()
+                select new
+                {
+                    item.Id,
+                    item.RequestId,
+                    item.EmployeeId,
+                    item.OtHours,
+                    item.Status,
+                    item.SubmittedBy,
+                    item.CreatedOn,
+                    item.CurrentShiftId,
+                    item.OtDate,
+                    item.DepartmentId,
+                    item.Reason,
+                    EmployeeName = master != null ? master.EmployeeName : string.Empty,
+                    EmployeeCode = master != null ? master.EmployeeCode : string.Empty,
+                    DepartmentName = dept != null ? dept.DepartmentName : string.Empty
+                }
+            ).ToListAsync(cancellationToken);
+
+            // build DTOs in memory
+            var groupedItems = pageItems.GroupBy(i => i.RequestId).ToDictionary(g => g.Key, g => g.ToList());
             var list = new List<OvertimeRequestDto>();
-            foreach (var group in page)
+            foreach (var requestId in pageRequestIds)
             {
-                var first = group.Latest;
+                groupedItems.TryGetValue(requestId, out var itemsForRequest);
+                if (itemsForRequest == null)
+                {
+                    continue;
+                }
+
+                var first = itemsForRequest.OrderByDescending(x => x.CreatedOn).FirstOrDefault();
                 var dto = new OvertimeRequestDto
                 {
-                    Id = group.RequestId,
+                    Id = requestId,
                     CurrentShiftId = first?.CurrentShiftId ?? string.Empty,
                     OTDate = first != null ? first.OtDate.ToDateTime(new TimeOnly(0, 0)) : DateTime.MinValue,
                     DepartmentId = first?.DepartmentId ?? string.Empty,
                     Reason = first?.Reason ?? string.Empty,
                 };
 
-                foreach (var e in group.Items)
+                foreach (var e in itemsForRequest)
                 {
                     dto.Employees.Add(new OvertimeEmployeeDto
                     {
                         EmployeeId = e.EmployeeId,
+                        EmployeeCode = e.EmployeeCode,
+                        EmployeeName = e.EmployeeName,
+                        DepartmentId = e.DepartmentId,
+                        DepartmentName = e.DepartmentName,
                         OTHours = e.OtHours.ToString(@"hh\:mm"),
                         Status = e.Status,
-                        ItemId = e.Id
+                        ItemId = e.Id,
+                        SubmittedBy = e.SubmittedBy
                     });
                 }
 

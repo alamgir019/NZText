@@ -12,5 +12,6 @@ namespace NZ.Attendance.Application.OvertimeRequests.Dto
         public string DepartmentId { get; set; } = string.Empty;
         public string? Reason { get; set; }
         public List<OvertimeEmployeeDto> Employees { get; set; } = new List<OvertimeEmployeeDto>();
+        public string? UnitId { get; set; }
     }
 }

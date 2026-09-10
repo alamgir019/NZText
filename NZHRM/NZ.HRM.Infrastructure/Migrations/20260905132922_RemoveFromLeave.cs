@@ -61,23 +61,17 @@ namespace NZ.HRM.Infrastructure.NZ.HRM.Infrastructure.Migrations
                 nullable: false,
                 defaultValue: false);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "LeaveYear",
-                schema: "leave_mgmt",
-                table: "leave_opening_balance",
-                type: "integer",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "text");
+            migrationBuilder.Sql(@"
+                ALTER TABLE leave_mgmt.leave_opening_balance
+                ALTER COLUMN ""LeaveYear"" TYPE integer
+                USING ""LeaveYear""::integer;
+            ");
 
-            migrationBuilder.AlterColumn<int>(
-                name: "YearId",
-                schema: "leave_mgmt",
-                table: "leave_balance",
-                type: "integer",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "text");
+            migrationBuilder.Sql(@"
+                ALTER TABLE leave_mgmt.leave_balance
+                ALTER COLUMN ""YearId"" TYPE integer
+                USING ""YearId""::integer;
+            ");
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "LastUpdated",

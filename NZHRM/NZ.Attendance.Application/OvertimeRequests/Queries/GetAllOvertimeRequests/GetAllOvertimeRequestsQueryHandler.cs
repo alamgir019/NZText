@@ -14,7 +14,7 @@ namespace NZ.Attendance.Application.OvertimeRequests.Queries.GetAllOvertimeReque
 
         public async Task<(List<OvertimeRequestDto> Items, int Total)> Handle(GetAllOvertimeRequestsQuery query, CancellationToken cancellationToken = default)
         {
-            return await _repository.GetAllAsync(query.PageNumber, query.PageSize, query.ShiftId, query.DepartmentId, query.From, query.To, query.Status, cancellationToken);
+            return await _repository.GetAllAsync(query.PageNumber, query.PageSize, query.UnitId, query.ShiftId, query.DepartmentId, query.From, query.To, query.Status, cancellationToken);
         }
     }
 }

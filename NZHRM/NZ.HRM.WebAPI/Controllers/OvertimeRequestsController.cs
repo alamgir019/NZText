@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using NZ.Attendance.Application.OvertimeRequests.Queries.GetOvertimeRequestById;
 using NZ.Attendance.Application.OvertimeRequests.Commands.CreateOvertimeRequest;
 using NZ.Attendance.Application.OvertimeRequests.Handlers;
 using NZ.Attendance.Application.OvertimeRequests.Queries.GetAllOvertimeRequests;
 using NZ.Attendance.Application.OvertimeRequests.Queries.GetEmployeesByShift;
+using NZ.Attendance.Application.OvertimeRequests.Queries.GetOvertimeRequestById;
+using NZ.HRM.Utility;
+using NZ.HRM.Utility.Enum;
 
 namespace NZ.Attendance.WebAPI.Controllers;
 
@@ -45,19 +47,24 @@ public class OvertimeRequestsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(
+        [FromQuery] string? shiftId = null,
+        [FromQuery] string? divisionId = null,
+        [FromQuery] string? unitId = null,
+        [FromQuery] string? departmentId = null,
+        [FromQuery] string? status = null,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20)
     {
         var query = new GetAllOvertimeRequestsQuery
         {
-            PageNumber = int.TryParse(HttpContext.Request.Query["pageNumber"], out var p) ? p : 1,
-            PageSize = int.TryParse(HttpContext.Request.Query["pageSize"], out var s) ? s : 20,
-            ShiftId = HttpContext.Request.Query["shiftId"].ToString(),
-            DepartmentId = HttpContext.Request.Query["departmentId"].ToString(),
-            Status = HttpContext.Request.Query["status"].ToString()
+            PageNumber = pageNumber > 0 ? pageNumber : 1,
+            PageSize = pageSize > 0 ? pageSize : 2000,
+            ShiftId = shiftId,
+            DepartmentId = departmentId,
+            UnitId = unitId,
+            Status = status
         };
-
-        if (DateTime.TryParse(HttpContext.Request.Query["from"], out var from)) query.From = from;
-        if (DateTime.TryParse(HttpContext.Request.Query["to"], out var to)) query.To = to;
 
         var (items, total) = await _getAllHandler.Handle(query);
         return Ok(new { items, total });

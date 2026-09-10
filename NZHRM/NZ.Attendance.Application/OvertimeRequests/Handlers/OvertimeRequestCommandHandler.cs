@@ -34,6 +34,7 @@ namespace NZ.Attendance.Application.OvertimeRequests.Handlers
             {
                 CurrentShiftId = command.CurrentShiftId,
                 OTDate = command.OTDate,
+                UnitId = command.UnitId,
                 DepartmentId = command.DepartmentId,
                 Reason = command.Reason
             };

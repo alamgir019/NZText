@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using NZ.Attendance.Application.OvertimeRequests.Dto;
 
@@ -12,6 +11,8 @@ namespace NZ.Attendance.Application.OvertimeRequests.Commands.CreateOvertimeRequ
 
         [Required]
         public DateTime OTDate { get; set; }
+
+        public string? UnitId { get; set; }
 
         [Required]
         public string DepartmentId { get; set; } = string.Empty;
