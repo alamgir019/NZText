@@ -40,6 +40,7 @@ namespace NZ.Attendance.Infrastructure.Repositories
                     EmployeeId = item.EmployeeId,
                     AttendanceDate = item.AttendanceDate,
                     ExceptionType = item.ExceptionType,
+                    Time = item.Time,
                     Severity = item.Severity,
                     Remarks = item.Remarks,
                     Status = AttendanceExceptionStatus.Draft,

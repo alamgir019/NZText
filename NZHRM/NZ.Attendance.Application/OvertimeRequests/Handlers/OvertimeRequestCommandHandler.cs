@@ -1,12 +1,9 @@
 using System.Globalization;
 using NZ.Attendance.Application.Interfaces.Repositories;
-using NZ.Attendance.Application.OvertimeRequests.Commands.SubmitOvertimeRequest;
 using NZ.Attendance.Application.OvertimeRequests.Dto;
 using NZ.Attendance.Application.OvertimeRequests.Commands.CreateOvertimeRequest;
-using NZ.Attendance.Application.OvertimeRequests.Commands.AddOvertimeEmployee;
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.Attendance.Application.OvertimeRequests.Commands.ApproveOvertimeRequest;
-using NZ.Attendance.Application.OvertimeRequests.Commands.ApproveOvertimeEmployee;
 
 namespace NZ.Attendance.Application.OvertimeRequests.Handlers
 {
@@ -34,6 +31,7 @@ namespace NZ.Attendance.Application.OvertimeRequests.Handlers
             {
                 CurrentShiftId = command.CurrentShiftId,
                 OTDate = command.OTDate,
+                UnitId = command.UnitId,
                 DepartmentId = command.DepartmentId,
                 Reason = command.Reason
             };
@@ -61,7 +59,8 @@ namespace NZ.Attendance.Application.OvertimeRequests.Handlers
                     EmployeeId = emp.EmployeeId,
                     EmployeeCode = emp.EmployeeCode,
                     EmployeeName = emp.EmployeeName,
-                    OTHours = emp.OTHours
+                    OTHours = emp.OTHours,
+                    SubmittedBy = emp.SubmittedBy,
                 });
             }
 

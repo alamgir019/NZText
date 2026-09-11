@@ -8,6 +8,9 @@ namespace NZ.Attendance.Application.OvertimeRequests.Dto
         public string EmployeeId { get; set; } = string.Empty;
         public string? EmployeeCode { get; set; }
         public string? EmployeeName { get; set; }
+        public string? DepartmentId { get; set; }
+        public string? DepartmentName { get; set; }
+
         // OT hours in HH:mm format
         public string? OTHours { get; set; } = string.Empty;
         // Approval status at employee item level

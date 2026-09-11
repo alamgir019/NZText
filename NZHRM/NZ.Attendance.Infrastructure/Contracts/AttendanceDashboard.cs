@@ -13,6 +13,11 @@ public interface IAttendanceDashboardQuery
         bool includeDepartments = true,
         string? departmentId = null,
         CancellationToken cancellationToken = default);
+
+    Task<PunchSummaryResult?> GetPunchSummaryAsync(
+        string unitId,
+        bool isPrevious = false,
+        CancellationToken cancellationToken = default);
 }
 
 public record ShiftAttendanceSummaryResult(
@@ -53,3 +58,14 @@ public record ShiftTotals(
     int OnOtCount,
     int TotalOnDuty,
     decimal PresentPercentage);
+
+public record PunchSummaryResult(
+    string ShiftId,
+    string ShiftName,
+    DateOnly AttendanceDate,
+    DateTime GeneratedTimestamp,
+    int InPunch,
+    int OutPunch,
+    int MissingInPunch,
+    int MissingOutPunch,
+    int HeadCount);

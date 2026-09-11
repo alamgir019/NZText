@@ -2,8 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using NZ.Attendance.Infrastructure.Persistence;
 using NZ.Shared.Contracts.Attendance;
 using NZ.Attendance.Infrastructure.Contracts;
+using NZ.HRM.Domain.Entities;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace NZ.Attendance.Infrastructure.Services;
 
@@ -191,5 +193,80 @@ public class AttendanceSummaryQueryService : IAttendanceSummaryQuery, NZ.Attenda
             totals);
 
         return result;
+    }
+
+    public async Task<PunchSummaryResult?> GetPunchSummaryAsync(
+        string unitId,
+        bool isPrevious = false,
+        CancellationToken cancellationToken = default)
+    {
+        var now = DateTime.Now;
+
+        // load roster shifts
+        var shifts = await _context.MstShifts.Where(s => s.ShiftType == "Roster").ToListAsync(cancellationToken);
+        if (!shifts.Any()) return null;
+
+        // Build candidate ranges for today and yesterday to support overnight shifts
+        var candidates = new List<(MstShift shift, DateTime start, DateTime end)>();
+        foreach (var s in shifts)
+        {
+            var startToday = DateTime.Today.Add(s.StartTime.ToTimeSpan());
+            DateTime endToday;
+            if (s.StartTime <= s.EndTime)
+                endToday = DateTime.Today.Add(s.EndTime.ToTimeSpan());
+            else
+                endToday = DateTime.Today.AddDays(1).Add(s.EndTime.ToTimeSpan());
+
+            candidates.Add((s, startToday, endToday));
+
+            var startYesterday = DateTime.Today.AddDays(-1).Add(s.StartTime.ToTimeSpan());
+            DateTime endYesterday;
+            if (s.StartTime <= s.EndTime)
+                endYesterday = DateTime.Today.AddDays(-1).Add(s.EndTime.ToTimeSpan());
+            else
+                endYesterday = DateTime.Today.Add(s.EndTime.ToTimeSpan());
+
+            candidates.Add((s, startYesterday, endYesterday));
+        }
+
+        (MstShift shift, DateTime start, DateTime end)? selected = null;
+        if (!isPrevious)
+        {
+            selected = candidates.FirstOrDefault(c => now >= c.start && now < c.end);
+        }
+        else
+        {
+            selected = candidates.Where(c => c.end < now).OrderByDescending(c => c.end).FirstOrDefault();
+        }
+
+        if (selected == null || selected?.shift == null) return null;
+
+        var resolvedShift = selected.Value.shift;
+        var attendanceDate = DateOnly.FromDateTime(selected.Value.start.Date);
+
+        var query = from a in _context.AttProcessedAttendances
+                    join emp in _context.HrmEmployeeEmployments on a.EmployeeId equals emp.EmployeeId into empj
+                    from emp in empj.DefaultIfEmpty()
+                    where a.AttendanceDate == attendanceDate && a.ShiftId == resolvedShift.Id && emp.UnitId == unitId
+                    select new { a.EmployeeId, a.ActualInTime, a.ActualOutTime };
+
+        var list = await query.ToListAsync(cancellationToken);
+
+        var inPunch = list.Count(x => x.ActualInTime.HasValue);
+        var outPunch = list.Count(x => x.ActualOutTime.HasValue);
+        var missingIn = list.Count(x => !x.ActualInTime.HasValue);
+        var missingOut = list.Count(x => !x.ActualOutTime.HasValue);
+        var headCount = list.Select(x => x.EmployeeId).Distinct().Count();
+
+        return new PunchSummaryResult(
+            resolvedShift.Id,
+            resolvedShift.ShiftName,
+            attendanceDate,
+            DateTime.UtcNow,
+            inPunch,
+            outPunch,
+            missingIn,
+            missingOut,
+            headCount);
     }
 }

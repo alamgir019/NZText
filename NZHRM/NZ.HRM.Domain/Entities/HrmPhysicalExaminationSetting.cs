@@ -1,4 +1,3 @@
-using NZ.HRM.Domain.Common;
 using NZ.HRM.Utility.Enum;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;

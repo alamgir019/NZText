@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using NZ.HRM.Domain.Common;
+using NZ.Shared.Domain.Common;
 
 namespace NZ.HRM.Domain.Entities
 {
@@ -26,5 +26,16 @@ namespace NZ.HRM.Domain.Entities
         public DateTime? SubmittedOn { get; set; }
         public string? ApprovedBy { get; set; }
         public DateTime? ApprovalDate { get; set; }
+        public string? UnitId { get; set; }
+
+        [ForeignKey("EmployeeId")]
+        public HrmEmployeeMaster? Employee { get; set; }
+
+        [ForeignKey("DepartmentId")]
+        public MstDepartment? Department { get; set; }
+        
+        [ForeignKey("UnitId")]
+        public MstUnit? Unit { get; set; }
+
     }
 }

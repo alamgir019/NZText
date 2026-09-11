@@ -12,12 +12,9 @@ namespace NZ.Leave.Domain.Entities
         public decimal EncashDays { get; set; }
         public decimal EncashAmount { get; set; }
         public string? PayrollMonth { get; set; }
-        public string? ApprovedBy { get; set; }
         public DateTime? EncashDate { get; set; }
         public string? Reason { get; set; }
         public string? Instalment { get; set; }
-        public string? ForwardedBy { get; set; }
-        public DateTime? ForwardedDate { get; set; }
         public DateOnly? FromDate { get; set; }
         public DateOnly? ToDate { get; set; }
         public string? Status { get; set; }

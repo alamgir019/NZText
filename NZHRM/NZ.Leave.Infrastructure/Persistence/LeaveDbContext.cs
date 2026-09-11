@@ -15,6 +15,7 @@ public class LeaveDbContext : DbContext
     public DbSet<LevLeaveAdjustment> LevLeaveAdjustments => Set<LevLeaveAdjustment>();
     public DbSet<LevLeaveOpeningBalance> LevLeaveOpeningBalances => Set<LevLeaveOpeningBalance>();
     public DbSet<LevLeaveEncashment> LevLeaveEncashments => Set<LevLeaveEncashment>();
+    public DbSet<LevLeaveEncashmentHistory> LevLeaveEncashmentHistories => Set<LevLeaveEncashmentHistory>();
     public DbSet<LevLeaveAccrual> LevLeaveAccruals => Set<LevLeaveAccrual>();
     public DbSet<LevHolidayCalendar> LevHolidayCalendars => Set<LevHolidayCalendar>();
     public DbSet<LevLeaveApprovalHistory> LevLeaveApprovalHistories => Set<LevLeaveApprovalHistory>();

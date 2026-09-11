@@ -32,14 +32,25 @@ namespace NZ.Leave.Infrastructure.Repositories
                 Reason = dto.Reason,
                 Instalment = dto.Instalment,
                 Status = dto.Status,
-                ForwardedBy = dto.ForwardedBy,
-                ForwardedDate = dto.ForwardedDate,
                 FromDate = dto.FromDate,
                 ToDate = dto.ToDate,
                 CreatedBy = dto.CreatedBy ?? string.Empty
             };
 
             _context.LevLeaveEncashments.Add(entity);
+            // Create an initial encashment history record for the new encashment request
+            var history = new LevLeaveEncashmentHistory
+            {
+                EncashmentId = entity.Id,
+                WorkflowStepNo = 1,
+                ApproverId = dto.CreatedBy,
+                ActionTaken = "Submitted",
+                Remarks = dto.Reason ?? string.Empty,
+                CreatedBy = dto.CreatedBy ?? string.Empty
+            };
+
+            _context.LevLeaveEncashmentHistories.Add(history);
+
             await _context.SaveChangesAsync(cancellationToken);
 
             return entity.Id;
@@ -99,8 +110,6 @@ namespace NZ.Leave.Infrastructure.Repositories
             entity.EncashDate = dto.EncashDate.ToDateTime(TimeOnly.MinValue);
             entity.EncashDays = dto.EncashDays;
             entity.Reason = dto.Reason;
-            entity.ForwardedBy = dto.ForwardedBy;
-            entity.ForwardedDate = dto.ForwardedDate;
             entity.UpdatedBy = dto.ModifiedBy ?? entity.UpdatedBy;
 
             await _context.SaveChangesAsync(cancellationToken);
@@ -134,9 +143,7 @@ namespace NZ.Leave.Infrastructure.Repositories
             CreatedBy = entity.CreatedBy,
             CreatedDate = entity.CreatedOn,
             ModifiedBy = entity.UpdatedBy,
-            ModifiedDate = entity.UpdatedOn,
-            ForwardedBy = entity.ForwardedBy,
-            ForwardedDate = entity.ForwardedDate
+            ModifiedDate = entity.UpdatedOn
         };
     }
 }

@@ -33,12 +33,24 @@ namespace NZ.Leave.Infrastructure.Repositories
                 LeaveReason = dto.Reason,
                 LeaveStatus = dto.Status,
                 ApplicationDate = dto.CreatedDate ?? DateTime.UtcNow,
-                ForwardedBy = dto.ForwardedBy,
-                ForwardedDate = dto.ForwardedDate,
                 CreatedBy = dto.CreatedBy ?? string.Empty
             };
 
             _context.LevLeaveApplications.Add(entity);
+
+            // Create an initial approval history record for the new leave application
+            var history = new LevLeaveApprovalHistory
+            {
+                LeaveApplicationId = entity.Id,
+                WorkflowStepNo = 1,
+                ApproverId = dto.CreatedBy,
+                ActionTaken = "Submitted",
+                Remarks = dto.Reason ?? string.Empty,
+                CreatedBy = dto.CreatedBy ?? string.Empty
+            };
+
+            _context.LevLeaveApprovalHistories.Add(history);
+
             await _context.SaveChangesAsync(cancellationToken);
 
             return entity.Id;
@@ -76,7 +88,43 @@ namespace NZ.Leave.Infrastructure.Repositories
                 .Take(size)
                 .ToListAsync(cancellationToken);
 
-            return (items.Select(Map).ToList(), total);
+            // Map base DTOs
+            var dtos = items.Select(Map).ToList();
+
+            // Fetch available leave balances for the listed employees and attach to DTOs
+            var employeeIds = dtos.Select(d => d.EmployeeId).Distinct().ToList();
+            if (employeeIds.Any())
+            {
+                var balances = await _context.LevLeaveBalances
+                    .Include(b => b.LeaveType)
+                    .Where(b => employeeIds.Contains(b.EmployeeId))
+                    .ToListAsync(cancellationToken);
+
+                var balancesByEmployee = balances
+                    .GroupBy(b => b.EmployeeId)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.Select(b => new LeaveBalanceDto
+                        {
+                            LeaveTypeId = b.LeaveTypeId,
+                            LeaveTypeName = b.LeaveType?.LeaveName ?? string.Empty,
+                            OpeningBalance = b.OpeningBalance,
+                            EarnedLeave = b.EarnedLeave,
+                            AvailedLeave = b.AvailedLeave,
+                            AdjustedLeave = b.AdjustedLeave,
+                            EncashedLeave = b.EncashedLeave,
+                            ClosingBalance = b.ClosingBalance
+                        }).ToList()
+                    );
+
+                foreach (var dto in dtos)
+                {
+                    if (balancesByEmployee.TryGetValue(dto.EmployeeId, out var list))
+                        dto.AvailableLeaves = list;
+                }
+            }
+
+            return (dtos, total);
         }
 
         public async Task UpdateAsync(LeaveRequestDto dto, CancellationToken cancellationToken = default)
@@ -98,9 +146,26 @@ namespace NZ.Leave.Infrastructure.Repositories
             entity.ToDate = dto.ToDate;
             entity.TotalDays = dto.TotalDays;
             entity.LeaveReason = dto.Reason;
-            entity.ForwardedBy = dto.ForwardedBy;
-            entity.ForwardedDate = dto.ForwardedDate;
-            entity.UpdatedBy = dto.ModifiedBy ?? entity.UpdatedBy;
+            // set updated metadata
+            entity.UpdatedBy = dto.ApprovedBy ?? dto.CreatedBy ?? entity.UpdatedBy;
+            entity.UpdatedOn = DateTime.UtcNow;
+
+            // Insert approval history record for this update
+            var nextStepNo = await _context.LevLeaveApprovalHistories
+                .Where(h => h.LeaveApplicationId == entity.Id)
+                .CountAsync(cancellationToken) + 1;
+
+            var history = new LevLeaveApprovalHistory
+            {
+                LeaveApplicationId = entity.Id,
+                WorkflowStepNo = nextStepNo,
+                ApproverId = dto.ApprovedBy ?? dto.CreatedBy,
+                ActionTaken = dto.ApproveStatus ?? dto.Status ?? "Updated",
+                Remarks = dto.Reason ?? string.Empty,
+                CreatedBy = dto.ApprovedBy ?? dto.CreatedBy ?? string.Empty
+            };
+
+            _context.LevLeaveApprovalHistories.Add(history);
 
             await _context.SaveChangesAsync(cancellationToken);
         }
@@ -134,8 +199,9 @@ namespace NZ.Leave.Infrastructure.Repositories
         {
             RequestId = entity.Id,
             EmployeeId = entity.EmployeeId,
+            EmployeeCode = entity.Employee?.EmployeeCode ?? string.Empty,
             EmployeeName = entity.Employee?.EmployeeName ?? string.Empty,
-            LeaveType = entity.LeaveType?.LeaveCode ?? string.Empty,
+            LeaveType = entity.LeaveType?.LeaveName ?? string.Empty,
             FromDate = entity.FromDate,
             ToDate = entity.ToDate,
             TotalDays = entity.TotalDays,
@@ -143,10 +209,8 @@ namespace NZ.Leave.Infrastructure.Repositories
             Status = entity.LeaveStatus ?? string.Empty,
             CreatedBy = entity.CreatedBy,
             CreatedDate = entity.CreatedOn,
-            ModifiedBy = entity.UpdatedBy,
-            ModifiedDate = entity.UpdatedOn,
-            ForwardedBy = entity.ForwardedBy,
-            ForwardedDate = entity.ForwardedDate
+            ApprovedBy = entity.UpdatedBy,
+            ApprovedDate = entity.UpdatedOn
         };
     }
 }

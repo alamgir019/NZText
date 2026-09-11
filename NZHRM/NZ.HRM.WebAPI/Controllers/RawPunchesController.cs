@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using NZ.HRM.Application.RawPunches.Commands.CreateRawPunch;
 using NZ.Attendance.Application.RawPunches.Handlers;
+using NZ.Attendance.Application.RawPunches.Queries.GetProcessedPunches;
+using NZ.HRM.Application.RawPunches.Commands.CreateRawPunch;
 
 namespace NZ.HRM.WebAPI.Controllers;
 
@@ -9,10 +10,41 @@ namespace NZ.HRM.WebAPI.Controllers;
 public class RawPunchesController : ControllerBase
 {
     private readonly RawPunchCommandHandler _commandHandler;
+    private readonly QueryHandler _queryHandler;
 
-    public RawPunchesController(RawPunchCommandHandler commandHandler)
+    public RawPunchesController(
+        RawPunchCommandHandler commandHandler,
+        QueryHandler queryHandler)
     {
         _commandHandler = commandHandler;
+        _queryHandler = queryHandler;
+    }
+
+    [HttpGet("processed-punches")]
+    [ProducesResponseType(typeof(List<ProcessedPunchListItemDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetProcessedPunches(
+        [FromQuery] string shiftId,
+        [FromQuery] string companyId,
+        [FromQuery] string punchType,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var query = new GetProcessedPunchesQuery
+            {
+                ShiftId = shiftId,
+                CompanyId = companyId,
+                PunchType = punchType
+            };
+
+            var result = await _queryHandler.Handle(query, cancellationToken);
+            return Ok(result);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     [HttpPost]

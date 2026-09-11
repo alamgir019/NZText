@@ -11,7 +11,7 @@ namespace NZ.Attendance.Application.OvertimeRequests.Queries.GetOvertimeRequestB
             _repository = repository;
         }
 
-        public async Task<Dto.OvertimeRequestDto?> Handle(GetOvertimeRequestByIdQuery query, CancellationToken cancellationToken = default)
+        public async Task<List<Dto.OvertimeRequestDto>?> Handle(GetOvertimeRequestByIdQuery query, CancellationToken cancellationToken = default)
         {
             return await _repository.GetByIdAsync(query.Id, cancellationToken);
         }
