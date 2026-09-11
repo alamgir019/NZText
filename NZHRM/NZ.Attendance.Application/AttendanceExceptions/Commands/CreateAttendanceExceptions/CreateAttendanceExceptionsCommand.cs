@@ -21,6 +21,7 @@ namespace NZ.Attendance.Application.AttendanceExceptions.Commands.CreateAttendan
 
         [MaxLength(500)]
         public string? Remarks { get; set; }
+        public TimeOnly? Time { get; set; }
     }
 
     /// <summary>Creates a batch of attendance exceptions in one transaction.</summary>

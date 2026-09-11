@@ -41,6 +41,13 @@ namespace NZ.HRM.Infrastructure.NZ.HRM.Infrastructure.Migrations
                 schema: "leave_mgmt",
                 table: "leave_application");
 
+            migrationBuilder.AddColumn<TimeOnly>(
+                name: "Time",
+                schema: "attendance",
+                table: "attendance_exception",
+                type: "time without time zone",
+                nullable: true);
+
             migrationBuilder.CreateTable(
                 name: "leave_encashment_history",
                 schema: "leave_mgmt",
@@ -83,6 +90,11 @@ namespace NZ.HRM.Infrastructure.NZ.HRM.Infrastructure.Migrations
             migrationBuilder.DropTable(
                 name: "leave_encashment_history",
                 schema: "leave_mgmt");
+
+            migrationBuilder.DropColumn(
+                name: "Time",
+                schema: "attendance",
+                table: "attendance_exception");
 
             migrationBuilder.AddColumn<string>(
                 name: "ApprovedBy",

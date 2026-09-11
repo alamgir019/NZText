@@ -132,6 +132,9 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
+                    b.Property<TimeOnly?>("Time")
+                        .HasColumnType("time without time zone");
+
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
                         .HasColumnType("text");

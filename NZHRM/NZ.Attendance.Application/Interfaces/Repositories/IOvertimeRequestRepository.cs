@@ -10,7 +10,7 @@ namespace NZ.Attendance.Application.Interfaces.Repositories
     {
         Task<string> CreateAsync(OvertimeRequestDto dto);
         Task AddEmployeeAsync(string overtimeRequestId, OvertimeEmployeeDto dto);
-        Task<OvertimeRequestDto?> GetByIdAsync(string id, CancellationToken cancellationToken = default);
+        Task<List<OvertimeRequestDto>?> GetByIdAsync(string id, CancellationToken cancellationToken = default);
         /// <summary>
         /// Returns paged results and total count.
         /// </summary>

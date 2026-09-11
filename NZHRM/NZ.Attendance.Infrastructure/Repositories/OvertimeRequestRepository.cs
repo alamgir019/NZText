@@ -82,7 +82,7 @@ namespace NZ.Attendance.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<OvertimeRequestDto?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+        public async Task<List<OvertimeRequestDto>?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
         {
             // Gather all item rows for the request id and aggregate into a request dto
             var items = await _context.AttOtRequestItems
@@ -93,27 +93,26 @@ namespace NZ.Attendance.Infrastructure.Repositories
                 return null;
 
             var first = items.First();
-            var dto = new OvertimeRequestDto
-            {
-                RequestId = first.RequestId,
-                CurrentShiftId = first.CurrentShiftId,
-                OTDate = first.OtDate.ToDateTime(new TimeOnly(0, 0)),
-                DepartmentId = first.DepartmentId,
-                Reason = first.Reason
-            };
+           var dtos = new List<OvertimeRequestDto>();
 
             foreach (var e in items)
             {
-                dto.Employees.Add(new OvertimeEmployeeDto
+                var dto = new OvertimeRequestDto
                 {
+                    RequestId = first.RequestId,
+                    CurrentShiftId = first.CurrentShiftId,
+                    OTDate = first.OtDate.ToDateTime(new TimeOnly(0, 0)),
+                    DepartmentId = first.DepartmentId,
+                    Reason = first.Reason,
                     EmployeeId = e.EmployeeId,
                     OTHours = e.OtHours.ToString(@"hh\:mm"),
                     Status = e.Status,
                     ItemId = e.Id
-                });
+                };
+                dtos.Add(dto);
             }
 
-            return dto;
+            return dtos;
         }
 
         public async Task<(List<OvertimeRequestDto> Items, int Total)> GetAllAsync(
@@ -176,7 +175,8 @@ namespace NZ.Attendance.Infrastructure.Repositories
                     item.Reason,
                     EmployeeName = master != null ? master.EmployeeName : string.Empty,
                     EmployeeCode = master != null ? master.EmployeeCode : string.Empty,
-                    DepartmentName = dept != null ? dept.DepartmentName : string.Empty
+                    DepartmentName = dept != null ? dept.DepartmentName : string.Empty,
+                    item.UnitId
                 }
             ).ToListAsync(cancellationToken);
 
@@ -192,32 +192,29 @@ namespace NZ.Attendance.Infrastructure.Repositories
                 }
 
                 var first = itemsForRequest.OrderByDescending(x => x.CreatedOn).FirstOrDefault();
-                var dto = new OvertimeRequestDto
-                {
-                    RequestId = requestId,
-                    CurrentShiftId = first?.CurrentShiftId ?? string.Empty,
-                    OTDate = first != null ? first.OtDate.ToDateTime(new TimeOnly(0, 0)) : DateTime.MinValue,
-                    DepartmentId = first?.DepartmentId ?? string.Empty,
-                    Reason = first?.Reason ?? string.Empty,
-                };
-
+               
                 foreach (var e in itemsForRequest)
                 {
-                    dto.Employees.Add(new OvertimeEmployeeDto
+                    var dto = new OvertimeRequestDto
                     {
+                        RequestId = requestId,
+                        CurrentShiftId = first?.CurrentShiftId ?? string.Empty,
+                        OTDate = first != null ? first.OtDate.ToDateTime(new TimeOnly(0, 0)) : DateTime.MinValue,
+                        DepartmentId = first?.DepartmentId ?? string.Empty,
+                        Reason = first?.Reason ?? string.Empty,
                         EmployeeId = e.EmployeeId,
                         EmployeeCode = e.EmployeeCode,
                         EmployeeName = e.EmployeeName,
-                        DepartmentId = e.DepartmentId,
+                        UnitId = e.UnitId,
                         DepartmentName = e.DepartmentName,
                         OTHours = e.OtHours.ToString(@"hh\:mm"),
                         Status = e.Status,
                         ItemId = e.Id,
                         SubmittedBy = e.SubmittedBy
-                    });
+                    };
+                    list.Add(dto);
                 }
 
-                list.Add(dto);
             }
 
             return (list, total);

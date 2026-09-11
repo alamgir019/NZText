@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NZ.HRM.Infrastructure.NZ.HRM.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260911064614_ModifyLeaveHistory")]
+    [Migration("20260911101624_ModifyLeaveHistory")]
     partial class ModifyLeaveHistory
     {
         /// <inheritdoc />
@@ -134,6 +134,9 @@ namespace NZ.HRM.Infrastructure.NZ.HRM.Infrastructure.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
+
+                    b.Property<TimeOnly?>("Time")
+                        .HasColumnType("time without time zone");
 
                     b.Property<string>("UpdatedBy")
                         .IsRequired()

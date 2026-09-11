@@ -42,7 +42,7 @@ public class OvertimeRequestsController : ControllerBase
     {
         var query = new GetOvertimeRequestByIdQuery { Id = id };
         var dto = await _getByIdHandler.Handle(query);
-        if (dto == null) return NotFound();
+        if (dto == null || !dto.Any()) return NotFound();
         return Ok(dto);
     }
 

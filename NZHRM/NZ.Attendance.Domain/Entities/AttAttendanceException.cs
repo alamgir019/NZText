@@ -13,6 +13,7 @@ namespace NZ.Attendance.Domain.Entities
         public string EmployeeId { get; set; } = string.Empty;
         public DateOnly AttendanceDate { get; set; }
         public string? ExceptionType { get; set; }
+        public TimeOnly? Time { get; set; }
         public string? Severity { get; set; }
         public string? Remarks { get; set; }
 
