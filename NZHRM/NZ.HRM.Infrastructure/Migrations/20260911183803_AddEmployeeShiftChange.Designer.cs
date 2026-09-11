@@ -9,10 +9,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace NZ.HRM.Infrastructure.Migrations
+namespace NZ.HRM.Infrastructure.NZ.HRM.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260909185855_AddEmployeeShiftChange")]
+    [Migration("20260911183803_AddEmployeeShiftChange")]
     partial class AddEmployeeShiftChange
     {
         /// <inheritdoc />
@@ -134,6 +134,9 @@ namespace NZ.HRM.Infrastructure.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
+
+                    b.Property<TimeOnly?>("Time")
+                        .HasColumnType("time without time zone");
 
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
@@ -606,11 +609,11 @@ namespace NZ.HRM.Infrastructure.Migrations
 
                     b.Property<string>("DepartmentId")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("CHAR(26)");
 
                     b.Property<string>("EmployeeId")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("CHAR(26)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -637,6 +640,9 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.Property<DateTime?>("SubmittedOn")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("UnitId")
+                        .HasColumnType("CHAR(26)");
+
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
                         .HasColumnType("text");
@@ -647,6 +653,12 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasDefaultValueSql("NOW()");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("UnitId");
 
                     b.ToTable("ot_request_item", "attendance");
                 });
@@ -2281,6 +2293,76 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("employee_training", "hrm");
+                });
+
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.HrmEmployeeTransfer", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("CHAR(26)")
+                        .HasColumnName("Id");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<DateOnly>("EffectiveFrom")
+                        .HasColumnType("date");
+
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("CHAR(26)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("NewDepartmentId")
+                        .IsRequired()
+                        .HasColumnType("CHAR(26)");
+
+                    b.Property<string>("NewSectionId")
+                        .IsRequired()
+                        .HasColumnType("CHAR(26)");
+
+                    b.Property<string>("PreviousDepartmentId")
+                        .IsRequired()
+                        .HasColumnType("CHAR(26)");
+
+                    b.Property<string>("PreviousSectionId")
+                        .IsRequired()
+                        .HasColumnType("CHAR(26)");
+
+                    b.Property<string>("Remarks")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NewDepartmentId");
+
+                    b.HasIndex("NewSectionId");
+
+                    b.HasIndex("PreviousDepartmentId");
+
+                    b.HasIndex("PreviousSectionId");
+
+                    b.HasIndex("EmployeeId", "EffectiveFrom", "IsActive");
+
+                    b.ToTable("employee_transfer", "hrm");
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.HrmEmployeeVerification", b =>
@@ -6366,12 +6448,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("CHAR(26)");
 
-                    b.Property<string>("ForwardedBy")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("ForwardedDate")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<DateOnly>("FromDate")
                         .HasColumnType("date");
 
@@ -6500,9 +6576,6 @@ namespace NZ.HRM.Infrastructure.Migrations
 
                     b.Property<string>("Remarks")
                         .HasColumnType("text");
-
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("integer");
 
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
@@ -6654,9 +6727,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("CHAR(26)")
                         .HasColumnName("Id");
 
-                    b.Property<string>("ApprovedBy")
-                        .HasColumnType("text");
-
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasColumnType("text");
@@ -6678,12 +6748,6 @@ namespace NZ.HRM.Infrastructure.Migrations
 
                     b.Property<decimal>("EncashDays")
                         .HasColumnType("numeric");
-
-                    b.Property<string>("ForwardedBy")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("ForwardedDate")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateOnly?>("FromDate")
                         .HasColumnType("date");
@@ -6729,6 +6793,57 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.HasIndex("LeaveTypeId");
 
                     b.ToTable("leave_encashment", "leave_mgmt");
+                });
+
+            modelBuilder.Entity("NZ.Leave.Domain.Entities.LevLeaveEncashmentHistory", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("CHAR(26)")
+                        .HasColumnName("Id");
+
+                    b.Property<string>("ActionTaken")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ApproverId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("EncashmentId")
+                        .IsRequired()
+                        .HasColumnType("CHAR(26)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Remarks")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<int>("WorkflowStepNo")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EncashmentId");
+
+                    b.ToTable("leave_encashment_history", "leave_mgmt");
                 });
 
             modelBuilder.Entity("NZ.Leave.Domain.Entities.LevLeaveOpeningBalance", b =>
@@ -7063,6 +7178,31 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.AttOtRequestItem", b =>
+                {
+                    b.HasOne("NZ.HRM.Domain.Entities.MstDepartment", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("NZ.HRM.Domain.Entities.HrmEmployeeMaster", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("NZ.HRM.Domain.Entities.MstUnit", "Unit")
+                        .WithMany()
+                        .HasForeignKey("UnitId");
+
+                    b.Navigation("Department");
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Unit");
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.AttProcessedPunch", b =>
@@ -7458,6 +7598,49 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.HrmEmployeeTransfer", b =>
+                {
+                    b.HasOne("NZ.HRM.Domain.Entities.HrmEmployeeMaster", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("NZ.HRM.Domain.Entities.MstDepartment", "NewDepartment")
+                        .WithMany()
+                        .HasForeignKey("NewDepartmentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("NZ.HRM.Domain.Entities.MstSection", "NewSection")
+                        .WithMany()
+                        .HasForeignKey("NewSectionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("NZ.HRM.Domain.Entities.MstDepartment", "PreviousDepartment")
+                        .WithMany()
+                        .HasForeignKey("PreviousDepartmentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("NZ.HRM.Domain.Entities.MstSection", "PreviousSection")
+                        .WithMany()
+                        .HasForeignKey("PreviousSectionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("NewDepartment");
+
+                    b.Navigation("NewSection");
+
+                    b.Navigation("PreviousDepartment");
+
+                    b.Navigation("PreviousSection");
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.HrmEmployeeVerification", b =>
@@ -8225,6 +8408,17 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.Navigation("Employee");
 
                     b.Navigation("LeaveType");
+                });
+
+            modelBuilder.Entity("NZ.Leave.Domain.Entities.LevLeaveEncashmentHistory", b =>
+                {
+                    b.HasOne("NZ.Leave.Domain.Entities.LevLeaveEncashment", "Encashment")
+                        .WithMany()
+                        .HasForeignKey("EncashmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Encashment");
                 });
 
             modelBuilder.Entity("NZ.Leave.Domain.Entities.LevLeaveOpeningBalance", b =>

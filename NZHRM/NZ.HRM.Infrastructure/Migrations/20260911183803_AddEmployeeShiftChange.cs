@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace NZ.HRM.Infrastructure.Migrations
+namespace NZ.HRM.Infrastructure.NZ.HRM.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class AddEmployeeShiftChange : Migration
@@ -54,6 +54,8 @@ namespace NZ.HRM.Infrastructure.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            
+
             migrationBuilder.CreateIndex(
                 name: "IX_employee_shift_change_EmployeeId_EffectiveFrom_IsActive",
                 schema: "hrm",
@@ -71,6 +73,8 @@ namespace NZ.HRM.Infrastructure.Migrations
                 schema: "hrm",
                 table: "employee_shift_change",
                 column: "PreviousShiftId");
+
+            
         }
 
         /// <inheritdoc />
@@ -79,6 +83,8 @@ namespace NZ.HRM.Infrastructure.Migrations
             migrationBuilder.DropTable(
                 name: "employee_shift_change",
                 schema: "hrm");
+
+           
         }
     }
 }

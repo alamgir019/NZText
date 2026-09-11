@@ -34,6 +34,7 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<HrmEmployeeVerification> HrmEmployeeVerifications => Set<HrmEmployeeVerification>();
         public DbSet<HrmMedicalFitnessCheck> HrmMedicalFitnessChecks => Set<HrmMedicalFitnessCheck>();
         public DbSet<HrmEmployeeShiftChange> HrmEmployeeShiftChanges => Set<HrmEmployeeShiftChange>();
+        public DbSet<HrmEmployeeTransfer> HrmEmployeeTransfers => Set<HrmEmployeeTransfer>();
         public DbSet<HrmPhysicalExaminationSetting> HrmPhysicalExaminationSettings => Set<HrmPhysicalExaminationSetting>();
         public DbSet<HrmEmployeeMaster> HrmEmployeeMasters => Set<HrmEmployeeMaster>();
         public DbSet<HrmEmployeePersonal> HrmEmployeePersonals => Set<HrmEmployeePersonal>();
@@ -218,6 +219,40 @@ namespace NZ.HRM.Infrastructure.Persistence
 
             modelBuilder.Entity<HrmEmployeeShiftChange>()
                 .HasIndex(c => new { c.EmployeeId, c.EffectiveFrom, c.IsActive });
+
+            // Employee transfer relationships
+            modelBuilder.Entity<HrmEmployeeTransfer>()
+                .HasOne(t => t.Employee)
+                .WithMany()
+                .HasForeignKey(t => t.EmployeeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<HrmEmployeeTransfer>()
+                .HasOne(t => t.PreviousDepartment)
+                .WithMany()
+                .HasForeignKey(t => t.PreviousDepartmentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<HrmEmployeeTransfer>()
+                .HasOne(t => t.PreviousSection)
+                .WithMany()
+                .HasForeignKey(t => t.PreviousSectionId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<HrmEmployeeTransfer>()
+                .HasOne(t => t.NewDepartment)
+                .WithMany()
+                .HasForeignKey(t => t.NewDepartmentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<HrmEmployeeTransfer>()
+                .HasOne(t => t.NewSection)
+                .WithMany()
+                .HasForeignKey(t => t.NewSectionId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<HrmEmployeeTransfer>()
+                .HasIndex(t => new { t.EmployeeId, t.EffectiveFrom, t.IsActive });
 
 			// Learner permanency (confirmation) requests
 			modelBuilder.Entity<HrmLearnerConfirmationRequest>(entity =>
