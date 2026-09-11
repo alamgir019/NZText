@@ -49,12 +49,9 @@ namespace NZ.Leave.Application.LeaveRequests.Commands.UpdateLeaveRequest
             existing.ToDate = command.ToDate;
             existing.TotalDays = totalDays;
             existing.Reason = command.Reason;
-            existing.ModifiedBy = command.ModifiedBy;
-            existing.ModifiedDate = DateTime.UtcNow;
-            existing.ForwardedBy = command.ForwardedBy ?? existing.ForwardedBy;
-            existing.ForwardedDate = command.ForwardedDate.HasValue
-                ? command.ForwardedDate.Value.ToDateTime(TimeOnly.MinValue)
-                : existing.ForwardedDate;
+            existing.ApprovedBy = command.ApprovedBy;
+            existing.ApprovedDate = DateTime.UtcNow;
+            existing.ApproveStatus = command.Approved ? "APPROVED" : "REJECTED";
 
             await _repository.UpdateAsync(existing, cancellationToken);
 

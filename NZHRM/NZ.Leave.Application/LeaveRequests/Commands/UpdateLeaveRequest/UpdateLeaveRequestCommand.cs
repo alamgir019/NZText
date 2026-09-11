@@ -9,6 +9,7 @@ namespace NZ.Leave.Application.LeaveRequests.Commands.UpdateLeaveRequest
         public string Reason { get; set; } = string.Empty;
         public string? ForwardedBy { get; set; }
         public DateOnly? ForwardedDate { get; set; }
-        public string? ModifiedBy { get; set; }
+        public string? ApprovedBy { get; set; }
+        public bool Approved { get; internal set; }
     }
 }

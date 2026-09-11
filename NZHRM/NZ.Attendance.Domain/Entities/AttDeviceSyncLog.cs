@@ -1,5 +1,5 @@
-using NZ.HRM.Domain.Common;
 using NZ.HRM.Domain.Entities;
+using NZ.Shared.Domain.Common;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 

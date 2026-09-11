@@ -1,6 +1,4 @@
-﻿using NZ.HRM.Domain.Common;
-
-namespace NZ.Shared.Domain.Common
+﻿namespace NZ.Shared.Domain.Common
 {
     public abstract class BaseEntityWithSortOrder : BaseEntity
     {

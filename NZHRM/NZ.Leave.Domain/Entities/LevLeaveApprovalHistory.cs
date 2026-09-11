@@ -4,7 +4,7 @@ using NZ.Shared.Domain.Common;
 namespace NZ.Leave.Domain.Entities
 {
     [Table("leave_approval_history", Schema = "leave_mgmt")]
-    public class LevLeaveApprovalHistory : BaseEntityWithSortOrder
+    public class LevLeaveApprovalHistory : BaseEntity
     {
         public string LeaveApplicationId { get; set; } = string.Empty;
         public int WorkflowStepNo { get; set; }

@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace NZ.HRM.Domain.Common
+namespace NZ.Shared.Domain.Common
 {
     public abstract class BaseEntity
     {

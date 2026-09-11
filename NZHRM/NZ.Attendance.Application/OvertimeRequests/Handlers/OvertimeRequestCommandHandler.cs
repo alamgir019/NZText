@@ -62,7 +62,8 @@ namespace NZ.Attendance.Application.OvertimeRequests.Handlers
                     EmployeeId = emp.EmployeeId,
                     EmployeeCode = emp.EmployeeCode,
                     EmployeeName = emp.EmployeeName,
-                    OTHours = emp.OTHours
+                    OTHours = emp.OTHours,
+                    SubmittedBy = emp.SubmittedBy,
                 });
             }
 

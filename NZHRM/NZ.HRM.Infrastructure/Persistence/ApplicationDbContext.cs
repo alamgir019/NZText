@@ -236,6 +236,8 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<LevLeaveAccrual>().ToTable("leave_accrual", "leave_mgmt");
             modelBuilder.Entity<LevHolidayCalendar>().ToTable("holiday_calendar", "leave_mgmt");
             modelBuilder.Entity<LevLeaveApprovalHistory>().ToTable("leave_approval_history", "leave_mgmt");
+            modelBuilder.Entity<LevLeaveEncashmentHistory>().ToTable("leave_encashment_history", "leave_mgmt");
+            
             modelBuilder.Entity<LevLeaveCancellation>().ToTable("leave_cancellation", "leave_mgmt");
             modelBuilder.Entity<LevLeaveYear>().ToTable("leave_year", "leave_mgmt");
             modelBuilder.Entity<LevLeavePolicy>().ToTable("leave_policy", "leave_mgmt");

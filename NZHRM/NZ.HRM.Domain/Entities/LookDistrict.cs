@@ -1,4 +1,4 @@
-using NZ.HRM.Domain.Common;
+
 using NZ.Shared.Domain.Common;
 using System.ComponentModel.DataAnnotations.Schema;
 

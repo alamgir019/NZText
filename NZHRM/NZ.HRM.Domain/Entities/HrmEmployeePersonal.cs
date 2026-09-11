@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using NZ.HRM.Domain.Common;
+
 using NZ.HRM.Utility.Enum;
 
 namespace NZ.HRM.Domain.Entities

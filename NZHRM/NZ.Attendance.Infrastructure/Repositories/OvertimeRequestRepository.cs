@@ -69,7 +69,7 @@ namespace NZ.Attendance.Infrastructure.Repositories
 
             var headerDto = new OvertimeRequestDto
             {
-                Id = overtimeRequestId,
+                RequestId = overtimeRequestId,
                 CurrentShiftId = header.CurrentShiftId,
                 OTDate = header.OtDate.ToDateTime(new TimeOnly(0, 0)),
                 DepartmentId = header.DepartmentId,
@@ -95,7 +95,7 @@ namespace NZ.Attendance.Infrastructure.Repositories
             var first = items.First();
             var dto = new OvertimeRequestDto
             {
-                Id = first.RequestId,
+                RequestId = first.RequestId,
                 CurrentShiftId = first.CurrentShiftId,
                 OTDate = first.OtDate.ToDateTime(new TimeOnly(0, 0)),
                 DepartmentId = first.DepartmentId,
@@ -194,7 +194,7 @@ namespace NZ.Attendance.Infrastructure.Repositories
                 var first = itemsForRequest.OrderByDescending(x => x.CreatedOn).FirstOrDefault();
                 var dto = new OvertimeRequestDto
                 {
-                    Id = requestId,
+                    RequestId = requestId,
                     CurrentShiftId = first?.CurrentShiftId ?? string.Empty,
                     OTDate = first != null ? first.OtDate.ToDateTime(new TimeOnly(0, 0)) : DateTime.MinValue,
                     DepartmentId = first?.DepartmentId ?? string.Empty,
