@@ -48,7 +48,7 @@ namespace NZ.Attendance.Infrastructure.Repositories
                 Reason = dto.Reason,
                 EmployeeId = emp.EmployeeId,
                 OtHours = ts,
-                Status = "Submitted",
+                Status = "Pending",
                 SubmittedBy = emp.SubmittedBy ?? string.Empty,
                 SubmittedOn = DateTime.UtcNow
             };
