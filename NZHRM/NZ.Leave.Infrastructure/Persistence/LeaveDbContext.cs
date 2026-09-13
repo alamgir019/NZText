@@ -36,7 +36,6 @@ public class LeaveDbContext : DbContext
         modelBuilder.Entity<HrmEmployeeMaster>(entity =>
         {
             entity.Ignore(e => e.Personal);
-            entity.Ignore(e => e.Employment);
             entity.Ignore(e => e.Payroll);
             entity.Ignore(e => e.Verification);
             entity.Ignore(e => e.MedicalFitnessCheck);
@@ -49,5 +48,24 @@ public class LeaveDbContext : DbContext
             entity.Ignore(e => e.BankAccounts);
             entity.Ignore(e => e.Reportings);
         });
+        modelBuilder.Entity<HrmEmployeeEmployment>(entity =>
+        {
+            entity.Ignore(e => e.Cell);
+            entity.Ignore(e => e.ProcessingGroup);
+            entity.Ignore(e => e.Subunit);
+            entity.Ignore(e => e.EmployeeCategory);
+            entity.Ignore(e => e.Designation);
+            entity.Ignore(e => e.Grade);
+            entity.Ignore(e => e.Group);
+            entity.Ignore(e => e.Section);
+            entity.Ignore(e => e.Shift);
+            entity.Ignore(e => e.Unit);
+        });
+
+        modelBuilder.Entity<HrmEmployeeMaster>()
+            .HasOne(e => e.Employment)
+            .WithOne(emp => emp.Employee)
+            .HasForeignKey<HrmEmployeeEmployment>(emp => emp.EmployeeId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
