@@ -9,6 +9,8 @@ using NZ.HRM.Application.Districts.Handlers;
 using NZ.HRM.Application.Divisions.Handlers;
 using NZ.HRM.Application.EmployeeMasters.Handlers;
 using NZ.HRM.Application.Employees.Handlers;
+using NZ.HRM.Application.EmployeeShiftChanges.Handlers;
+using NZ.HRM.Application.EmployeeTransfers.Handlers;
 using NZ.HRM.Application.FinancialDetails.Handlers;
 // Overtime request handlers moved to Attendance module
 using NZ.HRM.Application.Grades.Handlers;
@@ -116,6 +118,14 @@ namespace NZ.HRM.Application.DependencyInjection
             // Register Medical Fitness Check Handlers
             services.AddScoped<MedicalFitnessCheckCommandHandler>();
             services.AddScoped<MedicalFitnessCheckQueryHandler>();
+
+            // Register Employee Shift Change Handlers
+            services.AddScoped<EmployeeShiftChangeCommandHandler>();
+            services.AddScoped<EmployeeShiftChangeQueryHandler>();
+
+            // Register Employee Transfer Handlers
+            services.AddScoped<EmployeeTransferCommandHandler>();
+            services.AddScoped<EmployeeTransferQueryHandler>();
 
             // Register Financial Detail Handlers
             services.AddScoped<FinancialDetailCommandHandler>();
