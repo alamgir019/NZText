@@ -41,6 +41,8 @@ namespace NZ.HRM.Infrastructure.DependencyInjection
             services.AddScoped<IPhysicalExaminationSettingRepository, PhysicalExaminationSettingRepository>();
             // IRawPunchRepository and IProcessedPunchRepository are registered by AddAttendanceModule()
             services.AddScoped<IEmployeeEmploymentRepository, EmployeeEmploymentRepository>();
+            services.AddScoped<IEmployeeShiftChangeRepository, EmployeeShiftChangeRepository>();
+            services.AddScoped<IEmployeeTransferRepository, EmployeeTransferRepository>();
             services.AddScoped<IEmployeeDocumentRepository, EmployeeDocumentRepository>();
             services.AddScoped<IEmployeeSalaryAccountRepository, EmployeeSalaryAccountRepository>();
             services.AddScoped<IEmployeeNomineeRepository, EmployeeNomineeRepository>();
