@@ -24,6 +24,7 @@ namespace NZ.Leave.Application.LeaveRequests.Dto
         // New: available leave balances for the employee
         public List<LeaveBalanceDto> AvailableLeaves { get; set; } = new List<LeaveBalanceDto>();
         public string LeaveTypeId { get; set; } = string.Empty;
+        public string? DepartmentName { get; set; }
     }
 
     public class LeaveBalanceDto

@@ -74,6 +74,7 @@ namespace NZ.Leave.Infrastructure.Repositories
         {
             var query = _context.LevLeaveApplications
                 .Include(a => a.Employee)
+                .ThenInclude(a => a.Employment != null ? a.Employment.Department : null)
                 .Include(a => a.LeaveType)
                 .AsQueryable();
 
@@ -203,6 +204,7 @@ namespace NZ.Leave.Infrastructure.Repositories
             EmployeeName = entity.Employee?.EmployeeName ?? string.Empty,
             LeaveType = entity.LeaveType?.LeaveName ?? string.Empty,
             LeaveTypeId = entity.LeaveType?.Id ?? string.Empty,
+            DepartmentName = entity.Employee?.Employment?.Department?.DepartmentName,
             FromDate = entity.FromDate,
             ToDate = entity.ToDate,
             TotalDays = entity.TotalDays,
