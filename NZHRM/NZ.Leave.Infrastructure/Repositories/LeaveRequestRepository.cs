@@ -120,7 +120,7 @@ namespace NZ.Leave.Infrastructure.Repositories
                 foreach (var dto in dtos)
                 {
                     if (balancesByEmployee.TryGetValue(dto.EmployeeId, out var list))
-                        dto.AvailableLeaves = list;
+                        dto.AvailableLeaves = [.. list.Where(x => x.LeaveTypeId == dto.LeaveTypeId)];
                 }
             }
 
@@ -202,6 +202,7 @@ namespace NZ.Leave.Infrastructure.Repositories
             EmployeeCode = entity.Employee?.EmployeeCode ?? string.Empty,
             EmployeeName = entity.Employee?.EmployeeName ?? string.Empty,
             LeaveType = entity.LeaveType?.LeaveName ?? string.Empty,
+            LeaveTypeId = entity.LeaveType?.Id ?? string.Empty,
             FromDate = entity.FromDate,
             ToDate = entity.ToDate,
             TotalDays = entity.TotalDays,

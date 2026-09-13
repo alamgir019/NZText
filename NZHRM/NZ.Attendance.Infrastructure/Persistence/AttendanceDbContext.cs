@@ -76,12 +76,11 @@ public class AttendanceDbContext : DbContext
     {
         entity.Ignore(e => e.Employee);
     });
-    // Attendance exception workflow: status stored as text, audit trail cascades.
+    // Attendance exception workflow: status stored as integer, audit trail cascades.
     modelBuilder.Entity<AttAttendanceException>(entity =>
     {
         entity.Property(e => e.Status)
-              .HasConversion<string>()
-              .HasMaxLength(20)
+              .HasConversion<int>()
               .IsRequired();
 
         entity.Property(e => e.ExceptionType).HasMaxLength(50);
@@ -104,8 +103,8 @@ public class AttendanceDbContext : DbContext
 
     modelBuilder.Entity<AttAttendanceExceptionHistory>(entity =>
     {
-        entity.Property(h => h.FromStatus).HasConversion<string>().HasMaxLength(20);
-        entity.Property(h => h.ToStatus).HasConversion<string>().HasMaxLength(20);
+        entity.Property(h => h.FromStatus).HasConversion<int>();
+        entity.Property(h => h.ToStatus).HasConversion<int>();
         entity.Property(h => h.ActionBy).HasMaxLength(50).IsRequired();
         entity.Property(h => h.Comments).HasMaxLength(500);
 
