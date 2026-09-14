@@ -11,11 +11,11 @@ namespace NZ.Leave.Application.LeaveRequests.Enums
 
     public static class RequestStatus
     {
-        public const string Draft = "DRAFT";
+        public const string PENDING = "PENDING";
         public const string Forwarded = "FORWARDED";
         public const string Rejected = "REJECTED";
         public const string Cancelled = "CANCELLED";
 
-        public static readonly string[] All = { Draft, Forwarded, Rejected, Cancelled };
+        public static readonly string[] All = { PENDING, Forwarded, Rejected, Cancelled };
     }
 }

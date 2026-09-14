@@ -26,7 +26,7 @@ namespace NZ.Leave.Application.LeaveRequests.Commands.DeleteLeaveRequest
             }
 
             // VAL-012: Only DRAFT requests can be deleted
-            if (!string.Equals(existing.Status, RequestStatus.Draft, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(existing.Status, RequestStatus.PENDING, StringComparison.OrdinalIgnoreCase))
             {
                 return new DeleteLeaveRequestResult
                 {

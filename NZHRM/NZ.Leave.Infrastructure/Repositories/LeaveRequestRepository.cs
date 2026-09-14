@@ -137,7 +137,7 @@ namespace NZ.Leave.Infrastructure.Repositories
                 throw new KeyNotFoundException($"Leave request {dto.RequestId} not found");
 
             var leaveType = await _context.LevLeaveTypes
-                .FirstOrDefaultAsync(lt => lt.LeaveCode == dto.LeaveType, cancellationToken);
+                .FirstOrDefaultAsync(lt => lt.Id == dto.LeaveTypeId, cancellationToken);
 
             if (leaveType == null)
                 throw new KeyNotFoundException($"Leave type {dto.LeaveType} not found");
@@ -147,6 +147,7 @@ namespace NZ.Leave.Infrastructure.Repositories
             entity.ToDate = dto.ToDate;
             entity.TotalDays = dto.TotalDays;
             entity.LeaveReason = dto.Reason;
+            entity.LeaveStatus = dto.Status;
             // set updated metadata
             entity.UpdatedBy = dto.ApprovedBy ?? dto.CreatedBy ?? entity.UpdatedBy;
             entity.UpdatedOn = DateTime.UtcNow;
@@ -161,7 +162,7 @@ namespace NZ.Leave.Infrastructure.Repositories
                 LeaveApplicationId = entity.Id,
                 WorkflowStepNo = nextStepNo,
                 ApproverId = dto.ApprovedBy ?? dto.CreatedBy,
-                ActionTaken = dto.ApproveStatus ?? dto.Status ?? "Updated",
+                ActionTaken = dto.Status ?? "Updated",
                 Remarks = dto.Reason ?? string.Empty,
                 CreatedBy = dto.ApprovedBy ?? dto.CreatedBy ?? string.Empty
             };

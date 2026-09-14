@@ -19,8 +19,8 @@ namespace NZ.Leave.Application.LeaveRequests.Commands.UpdateLeaveRequest
                 return Error("VAL-NOTFOUND", "Leave request not found.");
 
             // VAL-011: Only DRAFT requests can be updated
-            if (!string.Equals(existing.Status, RequestStatus.Draft, StringComparison.OrdinalIgnoreCase))
-                return Error("VAL-011", "Only DRAFT requests can be updated.");
+            if (!string.Equals(existing.Status, RequestStatus.PENDING, StringComparison.OrdinalIgnoreCase))
+                return Error("VAL-011", "Only PENDING requests can be updated.");
 
             if (string.IsNullOrWhiteSpace(command.LeaveType))
                 return Error("VAL-003", "Leave Type is required.");
@@ -51,7 +51,7 @@ namespace NZ.Leave.Application.LeaveRequests.Commands.UpdateLeaveRequest
             existing.Reason = command.Reason;
             existing.ApprovedBy = command.ApprovedBy;
             existing.ApprovedDate = DateTime.UtcNow;
-            existing.ApproveStatus = command.Approved ? "APPROVED" : "REJECTED";
+            existing.Status = command.ApprovStatus?? existing.Status;
 
             await _repository.UpdateAsync(existing, cancellationToken);
 

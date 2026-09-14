@@ -10,6 +10,6 @@ namespace NZ.Leave.Application.LeaveRequests.Commands.UpdateLeaveRequest
         public string? ForwardedBy { get; set; }
         public DateOnly? ForwardedDate { get; set; }
         public string? ApprovedBy { get; set; }
-        public bool Approved { get; internal set; }
+        public string? ApprovStatus { get; set; }
     }
 }

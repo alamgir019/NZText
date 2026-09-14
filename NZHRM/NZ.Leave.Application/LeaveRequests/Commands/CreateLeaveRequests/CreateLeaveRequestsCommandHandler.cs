@@ -87,7 +87,7 @@ namespace NZ.Leave.Application.LeaveRequests.Commands.CreateLeaveRequests
                     ToDate = req.ToDate,
                     TotalDays = days,
                     Reason = req.Reason,
-                    Status = RequestStatus.Forwarded,
+                    Status = RequestStatus.PENDING,
                     CreatedBy = command.CreatedBy,
                     CreatedDate = DateTime.UtcNow,
                     ForwardedBy = req.ForwardedBy,

@@ -19,7 +19,6 @@ namespace NZ.Leave.Application.LeaveRequests.Dto
         public DateTime? ApprovedDate { get; set; }
         public string? ForwardedBy { get; set; }
         public DateTime? ForwardedDate { get; set; }
-        public string? ApproveStatus { get; set; }
 
         // New: available leave balances for the employee
         public List<LeaveBalanceDto> AvailableLeaves { get; set; } = new List<LeaveBalanceDto>();
