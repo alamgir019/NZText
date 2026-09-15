@@ -51,9 +51,9 @@ public class LeaveEncashmentRequestsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] string? status, [FromQuery] int page = 1, [FromQuery] int size = 20, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetAll([FromQuery] string? status, [FromQuery] string? instalment, [FromQuery] int page = 1, [FromQuery] int size = 20, CancellationToken cancellationToken = default)
     {
-        var query = new GetLeaveEncashmentRequestsQuery { Status = status, Page = page, Size = size };
+        var query = new GetLeaveEncashmentRequestsQuery { Status = status, Instalment = instalment, Page = page, Size = size };
         var (items, total) = await _getAllHandler.Handle(query, cancellationToken);
 
         return Ok(new

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NZ.Leave.Application.Interfaces.Repositories;
+using NZ.Shared.Contracts.Leave;
 using NZ.Leave.Application.LeaveEncashmentRequests.Dto;
 using NZ.Leave.Domain.Entities;
 using NZ.Leave.Infrastructure.Persistence;
@@ -9,10 +10,12 @@ namespace NZ.Leave.Infrastructure.Repositories
     public class LeaveEncashmentRequestRepository : ILeaveEncashmentRequestRepository
     {
         private readonly LeaveDbContext _context;
+        private readonly ILeaveBalanceQuery _leaveBalanceQuery;
 
-        public LeaveEncashmentRequestRepository(LeaveDbContext context)
+        public LeaveEncashmentRequestRepository(LeaveDbContext context, ILeaveBalanceQuery leaveBalanceQuery)
         {
             _context = context;
+            _leaveBalanceQuery = leaveBalanceQuery;
         }
 
         public async Task<string> CreateAsync(LeaveEncashmentRequestDto dto, CancellationToken cancellationToken = default)
@@ -63,22 +66,45 @@ namespace NZ.Leave.Infrastructure.Repositories
                 .Include(a => a.LeaveType)
                 .FirstOrDefaultAsync(a => a.Id == requestId, cancellationToken);
 
-            return entity == null ? null : Map(entity);
+            if (entity == null) return null;
+
+            // Get forwarded info from history (most recent history record)
+            var history = await _context.LevLeaveEncashmentHistories
+                .Where(h => h.EncashmentId == entity.Id)
+                .OrderByDescending(h => h.CreatedOn)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            // Get leave balance / accrued info for this employee and leave type
+            var balances = await _leaveBalanceQuery.GetAllBalancesAsync(new List<string> { entity.EmployeeId }, cancellationToken);
+            var balance = balances.FirstOrDefault(b => string.Equals(b.LeaveCode, entity.LeaveType?.LeaveCode, StringComparison.OrdinalIgnoreCase));
+
+            var dto = Map(entity);
+            dto.ForwardedBy = history?.ApproverId ?? history?.CreatedBy ?? dto.ForwardedBy;
+            dto.ForwardedDate = history?.CreatedOn ?? dto.ForwardedDate;
+            dto.EarnedLeaveBalance = balance?.ClosingBalance ?? 0m;
+            dto.EarnedLeaveAccruedThisYear = balance?.EarnedLeaveAccrued ?? 0m;
+
+            return dto;
         }
 
         public async Task<(List<LeaveEncashmentRequestDto> Items, int Total)> GetAllAsync(
             string? status,
+            string? instalment,
             int page,
             int size,
             CancellationToken cancellationToken = default)
         {
             var query = _context.LevLeaveEncashments
                 .Include(a => a.Employee)
+                .ThenInclude(a => a.Employment != null ? a.Employment.Department : null)
                 .Include(a => a.LeaveType)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(status))
-                query = query.Where(a => a.Instalment == status);
+                query = query.Where(a => a.Status == status);
+
+            if (!string.IsNullOrWhiteSpace(instalment))
+                query = query.Where(a => a.Instalment == instalment);
 
             var total = await query.CountAsync(cancellationToken);
 
@@ -88,7 +114,42 @@ namespace NZ.Leave.Infrastructure.Repositories
                 .Take(size)
                 .ToListAsync(cancellationToken);
 
-            return (items.Select(Map).ToList(), total);
+            var encashmentIds = items.Select(i => i.Id).ToList();
+            var employeeIds = items.Select(i => i.EmployeeId).Distinct().ToList();
+
+            // fetch latest history per encashment
+            var histories = await _context.LevLeaveEncashmentHistories
+                .Where(h => encashmentIds.Contains(h.EncashmentId))
+                .OrderByDescending(h => h.CreatedOn)
+                .ToListAsync(cancellationToken);
+
+            // fetch leave balances for employees
+            var balances = await _leaveBalanceQuery.GetAllBalancesAsync(employeeIds, cancellationToken);
+
+            var result = new List<LeaveEncashmentRequestDto>(items.Count);
+
+            foreach (var item in items)
+            {
+                var dto = Map(item);
+
+                var hist = histories.FirstOrDefault(h => h.EncashmentId == item.Id);
+                if (hist != null)
+                {
+                    dto.ForwardedBy = hist.ApproverId ?? hist.CreatedBy ?? dto.ForwardedBy;
+                    dto.ForwardedDate = hist.CreatedOn;
+                }
+
+                var bal = balances.FirstOrDefault(b => b.EmployeeId == item.EmployeeId && string.Equals(b.LeaveCode, item.LeaveType?.LeaveCode, StringComparison.OrdinalIgnoreCase));
+                if (bal != null)
+                {
+                    dto.EarnedLeaveBalance = bal.ClosingBalance;
+                    dto.EarnedLeaveAccruedThisYear = bal.EarnedLeaveAccrued;
+                }
+
+                result.Add(dto);
+            }
+
+            return (result, total);
         }
 
         public async Task UpdateAsync(LeaveEncashmentRequestDto dto, CancellationToken cancellationToken = default)
@@ -107,11 +168,23 @@ namespace NZ.Leave.Infrastructure.Repositories
 
             entity.EmployeeId = dto.EmployeeId;
             entity.LeaveTypeId = leaveType.Id;
-            entity.EncashDate = dto.EncashDate.ToDateTime(TimeOnly.MinValue);
+            entity.EncashDate = dto.EncashDate.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
             entity.EncashDays = dto.EncashDays;
             entity.Reason = dto.Reason;
             entity.UpdatedBy = dto.ModifiedBy ?? entity.UpdatedBy;
+            entity.Status = dto.Status;
+            // Create an initial encashment history record for the new encashment request
+            var history = new LevLeaveEncashmentHistory
+            {
+                EncashmentId = entity.Id,
+                WorkflowStepNo = 1,
+                ApproverId = dto.CreatedBy,
+                ActionTaken = dto.Status,
+                Remarks = dto.Reason ?? string.Empty,
+                CreatedBy = dto.CreatedBy ?? string.Empty
+            };
 
+            _context.LevLeaveEncashmentHistories.Add(history);
             await _context.SaveChangesAsync(cancellationToken);
         }
 
@@ -131,7 +204,9 @@ namespace NZ.Leave.Infrastructure.Repositories
         {
             RequestId = entity.Id,
             EmployeeId = entity.EmployeeId,
+            EmployeeCode = entity.Employee?.EmployeeCode ?? string.Empty,
             EmployeeName = entity.Employee?.EmployeeName ?? string.Empty,
+            Department = entity.Employee?.Employment?.Department?.DepartmentName,
             LeaveType = entity.LeaveType?.LeaveCode ?? string.Empty,
             EncashDate = entity.EncashDate.HasValue ? DateOnly.FromDateTime(entity.EncashDate.Value) : default,
             EncashDays = entity.EncashDays,
@@ -140,10 +215,10 @@ namespace NZ.Leave.Infrastructure.Repositories
             Status = entity.Status ?? string.Empty,
             FromDate = entity.FromDate,
             ToDate = entity.ToDate,
-            CreatedBy = entity.CreatedBy,
-            CreatedDate = entity.CreatedOn,
-            ModifiedBy = entity.UpdatedBy,
-            ModifiedDate = entity.UpdatedOn
+            ForwardedBy = entity.CreatedBy,
+            ForwardedDate = entity.CreatedOn,
+            EarnedLeaveBalance = 0m,
+            EarnedLeaveAccruedThisYear = 0m,
         };
     }
 }

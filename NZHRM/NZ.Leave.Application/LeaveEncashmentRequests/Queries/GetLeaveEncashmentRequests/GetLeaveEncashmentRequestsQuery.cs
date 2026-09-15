@@ -5,5 +5,6 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Queries.GetLeaveEncashmen
         public string? Status { get; set; }
         public int Page { get; set; } = 1;
         public int Size { get; set; } = 20;
+        public string? Instalment { get; set; }
     }
 }

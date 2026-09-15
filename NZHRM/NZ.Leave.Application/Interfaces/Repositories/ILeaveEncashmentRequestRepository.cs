@@ -8,6 +8,7 @@ namespace NZ.Leave.Application.Interfaces.Repositories
         Task<LeaveEncashmentRequestDto?> GetByIdAsync(string requestId, CancellationToken cancellationToken = default);
         Task<(List<LeaveEncashmentRequestDto> Items, int Total)> GetAllAsync(
             string? status,
+            string? instalment,
             int page,
             int size,
             CancellationToken cancellationToken = default);

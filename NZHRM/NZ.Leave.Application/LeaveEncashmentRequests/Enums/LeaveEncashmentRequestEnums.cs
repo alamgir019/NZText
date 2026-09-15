@@ -11,11 +11,11 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Enums
 
     public static class LeaveEncashmentRequestStatus
     {
-        public const string Draft = "DRAFT";
+        public const string Pending = "PENDING";
         public const string Forwarded = "FORWARDED";
         public const string Rejected = "REJECTED";
         public const string Cancelled = "CANCELLED";
 
-        public static readonly string[] All = { Draft, Forwarded, Rejected, Cancelled };
+        public static readonly string[] All = { Pending, Forwarded, Rejected, Cancelled };
     }
 }

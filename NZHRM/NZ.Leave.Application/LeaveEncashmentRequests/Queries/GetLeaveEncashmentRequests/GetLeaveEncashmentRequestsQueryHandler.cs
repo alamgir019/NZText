@@ -14,7 +14,7 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Queries.GetLeaveEncashmen
 
         public async Task<(List<LeaveEncashmentRequestDto> Items, int Total)> Handle(GetLeaveEncashmentRequestsQuery query, CancellationToken cancellationToken = default)
         {
-            return await _repository.GetAllAsync(query.Status, query.Page, query.Size, cancellationToken);
+            return await _repository.GetAllAsync(query.Status, query.Instalment, query.Page, query.Size, cancellationToken);
         }
     }
 }

@@ -18,9 +18,9 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.UpdateLeaveEncas
             if (existing == null)
                 return Error("VAL-NOTFOUND", "Leave request not found.");
 
-            // VAL-011: Only DRAFT requests can be updated
-            if (!string.Equals(existing.Status, LeaveEncashmentRequestStatus.Draft, StringComparison.OrdinalIgnoreCase))
-                return Error("VAL-011", "Only DRAFT requests can be updated.");
+            // VAL-011: Only PENDING requests can be updated
+            if (!string.Equals(existing.Status, LeaveEncashmentRequestStatus.Pending, StringComparison.OrdinalIgnoreCase))
+                return Error("VAL-011", "Only PENDING requests can be updated.");
 
             if (string.IsNullOrWhiteSpace(command.EmployeeId))
                 return Error("VAL-001", "Employee ID is required.");
@@ -53,8 +53,9 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.UpdateLeaveEncas
             existing.ModifiedDate = DateTime.UtcNow;
             existing.ForwardedBy = command.ForwardedBy ?? existing.ForwardedBy;
             existing.ForwardedDate = command.ForwardedDate.HasValue
-                ? command.ForwardedDate.Value.ToDateTime(TimeOnly.MinValue)
+                ? command.ForwardedDate.Value.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc)
                 : existing.ForwardedDate;
+            existing.Status = command.Status ?? existing.Status;
 
             await _repository.UpdateAsync(existing, cancellationToken);
 

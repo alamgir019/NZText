@@ -25,14 +25,14 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.DeleteLeaveEncas
                 };
             }
 
-            // VAL-012: Only DRAFT requests can be deleted
-            if (!string.Equals(existing.Status, LeaveEncashmentRequestStatus.Draft, StringComparison.OrdinalIgnoreCase))
+            // VAL-012: Only PENDING requests can be deleted
+            if (!string.Equals(existing.Status, LeaveEncashmentRequestStatus.Pending, StringComparison.OrdinalIgnoreCase))
             {
                 return new DeleteLeaveEncashmentRequestResult
                 {
                     Success = false,
                     ErrorCode = "VAL-012",
-                    Message = "Only DRAFT requests can be deleted."
+                    Message = "Only PENDING requests can be deleted."
                 };
             }
 
