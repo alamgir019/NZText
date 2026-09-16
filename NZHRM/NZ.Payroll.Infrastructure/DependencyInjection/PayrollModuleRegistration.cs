@@ -22,6 +22,13 @@ public static class PayrollModuleRegistration
         services.AddScoped<IPayIncrementHistoryRepository, PayIncrementHistoryRepository>();
         services.AddScoped<CreatePayIncrementHistoryHandler>();
 
+        // Payroll adjustments
+        services.AddScoped<IPayrollAdjustmentRepository, PayrollAdjustmentRepository>();
+        services.AddScoped<IPayrollAdjustmentHistoryRepository, PayrollAdjustmentHistoryRepository>();
+        services.AddScoped< NZ.Payroll.Application.PayrollAdjustments.Handlers.PayrollAdjustmentCommandHandler>();
+        services.AddScoped< NZ.Payroll.Application.PayrollAdjustments.Handlers.GetPayrollAdjustmentByIdQueryHandler>();
+        services.AddScoped< NZ.Payroll.Application.PayrollAdjustments.Handlers.GetAllPayrollAdjustmentsQueryHandler>();
+
         return services;
     }
 }

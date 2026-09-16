@@ -16,8 +16,8 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Dto
         public DateTime? ModifiedDate { get; set; }
         public string? ForwardedBy { get; set; }
         public DateTime? ForwardedDate { get; set; }
-        public decimal EarnedLeaveBalance { get; set; }
-        public decimal EarnedLeaveAccruedThisYear { get; set; }
+        public decimal LeaveBalance { get; set; }
+        public decimal LeaveAccruedThisYear { get; set; }
         public DateOnly? FromDate { get; set; }
         public DateOnly? ToDate { get; set; }
         public string? Status { get; set; }

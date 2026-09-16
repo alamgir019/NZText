@@ -20,6 +20,7 @@ public class PayrollDbContext : DbContext
     public DbSet<PayBankTransfer> PayBankTransfers => Set<PayBankTransfer>();
     public DbSet<PayPayslip> PayPayslips => Set<PayPayslip>();
     public DbSet<PayPayrollAdjustment> PayPayrollAdjustments => Set<PayPayrollAdjustment>();
+    public DbSet<PayPayrollAdjustmentHistory> PayPayrollAdjustmentHistories => Set<PayPayrollAdjustmentHistory>();
     public DbSet<PayPayrollLock> PayPayrollLocks => Set<PayPayrollLock>();
     public DbSet<PayPayrollProcessLog> PayPayrollProcessLogs => Set<PayPayrollProcessLog>();
     public DbSet<PayPartialSalaryPayment> PayPartialSalaryPayments => Set<PayPartialSalaryPayment>();

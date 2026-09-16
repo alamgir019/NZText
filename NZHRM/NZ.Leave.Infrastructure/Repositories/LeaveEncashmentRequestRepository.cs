@@ -81,8 +81,8 @@ namespace NZ.Leave.Infrastructure.Repositories
             var dto = Map(entity);
             dto.ForwardedBy = history?.ApproverId ?? history?.CreatedBy ?? dto.ForwardedBy;
             dto.ForwardedDate = history?.CreatedOn ?? dto.ForwardedDate;
-            dto.EarnedLeaveBalance = balance?.ClosingBalance ?? 0m;
-            dto.EarnedLeaveAccruedThisYear = balance?.EarnedLeaveAccrued ?? 0m;
+            dto.LeaveBalance = balance?.ClosingBalance ?? 0m;
+            dto.LeaveAccruedThisYear = balance?.EarnedLeaveAccrued ?? 0m;
 
             return dto;
         }
@@ -90,6 +90,7 @@ namespace NZ.Leave.Infrastructure.Repositories
         public async Task<(List<LeaveEncashmentRequestDto> Items, int Total)> GetAllAsync(
             string? status,
             string? instalment,
+            string? leaveType,
             int page,
             int size,
             CancellationToken cancellationToken = default)
@@ -105,6 +106,9 @@ namespace NZ.Leave.Infrastructure.Repositories
 
             if (!string.IsNullOrWhiteSpace(instalment))
                 query = query.Where(a => a.Instalment == instalment);
+
+            if (!string.IsNullOrWhiteSpace(leaveType))
+                query = query.Where(a => a.LeaveType.LeaveCode == leaveType);
 
             var total = await query.CountAsync(cancellationToken);
 
@@ -142,8 +146,8 @@ namespace NZ.Leave.Infrastructure.Repositories
                 var bal = balances.FirstOrDefault(b => b.EmployeeId == item.EmployeeId && string.Equals(b.LeaveCode, item.LeaveType?.LeaveCode, StringComparison.OrdinalIgnoreCase));
                 if (bal != null)
                 {
-                    dto.EarnedLeaveBalance = bal.ClosingBalance;
-                    dto.EarnedLeaveAccruedThisYear = bal.EarnedLeaveAccrued;
+                    dto.LeaveBalance = bal.ClosingBalance;
+                    dto.LeaveAccruedThisYear = bal.EarnedLeaveAccrued;
                 }
 
                 result.Add(dto);
@@ -217,8 +221,8 @@ namespace NZ.Leave.Infrastructure.Repositories
             ToDate = entity.ToDate,
             ForwardedBy = entity.CreatedBy,
             ForwardedDate = entity.CreatedOn,
-            EarnedLeaveBalance = 0m,
-            EarnedLeaveAccruedThisYear = 0m,
+            LeaveBalance = 0m,
+            LeaveAccruedThisYear = 0m,
         };
     }
 }

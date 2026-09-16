@@ -249,7 +249,7 @@ namespace NZ.Attendance.Infrastructure.Repositories
             dto.ExceptionType = entity.ExceptionType;
             dto.Severity = entity.Severity;
             dto.Remarks = entity.Remarks;
-            dto.Status = entity.Status;
+            dto.Status = entity.Status.ToString();
             dto.CreatedOn = entity.CreatedOn;
 
             var forwarded = entity.History

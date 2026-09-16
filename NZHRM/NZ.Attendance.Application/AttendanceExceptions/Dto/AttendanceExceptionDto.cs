@@ -13,7 +13,7 @@ namespace NZ.Attendance.Application.AttendanceExceptions.Dto
         public string? ExceptionType { get; set; }
         public string? Severity { get; set; }
         public string? Remarks { get; set; }
-        public AttendanceExceptionStatus Status { get; set; }
+        public string? Status { get; set; }
 
         // Projected from the history trail, not stored on the entity.
         public string? ForwardedBy { get; set; }

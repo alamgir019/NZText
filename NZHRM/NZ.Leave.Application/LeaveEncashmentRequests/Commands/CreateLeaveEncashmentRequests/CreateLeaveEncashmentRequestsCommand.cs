@@ -12,6 +12,7 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.CreateLeaveEncas
         public DateOnly? ForwardedDate { get; set; }
         public DateOnly? FromDate { get; set; }
         public DateOnly? ToDate { get; set; }
+        public string? Instalment { get; set; }
     }
 
     public class CreateLeaveEncashmentRequestsCommand

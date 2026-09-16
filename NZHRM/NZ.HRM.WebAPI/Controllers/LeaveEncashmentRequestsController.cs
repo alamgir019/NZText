@@ -51,9 +51,9 @@ public class LeaveEncashmentRequestsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] string? status, [FromQuery] string? instalment, [FromQuery] int page = 1, [FromQuery] int size = 20, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetAll([FromQuery] string? status, [FromQuery] string? instalment, [FromQuery] string? leaveType, [FromQuery] int page = 1, [FromQuery] int size = 20, CancellationToken cancellationToken = default)
     {
-        var query = new GetLeaveEncashmentRequestsQuery { Status = status, Instalment = instalment, Page = page, Size = size };
+        var query = new GetLeaveEncashmentRequestsQuery { Status = status, Instalment = instalment, LeaveType = leaveType, Page = page, Size = size };
         var (items, total) = await _getAllHandler.Handle(query, cancellationToken);
 
         return Ok(new
@@ -64,11 +64,10 @@ public class LeaveEncashmentRequestsController : ControllerBase
         });
     }
 
-    [HttpPut("{requestId}")]
-    public async Task<IActionResult> Update(string requestId, [FromBody] UpdateLeaveEncashmentRequestCommand command, CancellationToken cancellationToken)
+    [HttpPut]
+    public async Task<IActionResult> Update([FromBody] List<UpdateLeaveEncashmentRequestCommand> commands, CancellationToken cancellationToken)
     {
-        command.RequestId = requestId;
-        var result = await _updateHandler.Handle(command, cancellationToken);
+        var result = await _updateHandler.Handle(commands, cancellationToken);
 
         if (!result.Success)
         {
