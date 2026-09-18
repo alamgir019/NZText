@@ -2,10 +2,11 @@ namespace NZ.Attendance.Domain.Enums
 {
     public enum AttendanceExceptionStatus
     {
-        Draft = 0,
+        Pending = 0,
         Submitted = 1,
-        Approved = 2,
-        Rejected = 3,
-        Cancelled = 4
+        Forwarded = 2,
+        Approved = 3,
+        Rejected = 4,
+        Cancelled = 5
     }
 }

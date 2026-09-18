@@ -19,7 +19,7 @@ namespace NZ.Attendance.Domain.Entities
 
         // Current workflow state. Changed only through AttendanceExceptionWorkflow.
         // Who forwarded/approved and when is recorded in History.
-        public AttendanceExceptionStatus Status { get; set; } = AttendanceExceptionStatus.Draft;
+        public AttendanceExceptionStatus Status { get; set; } = AttendanceExceptionStatus.Pending;
 
         [ForeignKey("EmployeeId")] public HrmEmployeeMaster? Employee { get; set; }
 

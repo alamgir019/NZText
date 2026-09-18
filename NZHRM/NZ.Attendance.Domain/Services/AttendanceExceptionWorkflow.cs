@@ -29,7 +29,7 @@ namespace NZ.Attendance.Domain.Services
 
         public void EnsureEditable(AttAttendanceException entity)
         {
-            if (entity.Status is not (AttendanceExceptionStatus.Draft or AttendanceExceptionStatus.Rejected))
+            if (entity.Status is not (AttendanceExceptionStatus.Pending or AttendanceExceptionStatus.Rejected))
                 throw new InvalidOperationException(
                     $"An attendance exception in '{entity.Status}' state cannot be modified.");
         }
@@ -69,12 +69,12 @@ namespace NZ.Attendance.Domain.Services
         private static bool IsAllowed(AttendanceExceptionStatus from, AttendanceExceptionStatus to)
             => (from, to) switch
             {
-                (AttendanceExceptionStatus.Draft, AttendanceExceptionStatus.Submitted) => true,
+                (AttendanceExceptionStatus.Pending, AttendanceExceptionStatus.Submitted) => true,
                 (AttendanceExceptionStatus.Rejected, AttendanceExceptionStatus.Submitted) => true,
                 (AttendanceExceptionStatus.Submitted, AttendanceExceptionStatus.Approved) => true,
                 (AttendanceExceptionStatus.Submitted, AttendanceExceptionStatus.Rejected) => true,
                 (AttendanceExceptionStatus.Submitted, AttendanceExceptionStatus.Cancelled) => true,
-                (AttendanceExceptionStatus.Draft, AttendanceExceptionStatus.Cancelled) => true,
+                (AttendanceExceptionStatus.Pending, AttendanceExceptionStatus.Cancelled) => true,
                 _ => false
             };
     }

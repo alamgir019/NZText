@@ -43,7 +43,7 @@ namespace NZ.Attendance.Infrastructure.Repositories
                     Time = item.Time,
                     Severity = item.Severity,
                     Remarks = item.Remarks,
-                    Status = AttendanceExceptionStatus.Draft,
+                    Status = AttendanceExceptionStatus.Pending,
                     CreatedBy = command.UserId,
                     UpdatedBy = command.UserId
                 };
@@ -180,7 +180,7 @@ namespace NZ.Attendance.Infrastructure.Repositories
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task SubmitAsync(string id, string userId, string? comments, CancellationToken cancellationToken = default)
+        public async Task ForwardAsync(string id, string userId, string? comments, CancellationToken cancellationToken = default)
         {
             var entity = await GetTrackedAsync(id, cancellationToken);
             _workflow.Submit(entity, userId, comments);

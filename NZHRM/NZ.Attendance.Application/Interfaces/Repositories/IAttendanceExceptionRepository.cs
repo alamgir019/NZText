@@ -40,7 +40,7 @@ namespace NZ.Attendance.Application.Interfaces.Repositories
         /// <summary>Soft delete (IsActive = false).</summary>
         Task DeleteAsync(string id, string userId, CancellationToken cancellationToken = default);
 
-        Task SubmitAsync(string id, string userId, string? comments, CancellationToken cancellationToken = default);
+        Task ForwardAsync(string id, string userId, string? comments, CancellationToken cancellationToken = default);
         Task ApproveAsync(string id, string reviewerId, string? comments, CancellationToken cancellationToken = default);
         Task RejectAsync(string id, string reviewerId, string comments, CancellationToken cancellationToken = default);
         Task CancelAsync(string id, string userId, string? comments, CancellationToken cancellationToken = default);

@@ -85,27 +85,24 @@ public class AttendanceExceptionsController : ControllerBase
     }
 
     /// <summary>Forwards the exception to the attendance cell.</summary>
-    [HttpPost("{id}/submit")]
-    public async Task<IActionResult> Submit(string id, [FromBody] SubmitAttendanceExceptionCommand command)
+    [HttpPost("forward")]
+    public async Task<IActionResult> Forward([FromBody] List<SubmitAttendanceExceptionCommand> commands)
     {
-        command.Id = id;
-        await _commandHandler.Handle(command);
+        await _commandHandler.Handle(commands);
         return NoContent();
     }
 
-    [HttpPost("{id}/approve")]
-    public async Task<IActionResult> Approve(string id, [FromBody] ApproveAttendanceExceptionCommand command)
+    [HttpPost("approve")]
+    public async Task<IActionResult> Approve([FromBody] List<ApproveAttendanceExceptionCommand> commands)
     {
-        command.Id = id;
-        await _commandHandler.Handle(command);
+        await _commandHandler.Handle(commands);
         return NoContent();
     }
 
-    [HttpPost("{id}/reject")]
-    public async Task<IActionResult> Reject(string id, [FromBody] RejectAttendanceExceptionCommand command)
+    [HttpPost("reject")]
+    public async Task<IActionResult> Reject([FromBody] List<RejectAttendanceExceptionCommand> commands)
     {
-        command.Id = id;
-        await _commandHandler.Handle(command);
+        await _commandHandler.Handle(commands);
         return NoContent();
     }
 

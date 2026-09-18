@@ -99,23 +99,37 @@ namespace NZ.Attendance.Application.AttendanceExceptions.Handlers
         }
 
         public async Task Handle(
-            SubmitAttendanceExceptionCommand command,
-            CancellationToken cancellationToken = default)
-            => await _repository.SubmitAsync(command.Id, command.UserId, command.Comments, cancellationToken);
-
-        public async Task Handle(
-            ApproveAttendanceExceptionCommand command,
-            CancellationToken cancellationToken = default)
-            => await _repository.ApproveAsync(command.Id, command.UserId, command.Comments, cancellationToken);
-
-        public async Task Handle(
-            RejectAttendanceExceptionCommand command,
+            List<SubmitAttendanceExceptionCommand> commands,
             CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrWhiteSpace(command.Comments))
-                throw new ArgumentException("Rejection remarks are required");
+            foreach (var command in commands)
+            {
+                await _repository.ForwardAsync(command.Id, command.UserId, command.Comments, cancellationToken);
+            }
 
-            await _repository.RejectAsync(command.Id, command.UserId, command.Comments, cancellationToken);
+        }
+
+        public async Task Handle(
+            List<ApproveAttendanceExceptionCommand> commands,
+            CancellationToken cancellationToken = default)
+        {
+            foreach (var command in commands)
+            {
+                await _repository.ApproveAsync(command.Id, command.UserId, command.Comments, cancellationToken);
+            }
+
+        }
+
+        public async Task Handle(
+            List<RejectAttendanceExceptionCommand> commands,
+            CancellationToken cancellationToken = default)
+        {
+            foreach (var command in commands)
+            {
+                if (string.IsNullOrWhiteSpace(command.Comments))
+                    throw new ArgumentException("Rejection remarks are required");
+                await _repository.RejectAsync(command.Id, command.UserId, command.Comments, cancellationToken);
+            }
         }
 
         public async Task Handle(
