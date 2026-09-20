@@ -321,9 +321,10 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<PaySpecialPayrollPolicy>().ToTable("special_payroll_policy", "payroll");
             modelBuilder.Entity<PaySpecialPayrollBand>().ToTable("special_payroll_band", "payroll");
             modelBuilder.Entity<PayPayrollException>().ToTable("payroll_exception", "payroll");
+			modelBuilder.Entity<PerIncrementRequest>().ToTable("increment_request", "payroll");
 
-            // Workflow
-            modelBuilder.Entity<WfWorkflowMaster>().ToTable("workflow_master", "workflow");
+			// Workflow
+			modelBuilder.Entity<WfWorkflowMaster>().ToTable("workflow_master", "workflow");
             modelBuilder.Entity<WfWorkflowStep>().ToTable("workflow_step", "workflow");
             modelBuilder.Entity<WfWorkflowTransaction>().ToTable("workflow_transaction", "workflow");
             modelBuilder.Entity<WfApprovalHistory>().ToTable("approval_history", "workflow");

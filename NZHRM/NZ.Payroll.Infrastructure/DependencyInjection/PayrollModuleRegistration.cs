@@ -21,6 +21,8 @@ public static class PayrollModuleRegistration
         // Pay increment history
         services.AddScoped<IPayIncrementHistoryRepository, PayIncrementHistoryRepository>();
         services.AddScoped<CreatePayIncrementHistoryHandler>();
+        services.AddScoped<UpdatePayIncrementHistoryHandler>();
+        services.AddScoped<GetPayIncrementHistoriesByStatusHandler>();
 
         // Payroll adjustments
         services.AddScoped<IPayrollAdjustmentRepository, PayrollAdjustmentRepository>();
