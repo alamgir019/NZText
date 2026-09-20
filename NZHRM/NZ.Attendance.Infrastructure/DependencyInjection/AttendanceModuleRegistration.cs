@@ -43,7 +43,7 @@ public static class AttendanceModuleRegistration
 
         services.Configure<PunchPollingOptions>(configuration.GetSection("PunchPolling"));
         services.AddHttpClient<IDevicePunchSource, VirdiApiDevicePunchSource>();
-        services.AddHostedService<PunchPollingBackgroundService>();
+        //services.AddHostedService<PunchPollingBackgroundService>();
 
 
         // Register RawPunch Handlers

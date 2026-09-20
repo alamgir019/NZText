@@ -183,8 +183,22 @@ namespace NZ.Attendance.Infrastructure.Repositories
         public async Task ForwardAsync(string id, string userId, string? comments, CancellationToken cancellationToken = default)
         {
             var entity = await GetTrackedAsync(id, cancellationToken);
-            _workflow.Submit(entity, userId, comments);
-            await _context.SaveChangesAsync(cancellationToken);
+            _workflow.ForWard(entity, userId, comments);
+            var newHistory = entity.History.LastOrDefault();
+            if (newHistory != null)
+            {
+                await _context.AttAttendanceExceptionHistories.AddAsync(newHistory, cancellationToken);
+            }
+            try
+            {
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                // Entry.ReloadAsync throws InvalidOperationException when the entity no longer exists in the database.
+                throw new InvalidOperationException("The attendance exception no longer exists.", ex);
+             
+            }
         }
 
         public async Task ApproveAsync(string id, string reviewerId, string? comments, CancellationToken cancellationToken = default)

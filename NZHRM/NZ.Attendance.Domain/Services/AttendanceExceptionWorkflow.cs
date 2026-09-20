@@ -1,6 +1,7 @@
 using System;
 using NZ.Attendance.Domain.Entities;
 using NZ.Attendance.Domain.Enums;
+using NZ.HRM.Domain.Helper;
 
 namespace NZ.Attendance.Domain.Services
 {
@@ -12,6 +13,9 @@ namespace NZ.Attendance.Domain.Services
     {
         public void Submit(AttAttendanceException entity, string userId, string? comments = null)
             => Transition(entity, AttendanceExceptionStatus.Submitted, userId, comments);
+
+        public void ForWard(AttAttendanceException entity, string userId, string? comments = null)
+            => Transition(entity, AttendanceExceptionStatus.Forwarded, userId, comments);
 
         public void Approve(AttAttendanceException entity, string reviewerId, string? comments = null)
             => Transition(entity, AttendanceExceptionStatus.Approved, reviewerId, comments);
@@ -51,6 +55,7 @@ namespace NZ.Attendance.Domain.Services
 
             entity.History.Add(new AttAttendanceExceptionHistory
             {
+                Id = IdentityGenerator.Next(),
                 AttendanceExceptionId = entity.Id,
                 FromStatus = entity.Status,
                 ToStatus = to,
@@ -71,8 +76,9 @@ namespace NZ.Attendance.Domain.Services
             {
                 (AttendanceExceptionStatus.Pending, AttendanceExceptionStatus.Submitted) => true,
                 (AttendanceExceptionStatus.Rejected, AttendanceExceptionStatus.Submitted) => true,
-                (AttendanceExceptionStatus.Submitted, AttendanceExceptionStatus.Approved) => true,
-                (AttendanceExceptionStatus.Submitted, AttendanceExceptionStatus.Rejected) => true,
+                (AttendanceExceptionStatus.Submitted, AttendanceExceptionStatus.Forwarded) => true,
+                (AttendanceExceptionStatus.Forwarded, AttendanceExceptionStatus.Approved) => true,
+                (AttendanceExceptionStatus.Forwarded, AttendanceExceptionStatus.Rejected) => true,
                 (AttendanceExceptionStatus.Submitted, AttendanceExceptionStatus.Cancelled) => true,
                 (AttendanceExceptionStatus.Pending, AttendanceExceptionStatus.Cancelled) => true,
                 _ => false
