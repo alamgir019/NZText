@@ -14,7 +14,7 @@ namespace NZ.Leave.Application.LeaveRequests.Queries.GetLeaveRequests
 
         public async Task<(List<LeaveRequestDto> Items, int Total)> Handle(GetLeaveRequestsQuery query, CancellationToken cancellationToken = default)
         {
-            return await _repository.GetAllAsync(query.Status, query.Page, query.Size, cancellationToken);
+            return await _repository.GetAllAsync(query.Status, query.FromDate, query.ToDate, query.Page, query.Size, cancellationToken);
         }
     }
 }

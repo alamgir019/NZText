@@ -68,6 +68,8 @@ namespace NZ.Leave.Infrastructure.Repositories
 
         public async Task<(List<LeaveRequestDto> Items, int Total)> GetAllAsync(
             string? status,
+            DateOnly? fromDate,
+            DateOnly? toDate,
             int page,
             int size,
             CancellationToken cancellationToken = default)
@@ -80,6 +82,12 @@ namespace NZ.Leave.Infrastructure.Repositories
 
             if (!string.IsNullOrWhiteSpace(status))
                 query = query.Where(a => a.LeaveStatus == status);
+            
+            if (fromDate.HasValue)
+                query = query.Where(a => a.FromDate >= fromDate.Value);
+
+            if (toDate.HasValue)
+                query = query.Where(a => a.FromDate <= toDate.Value);
 
             var total = await query.CountAsync(cancellationToken);
 
