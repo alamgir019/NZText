@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using NZ.HRM.Domain.Constants;
 using NZ.HRM.Domain.Entities;
 
 namespace NZ.Payroll.Infrastructure.Persistence;
@@ -9,7 +10,8 @@ public class PayrollDbContext : DbContext
 
     public DbSet<PaySalaryStructure> PaySalaryStructures => Set<PaySalaryStructure>();
     public DbSet<PayIncrementHistory> PayIncrementHistories => Set<PayIncrementHistory>();
-    public DbSet<PayPayrollHeader> PayPayrollHeaders => Set<PayPayrollHeader>();
+	public DbSet<PerIncrementRequest> PerIncrementRequests => Set<PerIncrementRequest>();
+	public DbSet<PayPayrollHeader> PayPayrollHeaders => Set<PayPayrollHeader>();
     public DbSet<PayPayrollDetails> PayPayrollDetails => Set<PayPayrollDetails>();
     public DbSet<PayOtDetails> PayOtDetails => Set<PayOtDetails>();
     public DbSet<PayDeduction> PayDeductions => Set<PayDeduction>();
@@ -38,7 +40,28 @@ public class PayrollDbContext : DbContext
 	{
 		base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<HrmEmployeeMaster>(entity =>
+		modelBuilder.Entity<PayIncrementHistory>()
+            .ToTable("increment_history", "payroll");
+
+        modelBuilder.Entity<PayIncrementHistory>()
+            .Property(history => history.Status)
+            .HasDefaultValue(PayIncrementStatuses.Pending)
+            .IsRequired();
+
+		modelBuilder.Entity<PerIncrementRequest>()
+			.ToTable("increment_request", "payroll");
+
+		modelBuilder.Entity<PerIncrementRequest>()
+			.HasOne(request => request.PayIncrementHistory)
+            .WithMany(history => history.PerIncrementRequests)
+			.HasForeignKey(request => request.PayIncHistId)
+			.OnDelete(DeleteBehavior.Restrict);
+
+		modelBuilder.Entity<PerIncrementRequest>()
+			.HasIndex(request => request.PayIncHistId)
+            .IsUnique(false);
+
+		modelBuilder.Entity<HrmEmployeeMaster>(entity =>
         {
             entity.Ignore(e => e.Personal);
             entity.Ignore(e => e.Employment);

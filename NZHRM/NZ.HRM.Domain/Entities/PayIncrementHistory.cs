@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using NZ.HRM.Domain.Constants;
 
 
 namespace NZ.HRM.Domain.Entities
@@ -13,13 +14,10 @@ namespace NZ.HRM.Domain.Entities
         public decimal? NewGrossSalary { get; set; }
         public decimal? IncrementAmount { get; set; }
         public decimal? IncrementPercent { get; set; }
-        public string? ApprovedBy { get; set; }
-        public DateTime? ApprovalDate { get; set; }
 
-		public string? ForwardedBy { get; set; }
-		public DateTime? ForwardDate { get; set; }
-
+        public string Status { get; set; } = PayIncrementStatuses.Pending;
 		public string? IncrementType { get; set; }
+        public ICollection<PerIncrementRequest> PerIncrementRequests { get; set; } = new List<PerIncrementRequest>();
 
 		[ForeignKey("EmployeeId")] public HrmEmployeeMaster? Employee { get; set; }
     }

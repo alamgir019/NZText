@@ -214,6 +214,19 @@ public class EmployeeMasterRepository : IEmployeeMasterRepository
             .FirstOrDefaultAsync(e => e.Id == id && e.IsActive, cancellationToken);
     }
 
+    public async Task<List<HrmEmployeeMaster>> GetByIdsAsync(
+        IEnumerable<string> ids,
+        CancellationToken cancellationToken = default)
+    {
+        var employeeIds = ids.ToList();
+
+        return await _context.HrmEmployeeMasters
+            .Where(employee => employeeIds.Contains(employee.Id))
+            .Include(employee => employee.Employment.Department)
+            .Include(employee => employee.Employment.Section)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<HrmEmployeeMaster?> GetByEmployeeCodeAsync(string employeeCode, CancellationToken cancellationToken = default)
     {
         return await _context.HrmEmployeeMasters

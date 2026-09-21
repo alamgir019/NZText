@@ -1,5 +1,6 @@
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Domain.Entities;
+using NZ.HRM.Domain.Constants;
 using NZ.Payroll.Application.Interfaces.Repositories;
 using NZ.Payroll.Application.PayIncrementHistories.Commands;
 
@@ -18,7 +19,16 @@ public class CreatePayIncrementHistoryHandler
 
 	public async Task<List<string>> Handle(CreateIncrementRequestsCommand command, CancellationToken cancellationToken = default)
 	{
+		if (string.IsNullOrWhiteSpace(command.CreatedBy))
+			throw new UnauthorizedAccessException("Authenticated user was not found");
+
+		if (command.Requests.Count == 0)
+			throw new ArgumentException("At least one increment request is required");
+
 		var histories = new List<PayIncrementHistory>();
+		var perIncrementRequests = new List<PerIncrementRequest>();
+		var approvalDate = DateTime.UtcNow;
+
 		foreach (var request in command.Requests)
 		{
 			if (string.IsNullOrWhiteSpace(request.EmployeeId))
@@ -32,7 +42,9 @@ public class CreatePayIncrementHistoryHandler
 			if (duplicateExists)
 				throw new InvalidOperationException($"An increment history record already exists for employee '{request.EmployeeId}' with effective date '{request.EffectiveDate}'");
 
-			var entity = new PayIncrementHistory
+
+
+			var history = new PayIncrementHistory
 			{
 				EmployeeId = request.EmployeeId,
 				EffectiveDate = request.EffectiveDate,
@@ -40,16 +52,28 @@ public class CreatePayIncrementHistoryHandler
 				NewGrossSalary = request.NewGrossSalary,
 				IncrementAmount = request.IncrementAmount,
 				IncrementPercent = request.IncrementPercent,
-				ForwardedBy = command.ForwardedBy,
-				ForwardDate = command.ForwardDate,
 				IncrementType = request.IncrementType,
+				Status = PayIncrementStatuses.Pending,
 				IsActive = true
 			};
-			histories.Add(entity);
+			histories.Add(history);
+
+			var perRequest = new PerIncrementRequest
+			{
+				PayIncHistId = history.Id,
+				ApprovedBy = command.CreatedBy,
+				ApprovalDate = approvalDate,
+				IsActive = true
+			};
+
+			perIncrementRequests.Add(perRequest);
 		}
 
-		// Save PayIncrementHistory entities to the database
-		var savedEntities = await _repository.AddRangeAsync(histories, cancellationToken);
-		return savedEntities.Select(e => e.Id).ToList();
+		var savedHistories = await _repository.AddHistoriesWithRequestsAsync(
+			histories,
+			perIncrementRequests,
+			cancellationToken);
+
+		return savedHistories.Select(e => e.Id).ToList();
 	}
 }
