@@ -38,6 +38,7 @@ public static class LeaveModuleRegistration
         services.AddScoped<UpdateLeaveRequestCommandHandler>();
         services.AddScoped<DeleteLeaveRequestCommandHandler>();
         services.AddScoped<GetLeaveRequestsQueryHandler>();
+        services.AddScoped< NZ.Leave.Application.LeaveRequests.Queries.GetLeaveRequestById.GetLeaveRequestByIdQueryHandler>();
 
         services.AddScoped<ILeaveEncashmentRequestRepository, LeaveEncashmentRequestRepository>();
         services.AddScoped<CreateLeaveEncashmentRequestsCommandHandler>();

@@ -4,6 +4,8 @@ using NZ.Leave.Application.LeaveRequests.Commands.DeleteLeaveRequest;
 using NZ.Leave.Application.LeaveRequests.Commands.UpdateLeaveRequest;
 using NZ.Leave.Application.LeaveRequests.Queries.GetLeaveRequests;
 using NZ.Leave.Application.LeaveTypes.Handlers;
+using NZ.Leave.Application.Interfaces.Repositories;
+using NZ.Leave.Application.LeaveRequests.Queries.GetLeaveRequestById;
 using NZ.Leave.Application.LeaveTypes.Queries.GetAllLeaveTypes;
 
 namespace NZ.HRM.WebAPI.Controllers;
@@ -17,6 +19,7 @@ public class LeaveController : ControllerBase
     private readonly UpdateLeaveRequestCommandHandler _updateHandler;
     private readonly DeleteLeaveRequestCommandHandler _deleteHandler;
     private readonly GetLeaveRequestsQueryHandler _getAllHandler;
+    private readonly GetLeaveRequestByIdQueryHandler _getByIdHandler;
 
 
     public LeaveController(
@@ -24,13 +27,74 @@ public class LeaveController : ControllerBase
         CreateLeaveRequestsCommandHandler createHandler,
         UpdateLeaveRequestCommandHandler updateHandler,
         DeleteLeaveRequestCommandHandler deleteHandler,
-        GetLeaveRequestsQueryHandler getAllHandler)
+        GetLeaveRequestsQueryHandler getAllHandler,
+        GetLeaveRequestByIdQueryHandler getByIdHandler)
     {
         _getAllLeaveTypesHandler = getAllLeaveTypesHandler;
         _createHandler = createHandler;
         _updateHandler = updateHandler;
         _deleteHandler = deleteHandler;
         _getAllHandler = getAllHandler;
+        _getByIdHandler = getByIdHandler;
+    }
+
+    [HttpGet("/api/v1/leave-requests/{requestId}")]
+    public async Task<IActionResult> GetById(string requestId, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(requestId))
+        {
+            return BadRequest(new
+            {
+                code = "INVALID_REQUEST_ID",
+                message = "Invalid leave request identifier."
+            });
+        }
+
+        var dto = await _getByIdHandler.Handle(new GetLeaveRequestByIdQuery { RequestId = requestId }, cancellationToken);
+
+        if (dto == null)
+        {
+            return NotFound(new
+            {
+                code = "LEAVE_REQUEST_NOT_FOUND",
+                message = "Leave request not found."
+            });
+        }
+
+        var response = new
+        {
+            requestId = dto.RequestId,
+            status = dto.Status,
+            appliedOn = dto.CreatedDate?.ToString("o"),
+            forwardedBy = dto.ForwardedBy == null ? null : new
+            {
+                employeeId = dto.ForwardedBy,
+                name = string.Empty,
+                forwardedOn = dto.ForwardedDate?.ToString("o")
+            },
+            employee = new
+            {
+                employeeId = dto.EmployeeId,
+                employeeName = dto.EmployeeName,
+                department = dto.DepartmentName,
+                designation = string.Empty,
+                dateOfJoining = (string?)null,
+                reportingManager = (object?)null
+            },
+            leave = new
+            {
+                leaveType = dto.LeaveType,
+                leaveCode = dto.LeaveTypeId,
+                startDate = dto.FromDate.ToString("yyyy-MM-dd"),
+                endDate = dto.ToDate.ToString("yyyy-MM-dd"),
+                totalDays = dto.TotalDays,
+                session = "FULL_DAY",
+                reason = dto.Reason,
+                contactNumber = string.Empty
+            }
+        };
+
+        return Ok(response);
     }
 
     [HttpGet("types")]
