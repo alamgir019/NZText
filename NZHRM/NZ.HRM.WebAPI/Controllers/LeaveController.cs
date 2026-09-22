@@ -166,6 +166,31 @@ public class LeaveController : ControllerBase
         });
     }
 
+
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateAll([FromBody] List<UpdateLeaveRequestCommand> commands, CancellationToken cancellationToken)
+    {
+        var result = await _updateHandler.Handle(commands, cancellationToken);
+
+        if (!result.Success)
+        {
+            var statusCode = result.ErrorCode == "VAL-NOTFOUND" ? StatusCodes.Status404NotFound : StatusCodes.Status400BadRequest;
+            return StatusCode(statusCode, new
+            {
+                success = false,
+                errorCode = result.ErrorCode,
+                message = result.Message
+            });
+        }
+
+        return Ok(new
+        {
+            success = true,
+            message = result.Message
+        });
+    }
+
     [HttpDelete("{requestId}")]
     public async Task<IActionResult> Delete(string requestId, CancellationToken cancellationToken)
     {
