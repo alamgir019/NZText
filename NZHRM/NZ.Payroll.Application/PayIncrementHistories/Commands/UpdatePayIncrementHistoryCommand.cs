@@ -2,12 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NZ.Payroll.Application.PayIncrementHistories.Commands;
 
-public class CreateIncrementRequestItem
+public class UpdateIncrementRequestItem
 {
-	[Required(ErrorMessage = "Employee ID is required")]
-	[MaxLength(50, ErrorMessage = "Employee ID must not exceed 50 characters")]
-	public string EmployeeId { get; set; } = string.Empty;
-
+	[Required(ErrorMessage = "Pay increment history ID is required")]
+	public string PayIncrementHistoryId { get; set; } = string.Empty;
 	[Required(ErrorMessage = "Effective date is required")]
 	public DateOnly EffectiveDate { get; set; }
 
@@ -27,9 +25,7 @@ public class CreateIncrementRequestItem
 	public string? IncrementType { get; set; }
 }
 
-
-public class CreateIncrementRequestsCommand
+public class UpdateIncrementRequestsCommand
 {
-    public List<CreateIncrementRequestItem> Requests { get; set; } = new List<CreateIncrementRequestItem>();
-    public string? CreatedBy { get; set; }
+	public List<UpdateIncrementRequestItem> Requests { get; set; } = new();
 }
