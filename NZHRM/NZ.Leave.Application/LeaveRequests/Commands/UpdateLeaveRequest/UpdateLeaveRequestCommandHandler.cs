@@ -25,8 +25,8 @@ namespace NZ.Leave.Application.LeaveRequests.Commands.UpdateLeaveRequest
                 return (flowControl: false, value: Error("VAL-NOTFOUND", "Leave request not found."));
 
             // VAL-011: Only DRAFT requests can be updated
-            if (!string.Equals(existing.Status, RequestStatus.PENDING, StringComparison.OrdinalIgnoreCase))
-                return (flowControl: false, value: Error("VAL-011", "Only PENDING requests can be updated."));
+            //if (!string.Equals(existing.Status, RequestStatus.PENDING, StringComparison.OrdinalIgnoreCase))
+            //    return (flowControl: false, value: Error("VAL-011", "Only PENDING requests can be updated."));
 
             if (string.IsNullOrWhiteSpace(command.LeaveType))
                 return (flowControl: false, value: Error("VAL-003", "Leave Type is required."));
