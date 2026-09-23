@@ -4,7 +4,6 @@ using NZ.Leave.Application.LeaveRequests.Commands.DeleteLeaveRequest;
 using NZ.Leave.Application.LeaveRequests.Commands.UpdateLeaveRequest;
 using NZ.Leave.Application.LeaveRequests.Queries.GetLeaveRequests;
 using NZ.Leave.Application.LeaveTypes.Handlers;
-using NZ.Leave.Application.Interfaces.Repositories;
 using NZ.Leave.Application.LeaveRequests.Queries.GetLeaveRequestById;
 using NZ.Leave.Application.LeaveTypes.Queries.GetAllLeaveTypes;
 
@@ -38,7 +37,7 @@ public class LeaveController : ControllerBase
         _getByIdHandler = getByIdHandler;
     }
 
-    [HttpGet("/api/v1/leave-requests/{requestId}")]
+    [HttpGet("leave-request/{requestId}")]
     public async Task<IActionResult> GetById(string requestId, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(requestId))
