@@ -21,8 +21,8 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.UpdateLeaveEncas
                     return Error("VAL-NOTFOUND", "Leave request not found.");
 
                 // VAL-011: Only PENDING requests can be updated
-                if (!string.Equals(existing.Status, LeaveEncashmentRequestStatus.Pending, StringComparison.OrdinalIgnoreCase))
-                    return Error("VAL-011", "Only PENDING requests can be updated.");
+                //if (!string.Equals(existing.Status, LeaveEncashmentRequestStatus.Pending, StringComparison.OrdinalIgnoreCase))
+                //    return Error("VAL-011", "Only PENDING requests can be updated.");
 
                 if (string.IsNullOrWhiteSpace(command.EmployeeId))
                     return Error("VAL-001", "Employee ID is required.");
