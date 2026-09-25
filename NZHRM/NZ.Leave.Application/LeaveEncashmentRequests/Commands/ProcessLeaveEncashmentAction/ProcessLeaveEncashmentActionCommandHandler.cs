@@ -18,8 +18,8 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.ProcessLeaveEnca
                 return Error("INVALID_REQUEST", "Request ID is mandatory.");
 
             var action = command.Action?.Trim().ToUpperInvariant();
-            if (string.IsNullOrWhiteSpace(action) || !LeaveEncashmentRequestAction.All.Contains(action))
-                return Error("INVALID_REQUEST", "Action must be either FORWARD or REJECT.");
+            //if (string.IsNullOrWhiteSpace(action) || !LeaveEncashmentRequestAction.All.Contains(action))
+            //    return Error("INVALID_REQUEST", "Action must be either FORWARD or REJECT.");
 
             var existing = await _repository.GetByIdAsync(command.RequestId, cancellationToken);
             if (existing == null)
@@ -31,8 +31,8 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.ProcessLeaveEnca
             if (string.Equals(existing.Status, LeaveEncashmentRequestStatus.Approved, StringComparison.OrdinalIgnoreCase))
                 return Error("INVALID_REQUEST", "Approved requests cannot be processed again.");
 
-            if (!string.Equals(existing.Status, LeaveEncashmentRequestStatus.Pending, StringComparison.OrdinalIgnoreCase))
-                return Error("INVALID_REQUEST", "Request must be in PENDING status.");
+            //if (!string.Equals(existing.Status, LeaveEncashmentRequestStatus.Pending, StringComparison.OrdinalIgnoreCase))
+            //    return Error("INVALID_REQUEST", "Request must be in PENDING status.");
 
             var processedBy = string.IsNullOrWhiteSpace(command.ProcessedBy)
                 ? "SYSTEM"
@@ -45,16 +45,16 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.ProcessLeaveEnca
                 processedBy,
                 cancellationToken);
 
-            var targetStatus = action == LeaveEncashmentRequestAction.Forward
-                ? LeaveEncashmentRequestStatus.Forwarded
-                : LeaveEncashmentRequestStatus.Rejected;
+            //var targetStatus = action == LeaveEncashmentRequestAction.Forward
+            //    ? LeaveEncashmentRequestStatus.Forwarded
+            //    : LeaveEncashmentRequestStatus.Rejected;
 
             return new ProcessLeaveEncashmentActionResult
             {
                 Success = true,
                 RequestId = command.RequestId,
                 Action = action,
-                Status = targetStatus,
+                Status = action,
                 Message = action == LeaveEncashmentRequestAction.Forward
                     ? "Request forwarded successfully."
                     : "Request rejected successfully."

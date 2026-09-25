@@ -23,8 +23,8 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Enums
 
     public static class LeaveEncashmentRequestAction
     {
-        public const string Forward = "FORWARD";
-        public const string Reject = "REJECT";
+        public const string Forward = "FORWARD-TO-HR";
+        public const string Reject = "REJECTED";
 
         public static readonly string[] All = { Forward, Reject };
     }
