@@ -87,6 +87,10 @@ public class LeaveDbContext : DbContext
         {
             entity.Ignore(e => e.Grade);
         });
+        modelBuilder.Entity<MstGrade>(entity =>
+        {
+            entity.Ignore(e => e.Designations);
+        });
         modelBuilder.Entity<WfWorkflowTransaction>(entity =>
         {
             entity.Ignore(e => e.WorkflowMaster);

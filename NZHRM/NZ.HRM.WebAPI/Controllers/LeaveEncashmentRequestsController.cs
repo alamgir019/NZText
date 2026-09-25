@@ -73,7 +73,7 @@ public class LeaveEncashmentRequestsController : ControllerBase
         });
     }
 
-    [HttpGet("~/api/v1/leave-encashment/{requestId}")]
+    [HttpGet("{requestId}")]
     public async Task<IActionResult> GetById(string requestId, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(requestId))
@@ -103,7 +103,7 @@ public class LeaveEncashmentRequestsController : ControllerBase
         return Ok(detail);
     }
 
-    [HttpPost("~/api/v1/leave-encashment/action")]
+    [HttpPost("action")]
     public async Task<IActionResult> ProcessAction([FromBody] ProcessLeaveEncashmentActionCommand command, CancellationToken cancellationToken = default)
     {
         command.ProcessedBy = User.FindFirstValue(ClaimTypes.NameIdentifier);
