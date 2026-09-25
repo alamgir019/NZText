@@ -4,13 +4,16 @@ using Microsoft.Extensions.DependencyInjection;
 using NZ.Leave.Application.Interfaces.Repositories;
 using NZ.Leave.Application.LeaveEncashmentRequests.Commands.CreateLeaveEncashmentRequests;
 using NZ.Leave.Application.LeaveEncashmentRequests.Commands.DeleteLeaveEncashmentRequest;
+using NZ.Leave.Application.LeaveEncashmentRequests.Commands.ProcessLeaveEncashmentAction;
 using NZ.Leave.Application.LeaveEncashmentRequests.Commands.UpdateLeaveEncashmentRequest;
+using NZ.Leave.Application.LeaveEncashmentRequests.Queries.GetLeaveEncashmentRequestDetail;
 using NZ.Leave.Application.LeaveEncashmentRequests.Queries.GetLeaveEncashmentRequests;
 using NZ.Leave.Application.LeaveRequests.Commands.CreateLeaveRequests;
 using NZ.Leave.Application.LeaveRequests.Commands.DeleteLeaveRequest;
 using NZ.Leave.Application.LeaveRequests.Commands.UpdateLeaveRequest;
 using NZ.Leave.Application.LeaveRequests.Queries.GetLeaveRequests;
 using NZ.Leave.Application.LeaveTypes.Handlers;
+using NZ.Leave.Domain.Services;
 using NZ.Leave.Infrastructure.Persistence;
 using NZ.Leave.Infrastructure.Repositories;
 using NZ.Leave.Infrastructure.Services;
@@ -41,9 +44,12 @@ public static class LeaveModuleRegistration
         services.AddScoped< NZ.Leave.Application.LeaveRequests.Queries.GetLeaveRequestById.GetLeaveRequestByIdQueryHandler>();
 
         services.AddScoped<ILeaveEncashmentRequestRepository, LeaveEncashmentRequestRepository>();
+        services.AddScoped<LeaveEncashmentApprovalWorkflow>();
         services.AddScoped<CreateLeaveEncashmentRequestsCommandHandler>();
+        services.AddScoped<ProcessLeaveEncashmentActionCommandHandler>();
         services.AddScoped<UpdateLeaveEncashmentRequestCommandHandler>();
         services.AddScoped<DeleteLeaveEncashmentRequestCommandHandler>();
+        services.AddScoped<GetLeaveEncashmentRequestDetailQueryHandler>();
         services.AddScoped<GetLeaveEncashmentRequestsQueryHandler>();
 
         return services;

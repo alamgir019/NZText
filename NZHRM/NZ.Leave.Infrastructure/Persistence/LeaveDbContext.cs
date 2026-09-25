@@ -25,6 +25,13 @@ public class LeaveDbContext : DbContext
 
     // Cross-module read-only reference (owned by HRM module)
     public DbSet<HrmEmployeeMaster> HrmEmployeeMasters => Set<HrmEmployeeMaster>();
+    public DbSet<HrmEmployeeEmployment> HrmEmployeeEmployments => Set<HrmEmployeeEmployment>();
+    public DbSet<HrmEmployeeReporting> HrmEmployeeReportings => Set<HrmEmployeeReporting>();
+    public DbSet<MstDepartment> MstDepartments => Set<MstDepartment>();
+    public DbSet<MstSection> MstSections => Set<MstSection>();
+    public DbSet<MstDesignation> MstDesignations => Set<MstDesignation>();
+    public DbSet<WfWorkflowTransaction> WfWorkflowTransactions => Set<WfWorkflowTransaction>();
+    public DbSet<WfWorkflowAttachment> WfWorkflowAttachments => Set<WfWorkflowAttachment>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -60,6 +67,38 @@ public class LeaveDbContext : DbContext
             entity.Ignore(e => e.Section);
             entity.Ignore(e => e.Shift);
             entity.Ignore(e => e.Unit);
+        });
+        modelBuilder.Entity<HrmEmployeeReporting>(entity =>
+        {
+            entity.Ignore(e => e.Employee);
+            entity.Ignore(e => e.ReportingEmployee);
+        });
+        modelBuilder.Entity<MstDepartment>(entity =>
+        {
+            entity.Ignore(e => e.DepartmentUnitComplexes);
+            entity.Ignore(e => e.Sections);
+        });
+        modelBuilder.Entity<MstSection>(entity =>
+        {
+            entity.Ignore(e => e.Department);
+            entity.Ignore(e => e.Cells);
+        });
+        modelBuilder.Entity<MstDesignation>(entity =>
+        {
+            entity.Ignore(e => e.Grade);
+        });
+        modelBuilder.Entity<WfWorkflowTransaction>(entity =>
+        {
+            entity.Ignore(e => e.WorkflowMaster);
+            entity.Ignore(e => e.ApprovalHistory);
+            entity.Ignore(e => e.PendingApprovals);
+            entity.Ignore(e => e.Notifications);
+            entity.Ignore(e => e.Attachments);
+            entity.Ignore(e => e.Audits);
+        });
+        modelBuilder.Entity<WfWorkflowAttachment>(entity =>
+        {
+            entity.Ignore(e => e.WorkflowTransaction);
         });
 
         modelBuilder.Entity<HrmEmployeeMaster>()
