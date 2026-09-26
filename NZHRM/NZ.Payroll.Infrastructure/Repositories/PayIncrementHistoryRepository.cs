@@ -86,12 +86,50 @@ public class PayIncrementHistoryRepository : IPayIncrementHistoryRepository
 			foreach (var history in historyList.Where(history =>
 				string.Equals(history.Status, PayIncrementStatuses.Approved, StringComparison.OrdinalIgnoreCase)))
 			{
-				if (!history.NewGrossSalary.HasValue || history.NewGrossSalary.Value <= 2000m)
-					throw new ArgumentException("New gross salary must be greater than 2000 when approving a pay increment");
+				var employeeNature = await _context.HrmEmployeeMasters
+					.Where(employee => employee.Id == history.EmployeeId)
+					.Select(employee => employee.EmployeeNature)
+					.FirstOrDefaultAsync(cancellationToken);
+
+				if (!history.NewGrossSalary.HasValue)
+					throw new ArgumentException("New gross salary is required when approving a pay increment");
 
 				var grossSalary = history.NewGrossSalary.Value;
-				var basicSalary = (grossSalary - 2000m) / 1.55m;
-				var houseRent = basicSalary * 0.55m;
+				decimal basicSalary;
+				decimal houseRent;
+				decimal medicalAllowance;
+				decimal foodAllowance;
+				decimal conveyanceAllowance;
+
+				if (string.Equals(employeeNature, "Worker", StringComparison.OrdinalIgnoreCase))
+				{
+					if (grossSalary <= 2000m)
+						throw new ArgumentException("New gross salary must be greater than 2000 for Worker employees");
+
+					medicalAllowance = 750m;
+					foodAllowance = 850m;
+					conveyanceAllowance = 400m;
+					basicSalary = (grossSalary - (medicalAllowance + foodAllowance + conveyanceAllowance)) / 1.55m;
+					houseRent = basicSalary * 0.55m;
+				}
+				else
+				{
+					if (grossSalary <= 2500m)
+						throw new ArgumentException("New gross salary must be greater than 2500 for Staff/Management employees");
+
+					conveyanceAllowance = 2500m;
+					foodAllowance = 0m;
+					basicSalary = (grossSalary - conveyanceAllowance) / 1.6m;
+					houseRent = basicSalary * 0.50m;
+
+					if (houseRent > 25000m)
+					{
+						basicSalary = (grossSalary - conveyanceAllowance) / 1.1m;
+						houseRent = 25000m;
+					}
+
+					medicalAllowance = basicSalary * 0.10m;
+				}
 
 				var salaryStructure = await _context.PaySalaryStructures
 					.FirstOrDefaultAsync(structure =>
@@ -114,9 +152,9 @@ public class PayIncrementHistoryRepository : IPayIncrementHistoryRepository
 				salaryStructure.GrossSalary = grossSalary;
 				salaryStructure.BasicSalary = basicSalary;
 				salaryStructure.HouseRent = houseRent;
-				salaryStructure.MedicalAllowance = 750m;
-				salaryStructure.FoodAllowance = 850m;
-				salaryStructure.ConveyanceAllowance = 400m;
+				salaryStructure.MedicalAllowance = medicalAllowance;
+				salaryStructure.FoodAllowance = foodAllowance;
+				salaryStructure.ConveyanceAllowance = conveyanceAllowance;
 
 				var employeePayroll = await _context.HrmEmployeePayrolls
 					.FirstOrDefaultAsync(payroll =>
@@ -137,9 +175,9 @@ public class PayIncrementHistoryRepository : IPayIncrementHistoryRepository
 				employeePayroll.GrossSalary = grossSalary;
 				employeePayroll.BasicSalary = basicSalary;
 				employeePayroll.HouseRentAllowance = houseRent;
-				employeePayroll.MedicalAllowance = 750m;
-				employeePayroll.FoodAllowance = 850m;
-				employeePayroll.ConveyanceAllowance = 400m;
+				employeePayroll.MedicalAllowance = medicalAllowance;
+				employeePayroll.FoodAllowance = foodAllowance;
+				employeePayroll.ConveyanceAllowance = conveyanceAllowance;
 			}
 
 			await _context.SaveChangesAsync(cancellationToken);
