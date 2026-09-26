@@ -1,7 +1,8 @@
-using System;
 using NZ.Attendance.Domain.Entities;
 using NZ.Attendance.Domain.Enums;
 using NZ.HRM.Domain.Helper;
+using System;
+using System.Xml.Linq;
 
 namespace NZ.Attendance.Domain.Services
 {
@@ -17,6 +18,9 @@ namespace NZ.Attendance.Domain.Services
         public void ForWard(AttAttendanceException entity, string userId, string? comments = null)
             => Transition(entity, AttendanceExceptionStatus.Forwarded, userId, comments);
 
+        public void ReviewForward(AttAttendanceException entity, string userId, string? comments = null)
+            => Transition(entity, AttendanceExceptionStatus.Forwarded, userId, comments);
+
         public void Approve(AttAttendanceException entity, string reviewerId, string? comments = null)
             => Transition(entity, AttendanceExceptionStatus.Approved, reviewerId, comments);
 
@@ -27,6 +31,9 @@ namespace NZ.Attendance.Domain.Services
 
             Transition(entity, AttendanceExceptionStatus.Rejected, reviewerId, comments);
         }
+
+        public void ReviewReject(AttAttendanceException entity, string reviewerId, string? comments = null)
+            => Transition(entity, AttendanceExceptionStatus.Rejected, reviewerId, comments);
 
         public void Cancel(AttAttendanceException entity, string userId, string? comments = null)
             => Transition(entity, AttendanceExceptionStatus.Cancelled, userId, comments);
@@ -76,12 +83,19 @@ namespace NZ.Attendance.Domain.Services
             {
                 (AttendanceExceptionStatus.Pending, AttendanceExceptionStatus.Submitted) => true,
                 (AttendanceExceptionStatus.Rejected, AttendanceExceptionStatus.Submitted) => true,
+                (AttendanceExceptionStatus.Pending, AttendanceExceptionStatus.Forwarded) => true,
                 (AttendanceExceptionStatus.Submitted, AttendanceExceptionStatus.Forwarded) => true,
+                (AttendanceExceptionStatus.Pending, AttendanceExceptionStatus.Rejected) => true,
                 (AttendanceExceptionStatus.Forwarded, AttendanceExceptionStatus.Approved) => true,
                 (AttendanceExceptionStatus.Forwarded, AttendanceExceptionStatus.Rejected) => true,
+                (AttendanceExceptionStatus.Forwarded, AttendanceExceptionStatus.ForwardedToHR) => true,
+                (AttendanceExceptionStatus.Forwarded, AttendanceExceptionStatus.ForwardedToIT) => true,
                 (AttendanceExceptionStatus.Submitted, AttendanceExceptionStatus.Cancelled) => true,
                 (AttendanceExceptionStatus.Pending, AttendanceExceptionStatus.Cancelled) => true,
                 _ => false
             };
+
+        public void ForWardToIT(AttAttendanceException entity, string processedBy, string? remarks)
+            => Transition(entity, AttendanceExceptionStatus.ForwardedToIT, processedBy, remarks);
     }
 }

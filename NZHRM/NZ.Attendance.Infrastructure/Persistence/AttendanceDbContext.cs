@@ -30,9 +30,13 @@ public class AttendanceDbContext : DbContext
     public DbSet<MstShift> MstShifts => Set<MstShift>();
     public DbSet<LevHolidayCalendar> LevHolidayCalendars => Set<LevHolidayCalendar>();
     public DbSet<HrmEmployeeEmployment> HrmEmployeeEmployments => Set<HrmEmployeeEmployment>();
+    public DbSet<HrmEmployeeReporting> HrmEmployeeReportings => Set<HrmEmployeeReporting>();
     public DbSet<MstDepartment> MstDepartments => Set<MstDepartment>();
+    public DbSet<MstSection> MstSections => Set<MstSection>();
     public DbSet<MstDesignation> MstDesignations => Set<MstDesignation>();
     public DbSet<HrmEmployeeDocument> HrmEmployeeDocuments => Set<HrmEmployeeDocument>();
+    public DbSet<WfWorkflowTransaction> WfWorkflowTransactions => Set<WfWorkflowTransaction>();
+    public DbSet<WfWorkflowAttachment> WfWorkflowAttachments => Set<WfWorkflowAttachment>();
     // C#
     protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
@@ -76,6 +80,42 @@ public class AttendanceDbContext : DbContext
     {
         entity.Ignore(e => e.Employee);
     });
+    modelBuilder.Entity<HrmEmployeeReporting>(entity =>
+    {
+        entity.Ignore(e => e.Employee);
+        entity.Ignore(e => e.ReportingEmployee);
+    });
+    modelBuilder.Entity<MstDepartment>(entity =>
+    {
+        entity.Ignore(e => e.DepartmentUnitComplexes);
+        entity.Ignore(e => e.Sections);
+    });
+    modelBuilder.Entity<MstSection>(entity =>
+    {
+        entity.Ignore(e => e.Department);
+        entity.Ignore(e => e.Cells);
+    });
+    modelBuilder.Entity<MstDesignation>(entity =>
+    {
+        entity.Ignore(e => e.Grade);
+    });
+    modelBuilder.Entity<MstGrade>(entity =>
+    {
+        entity.Ignore(e => e.Designations);
+    });
+    modelBuilder.Entity<WfWorkflowTransaction>(entity =>
+    {
+        entity.Ignore(e => e.WorkflowMaster);
+        entity.Ignore(e => e.ApprovalHistory);
+        entity.Ignore(e => e.PendingApprovals);
+        entity.Ignore(e => e.Notifications);
+        entity.Ignore(e => e.Attachments);
+        entity.Ignore(e => e.Audits);
+    });
+    modelBuilder.Entity<WfWorkflowAttachment>(entity =>
+    {
+        entity.Ignore(e => e.WorkflowTransaction);
+    });
     // Attendance exception workflow: status stored as integer, audit trail cascades.
     modelBuilder.Entity<AttAttendanceException>(entity =>
     {
@@ -111,9 +151,5 @@ public class AttendanceDbContext : DbContext
         entity.HasIndex(h => new { h.AttendanceExceptionId, h.ActionOn });
     });
 
-    modelBuilder.Entity<HrmEmployeeDocument>(entity =>
-    {
-        entity.Ignore(e => e.Employee);
-    });
 }
 }

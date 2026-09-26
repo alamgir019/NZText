@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.EntityFrameworkCore;
 using NZ.Attendance.Application.AttendanceExceptions.Commands.CreateAttendanceExceptions;
 using NZ.Attendance.Application.AttendanceExceptions.Dto;
@@ -11,6 +8,12 @@ using NZ.Attendance.Domain.Entities;
 using NZ.Attendance.Domain.Enums;
 using NZ.Attendance.Domain.Services;
 using NZ.Attendance.Infrastructure.Persistence;
+using NZ.HRM.Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NZ.Attendance.Infrastructure.Repositories
 {
@@ -72,22 +75,127 @@ namespace NZ.Attendance.Infrastructure.Repositories
 
             if (entity == null) return null;
 
-            var dto = new AttendanceExceptionDetailDto();
-            MapHeader(entity, dto);
+            var employment = await _context.HrmEmployeeEmployments
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.EmployeeId == entity.EmployeeId, cancellationToken);
 
-            dto.History = entity.History
-                .OrderBy(h => h.ActionOn)
-                .Select(h => new AttendanceExceptionHistoryDto
+            var department = string.IsNullOrWhiteSpace(employment?.DepartmentId)
+                ? null
+                : await _context.MstDepartments
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(d => d.Id == employment.DepartmentId, cancellationToken);
+
+            var section = string.IsNullOrWhiteSpace(employment?.SectionId)
+                ? null
+                : await _context.MstSections
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(s => s.Id == employment.SectionId, cancellationToken);
+
+            var designation = string.IsNullOrWhiteSpace(employment?.DesignationId)
+                ? null
+                : await _context.MstDesignations
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(d => d.Id == employment.DesignationId, cancellationToken);
+
+            var reportingManagerId = employment?.ReportingTo;
+            if (string.IsNullOrWhiteSpace(reportingManagerId))
+            {
+                reportingManagerId = await _context.HrmEmployeeReportings
+                    .AsNoTracking()
+                    .Where(r => r.EmployeeId == entity.EmployeeId)
+                    .OrderByDescending(r => r.EffectiveFrom)
+                    .Select(r => r.ReportingEmployeeId)
+                    .FirstOrDefaultAsync(cancellationToken);
+            }
+
+            var reportingManager = string.IsNullOrWhiteSpace(reportingManagerId)
+                ? null
+                : await _context.HrmEmployeeMasters
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(e => e.Id == reportingManagerId, cancellationToken);
+
+            var processedAttendance = await _context.AttProcessedAttendances
+                .AsNoTracking()
+                .FirstOrDefaultAsync(a => a.EmployeeId == entity.EmployeeId && a.AttendanceDate == entity.AttendanceDate, cancellationToken);
+
+            MstShift? shift = null;
+            if (!string.IsNullOrWhiteSpace(processedAttendance?.ShiftId))
+            {
+                shift = await _context.MstShifts
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(s => s.Id == processedAttendance.ShiftId, cancellationToken);
+            }
+
+            var latestForward = entity.History
+                .Where(h => h.ToStatus == AttendanceExceptionStatus.Forwarded || h.ToStatus == AttendanceExceptionStatus.Submitted)
+                .OrderByDescending(h => h.ActionOn)
+                .FirstOrDefault();
+
+            var workflowTransactionIds = await _context.WfWorkflowTransactions
+                .AsNoTracking()
+                .Where(t => t.ReferenceId == entity.Id)
+                .OrderByDescending(t => t.CreatedOn)
+                .Select(t => t.Id)
+                .ToListAsync(cancellationToken);
+
+            var attachments = workflowTransactionIds.Count == 0
+                ? new List<AttendanceExceptionAttachmentDto>()
+                : await _context.WfWorkflowAttachments
+                    .AsNoTracking()
+                    .Where(a => workflowTransactionIds.Contains(a.WorkflowTransactionId))
+                    .OrderByDescending(a => a.UploadDate)
+                    .Select(a => new AttendanceExceptionAttachmentDto
+                    {
+                        AttachmentId = a.Id,
+                        FileName = a.FileName,
+                        UploadedOn = a.UploadDate,
+                        DownloadUrl = $"/attachments/{a.Id}"
+                    })
+                    .ToListAsync(cancellationToken);
+
+            return new AttendanceExceptionDetailDto
+            {
+                RequestId = entity.Id,
+                Status = entity.Status.ToString().ToUpperInvariant(),
+                ExceptionDate = entity.AttendanceDate,
+                Shift = shift?.ShiftName,
+                Employee = new AttendanceExceptionEmployeeInfoDto
                 {
-                    FromStatus = h.FromStatus,
-                    ToStatus = h.ToStatus,
-                    ActionBy = h.ActionBy,
-                    ActionOn = h.ActionOn,
-                    Comments = h.Comments
-                })
-                .ToList();
-
-            return dto;
+                    EmployeeId = string.IsNullOrWhiteSpace(entity.Employee?.EmployeeCode) ? entity.EmployeeId : entity.Employee.EmployeeCode,
+                    EmployeeName = entity.Employee?.EmployeeName ?? string.Empty,
+                    Department = department?.DepartmentName,
+                    Designation = designation?.DesignationName,
+                    DateOfJoining = employment?.JoiningDate,
+                    ReportingManager = reportingManager == null
+                        ? null
+                        : new AttendanceExceptionReportingManagerDto
+                        {
+                            EmployeeId = string.IsNullOrWhiteSpace(reportingManager.EmployeeCode) ? reportingManager.Id : reportingManager.EmployeeCode,
+                            EmployeeName = reportingManager.EmployeeName
+                        }
+                },
+                Workflow = new AttendanceExceptionWorkflowInfoDto
+                {
+                    ForwardedByDepartment = department?.DepartmentName,
+                    ForwardedBySection = section?.SectionName,
+                    ForwardedOn = latestForward?.ActionOn ?? entity.CreatedOn,
+                    CurrentStatus = entity.Status.ToString().ToUpperInvariant()
+                },
+                ExceptionInformation = new AttendanceExceptionInformationDto
+                {
+                    ExceptionType = entity.ExceptionType ?? string.Empty,
+                    ExceptionDate = entity.AttendanceDate,
+                    ShiftName = shift?.ShiftName,
+                    ShiftTime = BuildShiftTime(shift),
+                    ScheduledInTime = shift?.StartTime.ToString("hh:mm tt"),
+                    ActualInTime = processedAttendance?.ActualInTime?.ToString("hh:mm tt"),
+                    ScheduledOutTime = shift?.EndTime.ToString("hh:mm tt"),
+                    ActualOutTime = processedAttendance?.ActualOutTime?.ToString("hh:mm tt"),
+                    ReasonProvided = entity.Remarks,
+                    RemarksByFloor = latestForward?.Comments ?? entity.Remarks
+                },
+                Attachments = attachments
+            };
         }
 
         public async Task<(List<AttendanceExceptionDto> Items, int Total)> GetAllAsync(
@@ -205,13 +313,26 @@ namespace NZ.Attendance.Infrastructure.Repositories
         {
             var entity = await GetTrackedAsync(id, cancellationToken);
             _workflow.Approve(entity, reviewerId, comments);
+            var newHistory = entity.History.LastOrDefault();
+            if (newHistory != null && _context.Entry(newHistory).State == EntityState.Detached)
+            {
+                await _context.AttAttendanceExceptionHistories.AddAsync(newHistory, cancellationToken);
+            }
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task RejectAsync(string id, string reviewerId, string comments, CancellationToken cancellationToken = default)
+        public async Task RejectAsync(string id, string reviewerId, string? comments, CancellationToken cancellationToken = default)
         {
             var entity = await GetTrackedAsync(id, cancellationToken);
-            _workflow.Reject(entity, reviewerId, comments);
+            if (entity.Status == AttendanceExceptionStatus.Pending)
+                _workflow.ReviewReject(entity, reviewerId, comments);
+            else
+                _workflow.Reject(entity, reviewerId, comments ?? string.Empty);
+            var newHistory = entity.History.LastOrDefault();
+            if (newHistory != null && _context.Entry(newHistory).State == EntityState.Detached)
+            {
+                await _context.AttAttendanceExceptionHistories.AddAsync(newHistory, cancellationToken);
+            }
             await _context.SaveChangesAsync(cancellationToken);
         }
 
@@ -219,6 +340,11 @@ namespace NZ.Attendance.Infrastructure.Repositories
         {
             var entity = await GetTrackedAsync(id, cancellationToken);
             _workflow.Cancel(entity, userId, comments);
+            var newHistory = entity.History.LastOrDefault();
+            if (newHistory != null && _context.Entry(newHistory).State == EntityState.Detached)
+            {
+                await _context.AttAttendanceExceptionHistories.AddAsync(newHistory, cancellationToken);
+            }
             await _context.SaveChangesAsync(cancellationToken);
         }
 
@@ -288,6 +414,35 @@ namespace NZ.Attendance.Infrastructure.Repositories
                 dto.ReviewedBy = reviewed.ActionBy;
                 dto.ReviewedOn = reviewed.ActionOn;
                 dto.ReviewRemarks = reviewed.Comments;
+            }
+        }
+
+        private static string? BuildShiftTime(MstShift? shift)
+        {
+            if (shift == null)
+                return null;
+
+            return $"{shift.StartTime:hh:mm tt} - {shift.EndTime:hh:mm tt}";
+        }
+
+        public async Task ForwardToITAsync(string requestId, string processedBy, string? remarks, CancellationToken cancellationToken)
+        {
+            var entity = await GetTrackedAsync(requestId, cancellationToken);
+            _workflow.ForWardToIT(entity, processedBy, remarks);
+            var newHistory = entity.History.LastOrDefault();
+            if (newHistory != null)
+            {
+                await _context.AttAttendanceExceptionHistories.AddAsync(newHistory, cancellationToken);
+            }
+            try
+            {
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                // Entry.ReloadAsync throws InvalidOperationException when the entity no longer exists in the database.
+                throw new InvalidOperationException("The attendance exception no longer exists.", ex);
+
             }
         }
     }

@@ -1,6 +1,8 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using NZ.Attendance.Application.AttendanceExceptions.Commands.CreateAttendanceExceptions;
 using NZ.Attendance.Application.AttendanceExceptions.Commands.DeleteAttendanceException;
+using NZ.Attendance.Application.AttendanceExceptions.Commands.ProcessAttendanceExceptionAction;
 using NZ.Attendance.Application.AttendanceExceptions.Commands.ReviewAttendanceException;
 using NZ.Attendance.Application.AttendanceExceptions.Commands.UpdateAttendanceException;
 using NZ.Attendance.Application.AttendanceExceptions.Handlers;
@@ -15,15 +17,18 @@ namespace NZ.Attendance.WebAPI.Controllers;
 public class AttendanceExceptionsController : ControllerBase
 {
     private readonly AttendanceExceptionCommandHandler _commandHandler;
+    private readonly ProcessAttendanceExceptionActionCommandHandler _processActionHandler;
     private readonly GetAttendanceExceptionByIdQueryHandler _getByIdHandler;
     private readonly GetAllAttendanceExceptionsQueryHandler _getAllHandler;
 
     public AttendanceExceptionsController(
         AttendanceExceptionCommandHandler commandHandler,
+        ProcessAttendanceExceptionActionCommandHandler processActionHandler,
         GetAttendanceExceptionByIdQueryHandler getByIdHandler,
         GetAllAttendanceExceptionsQueryHandler getAllHandler)
     {
         _commandHandler = commandHandler;
+        _processActionHandler = processActionHandler;
         _getByIdHandler = getByIdHandler;
         _getAllHandler = getAllHandler;
     }
@@ -36,12 +41,57 @@ public class AttendanceExceptionsController : ControllerBase
         return Ok(new { ids });
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(string id)
+    [HttpGet("~/api/attendance-exceptions/{requestId}")]
+    public async Task<IActionResult> GetById(string requestId, CancellationToken cancellationToken = default)
     {
-        var dto = await _getByIdHandler.Handle(new GetAttendanceExceptionByIdQuery { Id = id });
-        if (dto == null) return NotFound();
+        if (string.IsNullOrWhiteSpace(requestId))
+        {
+            return BadRequest(new
+            {
+                success = false,
+                errorCode = "INVALID_REQUEST",
+                message = "Request ID must exist."
+            });
+        }
+
+        var dto = await _getByIdHandler.Handle(new GetAttendanceExceptionByIdQuery { Id = requestId }, cancellationToken);
+        if (dto == null)
+        {
+            return NotFound(new
+            {
+                success = false,
+                errorCode = "NOT_FOUND",
+                message = "Attendance exception request not found."
+            });
+        }
+
         return Ok(dto);
+    }
+
+    [HttpPut("~/api/attendance-exceptions/action")]
+    public async Task<IActionResult> ProcessAction([FromBody] ProcessAttendanceExceptionActionCommand command, CancellationToken cancellationToken = default)
+    {
+        command.ProcessedBy = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "SYSTEM";
+
+        var result = await _processActionHandler.Handle(command, cancellationToken);
+        if (!result.Success)
+        {
+            return BadRequest(new
+            {
+                success = false,
+                errorCode = result.ErrorCode,
+                message = result.Message
+            });
+        }
+
+        return Ok(new
+        {
+            success = true,
+            requestId = result.RequestId,
+            action = result.Action,
+            status = result.Status,
+            message = result.Message
+        });
     }
 
     [HttpGet]

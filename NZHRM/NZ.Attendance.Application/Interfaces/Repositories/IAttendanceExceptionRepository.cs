@@ -42,7 +42,7 @@ namespace NZ.Attendance.Application.Interfaces.Repositories
 
         Task ForwardAsync(string id, string userId, string? comments, CancellationToken cancellationToken = default);
         Task ApproveAsync(string id, string reviewerId, string? comments, CancellationToken cancellationToken = default);
-        Task RejectAsync(string id, string reviewerId, string comments, CancellationToken cancellationToken = default);
+        Task RejectAsync(string id, string reviewerId, string? comments, CancellationToken cancellationToken = default);
         Task CancelAsync(string id, string userId, string? comments, CancellationToken cancellationToken = default);
 
         /// <summary>Returns employee/date pairs that already exist, to prevent duplicates on bulk create.</summary>
@@ -50,5 +50,6 @@ namespace NZ.Attendance.Application.Interfaces.Repositories
             IEnumerable<string> employeeIds,
             IEnumerable<DateOnly> dates,
             CancellationToken cancellationToken = default);
+        Task ForwardToITAsync(string requestId, string processedBy, string? remarks, CancellationToken cancellationToken);
     }
 }

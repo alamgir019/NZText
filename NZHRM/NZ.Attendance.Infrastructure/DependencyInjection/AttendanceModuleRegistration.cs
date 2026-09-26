@@ -38,6 +38,7 @@ public static class AttendanceModuleRegistration
         services.AddScoped<AttendanceExceptionWorkflow>();
         services.AddScoped<Application.Interfaces.Repositories.IAttendanceExceptionRepository, AttendanceExceptionRepository>();
         services.AddScoped<Application.AttendanceExceptions.Handlers.AttendanceExceptionCommandHandler>();
+        services.AddScoped<Application.AttendanceExceptions.Commands.ProcessAttendanceExceptionAction.ProcessAttendanceExceptionActionCommandHandler>();
         services.AddScoped<Application.AttendanceExceptions.Queries.GetAllAttendanceExceptions.GetAllAttendanceExceptionsQueryHandler>();
         services.AddScoped<Application.AttendanceExceptions.Queries.GetAttendanceExceptionById.GetAttendanceExceptionByIdQueryHandler>();
 
