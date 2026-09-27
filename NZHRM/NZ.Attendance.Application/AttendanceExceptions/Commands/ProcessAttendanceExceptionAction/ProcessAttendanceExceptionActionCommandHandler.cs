@@ -64,5 +64,23 @@ namespace NZ.Attendance.Application.AttendanceExceptions.Commands.ProcessAttenda
                 ErrorCode = errorCode,
                 Message = message
             };
+
+        public async Task<ProcessAttendanceExceptionActionResult> Handle(List<ProcessAttendanceExceptionActionCommand> commands, CancellationToken cancellationToken)
+        {
+            foreach (var command in commands)
+            {
+                var result = await Handle(command, cancellationToken);
+                if (!result.Success)
+                {
+                    return result;
+                }
+            }
+
+            return new ProcessAttendanceExceptionActionResult
+            {
+                Success = true,
+                Message = "All commands processed successfully."
+            };
+        }
     }
 }

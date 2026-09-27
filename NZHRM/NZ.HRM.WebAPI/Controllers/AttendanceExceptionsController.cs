@@ -41,7 +41,7 @@ public class AttendanceExceptionsController : ControllerBase
         return Ok(new { ids });
     }
 
-    [HttpGet("~/api/attendance-exceptions/{requestId}")]
+    [HttpGet("{requestId}")]
     public async Task<IActionResult> GetById(string requestId, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(requestId))
@@ -68,7 +68,7 @@ public class AttendanceExceptionsController : ControllerBase
         return Ok(dto);
     }
 
-    [HttpPut("~/api/attendance-exceptions/action")]
+    [HttpPut("action")]
     public async Task<IActionResult> ProcessAction([FromBody] ProcessAttendanceExceptionActionCommand command, CancellationToken cancellationToken = default)
     {
         command.ProcessedBy = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "SYSTEM";
@@ -93,6 +93,38 @@ public class AttendanceExceptionsController : ControllerBase
             message = result.Message
         });
     }
+
+
+
+    [HttpPut("action-selected")]
+    public async Task<IActionResult> ProcessSelectedAction([FromBody]  List<ProcessAttendanceExceptionActionCommand> commands, CancellationToken cancellationToken = default)
+    {
+        foreach (var cmd in commands)
+        {
+            cmd.ProcessedBy = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "SYSTEM";
+        }
+
+        var result = await _processActionHandler.Handle(commands, cancellationToken);
+        if (!result.Success)
+        {
+            return BadRequest(new
+            {
+                success = false,
+                errorCode = result.ErrorCode,
+                message = result.Message
+            });
+        }
+
+        return Ok(new
+        {
+            success = true,
+            requestId = result.RequestId,
+            action = result.Action,
+            status = result.Status,
+            message = result.Message
+        });
+    }
+
 
     [HttpGet]
     public async Task<IActionResult> GetAll(
