@@ -46,7 +46,7 @@ public class PayrollAdjustmentCommandHandler
             var history = new PayPayrollAdjustmentHistory
             {
                 PayrollAdjustmentId = saved.Id,
-                Action = "CREATED",
+                Action = "SUBMITTED",
                 PerformedBy = "SYSTEM",
                 PerformedOn = DateTime.UtcNow,
                 Notes = command.Remarks,

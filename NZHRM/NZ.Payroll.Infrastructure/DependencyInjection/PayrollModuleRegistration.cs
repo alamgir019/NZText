@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NZ.Payroll.Application.Interfaces.Repositories;
 using NZ.Payroll.Application.PayIncrementHistories.Handlers;
+using NZ.Payroll.Domain.Services;
 using NZ.Payroll.Infrastructure.Persistence;
 using NZ.Payroll.Infrastructure.Repositories;
 
@@ -26,10 +27,16 @@ public static class PayrollModuleRegistration
 
         // Payroll adjustments
         services.AddScoped<IPayrollAdjustmentRepository, PayrollAdjustmentRepository>();
+        services.AddScoped<IPayrollExceptionRepository, PayrollExceptionRepository>();
         services.AddScoped<IPayrollAdjustmentHistoryRepository, PayrollAdjustmentHistoryRepository>();
+        services.AddScoped<PayrollExceptionWorkflow>();
         services.AddScoped< NZ.Payroll.Application.PayrollAdjustments.Handlers.PayrollAdjustmentCommandHandler>();
         services.AddScoped< NZ.Payroll.Application.PayrollAdjustments.Handlers.GetPayrollAdjustmentByIdQueryHandler>();
         services.AddScoped< NZ.Payroll.Application.PayrollAdjustments.Handlers.GetAllPayrollAdjustmentsQueryHandler>();
+        services.AddScoped< NZ.Payroll.Application.PayrollExceptions.Handlers.GetPayrollExceptionRequestDetailQueryHandler>();
+        services.AddScoped< NZ.Payroll.Application.PayrollExceptions.Handlers.GetPayrollExceptionRequestsQueryHandler>();
+        services.AddScoped< NZ.Payroll.Application.PayrollExceptions.Handlers.ForwardPayrollExceptionRequestCommandHandler>();
+        services.AddScoped< NZ.Payroll.Application.PayrollExceptions.Handlers.ForwardPayrollExceptionRequestsCommandHandler>();
 
         return services;
     }
