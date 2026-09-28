@@ -20,4 +20,6 @@ public class CreatePayrollAdjustmentCommand
 
     public string? SupportingDocumentId { get; set; }
     public string? Remarks { get; set; }
+    public decimal? NewAmount { get; set; }
+    public decimal? OldAmount { get; set; }
 }

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace NZ.HRM.Domain.Entities
 {
     [Table("payroll_adjustment", Schema = "payroll")]
-    public class PayPayrollAdjustment : BaseEntityWithSortOrder
+    public class PayPayrollAdjustment : BaseEntity
     {
         public string EmployeeId { get; set; } = string.Empty;
         public string PayrollMonth { get; set; } = string.Empty;
@@ -15,7 +15,7 @@ namespace NZ.HRM.Domain.Entities
         public string? Reason { get; set; }
         public string? ApprovedBy { get; set; }
         public DateTime? AdjustmentDate { get; set; }
-
+        public string? Status { get; set; }
         [ForeignKey("EmployeeId")] public HrmEmployeeMaster? Employee { get; set; }
     }
 }

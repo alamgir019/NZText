@@ -5,7 +5,7 @@ namespace NZ.Payroll.Domain.Services;
 
 public class PayrollExceptionWorkflow
 {
-    public void ForwardToIT(PayPayrollException entity, string processedBy)
+    public void ForwardToIT(PayPayrollAdjustment entity, string processedBy)
     {
         if (entity is null)
         {
@@ -23,8 +23,6 @@ public class PayrollExceptionWorkflow
         }
 
         entity.Status = PayrollExceptionStatuses.ForwardedToIT;
-        entity.ResolvedBy = processedBy;
-        entity.ResolvedDate = DateTime.UtcNow;
         entity.UpdatedBy = processedBy;
         entity.UpdatedOn = DateTime.UtcNow;
     }

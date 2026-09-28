@@ -1,4 +1,6 @@
 using NZ.HRM.Domain.Entities;
+using NZ.Payroll.Application.PayrollExceptions.DTOs;
+using NZ.Payroll.Application.PayrollExceptions.Queries;
 
 namespace NZ.Payroll.Application.Interfaces.Repositories;
 

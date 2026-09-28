@@ -5,7 +5,7 @@ using NZ.Shared.Domain.Common;
 namespace NZ.HRM.Domain.Entities
 {
     [Table("payroll_adjustment_history", Schema = "payroll")]
-    public class PayPayrollAdjustmentHistory : BaseEntityWithSortOrder
+    public class PayPayrollAdjustmentHistory : BaseEntity
     {
         public string PayrollAdjustmentId { get; set; } = string.Empty;
         public string Action { get; set; } = string.Empty; // CREATED, UPDATED, SUBMITTED, CANCELLED, APPROVED, REJECTED

@@ -100,5 +100,11 @@ public class PayrollDbContext : DbContext
             entity.Ignore(e => e.Shift);
             entity.Ignore(e => e.ProcessingGroup);
         });
+
+        modelBuilder.Entity<HrmEmployeeReporting>(entity =>
+        {
+            entity.Ignore(e => e.Employee);
+            entity.Ignore(e => e.ReportingEmployee);
+        });
     }
 }

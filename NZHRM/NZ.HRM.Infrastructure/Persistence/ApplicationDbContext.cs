@@ -315,6 +315,7 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<PayBankTransfer>().ToTable("bank_transfer", "payroll");
             modelBuilder.Entity<PayPayslip>().ToTable("payslip", "payroll");
             modelBuilder.Entity<PayPayrollAdjustment>().ToTable("payroll_adjustment", "payroll");
+            modelBuilder.Entity<PayPayrollAdjustmentHistory>().ToTable("payroll_adjustment_history", "payroll");
             modelBuilder.Entity<PayPayrollLock>().ToTable("payroll_lock", "payroll");
             modelBuilder.Entity<PayPayrollProcessLog>().ToTable("payroll_process_log", "payroll");
             modelBuilder.Entity<PayPartialSalaryPayment>().ToTable("partial_salary_payment", "payroll");

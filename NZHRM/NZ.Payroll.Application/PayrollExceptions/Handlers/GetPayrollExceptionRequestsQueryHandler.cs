@@ -12,7 +12,7 @@ public class GetPayrollExceptionRequestsQueryHandler
     {
         _repository = repository;
     }
-
+    // if payroll exception is used then move this handler to the payroll adjustment folder
     public Task<PayrollExceptionRequestsResponseDto> Handle(GetPayrollExceptionRequestsQuery query, CancellationToken cancellationToken = default)
         => _repository.GetPayrollExceptionRequestsAsync(query, cancellationToken);
 }

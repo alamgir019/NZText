@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.IO;
 using Microsoft.EntityFrameworkCore;
 using NZ.HRM.Domain.Entities;
 using NZ.Payroll.Application.Interfaces.Repositories;
@@ -12,7 +11,7 @@ namespace NZ.Payroll.Infrastructure.Repositories;
 
 public class PayrollExceptionRepository : IPayrollExceptionRepository
 {
-    private const string SourceTableName = "payroll.payroll_exception";
+    private const string SourceTableName = "payroll.payroll_adjustment";
     private const string ForwardingDepartment = "Attendance Cell";
 
     private readonly PayrollDbContext _context;
@@ -61,16 +60,16 @@ public class PayrollExceptionRepository : IPayrollExceptionRepository
         };
     }
 
-    public Task<List<PayPayrollException>> GetByIdsAsync(IReadOnlyCollection<string> ids, CancellationToken cancellationToken = default)
+    public Task<List<PayPayrollAdjustment>> GetByIdsAsync(IReadOnlyCollection<string> ids, CancellationToken cancellationToken = default)
     {
-        return _context.PayPayrollExceptions
+        return _context.PayPayrollAdjustments
             .Where(x => ids.Contains(x.Id))
             .ToListAsync(cancellationToken);
     }
 
     public async Task<PayrollExceptionRequestDetailDto?> GetDetailByIdAsync(string requestId, CancellationToken cancellationToken = default)
     {
-        var entity = await _context.PayPayrollExceptions
+        var entity = await _context.PayPayrollAdjustments
             .AsNoTracking()
             .Include(x => x.Employee)
             .FirstOrDefaultAsync(x => x.Id == requestId && x.IsActive, cancellationToken);
@@ -166,8 +165,8 @@ public class PayrollExceptionRepository : IPayrollExceptionRepository
             },
             Adjustment = new PayrollExceptionRequestAdjustmentDto
             {
-                AdjustmentType = entity.ExceptionType,
-                AdjustmentNature = entity.ExceptionDescription,
+                AdjustmentType = entity.AdjustmentType,
+                AdjustmentNature = entity.Reason,
                 OriginalOutPunch = null,
                 CorrectedOutPunch = null,
                 OtApplicable = null,
@@ -175,64 +174,52 @@ public class PayrollExceptionRepository : IPayrollExceptionRepository
                 OtHours = null,
                 OtRate = null,
                 ImpactOnPayroll = true,
-                ReasonProvided = entity.ExceptionDescription,
+                ReasonProvided = entity.Reason,
                 RemarksByAttendanceCell = remarksByAttendanceCell
             },
-            ForwardedBy = entity.ResolvedDate.HasValue
+            ForwardedBy = entity.AdjustmentDate.HasValue
                 ? new PayrollExceptionRequestForwardedByDto
                 {
                     Department = ForwardingDepartment,
-                    ForwardedDateTime = entity.ResolvedDate
+                    ForwardedDateTime = entity.AdjustmentDate
                 }
                 : null,
             Attachments = attachments
         };
     }
 
-    public async Task SaveForwardingAsync(IReadOnlyCollection<PayPayrollException> requests, string processedBy, string? remarks, CancellationToken cancellationToken = default)
+    public async Task SaveForwardingAsync(IReadOnlyCollection<PayPayrollAdjustment> requests, string processedBy, string? remarks, CancellationToken cancellationToken = default)
     {
-        var auditRows = new List<AudDataChange>();
-        var eventRows = new List<AudSystemEvent>();
+        var historyRows = new List<PayPayrollAdjustmentHistory>();
 
         foreach (var request in requests)
         {
-            auditRows.Add(CreateAuditRow(request.Id, "Status", PayrollExceptionStatuses.Pending, request.Status, processedBy));
-            auditRows.Add(CreateAuditRow(request.Id, "ResolvedBy", null, request.ResolvedBy, processedBy));
-            auditRows.Add(CreateAuditRow(request.Id, "ResolvedDate", null, request.ResolvedDate?.ToString("O"), processedBy));
-
-            if (!string.IsNullOrWhiteSpace(remarks))
+            historyRows.Add(new PayPayrollAdjustmentHistory
             {
-                auditRows.Add(CreateAuditRow(request.Id, "ForwardingRemarks", null, remarks, processedBy));
-            }
-
-            eventRows.Add(new AudSystemEvent
-            {
-                EventType = "PAYROLL_EXCEPTION_FORWARDED_TO_IT",
-                EventDateTime = DateTime.UtcNow,
-                UserId = processedBy,
-                EventDescription = $"Payroll exception request '{request.Id}' forwarded to Head Office IT.",
+                PayrollAdjustmentId = request.Id,
+                Action = "FORWARDED_TO_IT",
+                PerformedBy = processedBy,
+                PerformedOn = DateTime.UtcNow,
+                Notes = remarks,
+                OldData = PayrollExceptionStatuses.Pending,
+                NewData = request.Status,
                 CreatedBy = processedBy,
                 UpdatedBy = processedBy
             });
         }
 
-        if (auditRows.Count > 0)
+        if (historyRows.Count > 0)
         {
-            await _context.AudDataChanges.AddRangeAsync(auditRows, cancellationToken);
+            await _context.PayPayrollAdjustmentHistories.AddRangeAsync(historyRows, cancellationToken);
         }
 
-        if (eventRows.Count > 0)
-        {
-            await _context.AudSystemEvents.AddRangeAsync(eventRows, cancellationToken);
-        }
-
-        _context.PayPayrollExceptions.UpdateRange(requests);
+        _context.PayPayrollAdjustments.UpdateRange(requests);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
     private IQueryable<PayrollExceptionRequestRow> BuildRequestQuery()
     {
-        return from payrollException in _context.PayPayrollExceptions.AsNoTracking()
+        return from payrollException in _context.PayPayrollAdjustments.AsNoTracking()
                join employee in _context.HrmEmployeeMasters.AsNoTracking() on payrollException.EmployeeId equals employee.Id into employeeJoin
                from employee in employeeJoin.DefaultIfEmpty()
                join employment in _context.HrmEmployeeEmployments.AsNoTracking() on payrollException.EmployeeId equals employment.EmployeeId into employmentJoin
@@ -248,7 +235,7 @@ public class PayrollExceptionRepository : IPayrollExceptionRepository
                    EmployeeId = payrollException.EmployeeId,
                    EmployeeName = employee != null ? employee.EmployeeName : string.Empty,
                    Department = department != null ? department.DepartmentName : string.Empty,
-                   AdjustmentType = payrollException.ExceptionType,
+                   AdjustmentType = payrollException.AdjustmentType,
                    Shift = shift != null ? shift.ShiftCode : null,
                    ShiftStart = shift != null ? shift.StartTime : null,
                    ShiftEnd = shift != null ? shift.EndTime : null,
@@ -345,22 +332,6 @@ public class PayrollExceptionRepository : IPayrollExceptionRepository
             start.Value.ToString("hh:mm tt", CultureInfo.InvariantCulture),
             " - ",
             end.Value.ToString("hh:mm tt", CultureInfo.InvariantCulture));
-    }
-
-    private static AudDataChange CreateAuditRow(string requestId, string fieldName, string? oldValue, string? newValue, string changedBy)
-    {
-        return new AudDataChange
-        {
-            TableName = SourceTableName,
-            RecordId = requestId,
-            FieldName = fieldName,
-            OldValue = oldValue,
-            NewValue = newValue,
-            ChangedBy = changedBy,
-            ChangeDate = DateTime.UtcNow,
-            CreatedBy = changedBy,
-            UpdatedBy = changedBy
-        };
     }
 
     private static PayrollExceptionRequestAttachmentDto MapAttachment(WfWorkflowAttachment attachment)

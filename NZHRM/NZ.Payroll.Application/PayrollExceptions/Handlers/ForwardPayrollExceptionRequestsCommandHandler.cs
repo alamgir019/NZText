@@ -64,17 +64,19 @@ public class ForwardPayrollExceptionRequestsCommandHandler
 
         foreach (var request in requests)
         {
-            if (string.Equals(request.Status, PayrollExceptionStatuses.ForwardedToIT, StringComparison.OrdinalIgnoreCase))
+            var status = GetStatus(request);
+
+            if (string.Equals(status, PayrollExceptionStatuses.ForwardedToIT, StringComparison.OrdinalIgnoreCase))
             {
                 return Error("REQUEST_ALREADY_FORWARDED", "Selected request has already been forwarded to Head Office IT.");
             }
 
-            if (string.Equals(request.Status, PayrollExceptionStatuses.Rejected, StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(status, PayrollExceptionStatuses.Rejected, StringComparison.OrdinalIgnoreCase))
             {
                 return Error("INVALID_REQUEST", "Rejected requests cannot be forwarded.");
             }
 
-            if (!string.Equals(request.Status, PayrollExceptionStatuses.Pending, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(status, PayrollExceptionStatuses.Pending, StringComparison.OrdinalIgnoreCase))
             {
                 return Error("INVALID_REQUEST", "Only pending payroll exception requests can be forwarded.");
             }
@@ -82,7 +84,7 @@ public class ForwardPayrollExceptionRequestsCommandHandler
 
         foreach (var request in requests)
         {
-            _workflow.ForwardToIT(request, forwardedBy);
+            ForwardToIT(request, forwardedBy);
         }
 
         await _repository.SaveForwardingAsync(requests, forwardedBy, remarks, cancellationToken);
@@ -94,6 +96,33 @@ public class ForwardPayrollExceptionRequestsCommandHandler
             ForwardedCount = requests.Count,
             ForwardedOn = DateTime.UtcNow
         };
+    }
+
+    private static string? GetStatus(object request) =>
+        request.GetType().GetProperty("Status")?.GetValue(request)?.ToString();
+
+    private void ForwardToIT(object request, string forwardedBy)
+    {
+        var method = _workflow.GetType().GetMethods()
+            .FirstOrDefault(m =>
+            {
+                if (!string.Equals(m.Name, "ForwardToIT", StringComparison.Ordinal))
+                {
+                    return false;
+                }
+
+                var parameters = m.GetParameters();
+                return parameters.Length == 2
+                       && parameters[1].ParameterType == typeof(string)
+                       && parameters[0].ParameterType.IsInstanceOfType(request);
+            });
+
+        if (method == null)
+        {
+            throw new InvalidOperationException("ForwardToIT workflow method was not found for the repository entity type.");
+        }
+
+        method.Invoke(_workflow, new[] { request, forwardedBy });
     }
 
     private static ForwardPayrollExceptionRequestsResult Error(string errorCode, string message) =>

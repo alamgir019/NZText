@@ -8,6 +8,6 @@ public interface IPayrollExceptionRepository
 {
     Task<PayrollExceptionRequestsResponseDto> GetPayrollExceptionRequestsAsync(GetPayrollExceptionRequestsQuery query, CancellationToken cancellationToken = default);
     Task<PayrollExceptionRequestDetailDto?> GetDetailByIdAsync(string requestId, CancellationToken cancellationToken = default);
-    Task<List<PayPayrollException>> GetByIdsAsync(IReadOnlyCollection<string> ids, CancellationToken cancellationToken = default);
-    Task SaveForwardingAsync(IReadOnlyCollection<PayPayrollException> requests, string processedBy, string? remarks, CancellationToken cancellationToken = default);
+    Task<List<PayPayrollAdjustment>> GetByIdsAsync(IReadOnlyCollection<string> ids, CancellationToken cancellationToken = default);
+    Task SaveForwardingAsync(IReadOnlyCollection<PayPayrollAdjustment> requests, string processedBy, string? remarks, CancellationToken cancellationToken = default);
 }

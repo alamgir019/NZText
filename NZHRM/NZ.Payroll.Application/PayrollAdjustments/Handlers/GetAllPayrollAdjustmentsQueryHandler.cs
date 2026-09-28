@@ -1,6 +1,8 @@
+using NZ.Payroll.Application.Interfaces.Repositories;
 using NZ.Payroll.Application.PayrollAdjustments.DTOs;
 using NZ.Payroll.Application.PayrollAdjustments.Queries;
-using NZ.Payroll.Application.Interfaces.Repositories;
+using NZ.Payroll.Application.PayrollExceptions.DTOs;
+using NZ.Payroll.Application.PayrollExceptions.Queries;
 
 namespace NZ.Payroll.Application.PayrollAdjustments.Handlers;
 

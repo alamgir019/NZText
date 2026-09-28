@@ -32,9 +32,10 @@ public class PayrollAdjustmentCommandHandler
             PayrollMonth = command.AttendanceMonth,
             AdjustmentType = command.CorrectionType,
             Reason = command.Reason,
-            OldAmount = null,
-            NewAmount = null,
+            OldAmount = command.OldAmount,
+            NewAmount = command.NewAmount,
             AdjustmentDate = DateTime.UtcNow,
+            Status = "PENDING",
             IsActive = true
         };
 
@@ -46,7 +47,7 @@ public class PayrollAdjustmentCommandHandler
             var history = new PayPayrollAdjustmentHistory
             {
                 PayrollAdjustmentId = saved.Id,
-                Action = "SUBMITTED",
+                Action = "PENDING",
                 PerformedBy = "SYSTEM",
                 PerformedOn = DateTime.UtcNow,
                 Notes = command.Remarks,
