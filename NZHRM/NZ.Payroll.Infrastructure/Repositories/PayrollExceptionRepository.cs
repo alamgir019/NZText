@@ -243,7 +243,7 @@ public class PayrollExceptionRepository : IPayrollExceptionRepository
                    SubmittedBy = payrollException.CreatedBy,
                    SubmittedOn = payrollException.CreatedOn,
                    Status = string.IsNullOrWhiteSpace(payrollException.Status)
-                       ? PayrollExceptionStatuses.Pending
+                       ? string.Empty
                        : payrollException.Status!.ToUpper()
                };
     }
