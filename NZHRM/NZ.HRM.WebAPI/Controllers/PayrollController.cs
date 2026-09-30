@@ -69,7 +69,6 @@ public class PayrollController : ControllerBase
 	}
 
 	[HttpPost("increment-histories")]
-	[ProducesResponseType(typeof(PayIncrementHistoryDto), StatusCodes.Status201Created)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status409Conflict)]
