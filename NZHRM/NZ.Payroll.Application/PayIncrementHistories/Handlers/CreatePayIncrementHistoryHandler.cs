@@ -19,9 +19,6 @@ public class CreatePayIncrementHistoryHandler
 
 	public async Task<List<string>> Handle(CreateIncrementRequestsCommand command, CancellationToken cancellationToken = default)
 	{
-		if (string.IsNullOrWhiteSpace(command.CreatedBy))
-			throw new UnauthorizedAccessException("Authenticated user was not found");
-
 		if (command.Requests.Count == 0)
 			throw new ArgumentException("At least one increment request is required");
 
