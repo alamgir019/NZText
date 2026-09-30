@@ -79,12 +79,6 @@ public class PayrollController : ControllerBase
 		if (!ModelState.IsValid)
 			return BadRequest(ModelState);
 
-		var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
-		if (string.IsNullOrWhiteSpace(currentUser))
-			return Unauthorized(new { message = "Authenticated user was not found" });
-
-		command.CreatedBy = currentUser;
-
 		try
 		{
 			var Ids = await _createPayIncrementHistoryHandler.Handle(command, cancellationToken);
