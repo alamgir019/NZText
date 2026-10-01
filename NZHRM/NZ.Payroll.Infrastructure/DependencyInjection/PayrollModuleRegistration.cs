@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NZ.Payroll.Application.Interfaces.Repositories;
 using NZ.Payroll.Application.PayIncrementHistories.Handlers;
+using NZ.Payroll.Application.PromotionIncrementRequests.Handlers;
 using NZ.Payroll.Domain.Services;
 using NZ.Payroll.Infrastructure.Persistence;
 using NZ.Payroll.Infrastructure.Repositories;
@@ -25,6 +26,14 @@ public static class PayrollModuleRegistration
         services.AddScoped<UpdatePayIncrementHistoryHandler>();
         services.AddScoped<GetPayIncrementHistoriesByStatusHandler>();
 
+        // Promotion + increment requests
+        services.AddScoped<IPromotionIncrementRequestRepository, PromotionIncrementRequestRepository>();
+        services.AddScoped<ForwardPromotionIncrementRequestsToDirectorHandler>();
+        services.AddScoped<GetPromotionIncrementApprovalHistoryHandler>();
+        services.AddScoped<GetPromotionIncrementRequestsByStatusHandler>();
+        services.AddScoped<ForwardPromotionIncrementRequestsToMovementCellHandler>();
+        services.AddScoped<ForwardPromotionIncrementRequestsToHrBranchManagerHandler>();
+        services.AddScoped<ForwardPromotionIncrementRequestsToCeoHandler>();
         // Payroll adjustments
         services.AddScoped<IPayrollAdjustmentRepository, PayrollAdjustmentRepository>();
         services.AddScoped<IPayrollExceptionRepository, PayrollExceptionRepository>();

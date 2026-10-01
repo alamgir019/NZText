@@ -2,18 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NZ.HRM.Infrastructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace NZ.HRM.Infrastructure.Migrations
+namespace NZ.HRM.Infrastructure.NZ.HRM.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260930161853_AddPromotionIncrementRequest")]
+    partial class AddPromotionIncrementRequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4614,9 +4617,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
-                    b.Property<string>("SectionId")
-                        .HasColumnType("CHAR(26)");
-
                     b.Property<int>("SortOrder")
                         .HasColumnType("integer");
 
@@ -4645,8 +4645,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.HasIndex("ProposedDesignationId");
 
                     b.HasIndex("ProposedGradeId");
-
-                    b.HasIndex("SectionId");
 
                     b.HasIndex("Status");
 
@@ -8296,11 +8294,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("NZ.HRM.Domain.Entities.MstSection", "Section")
-                        .WithMany()
-                        .HasForeignKey("SectionId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.Navigation("CurrentDesignation");
 
                     b.Navigation("CurrentGrade");
@@ -8312,8 +8305,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.Navigation("ProposedDesignation");
 
                     b.Navigation("ProposedGrade");
-
-                    b.Navigation("Section");
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.PaySalaryStructure", b =>

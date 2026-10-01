@@ -11,6 +11,8 @@ public class PayrollDbContext : DbContext
     public DbSet<PaySalaryStructure> PaySalaryStructures => Set<PaySalaryStructure>();
     public DbSet<PayIncrementHistory> PayIncrementHistories => Set<PayIncrementHistory>();
 	public DbSet<PerIncrementRequest> PerIncrementRequests => Set<PerIncrementRequest>();
+	public DbSet<PayPromotionIncrementRequest> PayPromotionIncrementRequests => Set<PayPromotionIncrementRequest>();
+	public DbSet<PayPromotionIncrementApprovalHistory> PayPromotionIncrementApprovalHistories => Set<PayPromotionIncrementApprovalHistory>();
 	public DbSet<PayPayrollHeader> PayPayrollHeaders => Set<PayPayrollHeader>();
     public DbSet<PayPayrollDetails> PayPayrollDetails => Set<PayPayrollDetails>();
     public DbSet<PayOtDetails> PayOtDetails => Set<PayOtDetails>();
@@ -33,6 +35,7 @@ public class PayrollDbContext : DbContext
     public DbSet<HrmEmployeeReporting> HrmEmployeeReportings => Set<HrmEmployeeReporting>();
     public DbSet<MstDepartment> MstDepartments => Set<MstDepartment>();
     public DbSet<MstDesignation> MstDesignations => Set<MstDesignation>();
+    public DbSet<MstSection> MstSections => Set<MstSection>();
     public DbSet<MstShift> MstShifts => Set<MstShift>();
     public DbSet<AudDataChange> AudDataChanges => Set<AudDataChange>();
     public DbSet<AudSystemEvent> AudSystemEvents => Set<AudSystemEvent>();
@@ -70,6 +73,12 @@ public class PayrollDbContext : DbContext
 			.HasIndex(request => request.PayIncHistId)
             .IsUnique(false);
 
+		modelBuilder.Entity<PayPromotionIncrementApprovalHistory>()
+			.HasOne(history => history.PromotionIncrementRequest)
+			.WithMany(request => request.ApprovalHistories)
+			.HasForeignKey(history => history.PromotionIncrementRequestId)
+			.OnDelete(DeleteBehavior.Restrict);
+
 		modelBuilder.Entity<HrmEmployeeMaster>(entity =>
         {
             entity.Ignore(e => e.Personal);
@@ -99,6 +108,12 @@ public class PayrollDbContext : DbContext
             entity.Ignore(e => e.Grade);
             entity.Ignore(e => e.Shift);
             entity.Ignore(e => e.ProcessingGroup);
+        });
+
+        modelBuilder.Entity<MstSection>(entity =>
+        {
+            entity.Ignore(e => e.Department);
+            entity.Ignore(e => e.Cells);
         });
 
         modelBuilder.Entity<HrmEmployeeReporting>(entity =>

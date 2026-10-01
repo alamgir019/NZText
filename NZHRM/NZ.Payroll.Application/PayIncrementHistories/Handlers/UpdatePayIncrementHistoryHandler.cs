@@ -61,16 +61,16 @@ public class UpdatePayIncrementHistoryHandler
 			throw new InvalidOperationException("All pay increment histories in a batch must have the same status");
 
 		var currentStatus = statuses[0];
-		var nextStatus = currentStatus switch
-		{
-			var status when string.Equals(status, PayIncrementStatuses.Pending, StringComparison.OrdinalIgnoreCase)
-				=> PayIncrementStatuses.Forwarded,
-			var status when string.Equals(status, PayIncrementStatuses.Forwarded, StringComparison.OrdinalIgnoreCase)
-				=> PayIncrementStatuses.Approved,
-			var status when string.Equals(status, PayIncrementStatuses.Approved, StringComparison.OrdinalIgnoreCase)
-				=> throw new InvalidOperationException("Approved pay increment histories cannot be updated"),
-			_ => throw new InvalidOperationException($"Unsupported pay increment history status: '{currentStatus}'")
-		};
+		//var nextStatus = currentStatus switch
+		//{
+		//	var status when string.Equals(status, PayIncrementStatuses.Pending, StringComparison.OrdinalIgnoreCase)
+		//		=> PayIncrementStatuses.Forwarded,
+		//	var status when string.Equals(status, PayIncrementStatuses.Forwarded, StringComparison.OrdinalIgnoreCase)
+		//		=> PayIncrementStatuses.Approved,
+		//	var status when string.Equals(status, PayIncrementStatuses.Approved, StringComparison.OrdinalIgnoreCase)
+		//		=> throw new InvalidOperationException("Approved pay increment histories cannot be updated"),
+		//	_ => throw new InvalidOperationException($"Unsupported pay increment history status: '{currentStatus}'")
+		//};
 
 		var approvalDate = DateTime.UtcNow;
 		var requests = new List<PerIncrementRequest>();
@@ -79,17 +79,17 @@ public class UpdatePayIncrementHistoryHandler
 		{
 			var history = historyById[item.PayIncrementHistoryId];
 
-			if (string.Equals(nextStatus, PayIncrementStatuses.Approved, StringComparison.OrdinalIgnoreCase) &&
-				(!item.NewGrossSalary.HasValue || item.NewGrossSalary.Value <= 2000m))
-				throw new ArgumentException("New gross salary must be greater than 2000 when approving a pay increment");
+			//if (string.Equals(nextStatus, PayIncrementStatuses.Approved, StringComparison.OrdinalIgnoreCase) &&
+			//	(!item.NewGrossSalary.HasValue || item.NewGrossSalary.Value <= 2000m))
+			//	throw new ArgumentException("New gross salary must be greater than 2000 when approving a pay increment");
 
-			history.EffectiveDate = item.EffectiveDate;
-			history.OldGrossSalary = item.OldGrossSalary;
-			history.NewGrossSalary = item.NewGrossSalary;
-			history.IncrementAmount = item.IncrementAmount;
-			history.IncrementPercent = item.IncrementPercent;
-			history.IncrementType = item.IncrementType;
-			history.Status = nextStatus;
+			history.EffectiveDate = item.EffectiveDate?? history.EffectiveDate;
+			history.OldGrossSalary = item.OldGrossSalary?? history.OldGrossSalary;
+			history.NewGrossSalary = item.NewGrossSalary ?? history.NewGrossSalary;
+			history.IncrementAmount = item.IncrementAmount ?? history.IncrementAmount;
+			history.IncrementPercent = item.IncrementPercent ?? history.IncrementPercent;
+			history.IncrementType = item.IncrementType ?? history.IncrementType;
+			history.Status = item.Status ?? history.Status;
 			history.UpdatedBy = currentUser;
 			history.UpdatedOn = approvalDate;
 

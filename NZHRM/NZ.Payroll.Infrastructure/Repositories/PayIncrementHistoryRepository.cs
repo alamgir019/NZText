@@ -75,13 +75,14 @@ public class PayIncrementHistoryRepository : IPayIncrementHistoryRepository
 		CancellationToken cancellationToken = default)
 	{
 		var historyList = histories.ToList();
+		var approvedList = histories.Where(x => x.Status.ToLower() == "rejected").Select(x => x.Id).ToList();
 		var requestList = requests.ToList();
 		await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 
 		try
 		{
 			_context.PayIncrementHistories.UpdateRange(historyList);
-			await _context.PerIncrementRequests.AddRangeAsync(requestList, cancellationToken);
+			await _context.PerIncrementRequests.AddRangeAsync(requestList.Where(x => approvedList.Contains(x.PayIncHistId)), cancellationToken);
 
 			foreach (var history in historyList.Where(history =>
 				string.Equals(history.Status, PayIncrementStatuses.Approved, StringComparison.OrdinalIgnoreCase)))
@@ -103,8 +104,8 @@ public class PayIncrementHistoryRepository : IPayIncrementHistoryRepository
 
 				if (string.Equals(employeeNature, "Worker", StringComparison.OrdinalIgnoreCase))
 				{
-					if (grossSalary <= 2000m)
-						throw new ArgumentException("New gross salary must be greater than 2000 for Worker employees");
+					//if (grossSalary <= 2000m)
+					//	throw new ArgumentException("New gross salary must be greater than 2000 for Worker employees");
 
 					medicalAllowance = 750m;
 					foodAllowance = 850m;
@@ -114,8 +115,8 @@ public class PayIncrementHistoryRepository : IPayIncrementHistoryRepository
 				}
 				else
 				{
-					if (grossSalary <= 2500m)
-						throw new ArgumentException("New gross salary must be greater than 2500 for Staff/Management employees");
+					//if (grossSalary <= 2500m)
+					//	throw new ArgumentException("New gross salary must be greater than 2500 for Staff/Management employees");
 
 					conveyanceAllowance = 2500m;
 					foodAllowance = 0m;

@@ -14,6 +14,13 @@ public class PayIncrementHistoryWithRequestsDto
 	public decimal? IncrementAmount { get; set; }
 	public decimal? IncrementPercent { get; set; }
 	public string? IncrementType { get; set; }
+	public DateOnly? PreviousFivePercentIncrementDate { get; set; }
+	public decimal? PreviousFivePercentIncrementAmount { get; set; }
+	public DateOnly? LastPerformanceIncrementDate { get; set; }
+	public decimal? LastPerformanceIncrementPercent { get; set; }
+	public decimal? ProposedPerformanceIncrementPercent { get; set; }
+	public decimal? ProposedPerformanceIncrementAmount { get; set; }
+	public DateTime? SubmittedOn { get; set; }
 	public string Status { get; set; } = string.Empty;
 	public List<PerIncrementRequestDto> Requests { get; set; } = new();
 }

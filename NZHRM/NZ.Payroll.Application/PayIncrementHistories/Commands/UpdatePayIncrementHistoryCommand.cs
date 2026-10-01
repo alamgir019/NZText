@@ -7,7 +7,7 @@ public class UpdateIncrementRequestItem
 	[Required(ErrorMessage = "Pay increment history ID is required")]
 	public string PayIncrementHistoryId { get; set; } = string.Empty;
 	[Required(ErrorMessage = "Effective date is required")]
-	public DateOnly EffectiveDate { get; set; }
+	public DateOnly? EffectiveDate { get; set; }
 
 	[Range(0, double.MaxValue, ErrorMessage = "Old gross salary must be a positive value")]
 	public decimal? OldGrossSalary { get; set; }
@@ -23,6 +23,7 @@ public class UpdateIncrementRequestItem
 
 	[MaxLength(50, ErrorMessage = "Increment type must not exceed 50 characters")]
 	public string? IncrementType { get; set; }
+	public string Status { get; set; } = string.Empty;
 }
 
 public class UpdateIncrementRequestsCommand

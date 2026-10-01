@@ -1,11 +1,7 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using NZ.Payroll.Application.Interfaces;
 using NZ.Payroll.Application.PayIncrementHistories.Commands;
-using NZ.Payroll.Application.PayIncrementHistories.DTOs;
 using NZ.Payroll.Application.PayIncrementHistories.Handlers;
 using NZ.Payroll.Application.PayIncrementHistories.Queries;
-using NZ.Payroll.Domain.Contracts;
 
 namespace NZ.HRM.WebAPI.Controllers;
 
@@ -101,7 +97,7 @@ public class PayrollController : ControllerBase
 		}
 	}
 
-	[HttpPut("increment-histories/")]
+	[HttpPut("increment-histories")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -114,15 +110,11 @@ public class PayrollController : ControllerBase
 		if (!ModelState.IsValid)
 			return BadRequest(ModelState);
 
-		var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
-		if (string.IsNullOrWhiteSpace(currentUser))
-			return Unauthorized(new { message = "Authenticated user was not found" });
-
 		try
 		{
 			var result = await _updatePayIncrementHistoryHandler.Handle(
 				command,
-				currentUser,
+				"System",
 				cancellationToken);
 
 			return Ok(new

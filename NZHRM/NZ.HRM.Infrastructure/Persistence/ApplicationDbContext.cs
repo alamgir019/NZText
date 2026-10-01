@@ -23,6 +23,9 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<MstPayrollProcessingGroup> MstPayrollProcessingGroups => Set<MstPayrollProcessingGroup>();
         public DbSet<MstDepartmentUnitComplex> MstDepartmentUnitComplexes => Set<MstDepartmentUnitComplex>();
 
+
+        public DbSet<PayPromotionIncrementRequest> PayPromotionIncrementRequests => Set<PayPromotionIncrementRequest>();
+        public DbSet<PayPromotionIncrementApprovalHistory> PayPromotionIncrementApprovalHistories => Set<PayPromotionIncrementApprovalHistory>();
         // lookup
         public DbSet<LookDivision> Divisions => Set<LookDivision>();
         public DbSet<LookDistrict> Districts => Set<LookDistrict>();
@@ -323,6 +326,36 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<PaySpecialPayrollBand>().ToTable("special_payroll_band", "payroll");
             modelBuilder.Entity<PayPayrollException>().ToTable("payroll_exception", "payroll");
 			modelBuilder.Entity<PerIncrementRequest>().ToTable("increment_request", "payroll");
+
+        // Promotion + increment requests
+        modelBuilder.Entity<PayPromotionIncrementRequest>(entity =>
+			{
+				entity.ToTable("promotion_increment_request", "payroll");
+				entity.Property(r => r.CurrentGrossSalary).HasColumnType("numeric(18,2)");
+				entity.Property(r => r.IncrementPercent).HasColumnType("numeric(5,2)");
+				entity.Property(r => r.IncrementAmount).HasColumnType("numeric(18,2)");
+				entity.Property(r => r.NewGrossSalary).HasColumnType("numeric(18,2)");
+				entity.Property(r => r.Status).HasMaxLength(50);
+				entity.HasIndex(r => new { r.EmployeeId, r.Status });
+				entity.HasIndex(r => r.Status);
+				entity.HasOne(r => r.Employee).WithMany().HasForeignKey(r => r.EmployeeId).OnDelete(DeleteBehavior.Restrict);
+				entity.HasOne(r => r.Department).WithMany().HasForeignKey(r => r.DepartmentId).OnDelete(DeleteBehavior.Restrict);
+				entity.HasOne(r => r.Section).WithMany().HasForeignKey(r => r.SectionId).OnDelete(DeleteBehavior.Restrict);
+				entity.HasOne(r => r.CurrentDesignation).WithMany().HasForeignKey(r => r.CurrentDesignationId).OnDelete(DeleteBehavior.Restrict);
+				entity.HasOne(r => r.ProposedDesignation).WithMany().HasForeignKey(r => r.ProposedDesignationId).OnDelete(DeleteBehavior.Restrict);
+				entity.HasOne(r => r.CurrentGrade).WithMany().HasForeignKey(r => r.CurrentGradeId).OnDelete(DeleteBehavior.Restrict);
+				entity.HasOne(r => r.ProposedGrade).WithMany().HasForeignKey(r => r.ProposedGradeId).OnDelete(DeleteBehavior.Restrict);
+			});
+
+			modelBuilder.Entity<PayPromotionIncrementApprovalHistory>(entity =>
+			{
+				entity.ToTable("promotion_increment_approval_history", "payroll");
+				entity.HasIndex(h => h.PromotionIncrementRequestId);
+				entity.HasOne(h => h.PromotionIncrementRequest)
+					  .WithMany(r => r.ApprovalHistories)
+					  .HasForeignKey(h => h.PromotionIncrementRequestId)
+					  .OnDelete(DeleteBehavior.Restrict);
+			});
 
 			// Workflow
 			modelBuilder.Entity<WfWorkflowMaster>().ToTable("workflow_master", "workflow");

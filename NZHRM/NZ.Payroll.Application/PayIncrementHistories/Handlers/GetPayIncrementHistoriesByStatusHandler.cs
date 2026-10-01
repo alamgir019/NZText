@@ -1,5 +1,6 @@
 using NZ.HRM.Application.Interfaces.Repositories;
 using NZ.HRM.Domain.Constants;
+using NZ.HRM.Domain.Entities;
 using NZ.Payroll.Application.Interfaces.Repositories;
 using NZ.Payroll.Application.PayIncrementHistories.DTOs;
 using NZ.Payroll.Application.PayIncrementHistories.Queries;
@@ -44,6 +45,11 @@ public class GetPayIncrementHistoriesByStatusHandler
 			employeeIds,
 			cancellationToken);
 
+		var previousHistories = (await _repository.GetPreviousHistoriesAsync(
+			employeeIds,
+			histories.Select(history => history.Id),
+			cancellationToken)).ToList();
+
 		var employeeById = employees.ToDictionary(
 			employee => employee.Id,
 			StringComparer.OrdinalIgnoreCase);
@@ -51,6 +57,23 @@ public class GetPayIncrementHistoriesByStatusHandler
 		return histories.Select(history =>
 		{
 			var employee = employeeById.GetValueOrDefault(history.EmployeeId);
+			var previousEmployeeHistories = previousHistories
+				.Where(previousHistory =>
+					string.Equals(previousHistory.EmployeeId, history.EmployeeId, StringComparison.OrdinalIgnoreCase) &&
+					previousHistory.EffectiveDate.HasValue &&
+					history.EffectiveDate.HasValue &&
+					previousHistory.EffectiveDate.Value < history.EffectiveDate.Value &&
+					string.Equals(previousHistory.Status, PayIncrementStatuses.Approved, StringComparison.OrdinalIgnoreCase))
+				.OrderByDescending(previousHistory => previousHistory.EffectiveDate)
+				.ToList();
+			var previousFivePercentIncrement = previousEmployeeHistories
+				.FirstOrDefault(IsFivePercentIncrement);
+			var lastPerformanceIncrement = previousEmployeeHistories
+				.FirstOrDefault(IsPerformanceIncrement);
+			var submittedOn = history.PerIncrementRequests
+				.OrderByDescending(request => request.CreatedOn)
+				.Select(request => (DateTime?)request.CreatedOn)
+				.FirstOrDefault();
 
 			return new PayIncrementHistoryWithRequestsDto
 			{
@@ -66,6 +89,17 @@ public class GetPayIncrementHistoriesByStatusHandler
 				IncrementAmount = history.IncrementAmount,
 				IncrementPercent = history.IncrementPercent,
 				IncrementType = history.IncrementType,
+				PreviousFivePercentIncrementDate = previousFivePercentIncrement?.EffectiveDate,
+				PreviousFivePercentIncrementAmount = previousFivePercentIncrement?.IncrementAmount,
+				LastPerformanceIncrementDate = lastPerformanceIncrement?.EffectiveDate,
+				LastPerformanceIncrementPercent = lastPerformanceIncrement?.IncrementPercent,
+				ProposedPerformanceIncrementPercent = IsPerformanceIncrement(history)
+					? history.IncrementPercent
+					: null,
+				ProposedPerformanceIncrementAmount = IsPerformanceIncrement(history)
+					? history.IncrementAmount
+					: null,
+				SubmittedOn = submittedOn,
 				Status = history.Status,
 				Requests = history.PerIncrementRequests
 					.Select(request => new PerIncrementRequestDto
@@ -83,6 +117,16 @@ public class GetPayIncrementHistoriesByStatusHandler
 					.ToList()
 			};
 		}).ToList();
+	}
+
+	private static bool IsFivePercentIncrement(PayIncrementHistory history)
+	{
+		return history.IncrementPercent == 5m && !IsPerformanceIncrement(history);
+	}
+
+	private static bool IsPerformanceIncrement(PayIncrementHistory history)
+	{
+		return history.IncrementType?.Contains("performance", StringComparison.OrdinalIgnoreCase) == true;
 	}
 
 	private static string GetCanonicalStatus(string status)
