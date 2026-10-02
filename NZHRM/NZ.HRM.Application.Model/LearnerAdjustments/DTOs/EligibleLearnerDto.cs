@@ -12,4 +12,5 @@ public class EligibleLearnerDto
     public decimal CurrentGrossSalary { get; set; }
     public decimal StandardGrossSalary { get; set; }
     public decimal AdjustmentAmount { get; set; }
+    public string EmployeeCode { get; set; } = string.Empty;
 }

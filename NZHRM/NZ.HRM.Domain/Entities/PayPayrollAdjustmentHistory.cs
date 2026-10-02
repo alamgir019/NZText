@@ -1,6 +1,4 @@
-using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using NZ.Shared.Domain.Common;
 
 namespace NZ.HRM.Domain.Entities
 {

@@ -50,7 +50,8 @@ public class EligibleLearnerRepository : IEligibleLearnerRepository
                   && payroll.GrossSalary > 0
             select new
             {
-                EmployeeId = employee.EmployeeCode,
+                EmployeeId = employee.Id,
+                EmployeeCode = employee.EmployeeCode,
                 employee.EmployeeName,
                 DepartmentName = employment.Department != null ? employment.Department.DepartmentName : string.Empty,
                 SectionName = employment.Section != null ? employment.Section.SectionName : string.Empty,
@@ -70,6 +71,7 @@ public class EligibleLearnerRepository : IEligibleLearnerRepository
             .Select(x => new EligibleLearnerDto
             {
                 EmployeeId = x.EmployeeId,
+                EmployeeCode = x.EmployeeCode,
                 EmployeeName = x.EmployeeName,
                 DepartmentName = x.DepartmentName,
                 SectionName = x.SectionName,

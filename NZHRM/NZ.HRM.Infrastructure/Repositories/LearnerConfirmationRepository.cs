@@ -24,7 +24,6 @@ public class LearnerConfirmationRepository : ILearnerConfirmationRepository
     {
         var result = new LearnerConfirmationBatchResultDto { TotalRequested = command.EmployeeIds.Count };
 
-        var standardGrossSalary = await GetStandardWorkerGrossSalaryAsync(cancellationToken);
 
         var employees = await _context.HrmEmployeeMasters
             .Include(e => e.Employment)!.ThenInclude(emp => emp!.Designation)
@@ -68,6 +67,7 @@ public class LearnerConfirmationRepository : ILearnerConfirmationRepository
                 continue;
             }
 
+            var standardGrossSalary = await GetStandardWorkerGrossSalaryAsync(employee.Employment?.GradeId, cancellationToken);
             if (standardGrossSalary is null || standardGrossSalary <= 0m)
             {
                 result.Items.Add(Failure(employeeId, "Standard worker gross salary is not configured."));
@@ -92,6 +92,9 @@ public class LearnerConfirmationRepository : ILearnerConfirmationRepository
             request.UpdatedBy = command.ForwardedBy;
 
             await _context.HrmLearnerConfirmationRequests.AddAsync(request, cancellationToken);
+            await _context.HrmLearnerConfirmationApprovalHistories.AddRangeAsync(
+                request.ApprovalHistories,
+                cancellationToken);
 
             result.Items.Add(new LearnerConfirmationResultItemDto
             {
@@ -138,8 +141,9 @@ public class LearnerConfirmationRepository : ILearnerConfirmationRepository
 
             if (!command.Approved)
             {
-                request.Reject(command.ApprovedBy, command.Remarks);
+                var history = request.Reject(command.ApprovedBy, command.Remarks);
                 request.UpdatedBy = command.ApprovedBy;
+                _context.HrmLearnerConfirmationApprovalHistories.Add(history);
                 result.Items.Add(Success(employeeId, request));
                 continue;
             }
@@ -151,8 +155,9 @@ public class LearnerConfirmationRepository : ILearnerConfirmationRepository
                 continue;
             }
 
-            request.Approve(command.ApprovedBy, command.Remarks);
+            var approvalHistory = request.Approve(command.ApprovedBy, command.Remarks);
             request.UpdatedBy = command.ApprovedBy;
+            _context.HrmLearnerConfirmationApprovalHistories.Add(approvalHistory);
 
             // Apply permanency to the employee record.
             employee.Employment.ConfirmationDate = request.ProbationCompletedOn;
@@ -200,12 +205,11 @@ public class LearnerConfirmationRepository : ILearnerConfirmationRepository
             }).ToListAsync(cancellationToken);
     }
 
-    private async Task<decimal?> GetStandardWorkerGrossSalaryAsync(CancellationToken cancellationToken)
-        => await _context.MstDesignations
+    private async Task<decimal?> GetStandardWorkerGrossSalaryAsync(string? gradeId, CancellationToken cancellationToken)
+        => await _context.MstGrades
             .AsNoTracking()
-            .Where(d => d.DesignationName.ToLower() == ProbationAdjustmentPolicy.StandardWorkerDesignationName.ToLower()
-                        && d.Grade != null)
-            .Select(d => (decimal?)d.Grade!.MinimumSalary)
+            .Where(d => gradeId != null && d.Id == gradeId)
+            .Select(d => (decimal?)d.MinimumSalary)
             .FirstOrDefaultAsync(cancellationToken);
 
     private static LearnerConfirmationResultItemDto Failure(string employeeId, string message)

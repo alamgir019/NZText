@@ -52,6 +52,7 @@ namespace NZ.HRM.Infrastructure.Persistence
         public DbSet<HrmEmployeeSalaryAccount> HrmEmployeeBankAccounts => Set<HrmEmployeeSalaryAccount>();
         public DbSet<HrmEmployeeReporting> HrmEmployeeReportings => Set<HrmEmployeeReporting>();
         public DbSet<HrmLearnerConfirmationRequest> HrmLearnerConfirmationRequests => Set<HrmLearnerConfirmationRequest>();
+        public DbSet<HrmLearnerConfirmationApprovalHistory> HrmLearnerConfirmationApprovalHistories => Set<HrmLearnerConfirmationApprovalHistory>();
 
         // Attendance — now owned by NZ.Attendance.Infrastructure (AttendanceDbContext)
 
@@ -270,6 +271,16 @@ namespace NZ.HRM.Infrastructure.Persistence
 					  .HasForeignKey(r => r.EmployeeId)
 					  .OnDelete(DeleteBehavior.Cascade);
 			});
+
+            modelBuilder.Entity<HrmLearnerConfirmationApprovalHistory>(entity =>
+            {
+                entity.ToTable("learner_confirmation_approval_history", "hrm");
+                entity.HasIndex(h => new { h.LearnerConfirmationRequestId, h.StepNo });
+                entity.HasOne(h => h.LearnerConfirmationRequest)
+                      .WithMany(r => r.ApprovalHistories)
+                      .HasForeignKey(h => h.LearnerConfirmationRequestId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
 
 			// Attendance
 			modelBuilder.Entity<AttDeviceMaster>().ToTable("device_master", "attendance");

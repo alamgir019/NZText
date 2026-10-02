@@ -10,6 +10,9 @@ namespace NZ.HRM.Domain.Entities
     [Table("learner_confirmation_request", Schema = "hrm")]
     public class HrmLearnerConfirmationRequest : BaseEntityWithSortOrder
     {
+        private const int ConfirmationStepNo = 1;
+        private const string ConfirmationStepName = "Learner Confirmation";
+
         public string EmployeeId { get; set; } = string.Empty; // FK to employee_master.Id
 
         public DateOnly DateOfJoining { get; set; }
@@ -28,6 +31,9 @@ namespace NZ.HRM.Domain.Entities
         public string? ApprovedBy { get; set; }
         public DateTime? ApprovalDate { get; set; }
         public string? Remarks { get; set; }
+
+        public ICollection<HrmLearnerConfirmationApprovalHistory> ApprovalHistories { get; set; }
+            = new List<HrmLearnerConfirmationApprovalHistory>();
 
         [ForeignKey("EmployeeId")] public HrmEmployeeMaster? Employee { get; set; }
 
@@ -56,25 +62,71 @@ namespace NZ.HRM.Domain.Entities
                 Status = LearnerConfirmationStatus.Forwarded.ToString(),
                 ForwardedBy = forwardedBy,
                 ForwardedOn = DateTime.UtcNow,
-                Remarks = remarks
+                Remarks = string.IsNullOrWhiteSpace(remarks) ? null : remarks.Trim()
             };
 
-        public void Approve(string approvedBy, string? remarks)
+        public HrmLearnerConfirmationApprovalHistory Approve(string approvedBy, string? remarks)
         {
             EnsurePending();
+            var fromStatus = Status;
             Status = LearnerConfirmationStatus.Approved.ToString();
             ApprovedBy = approvedBy;
             ApprovalDate = DateTime.UtcNow;
-            Remarks = remarks ?? Remarks;
+            Remarks = string.IsNullOrWhiteSpace(remarks) ? Remarks : remarks.Trim();
+
+            return RecordTransition(
+                LearnerConfirmationStatus.Approved.ToString(),
+                fromStatus,
+                LearnerConfirmationStatus.Approved.ToString(),
+                approvedBy,
+                remarks);
         }
 
-        public void Reject(string rejectedBy, string? remarks)
+        public HrmLearnerConfirmationApprovalHistory Reject(string rejectedBy, string? remarks)
         {
             EnsurePending();
+            var fromStatus = Status;
             Status = LearnerConfirmationStatus.Rejected.ToString();
             ApprovedBy = rejectedBy;
             ApprovalDate = DateTime.UtcNow;
-            Remarks = remarks ?? Remarks;
+            Remarks = string.IsNullOrWhiteSpace(remarks) ? Remarks : remarks.Trim();
+
+            return RecordTransition(
+                LearnerConfirmationStatus.Rejected.ToString(),
+                fromStatus,
+                LearnerConfirmationStatus.Rejected.ToString(),
+                rejectedBy,
+                remarks);
+        }
+
+        private HrmLearnerConfirmationApprovalHistory RecordTransition(
+            string action,
+            string fromStatus,
+            string toStatus,
+            string actionBy,
+            string? remarks)
+        {
+            var actionOn = DateTime.UtcNow;
+
+            var history = new HrmLearnerConfirmationApprovalHistory
+            {
+                LearnerConfirmationRequestId = Id,
+                StepNo = ConfirmationStepNo,
+                StepName = ConfirmationStepName,
+                Action = action,
+                FromStatus = fromStatus,
+                ToStatus = toStatus,
+                ActionBy = actionBy,
+                ActionOn = actionOn,
+                Remarks = remarks,
+                CreatedBy = actionBy,
+                UpdatedBy = actionBy
+            };
+
+            UpdatedBy = actionBy;
+            UpdatedOn = actionOn;
+            ApprovalHistories.Add(history);
+            return history;
         }
 
         private void EnsurePending()
