@@ -134,20 +134,56 @@ public class PayPromotionIncrementRequest : BaseEntityWithSortOrder
 			remarks);
 	}
 
-	public PayPromotionIncrementApprovalHistory ForwardToEmployeeMovementCell(string forwardedBy, string? remarks)
+
+    public PayPromotionIncrementApprovalHistory ForwardToEmployeeMovementSection(string forwardedBy, string? remarks)
+    {
+        if (string.IsNullOrWhiteSpace(forwardedBy))
+            throw new ArgumentException("Forwarded by is required");
+
+        if (!string.Equals(Status, PromotionIncrementStatuses.PendingDirectorApproval, StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException(
+                $"Promotion increment request {Id} is {Status}; only requests pending director approval can be forwarded to Attendance & Workforce Movement Section");
+
+        return RecordTransition(
+            PromotionIncrementApprovalActions.ForwardedToEmployeeMovementCell,
+            PromotionIncrementStatuses.PendingEmployeeMovementCell,
+            PromotionIncrementApprovalSteps.EmployeeMovementCell,
+            forwardedBy,
+            remarks);
+    }
+
+    public PayPromotionIncrementApprovalHistory ForwardToEmployeeMovementCell(string forwardedBy, string? remarks)
 	{
 		if (string.IsNullOrWhiteSpace(forwardedBy))
 			throw new ArgumentException("Forwarded by is required");
 
-		if (!string.Equals(Status, PromotionIncrementStatuses.ApprovedByDirector, StringComparison.OrdinalIgnoreCase))
+		if (!string.Equals(Status, PromotionIncrementStatuses.PendingEmployeeMovementCell, StringComparison.OrdinalIgnoreCase))
 			throw new InvalidOperationException(
 				$"Promotion increment request {Id} is {Status}; only requests approved by Director can be forwarded to Attendance & Workforce Movement Section");
 
 		return RecordTransition(
 			PromotionIncrementApprovalActions.ForwardedToEmployeeMovementCell,
-			PromotionIncrementStatuses.PendingEmployeeMovementCell,
+			PromotionIncrementStatuses.PendingHrBranchManager,
 			PromotionIncrementApprovalSteps.EmployeeMovementCell,
 			forwardedBy,
+			remarks);
+	}
+
+	public PayPromotionIncrementApprovalHistory Reject(string rejectedBy, string? remarks)
+	{
+		if (string.IsNullOrWhiteSpace(rejectedBy))
+			throw new ArgumentException("Rejected by is required");
+
+		if (string.Equals(Status, PromotionIncrementStatuses.Approved, StringComparison.OrdinalIgnoreCase) ||
+			string.Equals(Status, PromotionIncrementStatuses.Rejected, StringComparison.OrdinalIgnoreCase))
+			throw new InvalidOperationException(
+				$"Promotion increment request {Id} is already {Status} and cannot be rejected");
+
+		return RecordTransition(
+			PromotionIncrementApprovalActions.Rejected,
+			PromotionIncrementStatuses.Rejected,
+			CurrentStepNo,
+			rejectedBy,
 			remarks);
 	}
 
@@ -156,13 +192,13 @@ public class PayPromotionIncrementRequest : BaseEntityWithSortOrder
 		if (string.IsNullOrWhiteSpace(forwardedBy))
 			throw new ArgumentException("Forwarded by is required");
 
-		if (!string.Equals(Status, PromotionIncrementStatuses.ReviewedByEmployeeMovementCell, StringComparison.OrdinalIgnoreCase))
+		if (!string.Equals(Status, PromotionIncrementStatuses.PendingHrBranchManager, StringComparison.OrdinalIgnoreCase))
 			throw new InvalidOperationException(
 				$"Promotion increment request {Id} is {Status}; only requests reviewed by Employee Movement Cell can be forwarded to HR Branch Manager");
 
 		return RecordTransition(
 			PromotionIncrementApprovalActions.ForwardedToHrBranchManager,
-			PromotionIncrementStatuses.PendingHrBranchManager,
+			PromotionIncrementStatuses.PendingCeoApproval,
 			PromotionIncrementApprovalSteps.HrBranchManager,
 			forwardedBy,
 			remarks);
@@ -173,13 +209,13 @@ public class PayPromotionIncrementRequest : BaseEntityWithSortOrder
 		if (string.IsNullOrWhiteSpace(forwardedBy))
 			throw new ArgumentException("Forwarded by is required");
 
-		if (!string.Equals(Status, PromotionIncrementStatuses.PendingHrBranchManager, StringComparison.OrdinalIgnoreCase))
+		if (!string.Equals(Status, PromotionIncrementStatuses.PendingCeoApproval, StringComparison.OrdinalIgnoreCase))
 			throw new InvalidOperationException(
 				$"Promotion increment request {Id} is {Status}; only requests pending with HR Branch Manager can be forwarded to CEO");
 
 		return RecordTransition(
 			PromotionIncrementApprovalActions.ForwardedToCeo,
-			PromotionIncrementStatuses.PendingCeoApproval,
+			PromotionIncrementStatuses.Approved,
 			PromotionIncrementApprovalSteps.Ceo,
 			forwardedBy,
 			remarks);

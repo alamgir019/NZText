@@ -67,60 +67,102 @@ public class PromotionIncrementRequestsController : ControllerBase
 		}
 	}
 
-	[HttpPut("forward-to-movement-section")]
-	[ProducesResponseType(StatusCodes.Status200OK)]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-	[ProducesResponseType(StatusCodes.Status404NotFound)]
-	[ProducesResponseType(StatusCodes.Status409Conflict)]
-	public async Task<IActionResult> ForwardToMovementSection(
-		[FromBody] ForwardPromotionIncrementRequestsToMovementCellCommand command,
-		CancellationToken cancellationToken = default)
-	{
-		if (!ModelState.IsValid)
-			return BadRequest(ModelState);
+    [HttpPut("forwarded-to-movement-cell")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> ForwardToMovementCell(
+        [FromBody] ForwardPromotionIncrementRequestsToMovementCellCommand command,
+        CancellationToken cancellationToken = default)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-		var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
-		if (string.IsNullOrWhiteSpace(currentUser))
-			return Unauthorized(new { message = "Authenticated user was not found" });
+        try
+        {
+            var result = await _forwardToMovementCellHandler.Handle(command, "currentUser", true, cancellationToken);
 
-		try
-		{
-			var result = await _forwardToMovementCellHandler.Handle(command, currentUser, cancellationToken);
+            return Ok(new
+            {
+                data = result,
+                message = "Promotion increment requests forwarded to Attendance & Workforce Movement Section"
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                message = "An error occurred while forwarding promotion increment requests to Attendance & Workforce Movement Section",
+                details = ex.Message
+            });
+        }
+    }
+    [HttpPut("forwarded-to-movement-section")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> ForwardToMovementSection(
+        [FromBody] ForwardPromotionIncrementRequestsToMovementCellCommand command,
+        CancellationToken cancellationToken = default)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-			return Ok(new
-			{
-				data = result,
-				message = "Promotion increment requests forwarded to Attendance & Workforce Movement Section"
-			});
-		}
-		catch (ArgumentException ex)
-		{
-			return BadRequest(new { message = ex.Message });
-		}
-		catch (UnauthorizedAccessException ex)
-		{
-			return Unauthorized(new { message = ex.Message });
-		}
-		catch (KeyNotFoundException ex)
-		{
-			return NotFound(new { message = ex.Message });
-		}
-		catch (InvalidOperationException ex)
-		{
-			return Conflict(new { message = ex.Message });
-		}
-		catch (Exception ex)
-		{
-			return StatusCode(500, new
-			{
-				message = "An error occurred while forwarding promotion increment requests to Attendance & Workforce Movement Section",
-				details = ex.Message
-			});
-		}
-	}
+        try
+        {
+            var result = await _forwardToMovementCellHandler.Handle(command, "currentUser", false, cancellationToken);
 
-	[HttpPut("forward-to-hr-branch-manager")]
+            return Ok(new
+            {
+                data = result,
+                message = "Promotion increment requests forwarded to Attendance & Workforce Movement Section"
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                message = "An error occurred while forwarding promotion increment requests to Attendance & Workforce Movement Section",
+                details = ex.Message
+            });
+        }
+    }
+
+    [HttpPut("forwarded-to-hr-branch-manager")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -132,14 +174,9 @@ public class PromotionIncrementRequestsController : ControllerBase
 	{
 		if (!ModelState.IsValid)
 			return BadRequest(ModelState);
-
-		var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
-		if (string.IsNullOrWhiteSpace(currentUser))
-			return Unauthorized(new { message = "Authenticated user was not found" });
-
 		try
 		{
-			var result = await _forwardToHrBranchManagerHandler.Handle(command, currentUser, cancellationToken);
+			var result = await _forwardToHrBranchManagerHandler.Handle(command, "currentUser", cancellationToken);
 
 			return Ok(new
 			{
@@ -173,7 +210,7 @@ public class PromotionIncrementRequestsController : ControllerBase
 		}
 	}
 
-	[HttpPut("forward-to-ceo")]
+	[HttpPut("forwarded-to-ceo")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -186,13 +223,9 @@ public class PromotionIncrementRequestsController : ControllerBase
 		if (!ModelState.IsValid)
 			return BadRequest(ModelState);
 
-		var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
-		if (string.IsNullOrWhiteSpace(currentUser))
-			return Unauthorized(new { message = "Authenticated user was not found" });
-
 		try
 		{
-			var result = await _forwardToCeoHandler.Handle(command, currentUser, cancellationToken);
+			var result = await _forwardToCeoHandler.Handle(command, "currentUser", cancellationToken);
 
 			return Ok(new
 			{

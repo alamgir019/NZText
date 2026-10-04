@@ -22,29 +22,31 @@ public class ForwardPromotionIncrementRequestsToCeoHandler
 		if (string.IsNullOrWhiteSpace(currentUser))
 			throw new UnauthorizedAccessException("Authenticated user was not found");
 
-		var requestIds = (command.RequestIds ?? new List<string>())
-			.Select(id => id?.Trim() ?? string.Empty)
-			.ToList();
+		var requestsToProcess = Normalize(command.Requests);
 
-		if (requestIds.Count == 0)
+		if (requestsToProcess.Count == 0)
 			throw new ArgumentException("At least one promotion increment request must be selected");
 
-		if (requestIds.Any(string.IsNullOrWhiteSpace) ||
-			requestIds.Count != requestIds.Distinct(StringComparer.OrdinalIgnoreCase).Count())
+		if (requestsToProcess.Count != requestsToProcess.Select(request => request.RequestId).Distinct(StringComparer.OrdinalIgnoreCase).Count())
 			throw new ArgumentException("Duplicate or empty request IDs are not allowed");
 
+		var requestIds = requestsToProcess.Select(request => request.RequestId).ToList();
 		var requests = await _repository.GetByIdsAsync(requestIds, cancellationToken);
-		var foundIds = requests.Select(request => request.Id).ToHashSet(StringComparer.OrdinalIgnoreCase);
-		var missingIds = requestIds.Where(id => !foundIds.Contains(id)).ToList();
+		var requestById = requests.ToDictionary(request => request.Id, StringComparer.OrdinalIgnoreCase);
+		var missingIds = requestIds.Where(id => !requestById.ContainsKey(id)).ToList();
 
 		if (missingIds.Count > 0)
 			throw new KeyNotFoundException(
 				$"Promotion increment requests were not found: {string.Join(", ", missingIds)}");
 
 		var histories = new List<PayPromotionIncrementApprovalHistory>();
-		foreach (var request in requests)
+		foreach (var action in requestsToProcess)
 		{
-			histories.Add(request.ForwardToCeo(currentUser, command.Remarks));
+			var request = requestById[action.RequestId];
+
+			histories.Add(action.Approved
+				? request.ForwardToCeo(currentUser, action.Remarks)
+				: request.Reject(currentUser, action.Remarks));
 		}
 
 		await _repository.SaveTransitionsAsync(requests, histories, cancellationToken);
@@ -63,4 +65,15 @@ public class ForwardPromotionIncrementRequestsToCeoHandler
 			}).ToList()
 		};
 	}
+
+	private static List<PromotionIncrementRequestActionDto> Normalize(List<PromotionIncrementRequestActionDto>? requests)
+		=> (requests ?? new List<PromotionIncrementRequestActionDto>())
+			.Where(request => !string.IsNullOrWhiteSpace(request.RequestId))
+			.Select(request =>
+			{
+				request.RequestId = request.RequestId.Trim();
+				request.Remarks = string.IsNullOrWhiteSpace(request.Remarks) ? null : request.Remarks.Trim();
+				return request;
+			})
+			.ToList();
 }
