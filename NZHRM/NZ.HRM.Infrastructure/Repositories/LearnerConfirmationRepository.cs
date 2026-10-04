@@ -114,48 +114,54 @@ public class LearnerConfirmationRepository : ILearnerConfirmationRepository
         ApproveLearnerConfirmationsCommand command,
         CancellationToken cancellationToken = default)
     {
-        var result = new LearnerConfirmationBatchResultDto { TotalRequested = command.EmployeeIds.Count };
+        var result = new LearnerConfirmationBatchResultDto { TotalRequested = command.Requests.Count };
+
+        var requestIds = command.Requests
+            .Select(request => request.RequestId)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
 
         var requests = await _context.HrmLearnerConfirmationRequests
-            .Where(r => command.EmployeeIds.Contains(r.EmployeeId)
+            .Where(r => requestIds.Contains(r.Id)
                         && r.Status == LearnerConfirmationStatus.Forwarded.ToString())
             .ToListAsync(cancellationToken);
 
-        var employeeIds = requests.Select(r => r.EmployeeId).ToList();
+        var requestsById = requests.ToDictionary(request => request.Id, StringComparer.OrdinalIgnoreCase);
 
         var employees = await _context.HrmEmployeeMasters
             .Include(e => e.Employment)
             .Include(e => e.Payroll)
-            .Where(e => employeeIds.Contains(e.Id))
+            .Where(e => requests.Select(request => request.EmployeeId).Contains(e.Id))
             .ToListAsync(cancellationToken);
 
-        foreach (var employeeId in command.EmployeeIds)
+        foreach (var action in command.Requests)
         {
-            var request = requests.FirstOrDefault(r => r.EmployeeId == employeeId);
+            var requestId = action.RequestId;
+            var request = requestsById.GetValueOrDefault(requestId);
 
             if (request is null)
             {
-                result.Items.Add(Failure(employeeId, "No permanency request awaiting approval was found."));
+                result.Items.Add(Failure(requestId, "No permanency request awaiting approval was found."));
                 continue;
             }
 
-            if (!command.Approved)
+            if (!action.Approved)
             {
-                var history = request.Reject(command.ApprovedBy, command.Remarks);
+                var history = request.Reject(command.ApprovedBy, action.Remarks);
                 request.UpdatedBy = command.ApprovedBy;
                 _context.HrmLearnerConfirmationApprovalHistories.Add(history);
-                result.Items.Add(Success(employeeId, request));
+                result.Items.Add(Success(request));
                 continue;
             }
 
-            var employee = employees.FirstOrDefault(e => e.Id == employeeId);
+            var employee = employees.FirstOrDefault(e => e.Id == request.EmployeeId);
             if (employee?.Employment is null || employee.Payroll is null)
             {
-                result.Items.Add(Failure(employeeId, "Employment or payroll information is not available."));
+                result.Items.Add(Failure(requestId, "Employment or payroll information is not available."));
                 continue;
             }
 
-            var approvalHistory = request.Approve(command.ApprovedBy, command.Remarks);
+            var approvalHistory = request.Approve(command.ApprovedBy, action.Remarks);
             request.UpdatedBy = command.ApprovedBy;
             _context.HrmLearnerConfirmationApprovalHistories.Add(approvalHistory);
 
@@ -165,7 +171,7 @@ public class LearnerConfirmationRepository : ILearnerConfirmationRepository
             employee.Payroll.GrossSalary = request.StandardGrossSalary;
             employee.Payroll.UpdatedBy = command.ApprovedBy;
 
-            result.Items.Add(Success(employeeId, request));
+            result.Items.Add(Success(request));
         }
 
         await _context.SaveChangesAsync(cancellationToken);
@@ -218,18 +224,17 @@ public class LearnerConfirmationRepository : ILearnerConfirmationRepository
             .Select(d => (decimal?)d.MinimumSalary)
             .FirstOrDefaultAsync(cancellationToken);
 
-    private static LearnerConfirmationResultItemDto Failure(string employeeId, string message)
+    private static LearnerConfirmationResultItemDto Failure(string requestId, string message)
         => new()
         {
-            EmployeeId = employeeId,
+            RequestId = requestId,
             Succeeded = false,
             Message = message
         };
 
-    private static LearnerConfirmationResultItemDto Success(string employeeId, HrmLearnerConfirmationRequest request)
+    private static LearnerConfirmationResultItemDto Success(HrmLearnerConfirmationRequest request)
         => new()
         {
-            EmployeeId = employeeId,
             RequestId = request.Id,
             Status = request.Status,
             Succeeded = true

@@ -31,7 +31,7 @@ public class LearnerConfirmationCommandHandler
             throw new BusinessRuleException("FORWARDED_BY_REQUIRED",
                 "Forwarded By is required.");
 
-        command.EmployeeIds = Normalize(command.EmployeeIds);
+        command.EmployeeIds = NormalizeEmployeeIds(command.EmployeeIds);
 
         return await _repository.ForwardAsync(command, cancellationToken);
     }
@@ -40,15 +40,15 @@ public class LearnerConfirmationCommandHandler
         ApproveLearnerConfirmationsCommand command,
         CancellationToken cancellationToken = default)
     {
-        if (command.EmployeeIds is null || command.EmployeeIds.Count == 0)
-            throw new BusinessRuleException("EMPLOYEE_LIST_REQUIRED",
-                "At least one employee must be selected.");
+        if (command.Requests is null || command.Requests.Count == 0)
+            throw new BusinessRuleException("REQUEST_LIST_REQUIRED",
+                "At least one request must be selected.");
 
         if (string.IsNullOrWhiteSpace(command.ApprovedBy))
             throw new BusinessRuleException("APPROVED_BY_REQUIRED",
                 "Approved By is required.");
 
-        command.EmployeeIds = Normalize(command.EmployeeIds);
+        command.Requests = NormalizeRequests(command.Requests);
 
         return await _repository.ApproveAsync(command, cancellationToken);
     }
@@ -57,10 +57,23 @@ public class LearnerConfirmationCommandHandler
         CancellationToken cancellationToken = default)
         => _repository.GetPendingAsync(cancellationToken);
 
-    private static List<string> Normalize(List<string> employeeIds)
+    private static List<string> NormalizeEmployeeIds(List<string> employeeIds)
         => employeeIds
             .Where(id => !string.IsNullOrWhiteSpace(id))
             .Select(id => id.Trim())
             .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+    private static List<LearnerConfirmationActionDto> NormalizeRequests(List<LearnerConfirmationActionDto> requests)
+        => requests
+            .Where(request => !string.IsNullOrWhiteSpace(request.RequestId))
+            .Select(request =>
+            {
+                request.RequestId = request.RequestId.Trim();
+                request.Remarks = string.IsNullOrWhiteSpace(request.Remarks) ? null : request.Remarks.Trim();
+                return request;
+            })
+            .GroupBy(request => request.RequestId, StringComparer.OrdinalIgnoreCase)
+            .Select(group => group.First())
             .ToList();
 }
