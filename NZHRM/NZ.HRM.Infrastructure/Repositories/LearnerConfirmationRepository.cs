@@ -184,6 +184,8 @@ public class LearnerConfirmationRepository : ILearnerConfirmationRepository
                 on request.EmployeeId equals employee.Id
             join employment in _context.HrmEmployeeEmployments.AsNoTracking()
                 on employee.Id equals employment.EmployeeId
+            join payroll in _context.HrmEmployeePayrolls.AsNoTracking()
+                on employee.Id equals payroll.EmployeeId
             where request.Status == forwarded
             orderby request.ProbationCompletedOn, employee.EmployeeCode
             select new PendingLearnerConfirmationDto
@@ -194,11 +196,15 @@ public class LearnerConfirmationRepository : ILearnerConfirmationRepository
                 EmployeeName = employee.EmployeeName,
                 DepartmentName = employment.Department != null ? employment.Department.DepartmentName : string.Empty,
                 Designation = employment.Designation != null ? employment.Designation.DesignationName : string.Empty,
+                ProbationPeriod = employment.ProbationPeriod,
                 DateOfJoining = request.DateOfJoining,
                 ProbationCompletedOn = request.ProbationCompletedOn,
                 CurrentGrossSalary = request.CurrentGrossSalary,
                 StandardGrossSalary = request.StandardGrossSalary,
                 AdjustmentAmount = request.AdjustmentAmount,
+                CurrentBasicSalary = payroll.BasicSalary ?? 0m,
+                AdjustedBasicSalary = (payroll.BasicSalary ?? 0m) + request.AdjustmentAmount,
+                EffectiveFrom = request.ProbationCompletedOn,
                 Status = request.Status,
                 ForwardedBy = request.ForwardedBy,
                 ForwardedOn = request.ForwardedOn

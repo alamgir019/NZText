@@ -31,11 +31,16 @@ public class PendingLearnerConfirmationDto
     public string EmployeeName { get; set; } = string.Empty;
     public string DepartmentName { get; set; } = string.Empty;
     public string Designation { get; set; } = string.Empty;
+    public decimal? ProbationPeriod { get; set; }
     public DateOnly DateOfJoining { get; set; }
     public DateOnly ProbationCompletedOn { get; set; }
     public decimal CurrentGrossSalary { get; set; }
     public decimal StandardGrossSalary { get; set; }
     public decimal AdjustmentAmount { get; set; }
+    public decimal CurrentBasicSalary { get; set; }
+    public decimal AdjustedBasicSalary { get; set; }
+    public decimal IncrementAmount { get; set; }
+    public DateOnly EffectiveFrom { get; set; }
     public string Status { get; set; } = string.Empty;
     public string ForwardedBy { get; set; } = string.Empty;
     public DateTime ForwardedOn { get; set; }
