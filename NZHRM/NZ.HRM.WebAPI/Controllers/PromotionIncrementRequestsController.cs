@@ -270,7 +270,7 @@ public class PromotionIncrementRequestsController : ControllerBase
 		CancellationToken cancellationToken = default)
 	{
 		if (!ModelState.IsValid)
-			return BadRequest(ModelState);
+			return BadRequest(new { success = false, message = "Validation failed." });
 
 		try
 		{
@@ -278,32 +278,33 @@ public class PromotionIncrementRequestsController : ControllerBase
 
 			return Ok(new
 			{
-				data = result,
-				message = "Promotion increment requests forwarded to Director"
+				success = true,
+				message = "Promotion and increment requests forwarded to Director successfully.",
+				totalProcessed = result.ForwardedCount
 			});
 		}
-		catch (ArgumentException ex)
+		catch (ArgumentException)
 		{
-			return BadRequest(new { message = ex.Message });
+			return BadRequest(new { success = false, message = "Validation failed." });
 		}
 		catch (UnauthorizedAccessException ex)
 		{
-			return Unauthorized(new { message = ex.Message });
+			return Unauthorized(new { success = false, message = ex.Message });
 		}
 		catch (KeyNotFoundException ex)
 		{
-			return NotFound(new { message = ex.Message });
+			return NotFound(new { success = false, message = ex.Message });
 		}
 		catch (InvalidOperationException ex)
 		{
-			return Conflict(new { message = ex.Message });
+			return Conflict(new { success = false, message = ex.Message });
 		}
-		catch (Exception ex)
+		catch (Exception)
 		{
 			return StatusCode(500, new
 			{
-				message = "An error occurred while forwarding promotion increment requests to Director",
-				details = ex.Message
+				success = false,
+				message = "An unexpected error occurred while forwarding requests."
 			});
 		}
 	}

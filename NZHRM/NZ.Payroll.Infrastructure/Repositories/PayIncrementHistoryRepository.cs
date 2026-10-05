@@ -258,7 +258,7 @@ public class PayIncrementHistoryRepository : IPayIncrementHistoryRepository
 			.Include(history => history.PerIncrementRequests.Where(request => request.IsActive))
 			.Where(history =>
 				history.IsActive &&
-				history.Status == status)
+				history.Status.ToLower() == status.ToLower() )
 			.ToListAsync(cancellationToken);
 	}
 

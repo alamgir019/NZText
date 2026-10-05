@@ -137,9 +137,15 @@ public class GetPayIncrementHistoriesByStatusHandler
 				=> PayIncrementStatuses.Pending,
 			var value when string.Equals(value, PayIncrementStatuses.Forwarded, StringComparison.OrdinalIgnoreCase)
 				=> PayIncrementStatuses.Forwarded,
-			var value when string.Equals(value, PayIncrementStatuses.Approved, StringComparison.OrdinalIgnoreCase)
-				=> PayIncrementStatuses.Approved,
-			_ => throw new ArgumentException($"Unsupported pay increment history status: '{status}'", nameof(status))
+            var value when string.Equals(value, PayIncrementStatuses.Approved, StringComparison.OrdinalIgnoreCase)
+                => PayIncrementStatuses.Approved,
+            var value when string.Equals(value, PayIncrementStatuses.ForwardedToMovementSection, StringComparison.OrdinalIgnoreCase)
+                => PayIncrementStatuses.ForwardedToMovementSection,
+            var value when string.Equals(value, PayIncrementStatuses.ForwardedToHR, StringComparison.OrdinalIgnoreCase)
+                => PayIncrementStatuses.ForwardedToHR,
+            var value when string.Equals(value, PayIncrementStatuses.ForwardedToCEO, StringComparison.OrdinalIgnoreCase)
+                => PayIncrementStatuses.ForwardedToCEO,
+            _ => throw new ArgumentException($"Unsupported pay increment history status: '{status}'", nameof(status))
 		};
 	}
 }

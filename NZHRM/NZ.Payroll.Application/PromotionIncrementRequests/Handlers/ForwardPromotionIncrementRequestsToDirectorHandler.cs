@@ -23,7 +23,7 @@ public class ForwardPromotionIncrementRequestsToDirectorHandler
 			throw new UnauthorizedAccessException("Authenticated user was not found");
 
 		if (command.Requests.Count == 0)
-			throw new ArgumentException("At least one promotion increment request is required");
+			throw new ArgumentException("At least one employee must be selected for forwarding.");
 
 		var items = command.Requests;
 		foreach (var item in items)
@@ -60,8 +60,7 @@ public class ForwardPromotionIncrementRequestsToDirectorHandler
 
 		var employeesWithOpenRequests = await _repository.GetEmployeeIdsWithOpenRequestsAsync(employeeIds, cancellationToken);
 		if (employeesWithOpenRequests.Count > 0)
-			throw new InvalidOperationException(
-				$"Employees already have a promotion increment request in progress: {string.Join(", ", employeesWithOpenRequests)}");
+			throw new InvalidOperationException("Selected employee request has already been forwarded to Director.");
 
 		var requests = new List<PayPromotionIncrementRequest>();
 
@@ -88,7 +87,7 @@ public class ForwardPromotionIncrementRequestsToDirectorHandler
 			requests.Add(request);
 		}
 
-		await _repository.AddRangeAsync(requests, cancellationToken);
+		await _repository.ForwardBatchAsync(requests, requests.SelectMany(request => request.ApprovalHistories).ToList(), cancellationToken);
 
 		return new ForwardPromotionIncrementRequestsResultDto
 		{

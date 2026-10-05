@@ -297,4 +297,25 @@ public class PromotionIncrementRequestRepository : IPromotionIncrementRequestRep
 			.ThenBy(history => history.StepNo)
 			.ToListAsync(cancellationToken);
 	}
+
+	public async Task ForwardBatchAsync(
+		IReadOnlyCollection<PayPromotionIncrementRequest> requests,
+		IReadOnlyCollection<PayPromotionIncrementApprovalHistory> histories,
+		CancellationToken cancellationToken = default)
+	{
+		await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+
+		try
+		{
+			await _context.PayPromotionIncrementRequests.AddRangeAsync(requests, cancellationToken);
+			await _context.PayPromotionIncrementApprovalHistories.AddRangeAsync(histories, cancellationToken);
+			await _context.SaveChangesAsync(cancellationToken);
+			await transaction.CommitAsync(cancellationToken);
+		}
+		catch
+		{
+			await transaction.RollbackAsync(cancellationToken);
+			throw;
+		}
+	}
 }

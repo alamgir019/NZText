@@ -36,4 +36,8 @@ public interface IPromotionIncrementRequestRepository
 	Task<List<PayPromotionIncrementApprovalHistory>> GetApprovalHistoryAsync(
 		string requestId,
 		CancellationToken cancellationToken = default);
+	Task ForwardBatchAsync(
+		IReadOnlyCollection<PayPromotionIncrementRequest> requests,
+		IReadOnlyCollection<PayPromotionIncrementApprovalHistory> histories,
+		CancellationToken cancellationToken = default);
 }

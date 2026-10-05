@@ -1,12 +1,17 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace NZ.Payroll.Application.PromotionIncrementRequests.Commands;
 
 public class PromotionIncrementRequestItem
 {
-	[Required(ErrorMessage = "Employee ID is required")]
-	[MaxLength(50, ErrorMessage = "Employee ID must not exceed 50 characters")]
 	public string EmployeeId { get; set; } = string.Empty;
+	public string? EmployeeName { get; set; }
+	public string? Department { get; set; }
+	public string? CurrentDesignation { get; set; }
+	public string? ProposedDesignation { get; set; }
+	public string? CurrentGrade { get; set; }
+	public string? NewGrade { get; set; }
 
 	[Required(ErrorMessage = "Proposed designation is required")]
 	public string ProposedDesignationId { get; set; } = string.Empty;
@@ -30,7 +35,7 @@ public class PromotionIncrementRequestItem
 public class ForwardPromotionIncrementRequestsToDirectorCommand
 {
 	[Required]
-	[MinLength(1, ErrorMessage = "At least one promotion increment request is required")]
+	[MinLength(1, ErrorMessage = "At least one employee must be selected for forwarding.")]
 	public List<PromotionIncrementRequestItem> Requests { get; set; } = new();
 
 	[MaxLength(500, ErrorMessage = "Remarks must not exceed 500 characters")]
