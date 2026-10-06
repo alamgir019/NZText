@@ -25,5 +25,7 @@ public interface ILearnerConfirmationRepository
     /// </summary>
     Task<List<PendingLearnerConfirmationDto>> GetPendingAsync(
 string? status, CancellationToken cancellationToken = default);
-    Task<LearnerConfirmationBatchResultDto> ForwardToMovementCellAsync(List<MovementCellLearnerConfirmationsCommand> command, CancellationToken cancellationToken);
+    Task<LearnerConfirmationBatchResultDto> ForwardToMovementCellAsync(List<LearnerConfirmationsCommand> command, CancellationToken cancellationToken);
+    Task<LearnerConfirmationBatchResultDto> ForwardToMovementSectionAsync(List<LearnerConfirmationsCommand> commands, CancellationToken cancellationToken);
+    Task<LearnerConfirmationBatchResultDto> ForwardToMovementHRAsync(List<LearnerConfirmationsCommand> commands, CancellationToken cancellationToken);
 }

@@ -113,6 +113,39 @@ namespace NZ.HRM.Domain.Entities
                 forwardedBy,
                 remarks);
         }
+
+        public HrmLearnerConfirmationApprovalHistory ForwardToMovementHR(string forwardedBy, string? remarks)
+        {
+            var fromStatus = Status;
+            Status = LearnerConfirmationStatus.ForwardedHR.ToString();
+            ApprovedBy = forwardedBy;
+            ApprovalDate = DateTime.UtcNow;
+            Remarks = string.IsNullOrWhiteSpace(remarks) ? Remarks : remarks.Trim();
+
+            return RecordTransition(
+                LearnerConfirmationStatus.ForwardedHR.ToString(),
+                fromStatus,
+                LearnerConfirmationStatus.ForwardedHR.ToString(),
+                forwardedBy,
+                remarks);
+        }
+
+        public HrmLearnerConfirmationApprovalHistory ForwardToCEO(string forwardedBy, string? remarks)
+        {
+            var fromStatus = Status;
+            Status = LearnerConfirmationStatus.ForwardedCEO.ToString();
+            ApprovedBy = forwardedBy;
+            ApprovalDate = DateTime.UtcNow;
+            Remarks = string.IsNullOrWhiteSpace(remarks) ? Remarks : remarks.Trim();
+
+            return RecordTransition(
+                LearnerConfirmationStatus.ForwardedCEO.ToString(),
+                fromStatus,
+                LearnerConfirmationStatus.ForwardedCEO.ToString(),
+                forwardedBy,
+                remarks);
+        }
+
         private HrmLearnerConfirmationApprovalHistory RecordTransition(
             string action,
             string fromStatus,

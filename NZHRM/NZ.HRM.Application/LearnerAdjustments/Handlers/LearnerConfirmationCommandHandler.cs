@@ -55,7 +55,7 @@ public class LearnerConfirmationCommandHandler
 
 
     public async Task<LearnerConfirmationBatchResultDto> Handle(
-        List<MovementCellLearnerConfirmationsCommand> command,
+        List<LearnerConfirmationsCommand> command,
         CancellationToken cancellationToken = default)
     {
         if (command is null || command.Count == 0)
@@ -63,6 +63,25 @@ public class LearnerConfirmationCommandHandler
                 "At least one request must be selected.");
 
         return await _repository.ForwardToMovementCellAsync(command, cancellationToken);
+    }
+
+    public async Task<LearnerConfirmationBatchResultDto> HandleMovementSection(List<LearnerConfirmationsCommand> commands, CancellationToken cancellationToken)
+    {
+        if (commands is null || commands.Count == 0)
+            throw new BusinessRuleException("REQUEST_LIST_REQUIRED",
+                "At least one request must be selected.");
+
+        return await _repository.ForwardToMovementSectionAsync(commands, cancellationToken);
+    }
+
+
+    public async Task<LearnerConfirmationBatchResultDto> HandleMovementHR(List<LearnerConfirmationsCommand> commands, CancellationToken cancellationToken)
+    {
+        if (commands is null || commands.Count == 0)
+            throw new BusinessRuleException("REQUEST_LIST_REQUIRED",
+                "At least one request must be selected.");
+
+        return await _repository.ForwardToMovementHRAsync(commands, cancellationToken);
     }
 
     public Task<List<PendingLearnerConfirmationDto>> HandlePending(

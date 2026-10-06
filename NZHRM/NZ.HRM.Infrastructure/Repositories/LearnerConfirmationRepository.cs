@@ -179,7 +179,7 @@ public class LearnerConfirmationRepository : ILearnerConfirmationRepository
         return Finalize(result);
     }
 
-    public async Task<LearnerConfirmationBatchResultDto> ForwardToMovementCellAsync(List<MovementCellLearnerConfirmationsCommand> command, CancellationToken cancellationToken)
+    public async Task<LearnerConfirmationBatchResultDto> ForwardToMovementCellAsync(List<LearnerConfirmationsCommand> command, CancellationToken cancellationToken)
     {
         var result = new LearnerConfirmationBatchResultDto { TotalRequested = command.Count };
 
@@ -190,7 +190,7 @@ public class LearnerConfirmationRepository : ILearnerConfirmationRepository
 
         var requests = await _context.HrmLearnerConfirmationRequests
             .Where(r => requestIds.Contains(r.Id)
-                        && r.Status == LearnerConfirmationStatus.Approved.ToString())
+                        && r.Status.ToLower() == LearnerConfirmationStatus.Approved.ToString().ToLower())
             .ToListAsync(cancellationToken);
 
         var requestsById = requests.ToDictionary(request => request.Id, StringComparer.OrdinalIgnoreCase);
@@ -237,6 +237,126 @@ public class LearnerConfirmationRepository : ILearnerConfirmationRepository
 
         return Finalize(result);
     }
+
+    public async Task<LearnerConfirmationBatchResultDto> ForwardToMovementSectionAsync(List<LearnerConfirmationsCommand> commands, CancellationToken cancellationToken)
+    {
+        var result = new LearnerConfirmationBatchResultDto { TotalRequested = commands.Count };
+
+        var requestIds = commands
+            .Select(request => request.RequestId)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        var requests = await _context.HrmLearnerConfirmationRequests
+            .Where(r => requestIds.Contains(r.Id)
+                        && r.Status.ToLower() == LearnerConfirmationStatus.ForwardedMovementSection.ToString().ToLower())
+            .ToListAsync(cancellationToken);
+
+        var requestsById = requests.ToDictionary(request => request.Id, StringComparer.OrdinalIgnoreCase);
+
+        var employees = await _context.HrmEmployeeMasters
+            .Include(e => e.Employment)
+            .Include(e => e.Payroll)
+            .Where(e => requests.Select(request => request.EmployeeId).Contains(e.Id))
+            .ToListAsync(cancellationToken);
+
+        foreach (var action in commands)
+        {
+            var requestId = action.RequestId;
+            var request = requestsById.GetValueOrDefault(requestId);
+
+            if (request is null)
+            {
+                result.Items.Add(Failure(requestId, "No permanency request awaiting approval was found."));
+                continue;
+            }
+
+
+            var employee = employees.FirstOrDefault(e => e.Id == request.EmployeeId);
+            if (employee?.Employment is null || employee.Payroll is null)
+            {
+                result.Items.Add(Failure(requestId, "Employment or payroll information is not available."));
+                continue;
+            }
+
+            var approvalHistory = request.ForwardToMovementHR(action.ForwardedBy, action.Remarks);
+            request.UpdatedBy = action.ForwardedBy;
+            _context.HrmLearnerConfirmationApprovalHistories.Add(approvalHistory);
+
+            // Apply permanency to the employee record.
+            employee.Employment.ConfirmationDate = request.ProbationCompletedOn;
+            employee.Employment.UpdatedBy = action.ForwardedBy;
+            employee.Payroll.GrossSalary = request.StandardGrossSalary;
+            employee.Payroll.UpdatedBy = action.ForwardedBy;
+
+            result.Items.Add(Success(request));
+        }
+
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return Finalize(result);
+    }
+
+
+    public async Task<LearnerConfirmationBatchResultDto> ForwardToMovementHRAsync(List<LearnerConfirmationsCommand> commands, CancellationToken cancellationToken)
+    {
+        var result = new LearnerConfirmationBatchResultDto { TotalRequested = commands.Count };
+
+        var requestIds = commands
+            .Select(request => request.RequestId)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        var requests = await _context.HrmLearnerConfirmationRequests
+            .Where(r => requestIds.Contains(r.Id)
+                        && r.Status.ToLower() == LearnerConfirmationStatus.ForwardedHR.ToString().ToLower())
+            .ToListAsync(cancellationToken);
+
+        var requestsById = requests.ToDictionary(request => request.Id, StringComparer.OrdinalIgnoreCase);
+
+        var employees = await _context.HrmEmployeeMasters
+            .Include(e => e.Employment)
+            .Include(e => e.Payroll)
+            .Where(e => requests.Select(request => request.EmployeeId).Contains(e.Id))
+            .ToListAsync(cancellationToken);
+
+        foreach (var action in commands)
+        {
+            var requestId = action.RequestId;
+            var request = requestsById.GetValueOrDefault(requestId);
+
+            if (request is null)
+            {
+                result.Items.Add(Failure(requestId, "No permanency request awaiting approval was found."));
+                continue;
+            }
+
+
+            var employee = employees.FirstOrDefault(e => e.Id == request.EmployeeId);
+            if (employee?.Employment is null || employee.Payroll is null)
+            {
+                result.Items.Add(Failure(requestId, "Employment or payroll information is not available."));
+                continue;
+            }
+
+            var approvalHistory = request.ForwardToCEO(action.ForwardedBy, action.Remarks);
+            request.UpdatedBy = action.ForwardedBy;
+            _context.HrmLearnerConfirmationApprovalHistories.Add(approvalHistory);
+
+            // Apply permanency to the employee record.
+            employee.Employment.ConfirmationDate = request.ProbationCompletedOn;
+            employee.Employment.UpdatedBy = action.ForwardedBy;
+            employee.Payroll.GrossSalary = request.StandardGrossSalary;
+            employee.Payroll.UpdatedBy = action.ForwardedBy;
+
+            result.Items.Add(Success(request));
+        }
+
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return Finalize(result);
+    }
+
     public async Task<List<PendingLearnerConfirmationDto>> GetPendingAsync(string? status,
         CancellationToken cancellationToken = default)
     {
@@ -304,5 +424,4 @@ public class LearnerConfirmationRepository : ILearnerConfirmationRepository
         result.FailedCount = result.Items.Count(i => !i.Succeeded);
         return result;
     }
-
 }

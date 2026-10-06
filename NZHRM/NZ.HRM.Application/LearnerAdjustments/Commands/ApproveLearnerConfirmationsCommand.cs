@@ -27,7 +27,7 @@ public class LearnerConfirmationActionDto
 /// <summary>
 /// A single learner confirmation action in a batch request.
 /// </summary>
-public class MovementCellLearnerConfirmationsCommand
+public class LearnerConfirmationsCommand
 {
     public string RequestId { get; set; } = string.Empty;
     public string ForwardedBy { get; set; } = string.Empty;

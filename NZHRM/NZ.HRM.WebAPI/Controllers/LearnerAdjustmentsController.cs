@@ -116,12 +116,54 @@ public class LearnerAdjustmentsController : ControllerBase
     [ProducesResponseType(typeof(LearnerConfirmationBatchResultDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> MovementCell(
-        [FromBody] List<MovementCellLearnerConfirmationsCommand> commands,
+        [FromBody] List<LearnerConfirmationsCommand> commands,
         CancellationToken cancellationToken)
     {
         try
         {
             var result = await _learnerConfirmationCommandHandler.Handle(commands, cancellationToken);
+            return Ok(result);
+        }
+        catch (BusinessRuleException ex)
+        {
+            return BadRequest(new { code = ex.Code, message = ex.Message });
+        }
+    }
+
+    /// <summary>
+    /// Approves (or rejects) the forwarded permanency requests of the selected learner employees.
+    /// </summary>
+    [HttpPost("movement-section")]
+    [ProducesResponseType(typeof(LearnerConfirmationBatchResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> MovementSection(
+        [FromBody] List<LearnerConfirmationsCommand> commands,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await _learnerConfirmationCommandHandler.HandleMovementSection(commands, cancellationToken);
+            return Ok(result);
+        }
+        catch (BusinessRuleException ex)
+        {
+            return BadRequest(new { code = ex.Code, message = ex.Message });
+        }
+    }
+
+    /// <summary>
+    /// Approves (or rejects) the forwarded permanency requests of the selected learner employees.
+    /// </summary>
+    [HttpPost("movement-hr")]
+    [ProducesResponseType(typeof(LearnerConfirmationBatchResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> MovementHR(
+        [FromBody] List<LearnerConfirmationsCommand> commands,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await _learnerConfirmationCommandHandler.HandleMovementHR(commands, cancellationToken);
             return Ok(result);
         }
         catch (BusinessRuleException ex)
