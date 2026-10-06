@@ -110,13 +110,35 @@ public class LearnerAdjustmentsController : ControllerBase
     }
 
     /// <summary>
+    /// Approves (or rejects) the forwarded permanency requests of the selected learner employees.
+    /// </summary>
+    [HttpPost("movement-cell")]
+    [ProducesResponseType(typeof(LearnerConfirmationBatchResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> MovementCell(
+        [FromBody] List<MovementCellLearnerConfirmationsCommand> commands,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await _learnerConfirmationCommandHandler.Handle(commands, cancellationToken);
+            return Ok(result);
+        }
+        catch (BusinessRuleException ex)
+        {
+            return BadRequest(new { code = ex.Code, message = ex.Message });
+        }
+    }
+
+    /// <summary>
     /// Returns the permanency requests currently awaiting approval.
     /// </summary>
-    [HttpGet("pending-approvals")]
+    [HttpGet]
     [ProducesResponseType(typeof(List<PendingLearnerConfirmationDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetPendingApprovals(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetPendingApprovals(
+        [FromQuery] string? status, CancellationToken cancellationToken)
     {
-        var result = await _learnerConfirmationCommandHandler.HandlePending(cancellationToken);
+        var result = await _learnerConfirmationCommandHandler.HandlePending(status, cancellationToken);
         return Ok(result);
     }
 }

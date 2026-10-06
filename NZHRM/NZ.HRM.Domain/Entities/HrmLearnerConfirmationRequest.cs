@@ -98,7 +98,21 @@ namespace NZ.HRM.Domain.Entities
                 rejectedBy,
                 remarks);
         }
+        public HrmLearnerConfirmationApprovalHistory ForwardToMovementSection(string forwardedBy, string? remarks)
+        {
+            var fromStatus = Status;
+            Status = LearnerConfirmationStatus.ForwardedMovementSection.ToString();
+            ApprovedBy = forwardedBy;
+            ApprovalDate = DateTime.UtcNow;
+            Remarks = string.IsNullOrWhiteSpace(remarks) ? Remarks : remarks.Trim();
 
+            return RecordTransition(
+                LearnerConfirmationStatus.ForwardedMovementSection.ToString(),
+                fromStatus,
+                LearnerConfirmationStatus.ForwardedMovementSection.ToString(),
+                forwardedBy,
+                remarks);
+        }
         private HrmLearnerConfirmationApprovalHistory RecordTransition(
             string action,
             string fromStatus,

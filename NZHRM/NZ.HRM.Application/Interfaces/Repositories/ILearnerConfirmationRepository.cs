@@ -24,5 +24,6 @@ public interface ILearnerConfirmationRepository
     /// Returns the permanency requests currently awaiting approval.
     /// </summary>
     Task<List<PendingLearnerConfirmationDto>> GetPendingAsync(
-        CancellationToken cancellationToken = default);
+string? status, CancellationToken cancellationToken = default);
+    Task<LearnerConfirmationBatchResultDto> ForwardToMovementCellAsync(List<MovementCellLearnerConfirmationsCommand> command, CancellationToken cancellationToken);
 }

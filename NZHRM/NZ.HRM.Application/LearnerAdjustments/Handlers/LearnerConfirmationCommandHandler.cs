@@ -53,9 +53,21 @@ public class LearnerConfirmationCommandHandler
         return await _repository.ApproveAsync(command, cancellationToken);
     }
 
-    public Task<List<PendingLearnerConfirmationDto>> HandlePending(
+
+    public async Task<LearnerConfirmationBatchResultDto> Handle(
+        List<MovementCellLearnerConfirmationsCommand> command,
         CancellationToken cancellationToken = default)
-        => _repository.GetPendingAsync(cancellationToken);
+    {
+        if (command is null || command.Count == 0)
+            throw new BusinessRuleException("REQUEST_LIST_REQUIRED",
+                "At least one request must be selected.");
+
+        return await _repository.ForwardToMovementCellAsync(command, cancellationToken);
+    }
+
+    public Task<List<PendingLearnerConfirmationDto>> HandlePending(
+string? status, CancellationToken cancellationToken = default)
+        => _repository.GetPendingAsync(status, cancellationToken);
 
     private static List<string> NormalizeEmployeeIds(List<string> employeeIds)
         => employeeIds
@@ -76,4 +88,9 @@ public class LearnerConfirmationCommandHandler
             .GroupBy(request => request.RequestId, StringComparer.OrdinalIgnoreCase)
             .Select(group => group.First())
             .ToList();
+
+    public async Task Handle(List<MovementCellLearnerConfirmationsCommand> commands, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

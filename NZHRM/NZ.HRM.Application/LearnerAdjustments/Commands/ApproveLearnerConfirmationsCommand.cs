@@ -22,3 +22,14 @@ public class LearnerConfirmationActionDto
     public bool Approved { get; set; } = true;
     public string? Remarks { get; set; }
 }
+
+
+/// <summary>
+/// A single learner confirmation action in a batch request.
+/// </summary>
+public class MovementCellLearnerConfirmationsCommand
+{
+    public string RequestId { get; set; } = string.Empty;
+    public string ForwardedBy { get; set; } = string.Empty;
+    public string? Remarks { get; set; }
+}

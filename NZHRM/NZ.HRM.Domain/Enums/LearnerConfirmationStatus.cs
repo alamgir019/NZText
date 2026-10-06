@@ -6,7 +6,10 @@ namespace NZ.HRM.Domain.Enums
     public enum LearnerConfirmationStatus
     {
         Forwarded = 1,
-        Approved = 2,
-        Rejected = 3
+        Approved = 2, //ForwardedMovementCell
+        Rejected = 3,
+        ForwardedMovementSection = 4,
+        ForwardedHR = 5,
+        ForwardedCEO = 6,
     }
 }
