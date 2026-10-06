@@ -10,16 +10,28 @@ using NZ.HRM.Mapping.Employees;
 using NZ.HRM.Utility;
 using NZ.HRM.Utility.Enum;
 using NZ.HRM.Application.Employees.Queries.GetJoiningLetter;
+using NZ.HRM.Application.Common;
+using NZ.HRM.Application.Employees.Queries.GetProbationCompletion;
 
 namespace NZ.HRM.Application.Employees.Handlers;
 
 public class EmployeeQueryHandler
 {
     private readonly IEmployeeMasterRepository _employeeMasterRepository;
+    private readonly IDepartmentRepository _departmentRepository;
+    private readonly ISectionRepository _sectionRepository;
+    private readonly IProbationConfirmationRepository _probationConfirmationRepository;
 
-    public EmployeeQueryHandler(IEmployeeMasterRepository employeeMasterRepository)
+    public EmployeeQueryHandler(
+        IEmployeeMasterRepository employeeMasterRepository,
+        IDepartmentRepository departmentRepository,
+        ISectionRepository sectionRepository,
+        IProbationConfirmationRepository probationConfirmationRepository)
     {
         _employeeMasterRepository = employeeMasterRepository;
+        _departmentRepository = departmentRepository;
+        _sectionRepository = sectionRepository;
+        _probationConfirmationRepository = probationConfirmationRepository;
     }
 
     public async Task<EmployeeDetailForIT?> Handle(GetEmployeeDetailForITQuery query, CancellationToken cancellationToken = default)
@@ -121,6 +133,28 @@ public class EmployeeQueryHandler
             Remarks = medical.Remarks ?? string.Empty,
             PhotoUrl = photoDoc?.FilePath
         };
+    }
+
+    public async Task<ProbationCompletionPagedResultDto> Handle(GetProbationCompletionQuery query, CancellationToken cancellationToken = default)
+    {
+        if (query.PageNumber < 1 || query.PageSize < 1)
+            throw new BusinessRuleException("INVALID_REQUEST", "Page number and page size must be greater than zero.");
+
+        if (!string.IsNullOrWhiteSpace(query.DepartmentId))
+        {
+            var department = await _departmentRepository.GetByIdAsync(query.DepartmentId, cancellationToken);
+            if (department is null)
+                throw new BusinessRuleException("INVALID_DEPARTMENT", "Invalid department selected.");
+        }
+
+        if (!string.IsNullOrWhiteSpace(query.SectionId))
+        {
+            var section = await _sectionRepository.GetByIdAsync(query.SectionId, cancellationToken);
+            if (section is null)
+                throw new BusinessRuleException("INVALID_SECTION", "Invalid section selected.");
+        }
+
+        return await _probationConfirmationRepository.GetEligibleEmployeesAsync(query, cancellationToken);
     }
 
     public async Task<CandidateEntryReportDto?> Handle(GetCandidateEntryReportQuery query, CancellationToken cancellationToken = default)

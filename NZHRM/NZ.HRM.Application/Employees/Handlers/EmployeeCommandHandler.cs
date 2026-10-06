@@ -2,10 +2,12 @@ using NZ.HRM.Application.Interfaces.Repositories;
 using System.IO;
 using NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
 using NZ.HRM.Application.Model.Employees.DTOs;
+using NZ.HRM.Application.Employees.Commands.ConfirmProbationEmployees;
 using NZ.HRM.Application.Payroll.Services;
 using NZ.HRM.Domain.Entities;
 using NZ.HRM.Utility.Enum;
 using System.Text.Json;
+using NZ.HRM.Application.Common;
 
 namespace NZ.HRM.Application.Employees.Handlers;
 
@@ -22,6 +24,7 @@ public class EmployeeCommandHandler
     private readonly IEmployeeDocumentRepository _employeeDocumentRepository;
     private readonly IEmployeeSalaryAccountRepository _employeeSalaryAccountRepository;
     private readonly IEmployeeNomineeRepository _employeeNomineeRepository;
+    private readonly IProbationConfirmationRepository _probationConfirmationRepository;
 
     public EmployeeCommandHandler(
         IEmployeeMasterRepository employeeMasterRepository,
@@ -34,7 +37,8 @@ public class EmployeeCommandHandler
         IEmployeeEmploymentRepository employeeEmploymentRepository,
         IEmployeeSalaryAccountRepository employeeSalaryAccountRepository,
         IEmployeeDocumentRepository employeeDocumentRepository,
-        IEmployeeNomineeRepository employeeNomineeRepository)
+        IEmployeeNomineeRepository employeeNomineeRepository,
+        IProbationConfirmationRepository probationConfirmationRepository)
     {
         _employeeMasterRepository = employeeMasterRepository;
         _employeePersonalRepository = employeePersonalRepository;
@@ -47,6 +51,7 @@ public class EmployeeCommandHandler
         _employeeNomineeRepository = employeeNomineeRepository;
         _employeeEmploymentRepository = employeeEmploymentRepository;
         _employeeDocumentRepository = employeeDocumentRepository;
+        _probationConfirmationRepository = probationConfirmationRepository;
     }
 
     public async Task<string> Handle(CreateCandidateEntryCommand command, CancellationToken cancellationToken = default)
@@ -518,6 +523,30 @@ public class EmployeeCommandHandler
         employeeMaster.Status = command.EmployeeStatus?.ToString() ?? EmployeeStatus.ITActivation.ToString();
         await _employeeMasterRepository.UpdateAsync(employeeMaster, cancellationToken);
         return command.EmployeeId;
+    }
+
+    public async Task<ProbationConfirmationBatchResultDto> Handle(
+        ConfirmProbationEmployeesCommand command,
+        string confirmedBy,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(confirmedBy))
+            throw new BusinessRuleException("CONFIRMED_BY_REQUIRED", "Confirmed By is required.");
+
+        var employeeIds = command.EmployeeIds
+            .Where(id => !string.IsNullOrWhiteSpace(id))
+            .Select(id => id.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (employeeIds.Count == 0)
+            throw new BusinessRuleException("INVALID_REQUEST", "At least one employee must be selected for confirmation.");
+
+        if (employeeIds.Count != command.EmployeeIds.Count)
+            throw new BusinessRuleException("INVALID_REQUEST", "Duplicate employee IDs are not allowed.");
+
+        var normalizedCommand = new ConfirmProbationEmployeesCommand { EmployeeIds = employeeIds };
+        return await _probationConfirmationRepository.ConfirmEmployeesAsync(normalizedCommand, confirmedBy, cancellationToken);
     }
 
     private async Task<(HrmEmployeePayroll?, HrmEmployeeMaster)> DirectorsReviewMap(CreateDirectorReviewCommand command, CancellationToken cancellationToken = default)

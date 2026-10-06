@@ -53,6 +53,7 @@ namespace NZ.HRM.Infrastructure.DependencyInjection
             services.AddScoped<IEligibleLearnerRepository, EligibleLearnerRepository>();
             services.AddScoped<ILearnerConfirmationRepository, LearnerConfirmationRepository>();
             services.AddScoped<IBusinessCalendar, ServerBusinessCalendar>();
+            services.AddScoped<IProbationConfirmationRepository, ProbationConfirmationRepository>();
             return services;
         }
     }

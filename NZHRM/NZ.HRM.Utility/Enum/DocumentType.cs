@@ -17,6 +17,7 @@ namespace NZ.HRM.Utility.Enum
         Signature,
         AppointmentLetter,
         JoiningLetter,
+        ConfirmationLetter,
         MedicalReport,
         IDCardBangla,
         IDCardEnglish,

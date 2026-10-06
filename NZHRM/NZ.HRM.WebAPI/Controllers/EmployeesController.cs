@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
+using NZ.HRM.Application.Common;
 using NZ.HRM.Application.Employees.Handlers;
 using NZ.HRM.Application.Employees.Queries.GetEmployeeConfirmationDate;
 using NZ.HRM.Application.Employees.Queries.GetEmployeeDetail;
 using NZ.HRM.Application.Employees.Queries.GetEmployeesByStatus;
+using NZ.HRM.Application.Employees.Queries.GetProbationCompletion;
+using NZ.HRM.Application.Employees.Commands.ConfirmProbationEmployees;
 using NZ.HRM.Application.Employees.Queries.SearchEmployees;
 using NZ.HRM.Application.Model.Employees.Commands.CreateCompleteEmployee;
 using NZ.HRM.Application.Model.Employees.DTOs;
@@ -211,6 +214,55 @@ public class EmployeesController : ControllerBase
 
         var employees = await _getCompleteEmployeeHandler.Handle(query, cancellationToken: default);
         return Ok(employees);
+    }
+
+    [HttpGet("probation-completion")]
+    [ProducesResponseType(typeof(ProbationCompletionPagedResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetProbationCompletion([FromQuery] GetProbationCompletionQuery query, CancellationToken cancellationToken)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(new { success = false, message = "Validation failed." });
+
+        try
+        {
+            var result = await _employeeQueryHandler.Handle(query, cancellationToken);
+            return Ok(result);
+        }
+        catch (BusinessRuleException ex)
+        {
+            return BadRequest(new { success = false, errorCode = ex.Code, message = ex.Message });
+        }
+    }
+
+    [HttpPost("probation-confirmation")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ConfirmProbation([FromBody] ConfirmProbationEmployeesCommand command, CancellationToken cancellationToken)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(new { success = false, message = "Validation failed." });
+
+        try
+        {
+            var confirmedBy = User?.Identity?.Name ?? "System";
+            var result = await _createCompleteEmployeeHandler.Handle(command, confirmedBy, cancellationToken);
+
+            return Ok(new
+            {
+                success = true,
+                message = "Probation confirmation completed successfully.",
+                totalProcessed = result.SucceededCount
+            });
+        }
+        catch (BusinessRuleException ex)
+        {
+            return BadRequest(new { success = false, errorCode = ex.Code, message = ex.Message });
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, new { success = false, message = "An unexpected error occurred while confirming probation." });
+        }
     }
 
     [HttpPost("hr-executive-entry")]
