@@ -181,7 +181,7 @@ public class LearnerConfirmationRepository : ILearnerConfirmationRepository
 
     public async Task<LearnerConfirmationBatchResultDto> ForwardToMovementCellAsync(List<MovementCellLearnerConfirmationsCommand> command, CancellationToken cancellationToken)
     {
-        var result = new LearnerConfirmationBatchResultDto { TotalRequested = command.Requests.Count };
+        var result = new LearnerConfirmationBatchResultDto { TotalRequested = command.Count };
 
         var requestIds = command
             .Select(request => request.RequestId)
@@ -250,7 +250,7 @@ public class LearnerConfirmationRepository : ILearnerConfirmationRepository
                 on employee.Id equals employment.EmployeeId
             join payroll in _context.HrmEmployeePayrolls.AsNoTracking()
                 on employee.Id equals payroll.EmployeeId
-            where request.Status == status
+            where request.Status.ToLower() == status.ToLower()
             orderby request.ProbationCompletedOn, employee.EmployeeCode
             select new PendingLearnerConfirmationDto
             {

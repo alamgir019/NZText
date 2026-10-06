@@ -88,9 +88,4 @@ string? status, CancellationToken cancellationToken = default)
             .GroupBy(request => request.RequestId, StringComparer.OrdinalIgnoreCase)
             .Select(group => group.First())
             .ToList();
-
-    public async Task Handle(List<MovementCellLearnerConfirmationsCommand> commands, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
 }
