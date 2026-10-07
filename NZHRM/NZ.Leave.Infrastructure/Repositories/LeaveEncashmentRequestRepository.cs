@@ -153,7 +153,7 @@ namespace NZ.Leave.Infrastructure.Repositories
 
             var latestHistory = histories.FirstOrDefault();
             var latestForwardHistory = histories.FirstOrDefault(h =>
-                string.Equals(h.ActionTaken, LeaveEncashmentRequestAction.Forward, StringComparison.OrdinalIgnoreCase)
+                string.Equals(h.ActionTaken, LeaveEncashmentRequestAction.ForwardToHR, StringComparison.OrdinalIgnoreCase)
                 || string.Equals(h.ActionTaken, LeaveEncashmentRequestStatus.Forwarded, StringComparison.OrdinalIgnoreCase)
                 || string.Equals(h.ActionTaken, "Submitted", StringComparison.OrdinalIgnoreCase));
 

@@ -45,7 +45,7 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.ProcessLeaveEnca
                 processedBy,
                 cancellationToken);
 
-            //var targetStatus = action == LeaveEncashmentRequestAction.Forward
+            //var targetStatus = action == LeaveEncashmentRequestAction.ForwardToHR
             //    ? LeaveEncashmentRequestStatus.Forwarded
             //    : LeaveEncashmentRequestStatus.Rejected;
 
@@ -55,7 +55,7 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.ProcessLeaveEnca
                 RequestId = command.RequestId,
                 Action = action,
                 Status = action,
-                Message = action == LeaveEncashmentRequestAction.Forward
+                Message = new[] { LeaveEncashmentRequestAction.ForwardToHR, LeaveEncashmentRequestAction.ForwardToCEO }.Contains(action)
                     ? "Request forwarded successfully."
                     : "Request rejected successfully."
             };

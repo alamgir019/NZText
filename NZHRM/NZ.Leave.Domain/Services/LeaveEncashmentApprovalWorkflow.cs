@@ -4,11 +4,11 @@ namespace NZ.Leave.Domain.Services
 {
     public class LeaveEncashmentApprovalWorkflow
     {
-        private const string PendingStatus = "PENDING";
-        private const string ForwardedStatus = "FORWARDED";
-        private const string RejectedStatus = "REJECTED";
-        private const string ForwardAction = "FORWARD-TO-HR";
-        private const string RejectAction = "REJECTED";
+        //private const string PendingStatus = "PENDING";
+        //private const string ForwardedStatus = "FORWARDED";
+        //private const string RejectedStatus = "REJECTED";
+        //private const string ForwardAction = "FORWARD-TO-HR";
+        //private const string RejectAction = "REJECTED";
 
         public LevLeaveEncashmentHistory ApplyAction(
             LevLeaveEncashment entity,
@@ -25,15 +25,15 @@ namespace NZ.Leave.Domain.Services
             //if (!string.Equals(entity.Status, PendingStatus, StringComparison.OrdinalIgnoreCase))
             //    throw new InvalidOperationException("Only PENDING requests can be processed.");
 
-            var normalizedAction = action.Trim().ToUpperInvariant();
-            var nextStatus = normalizedAction switch
-            {
-                ForwardAction => ForwardedStatus,
-                RejectAction => RejectedStatus,
-                _ => throw new InvalidOperationException("Unsupported leave encashment action.")
-            };
+            //var normalizedAction = action.Trim().ToUpperInvariant();
+            //var nextStatus = normalizedAction switch
+            //{
+            //    ForwardAction => ForwardedStatus,
+            //    RejectAction => RejectedStatus,
+            //    _ => throw new InvalidOperationException("Unsupported leave encashment action.")
+            //};
 
-            entity.Status = nextStatus;
+            entity.Status = action;
             entity.UpdatedBy = processedBy;
             entity.UpdatedOn = DateTime.UtcNow;
 
@@ -42,7 +42,7 @@ namespace NZ.Leave.Domain.Services
                 EncashmentId = entity.Id,
                 WorkflowStepNo = workflowStepNo,
                 ApproverId = processedBy,
-                ActionTaken = normalizedAction,
+                ActionTaken = action,
                 Remarks = remarks ?? string.Empty,
                 CreatedBy = processedBy,
                 UpdatedBy = processedBy
