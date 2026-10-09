@@ -75,7 +75,7 @@ public class PayIncrementHistoryRepository : IPayIncrementHistoryRepository
 		CancellationToken cancellationToken = default)
 	{
 		var historyList = histories.ToList();
-		var approvedList = histories.Where(x => x.Status.ToLower() == "rejected").Select(x => x.Id).ToList();
+		var approvedList = histories.Where(x => x.Status.ToLower() != "rejected").Select(x => x.Id).ToList();
 		var requestList = requests.ToList();
 		await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 

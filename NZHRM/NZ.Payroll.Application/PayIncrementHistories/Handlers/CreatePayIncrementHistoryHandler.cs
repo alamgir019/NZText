@@ -60,7 +60,9 @@ public class CreatePayIncrementHistoryHandler
 				PayIncHistId = history.Id,
 				ApprovedBy = command.CreatedBy,
 				ApprovalDate = approvalDate,
-				IsActive = true
+                FromStatus = null,
+                ToStatus = PayIncrementStatuses.Pending,
+                IsActive = true
 			};
 
 			perIncrementRequests.Add(perRequest);

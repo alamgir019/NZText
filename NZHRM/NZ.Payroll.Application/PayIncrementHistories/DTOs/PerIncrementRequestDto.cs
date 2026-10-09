@@ -11,4 +11,6 @@ public class PerIncrementRequestDto
 	public DateTime UpdatedOn { get; set; }
 	public string UpdatedBy { get; set; } = string.Empty;
 	public bool IsActive { get; set; }
+    public string? FromStatus { get; internal set; }
+    public string? ToStatus { get; internal set; }
 }

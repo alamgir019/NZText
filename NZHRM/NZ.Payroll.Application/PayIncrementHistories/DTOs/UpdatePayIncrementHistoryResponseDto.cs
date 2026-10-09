@@ -13,4 +13,6 @@ public class UpdatePayIncrementHistoryResponseDto
 	public string? IncrementType { get; set; }
 	public string ApprovedBy { get; set; } = string.Empty;
 	public DateTime? ApprovalDate { get; set; }
+    public string? FromStatus { get; internal set; }
+    public string? ToStatus { get; internal set; }
 }

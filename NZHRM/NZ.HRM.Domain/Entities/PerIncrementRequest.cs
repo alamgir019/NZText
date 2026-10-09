@@ -8,7 +8,9 @@ namespace NZ.HRM.Domain.Entities
 	public class PerIncrementRequest: BaseEntity
 	{
 		public string PayIncHistId { get; set; } = string.Empty;
-		public string? ApprovedBy { get; set; }
+        public string? FromStatus { get; set; }
+        public string? ToStatus { get; set; }
+        public string? ApprovedBy { get; set; }
 		public DateTime? ApprovalDate { get; set; }
 
 		[ForeignKey(nameof(PayIncHistId))]
