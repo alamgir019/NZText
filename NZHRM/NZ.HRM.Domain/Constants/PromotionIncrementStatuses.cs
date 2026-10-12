@@ -6,7 +6,7 @@ public static class PromotionIncrementStatuses
 	public const string PendingDirectorApproval = "PENDING_DIRECTOR_APPROVAL";
 	public const string ApprovedByDirector = "APPROVED_BY_DIRECTOR";
 	public const string PendingEmployeeMovementCell = "PENDING_EMPLOYEE_MOVEMENT_CELL";
-	public const string ReviewedByEmployeeMovementCell = "REVIEWED_BY_EMPLOYEE_MOVEMENT_CELL";
+	public const string PendingEmployeeMovementSection = "PENDING_EMPLOYEE_MOVEMENT_SECTION";
 	public const string PendingHrBranchManager = "PENDING_HR_BRANCH_MANAGER";
 	public const string PendingCeoApproval = "PENDING_CEO_APPROVAL";
 	public const string Approved = "APPROVED";
@@ -20,7 +20,7 @@ public static class PromotionIncrementStatuses
 		PendingDirectorApproval,
 		ApprovedByDirector,
 		PendingEmployeeMovementCell,
-		ReviewedByEmployeeMovementCell,
+		PendingEmployeeMovementSection,
 		PendingHrBranchManager,
 		PendingCeoApproval,
 		Approved,

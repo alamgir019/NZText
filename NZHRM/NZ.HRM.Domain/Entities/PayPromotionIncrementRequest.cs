@@ -121,10 +121,11 @@ public class PayPromotionIncrementRequest : BaseEntityWithSortOrder
 	{
 		if (string.IsNullOrWhiteSpace(forwardedBy))
 			throw new ArgumentException("Forwarded by is required");
-
-		if (!string.Equals(Status, PromotionIncrementStatuses.Draft, StringComparison.OrdinalIgnoreCase))
-			throw new InvalidOperationException(
-				$"Promotion increment request {Id} is already {Status} and cannot be forwarded to Director");
+		
+		// need to check this
+		//if (!string.Equals(Status, PromotionIncrementStatuses.Draft, StringComparison.OrdinalIgnoreCase))
+		//	throw new InvalidOperationException(
+		//		$"Promotion increment request {Id} is already {Status} and cannot be forwarded to Director");
 
 		return RecordTransition(
 			PromotionIncrementApprovalActions.ForwardedToDirector,
@@ -139,15 +140,15 @@ public class PayPromotionIncrementRequest : BaseEntityWithSortOrder
     {
         if (string.IsNullOrWhiteSpace(forwardedBy))
             throw new ArgumentException("Forwarded by is required");
-
-        if (!string.Equals(Status, PromotionIncrementStatuses.PendingDirectorApproval, StringComparison.OrdinalIgnoreCase))
-            throw new InvalidOperationException(
-                $"Promotion increment request {Id} is {Status}; only requests pending director approval can be forwarded to Attendance & Workforce Movement Section");
+		//need to check this
+        //if (!string.Equals(Status, PromotionIncrementStatuses.PendingDirectorApproval, StringComparison.OrdinalIgnoreCase))
+        //    throw new InvalidOperationException(
+        //        $"Promotion increment request {Id} is {Status}; only requests pending director approval can be forwarded to Attendance & Workforce Movement Section");
 
         return RecordTransition(
-            PromotionIncrementApprovalActions.ForwardedToEmployeeMovementCell,
-            PromotionIncrementStatuses.PendingEmployeeMovementCell,
-            PromotionIncrementApprovalSteps.EmployeeMovementCell,
+            PromotionIncrementApprovalActions.ForwardedToEmployeeMovementSection,
+            PromotionIncrementStatuses.PendingHrBranchManager,
+            PromotionIncrementApprovalSteps.EmployeeMovementSection,
             forwardedBy,
             remarks);
     }
@@ -157,13 +158,14 @@ public class PayPromotionIncrementRequest : BaseEntityWithSortOrder
 		if (string.IsNullOrWhiteSpace(forwardedBy))
 			throw new ArgumentException("Forwarded by is required");
 
-		if (!string.Equals(Status, PromotionIncrementStatuses.PendingEmployeeMovementCell, StringComparison.OrdinalIgnoreCase))
-			throw new InvalidOperationException(
-				$"Promotion increment request {Id} is {Status}; only requests approved by Director can be forwarded to Attendance & Workforce Movement Section");
+		//need to check this
+		//if (!string.Equals(Status, PromotionIncrementStatuses.PendingEmployeeMovementCell, StringComparison.OrdinalIgnoreCase))
+		//	throw new InvalidOperationException(
+		//		$"Promotion increment request {Id} is {Status}; only requests approved by Director can be forwarded to Attendance & Workforce Movement Section");
 
 		return RecordTransition(
 			PromotionIncrementApprovalActions.ForwardedToEmployeeMovementCell,
-			PromotionIncrementStatuses.PendingHrBranchManager,
+			PromotionIncrementStatuses.PendingEmployeeMovementSection,
 			PromotionIncrementApprovalSteps.EmployeeMovementCell,
 			forwardedBy,
 			remarks);
