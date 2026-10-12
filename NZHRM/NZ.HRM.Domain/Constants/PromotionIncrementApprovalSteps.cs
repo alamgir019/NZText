@@ -14,6 +14,7 @@ public static class PromotionIncrementApprovalSteps
 		ProductionFloor => "PRODUCTION_FLOOR",
 		Director => "DIRECTOR",
 		EmployeeMovementCell => "EMPLOYEE_MOVEMENT_CELL",
+        EmployeeMovementSection => "EMPLOYEE_MOVEMENT_SECTION",
 		HrBranchManager => "HR_BRANCH_MANAGER",
 		Ceo => "CEO",
 		_ => throw new ArgumentOutOfRangeException(nameof(stepNo), stepNo, "Unknown promotion increment approval step")
