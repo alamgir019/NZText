@@ -85,7 +85,7 @@ public class LearnerConfirmationCommandHandler
     }
 
     public Task<List<PendingLearnerConfirmationDto>> HandlePending(
-string? status, CancellationToken cancellationToken = default)
+        string? status, CancellationToken cancellationToken = default)
         => _repository.GetPendingAsync(status, cancellationToken);
 
     private static List<string> NormalizeEmployeeIds(List<string> employeeIds)

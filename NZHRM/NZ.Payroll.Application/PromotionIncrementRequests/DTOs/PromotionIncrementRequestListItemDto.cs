@@ -25,4 +25,5 @@ public class PromotionIncrementRequestListItemDto
 	public DateTime? DirectorApprovalDate { get; set; }
 	public DateTime? MovementCellReviewDate { get; set; }
 	public string Status { get; set; } = string.Empty;
+	public List<PromotionIncrementApprovalHistoryDto> ApprovalHistories { get; set; } = new();
 }

@@ -97,6 +97,7 @@ public class PromotionIncrementRequestRepository : IPromotionIncrementRequestRep
 	{
 		var requests = await _context.PayPromotionIncrementRequests
 			.AsNoTracking()
+			.Include(request => request.ApprovalHistories)
 			.Where(request => request.IsActive && request.Status == status)
 			.ToListAsync(cancellationToken);
 
@@ -229,7 +230,23 @@ public class PromotionIncrementRequestRepository : IPromotionIncrementRequestRep
 					Reason = request.Reason,
 					DirectorApprovalDate = GetActionDate(requestId, PromotionIncrementApprovalActions.ApprovedByDirector),
 					MovementCellReviewDate = GetActionDate(requestId, PromotionIncrementApprovalActions.ReviewedByEmployeeMovementCell),
-					Status = request.Status
+					Status = request.Status,
+					ApprovalHistories = request.ApprovalHistories
+						.OrderBy(history => history.StepNo)
+						.ThenBy(history => history.ActionOn)
+						.Select(history => new PromotionIncrementApprovalHistoryDto
+						{
+							Id = history.Id,
+							StepNo = history.StepNo,
+							StepName = history.StepName,
+							Action = history.Action,
+							FromStatus = history.FromStatus,
+							ToStatus = history.ToStatus,
+							ActionBy = history.ActionBy,
+							ActionOn = history.ActionOn,
+							Remarks = history.Remarks
+						})
+						.ToList()
 				};
 			})
 			.ToList();

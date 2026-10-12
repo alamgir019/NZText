@@ -362,37 +362,58 @@ public class LearnerConfirmationRepository : ILearnerConfirmationRepository
     {
         status = string.IsNullOrEmpty(status) ? LearnerConfirmationStatus.Forwarded.ToString() : status;
 
-        return await (
-            from request in _context.HrmLearnerConfirmationRequests.AsNoTracking()
-            join employee in _context.HrmEmployeeMasters.AsNoTracking()
-                on request.EmployeeId equals employee.Id
-            join employment in _context.HrmEmployeeEmployments.AsNoTracking()
-                on employee.Id equals employment.EmployeeId
-            join payroll in _context.HrmEmployeePayrolls.AsNoTracking()
-                on employee.Id equals payroll.EmployeeId
-            where request.Status.ToLower() == status.ToLower()
-            orderby request.ProbationCompletedOn, employee.EmployeeCode
-            select new PendingLearnerConfirmationDto
+        var pendingRequests = await _context.HrmLearnerConfirmationRequests
+            .AsNoTracking()
+            .Include(request => request.Employee)!.ThenInclude(employee => employee!.Employment)!
+                .ThenInclude(employment => employment!.Department)
+            .Include(request => request.Employee)!.ThenInclude(employee => employee!.Employment)!
+                .ThenInclude(employment => employment!.Designation)
+            .Include(request => request.Employee)!.ThenInclude(employee => employee!.Payroll)
+            .Include(request => request.ApprovalHistories)
+            .Where(request => request.Status.ToLower() == status.ToLower())
+            .OrderBy(request => request.ProbationCompletedOn)
+            .ThenBy(request => request.Employee!.EmployeeCode)
+            .ToListAsync(cancellationToken);
+
+        return pendingRequests
+            .Select(request => new PendingLearnerConfirmationDto
             {
                 RequestId = request.Id,
                 EmployeeId = request.EmployeeId,
-                EmployeeCode = employee.EmployeeCode,
-                EmployeeName = employee.EmployeeName,
-                DepartmentName = employment.Department != null ? employment.Department.DepartmentName : string.Empty,
-                Designation = employment.Designation != null ? employment.Designation.DesignationName : string.Empty,
-                ProbationPeriod = employment.ProbationPeriod,
+                EmployeeCode = request.Employee?.EmployeeCode ?? string.Empty,
+                EmployeeName = request.Employee?.EmployeeName ?? string.Empty,
+                DepartmentName = request.Employee?.Employment?.Department?.DepartmentName ?? string.Empty,
+                Designation = request.Employee?.Employment?.Designation?.DesignationName ?? string.Empty,
+                ProbationPeriod = request.Employee?.Employment?.ProbationPeriod,
                 DateOfJoining = request.DateOfJoining,
                 ProbationCompletedOn = request.ProbationCompletedOn,
                 CurrentGrossSalary = request.CurrentGrossSalary,
                 StandardGrossSalary = request.StandardGrossSalary,
                 AdjustmentAmount = request.AdjustmentAmount,
-                CurrentBasicSalary = payroll.BasicSalary ?? 0m,
-                AdjustedBasicSalary = (payroll.BasicSalary ?? 0m) + request.AdjustmentAmount,
+                CurrentBasicSalary = request.Employee?.Payroll?.BasicSalary ?? 0m,
+                AdjustedBasicSalary = (request.Employee?.Payroll?.BasicSalary ?? 0m) + request.AdjustmentAmount,
                 EffectiveFrom = request.ProbationCompletedOn,
                 Status = request.Status,
                 ForwardedBy = request.ForwardedBy,
-                ForwardedOn = request.ForwardedOn
-            }).ToListAsync(cancellationToken);
+                ForwardedOn = request.ForwardedOn,
+                ApprovalHistories = request.ApprovalHistories
+                    .OrderBy(history => history.StepNo)
+                    .ThenBy(history => history.ActionOn)
+                    .Select(history => new LearnerConfirmationApprovalHistoryDto
+                    {
+                        Id = history.Id,
+                        StepNo = history.StepNo,
+                        StepName = history.StepName,
+                        Action = history.Action,
+                        FromStatus = history.FromStatus,
+                        ToStatus = history.ToStatus,
+                        ActionBy = history.ActionBy,
+                        ActionOn = history.ActionOn,
+                        Remarks = history.Remarks
+                    })
+                    .ToList()
+            })
+            .ToList();
     }
 
     private async Task<decimal?> GetStandardWorkerGrossSalaryAsync(string? gradeId, CancellationToken cancellationToken)
