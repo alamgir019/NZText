@@ -151,10 +151,14 @@ public class PromotionIncrementRequestRepository : IPromotionIncrementRequestRep
 		var trackedActions = new[]
 		{
 			PromotionIncrementApprovalActions.ApprovedByDirector,
-			PromotionIncrementApprovalActions.ReviewedByEmployeeMovementCell
-		};
+			PromotionIncrementApprovalActions.ReviewedByEmployeeMovementCell,
+			PromotionIncrementApprovalActions.ForwardedToEmployeeMovementCell,
+			PromotionIncrementApprovalActions.ForwardedToHrBranchManager,
+			PromotionIncrementApprovalActions.ForwardedToCeo,
+			PromotionIncrementApprovalActions.Rejected
+        };
 
-		var actionDates = (await _context.PayPromotionIncrementApprovalHistories
+    var actionDates = (await _context.PayPromotionIncrementApprovalHistories
 				.AsNoTracking()
 				.Where(history =>
 					requestIds.Contains(history.PromotionIncrementRequestId.Trim()) &&
