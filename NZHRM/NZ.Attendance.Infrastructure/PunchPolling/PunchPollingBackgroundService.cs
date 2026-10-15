@@ -168,7 +168,7 @@ public class PunchPollingBackgroundService : BackgroundService
                     var dbContext = scope.ServiceProvider.GetRequiredService<AttendanceDbContext>();
                     dbContext.AttDeviceSyncLogs.Add(new AttDeviceSyncLog
                     {
-                        DeviceId = deviceId,
+                        DeviceId = string.IsNullOrEmpty(deviceId) ? "10000000000000000000000001" : deviceId,
                         SyncStartTime = DateTime.UtcNow,
                         SyncEndTime = DateTime.UtcNow,
                         SyncStatus = "Failed",

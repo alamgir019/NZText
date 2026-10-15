@@ -3,13 +3,10 @@ using NZ.Attendance.Infrastructure.Persistence;
 using NZ.Shared.Contracts.Attendance;
 using NZ.Attendance.Infrastructure.Contracts;
 using NZ.HRM.Domain.Entities;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 
 namespace NZ.Attendance.Infrastructure.Services;
 
-public class AttendanceSummaryQueryService : IAttendanceSummaryQuery, NZ.Attendance.Infrastructure.Contracts.IAttendanceDashboardQuery
+public class AttendanceSummaryQueryService : IAttendanceSummaryQuery, IAttendanceDashboardQuery
 {
     private readonly AttendanceDbContext _context;
 
