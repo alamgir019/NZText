@@ -56,8 +56,10 @@ namespace NZ.Attendance.Application.OvertimeRequests.Handlers
                 // Use hours only: compare requested OT hours to available OT balance in hours
                 var requestedHours = (decimal)ts.TotalHours;
                 var availableHours = await _overtimeRequestRepository.GetBalanceAsync(emp.EmployeeId, cancellationToken) ?? 0m;
-                if (requestedHours > availableHours)
-                    throw new ArgumentException($"Requested OT hours ({requestedHours:F2}) exceed available overtime balance ({availableHours:F2}) for employee {emp.EmployeeId}");
+                var pendingHours = await _overtimeRequestRepository.GetPendingRequestedHoursAsync(emp.EmployeeId, cancellationToken);
+                var effectiveAvailable = availableHours - pendingHours;
+                if (requestedHours > effectiveAvailable)
+                    throw new ArgumentException($"Requested OT hours ({requestedHours:F2}) exceed available overtime balance ({availableHours:F2}) considering pending requests ({pendingHours:F2}) for employee {emp.EmployeeId}");
 
                 dto.Employees.Add(new OvertimeEmployeeDto
                 {

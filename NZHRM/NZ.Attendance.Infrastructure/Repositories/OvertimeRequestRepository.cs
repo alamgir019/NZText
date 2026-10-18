@@ -27,6 +27,28 @@ namespace NZ.Attendance.Infrastructure.Repositories
             return entity?.BalanceHours;
         }
 
+        public async Task<decimal> GetPendingRequestedHoursAsync(string employeeId, CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrWhiteSpace(employeeId)) return 0m;
+
+            // Fetch pending items for the employee and sum their hours in memory
+            var pendingItems = await _context.AttOtRequestItems
+                .AsNoTracking()
+                .Where(i => i.EmployeeId == employeeId && i.Status == "Pending")
+                .ToListAsync(cancellationToken);
+
+            decimal total = 0m;
+            foreach (var it in pendingItems)
+            {
+                if (it.OtHours != null)
+                {
+                    total += (decimal)it.OtHours.TotalHours;
+                }
+            }
+
+            return total;
+        }
+
         public async Task<string> CreateAsync(OvertimeRequestDto dto)
         {
             // Create a request id and insert one item row per employee with duplicated request header fields.
@@ -238,11 +260,66 @@ namespace NZ.Attendance.Infrastructure.Repositories
 
             foreach (var command in commands)
             {
-                var items = await _context.AttOtRequestItems.FirstOrDefaultAsync(i => i.Id == command.OvertimeRequestId, cancellationToken);
-                if (items == null) throw new KeyNotFoundException($"Overtime request {command.OvertimeRequestId} not found");
-                items.Status = command.Approved ? "Approved" : "Rejected";
-                items.ApprovedBy = command.ApprovedBy ?? string.Empty;
-                items.ApprovalDate = DateTime.UtcNow;
+                var item = await _context.AttOtRequestItems.FirstOrDefaultAsync(i => i.Id == command.OvertimeRequestId, cancellationToken);
+                if (item == null) throw new KeyNotFoundException($"Overtime request {command.OvertimeRequestId} not found");
+
+                var previousStatus = item.Status;
+                var newStatus = command.Approved ? "Approved" : "Rejected";
+
+                // Update item approval fields
+                item.Status = newStatus;
+                item.ApprovedBy = command.ApprovedBy ?? string.Empty;
+                item.ApprovalDate = DateTime.UtcNow;
+
+                // If status changed, adjust OT balance accordingly
+                if (!string.Equals(previousStatus, newStatus, StringComparison.OrdinalIgnoreCase))
+                {
+                    // compute hours to adjust (TotalHours)
+                    var hours = (decimal)item.OtHours.TotalHours;
+
+                    // If newly approved, subtract hours from balance; if moving from Approved->not approved, add back
+                    if (string.Equals(newStatus, "Approved", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var balance = await _context.AttOtBalances.FirstOrDefaultAsync(b => b.EmployeeId == item.EmployeeId, cancellationToken);
+                        if (balance == null)
+                        {
+                            balance = new AttOtBalance
+                            {
+                                EmployeeId = item.EmployeeId,
+                                BalanceHours = 0m - hours,
+                                UpdatedOn = DateTime.UtcNow
+                            };
+                            _context.AttOtBalances.Add(balance);
+                        }
+                        else
+                        {
+                            balance.BalanceHours -= hours;
+                            balance.UpdatedOn = DateTime.UtcNow;
+                            _context.AttOtBalances.Update(balance);
+                        }
+                    }
+                    else if (string.Equals(previousStatus, "Approved", StringComparison.OrdinalIgnoreCase) && !string.Equals(newStatus, "Approved", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // previously approved but now un-approved (rejected/rollback) -> restore hours
+                        var balance = await _context.AttOtBalances.FirstOrDefaultAsync(b => b.EmployeeId == item.EmployeeId, cancellationToken);
+                        if (balance == null)
+                        {
+                            balance = new AttOtBalance
+                            {
+                                EmployeeId = item.EmployeeId,
+                                BalanceHours = hours,
+                                UpdatedOn = DateTime.UtcNow
+                            };
+                            _context.AttOtBalances.Add(balance);
+                        }
+                        else
+                        {
+                            balance.BalanceHours += hours;
+                            balance.UpdatedOn = DateTime.UtcNow;
+                            _context.AttOtBalances.Update(balance);
+                        }
+                    }
+                }
             }
             await _context.SaveChangesAsync();
         }

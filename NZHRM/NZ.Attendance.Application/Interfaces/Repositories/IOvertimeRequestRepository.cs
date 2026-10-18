@@ -23,6 +23,11 @@ namespace NZ.Attendance.Application.Interfaces.Repositories
         /// Get the available overtime balance in hours for an employee. Returns null when no record exists.
         /// </summary>
         Task<decimal?> GetBalanceAsync(string employeeId, CancellationToken cancellationToken = default);
+        /// <summary>
+        /// Get total pending requested OT hours for the given employee (sum of OtHours where status is pending).
+        /// Returns 0 when no pending requests exist.
+        /// </summary>
+        Task<decimal> GetPendingRequestedHoursAsync(string employeeId, CancellationToken cancellationToken = default);
         // Update approval for a specific item (employee-level)
         Task UpdateEmployeeApprovalAsync(string itemId, string approvedBy, bool approved = true);
         // Get employees assigned to a shift (via shift roster) with employment/designation/department info
