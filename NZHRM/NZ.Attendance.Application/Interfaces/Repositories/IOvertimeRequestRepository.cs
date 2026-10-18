@@ -19,6 +19,10 @@ namespace NZ.Attendance.Application.Interfaces.Repositories
             CancellationToken cancellationToken = default);
 
         Task ApproveAsync(List<ApproveOvertimeRequestCommand> commands, CancellationToken cancellationToken = default);
+        /// <summary>
+        /// Get the available overtime balance in hours for an employee. Returns null when no record exists.
+        /// </summary>
+        Task<decimal?> GetBalanceAsync(string employeeId, CancellationToken cancellationToken = default);
         // Update approval for a specific item (employee-level)
         Task UpdateEmployeeApprovalAsync(string itemId, string approvedBy, bool approved = true);
         // Get employees assigned to a shift (via shift roster) with employment/designation/department info

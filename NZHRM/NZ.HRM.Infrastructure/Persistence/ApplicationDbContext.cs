@@ -289,6 +289,7 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<AttProcessedPunch>().ToTable("processed_punches", "attendance");
             modelBuilder.Entity<AttShiftRoster>().ToTable("shift_roster", "attendance");
             modelBuilder.Entity<AttOtAuthorization>().ToTable("ot_authorization", "attendance");
+            modelBuilder.Entity<AttOtBalance>().ToTable("ot_balance", "attendance");
             modelBuilder.Entity<AttProcessedAttendance>().ToTable("processed_attendance", "attendance");
             modelBuilder.Entity<AttAttendanceException>().ToTable("attendance_exception", "attendance");
             modelBuilder.Entity<AttAttendanceAdjustment>().ToTable("attendance_adjustment", "attendance");

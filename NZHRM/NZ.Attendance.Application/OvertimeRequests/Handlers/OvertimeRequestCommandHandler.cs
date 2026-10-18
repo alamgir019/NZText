@@ -11,7 +11,6 @@ namespace NZ.Attendance.Application.OvertimeRequests.Handlers
     {
         private readonly IOvertimeRequestRepository _overtimeRequestRepository;
         private readonly IEmployeeMasterRepository _employeeMasterRepository;
-
         public OvertimeRequestCommandHandler(
             IOvertimeRequestRepository overtimeRequestRepository,
             IEmployeeMasterRepository employeeMasterRepository)
@@ -53,6 +52,12 @@ namespace NZ.Attendance.Application.OvertimeRequests.Handlers
 
                 if (ts <= TimeSpan.Zero)
                     throw new ArgumentException($"OT hours must be greater than 00:00 for employee {emp.EmployeeId}");
+
+                // Use hours only: compare requested OT hours to available OT balance in hours
+                var requestedHours = (decimal)ts.TotalHours;
+                var availableHours = await _overtimeRequestRepository.GetBalanceAsync(emp.EmployeeId, cancellationToken) ?? 0m;
+                if (requestedHours > availableHours)
+                    throw new ArgumentException($"Requested OT hours ({requestedHours:F2}) exceed available overtime balance ({availableHours:F2}) for employee {emp.EmployeeId}");
 
                 dto.Employees.Add(new OvertimeEmployeeDto
                 {

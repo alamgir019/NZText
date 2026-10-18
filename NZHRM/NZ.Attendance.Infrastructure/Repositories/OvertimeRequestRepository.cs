@@ -16,6 +16,17 @@ namespace NZ.Attendance.Infrastructure.Repositories
             _context = context;
         }
 
+        public async Task<decimal?> GetBalanceAsync(string employeeId, CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrWhiteSpace(employeeId)) return null;
+
+            var entity = await _context.AttOtBalances
+                .AsNoTracking()
+                .FirstOrDefaultAsync(b => b.EmployeeId == employeeId, cancellationToken);
+
+            return entity?.BalanceHours;
+        }
+
         public async Task<string> CreateAsync(OvertimeRequestDto dto)
         {
             // Create a request id and insert one item row per employee with duplicated request header fields.

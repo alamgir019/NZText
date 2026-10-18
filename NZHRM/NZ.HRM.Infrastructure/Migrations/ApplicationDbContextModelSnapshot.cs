@@ -578,6 +578,48 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.ToTable("ot_authorization", "attendance");
                 });
 
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.AttOtBalance", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("CHAR(26)")
+                        .HasColumnName("Id");
+
+                    b.Property<decimal>("BalanceHours")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("CHAR(26)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("ot_balance", "attendance");
+                });
+
             modelBuilder.Entity("NZ.HRM.Domain.Entities.AttOtRequestItem", b =>
                 {
                     b.Property<string>("Id")
@@ -7516,6 +7558,17 @@ namespace NZ.HRM.Infrastructure.Migrations
                 });
 
             modelBuilder.Entity("NZ.HRM.Domain.Entities.AttOtAuthorization", b =>
+                {
+                    b.HasOne("NZ.HRM.Domain.Entities.HrmEmployeeMaster", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("NZ.HRM.Domain.Entities.AttOtBalance", b =>
                 {
                     b.HasOne("NZ.HRM.Domain.Entities.HrmEmployeeMaster", "Employee")
                         .WithMany()

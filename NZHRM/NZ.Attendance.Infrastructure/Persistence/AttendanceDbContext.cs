@@ -24,6 +24,7 @@ public class AttendanceDbContext : DbContext
     public DbSet<AttInsideFactoryStatus> AttInsideFactoryStatuses => Set<AttInsideFactoryStatus>();
     public DbSet<AttWeeklyOffPattern> AttWeeklyOffPatterns => Set<AttWeeklyOffPattern>();
     public DbSet<AttOtRequestItem> AttOtRequestItems => Set<AttOtRequestItem>();
+    public DbSet<AttOtBalance> AttOtBalances => Set<AttOtBalance>();
 
     // Cross-module read-only references (owned by HRM module)
     public DbSet<HrmEmployeeMaster> HrmEmployeeMasters => Set<HrmEmployeeMaster>();
