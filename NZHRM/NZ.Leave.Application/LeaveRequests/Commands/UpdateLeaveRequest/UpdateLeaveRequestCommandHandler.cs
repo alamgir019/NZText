@@ -1,15 +1,18 @@
 using NZ.Leave.Application.Interfaces.Repositories;
 using NZ.Leave.Application.LeaveRequests.Enums;
+using NZ.Shared.Contracts.Leave;
 
 namespace NZ.Leave.Application.LeaveRequests.Commands.UpdateLeaveRequest
 {
     public class UpdateLeaveRequestCommandHandler
     {
         private readonly ILeaveRequestRepository _repository;
+        private readonly ILeaveBalanceQuery _leaveBalanceQuery;
 
-        public UpdateLeaveRequestCommandHandler(ILeaveRequestRepository repository)
+        public UpdateLeaveRequestCommandHandler(ILeaveRequestRepository repository, ILeaveBalanceQuery leaveBalanceQuery)
         {
             _repository = repository;
+            _leaveBalanceQuery = leaveBalanceQuery;
         }
 
         public async Task<UpdateLeaveRequestResult> Handle(UpdateLeaveRequestCommand command, CancellationToken cancellationToken = default)
@@ -46,7 +49,13 @@ namespace NZ.Leave.Application.LeaveRequests.Commands.UpdateLeaveRequest
             if (command.Reason.Length > 250)
                 return (flowControl: false, value: Error("VAL-008", "Reason length cannot exceed 250 characters."));
 
-            var totalDays = CreateLeaveRequests.CreateLeaveRequestsCommandHandler.CalculateTotalDays(command.FromDate, command.ToDate);
+            var totalDays = await _leaveBalanceQuery.CalculateLeaveDaysAsync(
+                existing.EmployeeId,
+                command.FromDate,
+                command.ToDate,
+                cancellationToken);
+
+            //var totalDays = CreateLeaveRequests.CreateLeaveRequestsCommandHandler.CalculateTotalDays(command.FromDate, command.ToDate);
             if (totalDays <= 0)
                 return (flowControl: false, value: Error("VAL-009", "Total Days must be greater than 0."));
 
@@ -55,8 +64,8 @@ namespace NZ.Leave.Application.LeaveRequests.Commands.UpdateLeaveRequest
             existing.ToDate = command.ToDate;
             existing.TotalDays = totalDays;
             existing.Reason = command.Reason;
-            existing.ApprovedBy = command.ApprovedBy;
-            existing.ApprovedDate = DateTime.UtcNow;
+            existing.ActionBy = command.ApprovedBy;
+            existing.ActionDate = DateTime.UtcNow;
             existing.Status = command.ApprovStatus ?? existing.Status;
 
             await _repository.UpdateAsync(existing, cancellationToken);

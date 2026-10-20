@@ -150,6 +150,8 @@ namespace NZ.Leave.Infrastructure.Repositories
             if (leaveType == null)
                 throw new KeyNotFoundException($"Leave type {dto.LeaveType} not found");
 
+            var wasApproved = string.Equals(entity.LeaveStatus, "APPROVED", StringComparison.OrdinalIgnoreCase);
+
             entity.LeaveTypeId = leaveType.Id;
             entity.FromDate = dto.FromDate;
             entity.ToDate = dto.ToDate;
@@ -157,7 +159,7 @@ namespace NZ.Leave.Infrastructure.Repositories
             entity.LeaveReason = dto.Reason;
             entity.LeaveStatus = dto.Status;
             // set updated metadata
-            entity.UpdatedBy = dto.ApprovedBy ?? dto.CreatedBy ?? entity.UpdatedBy;
+            entity.UpdatedBy = dto.ActionBy ?? dto.CreatedBy ?? entity.UpdatedBy;
             entity.UpdatedOn = DateTime.UtcNow;
 
             // Insert approval history record for this update
@@ -169,13 +171,36 @@ namespace NZ.Leave.Infrastructure.Repositories
             {
                 LeaveApplicationId = entity.Id,
                 WorkflowStepNo = nextStepNo,
-                ApproverId = dto.ApprovedBy ?? dto.CreatedBy,
+                ApproverId = dto.ActionBy ?? dto.CreatedBy,
                 ActionTaken = dto.Status ?? "Updated",
                 Remarks = dto.Reason ?? string.Empty,
-                CreatedBy = dto.ApprovedBy ?? dto.CreatedBy ?? string.Empty
+                CreatedBy = dto.ActionBy ?? dto.CreatedBy ?? string.Empty
             };
 
             _context.LevLeaveApprovalHistories.Add(history);
+
+            var isApproved = string.Equals(entity.LeaveStatus, "APPROVED", StringComparison.OrdinalIgnoreCase);
+            if (isApproved && !wasApproved)
+            {
+                var currentYearId = await _context.LevLeaveYears
+                    .AsNoTracking()
+                    .Where(y => y.IsCurrentYear)
+                    .Select(y => y.Id)
+                    .FirstOrDefaultAsync(cancellationToken);
+
+                var leaveBalanceQuery = _context.LevLeaveBalances
+                    .Where(b => b.EmployeeId == entity.EmployeeId && b.LeaveTypeId == leaveType.Id);
+
+                if (!string.IsNullOrWhiteSpace(currentYearId))
+                    leaveBalanceQuery = leaveBalanceQuery.Where(b => b.YearId == currentYearId);
+
+                var leaveBalance = await leaveBalanceQuery.FirstOrDefaultAsync(cancellationToken);
+                if (leaveBalance != null)
+                {
+                    leaveBalance.AvailedLeave += dto.TotalDays;
+                    leaveBalance.ClosingBalance -= dto.TotalDays;
+                }
+            }
 
             await _context.SaveChangesAsync(cancellationToken);
         }
@@ -221,8 +246,8 @@ namespace NZ.Leave.Infrastructure.Repositories
             Status = entity.LeaveStatus ?? string.Empty,
             CreatedBy = entity.CreatedBy,
             CreatedDate = entity.CreatedOn,
-            ApprovedBy = entity.UpdatedBy,
-            ApprovedDate = entity.UpdatedOn
+            ActionBy = entity.UpdatedBy,
+            ActionDate = entity.UpdatedOn
         };
     }
 }

@@ -6,6 +6,16 @@ public interface ILeaveBalanceQuery
         List<string> employeeIds,
         CancellationToken cancellationToken = default);
 
+    Task<IReadOnlyList<EmployeePendingLeaveResult>> GetPendingLeavesAsync(
+        List<string> employeeIds,
+        CancellationToken cancellationToken = default);
+
+    Task<decimal> CalculateLeaveDaysAsync(
+        string employeeId,
+        DateOnly fromDate,
+        DateOnly toDate,
+        CancellationToken cancellationToken = default);
+
     Task<LeaveBalanceResult?> GetBalanceAsync(
         string employeeId,
         string leaveTypeCode,

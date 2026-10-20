@@ -7,6 +7,7 @@ namespace NZ.Leave.Infrastructure.Services;
 public class LeaveBalanceQueryService : ILeaveBalanceQuery
 {
     private readonly LeaveDbContext _context;
+    private const string PendingStatus = "PENDING";
 
     public LeaveBalanceQueryService(LeaveDbContext context)
     {
@@ -89,6 +90,73 @@ public class LeaveBalanceQueryService : ILeaveBalanceQuery
         }
 
         return results;
+    }
+
+    public async Task<IReadOnlyList<EmployeePendingLeaveResult>> GetPendingLeavesAsync(
+        List<string> employeeIds,
+        CancellationToken cancellationToken = default)
+    {
+        if (employeeIds.Count == 0)
+            return Array.Empty<EmployeePendingLeaveResult>();
+
+        var pendingLeaves = await (
+            from application in _context.LevLeaveApplications.AsNoTracking()
+            join leaveType in _context.LevLeaveTypes.AsNoTracking()
+                on application.LeaveTypeId equals leaveType.Id
+            where employeeIds.Contains(application.EmployeeId)
+                  && application.LeaveStatus != null
+                  && application.LeaveStatus.ToUpper() == PendingStatus
+            group application by new { application.EmployeeId, leaveType.LeaveCode } into g
+            select new EmployeePendingLeaveResult(
+                g.Key.EmployeeId,
+                g.Key.LeaveCode,
+                g.Sum(x => x.TotalDays)))
+            .ToListAsync(cancellationToken);
+
+        return pendingLeaves;
+    }
+
+    public async Task<decimal> CalculateLeaveDaysAsync(
+        string employeeId,
+        DateOnly fromDate,
+        DateOnly toDate,
+        CancellationToken cancellationToken = default)
+    {
+        if (toDate < fromDate)
+            return 0m;
+
+        var holidayDates = await _context.LevHolidayCalendars
+            .AsNoTracking()
+            .Where(h => h.IsActive && h.HolidayDate >= fromDate && h.HolidayDate <= toDate)
+            .Select(h => h.HolidayDate)
+            .ToHashSetAsync(cancellationToken);
+
+        var weeklyOffRaw = await _context.HrmEmployeeEmployments
+            .AsNoTracking()
+            .Where(e => e.EmployeeId == employeeId)
+            .Select(e => e.WeeklyOffDay)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        DayOfWeek? weeklyOffDay = null;
+        if (!string.IsNullOrWhiteSpace(weeklyOffRaw)
+            && Enum.TryParse<DayOfWeek>(weeklyOffRaw, true, out var parsedWeeklyOffDay))
+        {
+            weeklyOffDay = parsedWeeklyOffDay;
+        }
+
+        decimal leaveDays = 0m;
+        for (var date = fromDate; date <= toDate; date = date.AddDays(1))
+        {
+            if (holidayDates.Contains(date))
+                continue;
+
+            if (weeklyOffDay.HasValue && date.DayOfWeek == weeklyOffDay.Value)
+                continue;
+
+            leaveDays += 1m;
+        }
+
+        return leaveDays;
     }
 
     public async Task<LeaveBalanceResult?> GetBalanceAsync(

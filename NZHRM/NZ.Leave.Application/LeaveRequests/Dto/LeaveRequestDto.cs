@@ -15,8 +15,8 @@ namespace NZ.Leave.Application.LeaveRequests.Dto
         public string Status { get; set; } = string.Empty;
         public string? CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
-        public string? ApprovedBy { get; set; }
-        public DateTime? ApprovedDate { get; set; }
+        public string? ActionBy { get; set; }
+        public DateTime? ActionDate { get; set; }
         public string? ForwardedBy { get; set; }
         public DateTime? ForwardedDate { get; set; }
 

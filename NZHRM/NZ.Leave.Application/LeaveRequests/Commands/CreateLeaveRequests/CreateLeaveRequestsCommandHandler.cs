@@ -54,7 +54,21 @@ namespace NZ.Leave.Application.LeaveRequests.Commands.CreateLeaveRequests
 
             foreach (var req in command.Requests)
             {
-                var days = CalculateTotalDays(req.FromDate, req.ToDate);
+                var days = await _leaveBalanceQuery.CalculateLeaveDaysAsync(
+                    req.EmployeeId,
+                    req.FromDate,
+                    req.ToDate,
+                    cancellationToken);
+
+                if (days <= 0)
+                {
+                    return new CreateLeaveRequestsResult
+                    {
+                        Success = false,
+                        ErrorCode = "VAL-009",
+                        Message = "Total Days must be greater than 0."
+                    };
+                }
 
                 // VAL-006: Validate leave balance for the selected leave type
                 var balance = await _leaveBalanceQuery.GetBalanceAsync(req.EmployeeId, req.LeaveType, req.FromDate.Year, cancellationToken);

@@ -30,9 +30,19 @@ public class GetEmployeeBasicInformationQueryHandler
 		if (employee == null)
 			return null;
 
+		var employeeIds = employee.Select(e => e.Id).ToList();
+
 		var leaveBalances = await _leaveBalanceQuery.GetAllBalancesAsync(
-			employee.Select(e => e.Id).ToList(),
+			employeeIds,
 			cancellationToken);
+
+		var pendingLeaves = await _leaveBalanceQuery.GetPendingLeavesAsync(
+			employeeIds,
+			cancellationToken);
+
+		var pendingLeaveLookup = pendingLeaves.ToDictionary(
+			x => (x.EmployeeId, x.LeaveCode),
+			x => x.PendingDays);
 
 		return employee.Select( x => new BasicEmployeeInformationDto
 		{
@@ -45,7 +55,10 @@ public class GetEmployeeBasicInformationQueryHandler
 				{
 					LeaveCode = leave.LeaveCode,
 					LeaveName = leave.LeaveName,
-					ClosingBalance = leave.ClosingBalance,
+					ClosingBalance = leave.ClosingBalance -
+						(pendingLeaveLookup.TryGetValue((x.Id, leave.LeaveCode), out var pendingDays)
+							? pendingDays
+							: 0m),
 					EarnedLeave = leave.EarnedLeave,
 					AccruedLeave = leave.EarnedLeaveAccrued
                 }).ToList()
