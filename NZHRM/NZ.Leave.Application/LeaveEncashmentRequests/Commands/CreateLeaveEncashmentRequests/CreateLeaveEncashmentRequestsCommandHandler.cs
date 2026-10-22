@@ -1,6 +1,6 @@
 using NZ.Leave.Application.Interfaces.Repositories;
 using NZ.Leave.Application.LeaveEncashmentRequests.Dto;
-using NZ.Leave.Application.LeaveEncashmentRequests.Enums;
+using NZ.Leave.Domain.Constants;
 using NZ.Shared.Contracts.Leave;
 
 namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.CreateLeaveEncashmentRequests
@@ -40,18 +40,26 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.CreateLeaveEncas
             foreach (var req in command.Requests)
             {
                 // VAL-BALANCE: Validate leave balance for the selected leave type
-                var balance = await _leaveBalanceQuery.GetBalanceAsync(req.EmployeeId, req.LeaveType, req.EncashDate.Year, cancellationToken);
-                if (balance == null)
-                {
-                    return new CreateLeaveEncashmentRequestsResult
-                    {
-                        Success = false,
-                        ErrorCode = "VAL-BALANCE",
-                        Message = $"Employee {req.EmployeeId} is absent in Leave Balance."
-                    };
-                }
+                //var balance = await _leaveBalanceQuery.GetBalanceAsync(req.EmployeeId, req.LeaveType, req.EncashDate.Year, cancellationToken);
+                //if (balance == null)
+                //{
+                //    return new CreateLeaveEncashmentRequestsResult
+                //    {
+                //        Success = false,
+                //        ErrorCode = "VAL-BALANCE",
+                //        Message = $"Employee {req.EmployeeId} is absent in Leave Balance."
+                //    };
+                //}
+                // dummy
+                //req.MaxEncashable = 64;
+                var pendingEncashmentDays = await _leaveBalanceQuery.GetPendingEncashmentDaysAsync(
+                    req.EmployeeId,
+                    req.LeaveType,
+                    cancellationToken);
 
-                if (balance.Balance < req.EncashDays)
+                var availableBalance = req.MaxEncashable - pendingEncashmentDays;
+
+                if (availableBalance < req.EncashDays)
                 {
                     return new CreateLeaveEncashmentRequestsResult
                     {
@@ -69,7 +77,7 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.CreateLeaveEncas
                     EncashDate = req.EncashDate,
                     EncashDays = req.EncashDays,
                     Reason = req.Reason,
-                    Instalment = req.Instalment,
+                    Installment = req.Installment,
                     Status = LeaveEncashmentRequestStatus.Pending,
                     FromDate = req.FromDate,
                     ToDate = req.ToDate,

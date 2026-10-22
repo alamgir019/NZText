@@ -16,6 +16,11 @@ public interface ILeaveBalanceQuery
         DateOnly toDate,
         CancellationToken cancellationToken = default);
 
+    Task<decimal> GetPendingEncashmentDaysAsync(
+        string employeeId,
+        string leaveTypeCode,
+        CancellationToken cancellationToken = default);
+
     Task<LeaveBalanceResult?> GetBalanceAsync(
         string employeeId,
         string leaveTypeCode,
@@ -28,4 +33,5 @@ public record LeaveBalanceResult(
     string LeaveTypeCode,
     decimal TotalEntitled,
     decimal TotalUsed,
-    decimal Balance);
+    decimal Balance,
+    decimal encashedLeave);

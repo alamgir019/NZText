@@ -8,6 +8,8 @@ public class LeaveBalanceQueryService : ILeaveBalanceQuery
 {
     private readonly LeaveDbContext _context;
     private const string PendingStatus = "PENDING";
+    private const string ForwardedStatus = "FORWARDED";
+    private const string ForwardedToHRStatus = "FORWARDED_TO_HR";
 
     public LeaveBalanceQueryService(LeaveDbContext context)
     {
@@ -159,6 +161,27 @@ public class LeaveBalanceQueryService : ILeaveBalanceQuery
         return leaveDays;
     }
 
+    public async Task<decimal> GetPendingEncashmentDaysAsync(
+        string employeeId,
+        string leaveTypeCode,
+        CancellationToken cancellationToken = default)
+    {
+        var pendingEncashmentDays = await (
+            from encashment in _context.LevLeaveEncashments.AsNoTracking()
+            join leaveType in _context.LevLeaveTypes.AsNoTracking()
+                on encashment.LeaveTypeId equals leaveType.Id
+            where encashment.EmployeeId == employeeId
+                  && leaveType.LeaveCode == leaveTypeCode
+                  && encashment.Status != null
+                  && (encashment.Status.ToUpper() == PendingStatus
+                  || encashment.Status.ToUpper() == ForwardedStatus
+                  || encashment.Status.ToUpper() == ForwardedToHRStatus)
+            select encashment.EncashDays)
+            .SumAsync(cancellationToken);
+
+        return pendingEncashmentDays;
+    }
+
     public async Task<LeaveBalanceResult?> GetBalanceAsync(
         string employeeId,
         string leaveTypeCode,
@@ -186,6 +209,7 @@ public class LeaveBalanceQueryService : ILeaveBalanceQuery
             leaveTypeCode,
             totalEntitled,
             totalUsed,
-            balance.ClosingBalance);
+            balance.ClosingBalance,
+            balance.EncashedLeave);
     }
 }

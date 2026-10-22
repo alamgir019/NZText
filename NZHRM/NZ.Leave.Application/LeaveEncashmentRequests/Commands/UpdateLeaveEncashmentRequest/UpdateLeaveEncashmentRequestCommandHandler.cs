@@ -1,5 +1,5 @@
 using NZ.Leave.Application.Interfaces.Repositories;
-using NZ.Leave.Application.LeaveEncashmentRequests.Enums;
+using NZ.Leave.Domain.Constants;
 
 namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.UpdateLeaveEncashmentRequest
 {
@@ -16,6 +16,9 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.UpdateLeaveEncas
         {
             foreach (var command in commands)
             {
+                //dummy
+                //command.ActionTaken = LeaveEncashmentRequestAction.ForwardedToCEO;
+                //command.Status = LeaveEncashmentRequestStatus.Forwarded;
                 var existing = await _repository.GetByIdAsync(command.RequestId, cancellationToken);
                 if (existing == null)
                     return Error("VAL-NOTFOUND", "Leave request not found.");
@@ -45,6 +48,23 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.UpdateLeaveEncas
                 if (command.EncashDays <= 0)
                     return Error("VAL-009", "Total Days must be greater than 0.");
 
+                if (!string.IsNullOrWhiteSpace(command.Status)
+                    && !LeaveEncashmentRequestStatus.All.Contains(command.Status.Trim().ToUpperInvariant(), StringComparer.OrdinalIgnoreCase))
+                {
+                    return Error("VAL-010", "Invalid status value.");
+                }
+
+                if (!string.IsNullOrWhiteSpace(command.ActionTaken)
+                    && !LeaveEncashmentRequestAction.All.Contains(command.ActionTaken.Trim().ToUpperInvariant(), StringComparer.OrdinalIgnoreCase))
+                {
+                    return Error("VAL-013", "Invalid action value.");
+                }
+
+                if (!string.IsNullOrWhiteSpace(command.Status) && string.IsNullOrWhiteSpace(command.ActionTaken))
+                {
+                    return Error("VAL-015", "ActionTaken is required when Status is provided.");
+                }
+
                 existing.LeaveType = command.LeaveType;
                 existing.EmployeeId = command.EmployeeId;
                 existing.EmployeeName = command.EmployeeName;
@@ -57,7 +77,12 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.UpdateLeaveEncas
                 existing.ForwardedDate = command.ForwardedDate.HasValue
                     ? command.ForwardedDate.Value.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc)
                     : existing.ForwardedDate;
-                existing.Status = command.Status ?? existing.Status;
+                existing.Status = string.IsNullOrWhiteSpace(command.Status)
+                    ? existing.Status
+                    : command.Status.Trim().ToUpperInvariant();
+                existing.LatestActionTaken = string.IsNullOrWhiteSpace(command.ActionTaken)
+                    ? existing.LatestActionTaken
+                    : command.ActionTaken.Trim().ToUpperInvariant();
 
                 await _repository.UpdateAsync(existing, cancellationToken);
             }

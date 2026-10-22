@@ -60,9 +60,12 @@ public class LeaveEncashmentRequestsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] string? status, [FromQuery] string? instalment, [FromQuery] string? leaveType, [FromQuery] int page = 1, [FromQuery] int size = 20, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetAll([FromQuery] string? status, [FromQuery] string? actionTaken, [FromQuery] string? instalment, [FromQuery] string? leaveType, [FromQuery] int page = 1, [FromQuery] int size = 20, CancellationToken cancellationToken = default)
     {
-        var query = new GetLeaveEncashmentRequestsQuery { Status = status, Instalment = instalment, LeaveType = leaveType, Page = page, Size = size };
+        //dummy
+        //actionTaken = "FORWARDED-TO-HR";
+        //status = null;
+        var query = new GetLeaveEncashmentRequestsQuery { Status = status, ActionTaken = actionTaken, Instalment = instalment, LeaveType = leaveType, Page = page, Size = size };
         var (items, total) = await _getAllHandler.Handle(query, cancellationToken);
 
         return Ok(new
@@ -156,26 +159,26 @@ public class LeaveEncashmentRequestsController : ControllerBase
         });
     }
 
-    [HttpDelete("{requestId}")]
-    public async Task<IActionResult> Delete(string requestId, CancellationToken cancellationToken)
-    {
-        var result = await _deleteHandler.Handle(new DeleteLeaveEncashmentRequestCommand { RequestId = requestId }, cancellationToken);
+    //[HttpDelete("{requestId}")]
+    //public async Task<IActionResult> Delete(string requestId, CancellationToken cancellationToken)
+    //{
+    //    var result = await _deleteHandler.Handle(new DeleteLeaveEncashmentRequestCommand { RequestId = requestId }, cancellationToken);
 
-        if (!result.Success)
-        {
-            var statusCode = result.ErrorCode == "VAL-NOTFOUND" ? StatusCodes.Status404NotFound : StatusCodes.Status400BadRequest;
-            return StatusCode(statusCode, new
-            {
-                success = false,
-                errorCode = result.ErrorCode,
-                message = result.Message
-            });
-        }
+    //    if (!result.Success)
+    //    {
+    //        var statusCode = result.ErrorCode == "VAL-NOTFOUND" ? StatusCodes.Status404NotFound : StatusCodes.Status400BadRequest;
+    //        return StatusCode(statusCode, new
+    //        {
+    //            success = false,
+    //            errorCode = result.ErrorCode,
+    //            message = result.Message
+    //        });
+    //    }
 
-        return Ok(new
-        {
-            success = true,
-            message = result.Message
-        });
-    }
+    //    return Ok(new
+    //    {
+    //        success = true,
+    //        message = result.Message
+    //    });
+    //}
 }

@@ -1,14 +1,10 @@
+using NZ.Leave.Domain.Constants;
 using NZ.Leave.Domain.Entities;
 
 namespace NZ.Leave.Domain.Services
 {
     public class LeaveEncashmentApprovalWorkflow
     {
-        //private const string PendingStatus = "PENDING";
-        //private const string ForwardedStatus = "FORWARDED";
-        //private const string RejectedStatus = "REJECTED";
-        //private const string ForwardAction = "FORWARD-TO-HR";
-        //private const string RejectAction = "REJECTED";
 
         public LevLeaveEncashmentHistory ApplyAction(
             LevLeaveEncashment entity,
@@ -22,18 +18,10 @@ namespace NZ.Leave.Domain.Services
             if (string.IsNullOrWhiteSpace(processedBy))
                 throw new ArgumentException("Processed by is required.", nameof(processedBy));
 
-            //if (!string.Equals(entity.Status, PendingStatus, StringComparison.OrdinalIgnoreCase))
-            //    throw new InvalidOperationException("Only PENDING requests can be processed.");
+            var nextStatus = ResolveStatusFromAction(action);
+            var normalizedAction = action.Trim().ToUpperInvariant();
 
-            //var normalizedAction = action.Trim().ToUpperInvariant();
-            //var nextStatus = normalizedAction switch
-            //{
-            //    ForwardAction => ForwardedStatus,
-            //    RejectAction => RejectedStatus,
-            //    _ => throw new InvalidOperationException("Unsupported leave encashment action.")
-            //};
-
-            entity.Status = action;
+            entity.Status = nextStatus;
             entity.UpdatedBy = processedBy;
             entity.UpdatedOn = DateTime.UtcNow;
 
@@ -42,11 +30,40 @@ namespace NZ.Leave.Domain.Services
                 EncashmentId = entity.Id,
                 WorkflowStepNo = workflowStepNo,
                 ApproverId = processedBy,
-                ActionTaken = action,
+                ActionTaken = normalizedAction,
                 Remarks = remarks ?? string.Empty,
                 CreatedBy = processedBy,
                 UpdatedBy = processedBy
             };
+        }
+
+        public static string ResolveStatusFromAction(string action)
+        {
+            if (string.IsNullOrWhiteSpace(action))
+                throw new InvalidOperationException("Unsupported leave encashment action.");
+
+            var normalizedAction = action.Trim().ToUpperInvariant();
+
+            if (new[]
+                {
+                    LeaveEncashmentRequestAction.ForwardedToSectionInCharge,
+                    LeaveEncashmentRequestAction.ForwardedToAttendanceCell,
+                    LeaveEncashmentRequestAction.ForwardedToHR,
+                    LeaveEncashmentRequestAction.ForwardedToCEO
+                }.Contains(normalizedAction, StringComparer.OrdinalIgnoreCase))
+            {
+                return LeaveEncashmentRequestStatus.Forwarded;
+            }
+
+            return normalizedAction switch
+            {
+                LeaveEncashmentRequestAction.RejectedFromHR => LeaveEncashmentRequestStatus.Rejected,
+                LeaveEncashmentRequestAction.RejectedFromCEO => LeaveEncashmentRequestStatus.Rejected,
+                LeaveEncashmentRequestStatus.Approved => LeaveEncashmentRequestStatus.Approved,
+                LeaveEncashmentRequestStatus.Cancelled => LeaveEncashmentRequestStatus.Cancelled,
+                LeaveEncashmentRequestStatus.Pending => LeaveEncashmentRequestStatus.Pending,
+                _ => throw new InvalidOperationException("Unsupported leave encashment action.")
+            };
+        }
     }
 }
-    }

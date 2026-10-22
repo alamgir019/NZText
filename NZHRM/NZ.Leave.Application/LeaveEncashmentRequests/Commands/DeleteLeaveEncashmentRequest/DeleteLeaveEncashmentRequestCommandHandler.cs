@@ -1,5 +1,5 @@
 using NZ.Leave.Application.Interfaces.Repositories;
-using NZ.Leave.Application.LeaveEncashmentRequests.Enums;
+using NZ.Leave.Domain.Constants;
 
 namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.DeleteLeaveEncashmentRequest
 {

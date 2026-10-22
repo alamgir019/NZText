@@ -7,12 +7,13 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.CreateLeaveEncas
         public string LeaveType { get; set; } = string.Empty;
         public DateOnly EncashDate { get; set; }
         public decimal EncashDays { get; set; }
+        public decimal MaxEncashable { get; set; }
         public string Reason { get; set; } = string.Empty;
         public string? ForwardedBy { get; set; }
         public DateOnly? ForwardedDate { get; set; }
         public DateOnly? FromDate { get; set; }
         public DateOnly? ToDate { get; set; }
-        public string? Instalment { get; set; }
+        public string? Installment { get; set; }
     }
 
     public class CreateLeaveEncashmentRequestsCommand

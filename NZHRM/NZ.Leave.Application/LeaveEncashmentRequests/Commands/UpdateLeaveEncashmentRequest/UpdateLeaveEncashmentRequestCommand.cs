@@ -13,5 +13,6 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.UpdateLeaveEncas
         public DateOnly? ForwardedDate { get; set; }
         public string? ModifiedBy { get; set; }
         public string? Status { get; set; }
+        public string? ActionTaken { get; set; }
     }
 }

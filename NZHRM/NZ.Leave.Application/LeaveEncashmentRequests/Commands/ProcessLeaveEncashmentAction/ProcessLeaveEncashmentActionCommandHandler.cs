@@ -1,5 +1,6 @@
 using NZ.Leave.Application.Interfaces.Repositories;
-using NZ.Leave.Application.LeaveEncashmentRequests.Enums;
+using NZ.Leave.Domain.Constants;
+using NZ.Leave.Domain.Services;
 
 namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.ProcessLeaveEncashmentAction
 {
@@ -18,8 +19,8 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.ProcessLeaveEnca
                 return Error("INVALID_REQUEST", "Request ID is mandatory.");
 
             var action = command.Action?.Trim().ToUpperInvariant();
-            //if (string.IsNullOrWhiteSpace(action) || !LeaveEncashmentRequestAction.All.Contains(action))
-            //    return Error("INVALID_REQUEST", "Action must be either FORWARD or REJECT.");
+            if (string.IsNullOrWhiteSpace(action) || !LeaveEncashmentRequestAction.All.Contains(action, StringComparer.OrdinalIgnoreCase))
+                return Error("INVALID_REQUEST", "Unsupported action for leave encashment request.");
 
             var existing = await _repository.GetByIdAsync(command.RequestId, cancellationToken);
             if (existing == null)
@@ -45,17 +46,15 @@ namespace NZ.Leave.Application.LeaveEncashmentRequests.Commands.ProcessLeaveEnca
                 processedBy,
                 cancellationToken);
 
-            //var targetStatus = action == LeaveEncashmentRequestAction.ForwardToHR
-            //    ? LeaveEncashmentRequestStatus.Forwarded
-            //    : LeaveEncashmentRequestStatus.Rejected;
+            var targetStatus = LeaveEncashmentApprovalWorkflow.ResolveStatusFromAction(action);
 
             return new ProcessLeaveEncashmentActionResult
             {
                 Success = true,
                 RequestId = command.RequestId,
                 Action = action,
-                Status = action,
-                Message = new[] { LeaveEncashmentRequestAction.ForwardToHR, LeaveEncashmentRequestAction.ForwardToCEO }.Contains(action)
+                Status = targetStatus,
+                Message = targetStatus == LeaveEncashmentRequestStatus.Forwarded
                     ? "Request forwarded successfully."
                     : "Request rejected successfully."
             };

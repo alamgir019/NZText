@@ -9,6 +9,7 @@ namespace NZ.Leave.Application.Interfaces.Repositories
         Task<LeaveEncashmentRequestDetailDto?> GetDetailByIdAsync(string requestId, CancellationToken cancellationToken = default);
         Task<(List<LeaveEncashmentRequestDto> Items, int Total)> GetAllAsync(
             string? status,
+            string? actionTaken,
             string? instalment,
             string? leaveType,
             int page,
