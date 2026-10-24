@@ -84,6 +84,7 @@ public class PayIncrementHistoryRepository : IPayIncrementHistoryRepository
 			_context.PayIncrementHistories.UpdateRange(historyList);
 			await _context.PerIncrementRequests.AddRangeAsync(requestList.Where(x => approvedList.Contains(x.PayIncHistId)), cancellationToken);
 
+			/* this should be applied after ceo approval
 			foreach (var history in historyList.Where(history =>
 				string.Equals(history.Status, PayIncrementStatuses.Approved, StringComparison.OrdinalIgnoreCase)))
 			{
@@ -180,6 +181,7 @@ public class PayIncrementHistoryRepository : IPayIncrementHistoryRepository
 				employeePayroll.FoodAllowance = foodAllowance;
 				employeePayroll.ConveyanceAllowance = conveyanceAllowance;
 			}
+			*/
 
 			await _context.SaveChangesAsync(cancellationToken);
 			await transaction.CommitAsync(cancellationToken);

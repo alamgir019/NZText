@@ -19,10 +19,10 @@ public class PromotionIncrementRequestItem
 	[Required(ErrorMessage = "New grade is required")]
 	public string ProposedGradeId { get; set; } = string.Empty;
 
-	[Range(0.01, 100, ErrorMessage = "Increment percent must be greater than 0 and at most 100")]
+	//[Range(0.01, 100, ErrorMessage = "Increment percent must be greater than 0 and at most 100")]
 	public decimal IncrementPercent { get; set; }
 
-	[Range(0.01, double.MaxValue, ErrorMessage = "Increment amount must be greater than 0")]
+	//[Range(0.01, double.MaxValue, ErrorMessage = "Increment amount must be greater than 0")]
 	public decimal IncrementAmount { get; set; }
 
 	[Required(ErrorMessage = "Effective date is required")]

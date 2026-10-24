@@ -343,11 +343,21 @@ namespace NZ.Attendance.Infrastructure.Repositories
                 .Distinct()
                 .ToListAsync(cancellationToken);
 
+            var today = DateOnly.FromDateTime(DateTime.Now);
+            var presentEmployeeIds = await _context.AttProcessedAttendances
+                .Where(a => a.AttendanceDate == today
+                            && a.ShiftId == shiftId
+                            && (a.AttendanceStatus == "P" || a.AttendanceStatus == "Present"))
+                .Select(a => a.EmployeeId)
+                .Distinct()
+                .ToListAsync(cancellationToken);
+
             // Join employment + employee master + designation + department
             var result = await (
                 from emp in _context.HrmEmployeeEmployments
                 where (employeeIds.Contains(emp.EmployeeId) || (!employeeIds.Contains(emp.EmployeeId) && emp.ShiftId == shiftId))
                 && emp.DepartmentId == departmentId
+                && presentEmployeeIds.Contains(emp.EmployeeId)
                 join master in _context.HrmEmployeeMasters on emp.EmployeeId equals master.Id
                 join designation in _context.MstDesignations on emp.DesignationId equals designation.Id into designationJoin
                 from designation in designationJoin.DefaultIfEmpty()

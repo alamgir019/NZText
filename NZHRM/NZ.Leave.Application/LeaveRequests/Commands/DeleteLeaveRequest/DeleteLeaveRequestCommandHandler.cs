@@ -1,5 +1,5 @@
 using NZ.Leave.Application.Interfaces.Repositories;
-using NZ.Leave.Application.LeaveRequests.Enums;
+using NZ.Leave.Domain.Constants;
 
 namespace NZ.Leave.Application.LeaveRequests.Commands.DeleteLeaveRequest
 {
@@ -26,7 +26,7 @@ namespace NZ.Leave.Application.LeaveRequests.Commands.DeleteLeaveRequest
             }
 
             // VAL-012: Only DRAFT requests can be deleted
-            if (!string.Equals(existing.Status, RequestStatus.PENDING, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(existing.Status, LeaveEncashmentRequestStatus.Pending, StringComparison.OrdinalIgnoreCase))
             {
                 return new DeleteLeaveRequestResult
                 {

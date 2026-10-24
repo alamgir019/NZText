@@ -1,6 +1,6 @@
 using NZ.Leave.Application.Interfaces.Repositories;
 using NZ.Leave.Application.LeaveRequests.Dto;
-using NZ.Leave.Application.LeaveRequests.Enums;
+using NZ.Leave.Domain.Constants;
 using NZ.Shared.Contracts.Leave;
 
 namespace NZ.Leave.Application.LeaveRequests.Commands.CreateLeaveRequests
@@ -101,7 +101,7 @@ namespace NZ.Leave.Application.LeaveRequests.Commands.CreateLeaveRequests
                     ToDate = req.ToDate,
                     TotalDays = days,
                     Reason = req.Reason,
-                    Status = RequestStatus.PENDING,
+                    Status = LeaveEncashmentRequestStatus.Pending,
                     CreatedBy = command.CreatedBy,
                     CreatedDate = DateTime.UtcNow,
                     ForwardedBy = req.ForwardedBy,

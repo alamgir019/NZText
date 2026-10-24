@@ -68,23 +68,28 @@ public class UpdatePayIncrementHistoryHandler
 		{
 			var history = historyById[item.PayIncrementHistoryId];
 
-            var currentStatus = history.Status;
-            var nextStatus = currentStatus switch
-            {
-                var status when string.Equals(status, PayIncrementStatuses.Pending, StringComparison.OrdinalIgnoreCase)
-                    => PayIncrementStatuses.Forwarded,
-                var status when string.Equals(status, PayIncrementStatuses.Forwarded, StringComparison.OrdinalIgnoreCase)
-                    => PayIncrementStatuses.Approved,
-                var status when string.Equals(status, PayIncrementStatuses.Approved, StringComparison.OrdinalIgnoreCase)
-                    => PayIncrementStatuses.ForwardedToMovementSection,
-                var status when string.Equals(status, PayIncrementStatuses.ForwardedToMovementSection, StringComparison.OrdinalIgnoreCase)
-                    => PayIncrementStatuses.ForwardedToHR,
-                var status when string.Equals(status, PayIncrementStatuses.ForwardedToHR, StringComparison.OrdinalIgnoreCase)
-                    => PayIncrementStatuses.ForwardedToCEO,
-                _ => throw new InvalidOperationException($"Unsupported pay increment history status: '{currentStatus}'")
-            };
-			if (!string.Equals(nextStatus, item.Status, StringComparison.OrdinalIgnoreCase))
-				throw new ArgumentException($"Expected status '{nextStatus}' but got '{item.Status}'");
+			var currentStatus = history.Status;
+			var nextStatuses = currentStatus switch
+			{
+				var status when string.Equals(status, PayIncrementStatuses.Pending, StringComparison.OrdinalIgnoreCase)
+					=> new[] { PayIncrementStatuses.Approved, PayIncrementStatuses.Rejected },
+				var status when string.Equals(status, PayIncrementStatuses.Approved, StringComparison.OrdinalIgnoreCase)
+					=> new[] { PayIncrementStatuses.ForwardedToMovementSection },
+				var status when string.Equals(status, PayIncrementStatuses.Rejected, StringComparison.OrdinalIgnoreCase)
+					=> new[] { PayIncrementStatuses.ForwardedToMovementSection },
+				var status when string.Equals(status, PayIncrementStatuses.ForwardedToMovementSection, StringComparison.OrdinalIgnoreCase)
+					=> new[] { PayIncrementStatuses.ForwardedToHR },
+				var status when string.Equals(status, PayIncrementStatuses.ForwardedToHR, StringComparison.OrdinalIgnoreCase)
+					=> new[] { PayIncrementStatuses.ForwardedToCEO },
+				_ => throw new InvalidOperationException($"Unsupported pay increment history status: '{currentStatus}'")
+			};
+
+			var requestedStatus = item.Status ?? string.Empty;
+			var isValidNextStatus = nextStatuses.Any(status =>
+				string.Equals(status, requestedStatus, StringComparison.OrdinalIgnoreCase));
+
+			if (!isValidNextStatus)
+				throw new ArgumentException($"Expected one of [{string.Join(", ", nextStatuses)}] but got '{item.Status}'");
 
 			//if (string.Equals(nextStatus, PayIncrementStatuses.Approved, StringComparison.OrdinalIgnoreCase) &&
 			//	(!item.NewGrossSalary.HasValue || item.NewGrossSalary.Value <= 2000m))
@@ -106,7 +111,7 @@ public class UpdatePayIncrementHistoryHandler
 				ApprovedBy = currentUser,
 				ApprovalDate = approvalDate,
 				FromStatus = currentStatus,
-				ToStatus = nextStatus,
+				ToStatus = item.Status ?? history.Status,
                 CreatedBy = currentUser,
 				UpdatedBy = currentUser,
 				IsActive = true

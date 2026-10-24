@@ -137,8 +137,8 @@ public class GetPayIncrementHistoriesByStatusHandler
 		{
 			var value when string.Equals(value, PayIncrementStatuses.Pending, StringComparison.OrdinalIgnoreCase)
 				=> PayIncrementStatuses.Pending,
-			var value when string.Equals(value, PayIncrementStatuses.Forwarded, StringComparison.OrdinalIgnoreCase)
-				=> PayIncrementStatuses.Forwarded,
+			var value when string.Equals(value, PayIncrementStatuses.ForwardedToDirector, StringComparison.OrdinalIgnoreCase)
+				=> PayIncrementStatuses.ForwardedToDirector,
             var value when string.Equals(value, PayIncrementStatuses.Approved, StringComparison.OrdinalIgnoreCase)
                 => PayIncrementStatuses.Approved,
             var value when string.Equals(value, PayIncrementStatuses.ForwardedToMovementSection, StringComparison.OrdinalIgnoreCase)

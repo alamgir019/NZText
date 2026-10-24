@@ -1,5 +1,4 @@
 using NZ.Leave.Application.Interfaces.Repositories;
-using NZ.Leave.Application.LeaveRequests.Enums;
 using NZ.Shared.Contracts.Leave;
 
 namespace NZ.Leave.Application.LeaveRequests.Commands.UpdateLeaveRequest
