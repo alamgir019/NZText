@@ -10,14 +10,16 @@ public class HrmEmployeeShiftChange : BaseEntity
 	[Required]
 	public string EmployeeId { get; set; } = string.Empty;
 
-	[Required]
-	public string PreviousShiftId { get; set; } = string.Empty;
+	public string? PreviousShiftId { get; set; }
 
 	[Required]
 	public string NewShiftId { get; set; } = string.Empty;
 
 	[Required]
 	public DateOnly EffectiveFrom { get; set; }
+
+	[Required]
+	public DateOnly EffectiveTo { get; set; }
 
 	[MaxLength(500)]
 	public string? Remarks { get; set; }

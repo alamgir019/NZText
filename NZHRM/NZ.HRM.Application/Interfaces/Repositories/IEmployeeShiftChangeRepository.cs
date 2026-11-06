@@ -50,4 +50,26 @@ public interface IEmployeeShiftChangeRepository
 		DateOnly effectiveFrom,
 		string? excludeId = null,
 		CancellationToken cancellationToken = default);
+
+	Task<bool> ExistsActiveForEmployeeAndEffectivePeriodAsync(
+		string employeeId,
+		DateOnly effectiveFrom,
+		DateOnly effectiveTo,
+		string? excludeId = null,
+		CancellationToken cancellationToken = default);
+
+	Task<bool> ExistsActiveOverlappingPeriodAsync(
+		string employeeId,
+		DateOnly effectiveFrom,
+		DateOnly effectiveTo,
+		string? excludeId = null,
+		CancellationToken cancellationToken = default);
+
+	Task AddRangeAsync(List<HrmEmployeeShiftChange> shiftChanges, CancellationToken cancellationToken = default);
+
+	Task DeleteByEmployeeAndDateRangeAsync(
+		string employeeId,
+		DateOnly from,
+		DateOnly to,
+		CancellationToken cancellationToken = default);
 }

@@ -127,33 +127,33 @@ public class LeaveBalanceQueryService : ILeaveBalanceQuery
         if (toDate < fromDate)
             return 0m;
 
-        var holidayDates = await _context.LevHolidayCalendars
-            .AsNoTracking()
-            .Where(h => h.IsActive && h.HolidayDate >= fromDate && h.HolidayDate <= toDate)
-            .Select(h => h.HolidayDate)
-            .ToHashSetAsync(cancellationToken);
+        //var holidayDates = await _context.LevHolidayCalendars
+        //    .AsNoTracking()
+        //    .Where(h => h.IsActive && h.HolidayDate >= fromDate && h.HolidayDate <= toDate)
+        //    .Select(h => h.HolidayDate)
+        //    .ToHashSetAsync(cancellationToken);
 
-        var weeklyOffRaw = await _context.HrmEmployeeEmployments
-            .AsNoTracking()
-            .Where(e => e.EmployeeId == employeeId)
-            .Select(e => e.WeeklyOffDay)
-            .FirstOrDefaultAsync(cancellationToken);
+        //var weeklyOffRaw = await _context.HrmEmployeeEmployments
+        //    .AsNoTracking()
+        //    .Where(e => e.EmployeeId == employeeId)
+        //    .Select(e => e.WeeklyOffDay)
+        //    .FirstOrDefaultAsync(cancellationToken);
 
-        DayOfWeek? weeklyOffDay = null;
-        if (!string.IsNullOrWhiteSpace(weeklyOffRaw)
-            && Enum.TryParse<DayOfWeek>(weeklyOffRaw, true, out var parsedWeeklyOffDay))
-        {
-            weeklyOffDay = parsedWeeklyOffDay;
-        }
+        //DayOfWeek? weeklyOffDay = null;
+        //if (!string.IsNullOrWhiteSpace(weeklyOffRaw)
+        //    && Enum.TryParse<DayOfWeek>(weeklyOffRaw, true, out var parsedWeeklyOffDay))
+        //{
+        //    weeklyOffDay = parsedWeeklyOffDay;
+        //}
 
         decimal leaveDays = 0m;
         for (var date = fromDate; date <= toDate; date = date.AddDays(1))
         {
-            if (holidayDates.Contains(date))
-                continue;
+            //if (holidayDates.Contains(date))
+            //    continue;
 
-            if (weeklyOffDay.HasValue && date.DayOfWeek == weeklyOffDay.Value)
-                continue;
+            //if (weeklyOffDay.HasValue && date.DayOfWeek == weeklyOffDay.Value)
+            //    continue;
 
             leaveDays += 1m;
         }

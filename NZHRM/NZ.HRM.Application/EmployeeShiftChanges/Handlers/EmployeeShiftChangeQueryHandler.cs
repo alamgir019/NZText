@@ -63,6 +63,7 @@ public class EmployeeShiftChangeQueryHandler
 			NewShiftId = change.NewShiftId,
 			NewShiftName = change.NewShift?.ShiftName ?? string.Empty,
 			EffectiveFrom = change.EffectiveFrom,
+			EffectiveTo = change.EffectiveTo,
 			Remarks = change.Remarks,
 			IsActive = change.IsActive
 		};
@@ -80,6 +81,7 @@ public class EmployeeShiftChangeQueryHandler
 			NewShiftId = change.NewShiftId,
 			NewShiftName = change.NewShift?.ShiftName ?? string.Empty,
 			EffectiveFrom = change.EffectiveFrom,
+			EffectiveTo = change.EffectiveTo,
 			Remarks = change.Remarks,
 			CreatedOn = change.CreatedOn,
 			CreatedBy = change.CreatedBy,

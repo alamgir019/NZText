@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using NZ.HRM.Application.EmployeeShiftChanges.Commands.CreateEmployeeShiftChange;
 using NZ.HRM.Application.EmployeeShiftChanges.Commands.DeleteEmployeeShiftChange;
+using NZ.HRM.Application.EmployeeShiftChanges.Commands.GenerateAnnualShiftRotation;
+using NZ.HRM.Application.EmployeeShiftChanges.Commands.GenerateJoinerShiftRotation;
 using NZ.HRM.Application.EmployeeShiftChanges.Commands.UpdateEmployeeShiftChange;
+using NZ.HRM.Application.EmployeeShiftChanges.DTOs;
 using NZ.HRM.Application.EmployeeShiftChanges.Handlers;
 using NZ.HRM.Application.EmployeeShiftChanges.Queries.GetAllEmployeeShiftChanges;
 using NZ.HRM.Application.EmployeeShiftChanges.Queries.GetEmployeeShiftChangeById;
@@ -165,6 +168,61 @@ public class EmployeeShiftChangesController : ControllerBase
 		catch (KeyNotFoundException ex)
 		{
 			return NotFound(new { message = ex.Message });
+		}
+		catch (InvalidOperationException ex)
+		{
+			return BadRequest(new { message = ex.Message });
+		}
+	}
+
+	[HttpPost("annual-population")]
+	[ProducesResponseType(typeof(ShiftRotationGenerationResultDto), StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest)]
+	public async Task<IActionResult> GenerateAnnualPopulation(
+		[FromBody] GenerateAnnualShiftRotationCommand command,
+		CancellationToken cancellationToken = default)
+	{
+		if (!ModelState.IsValid)
+			return BadRequest(ModelState);
+
+		try
+		{
+			var result = await _commandHandler.Handle(command, cancellationToken);
+			return Ok(result);
+		}
+		catch (ArgumentException ex)
+		{
+			return BadRequest(new { message = ex.Message });
+		}
+		catch (InvalidOperationException ex)
+		{
+			return BadRequest(new { message = ex.Message });
+		}
+	}
+
+	[HttpPost("joiner-population")]
+	[ProducesResponseType(typeof(ShiftRotationGenerationResultDto), StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest)]
+	[ProducesResponseType(StatusCodes.Status404NotFound)]
+	public async Task<IActionResult> GenerateJoinerPopulation(
+		[FromBody] GenerateJoinerShiftRotationCommand command,
+		CancellationToken cancellationToken = default)
+	{
+		if (!ModelState.IsValid)
+			return BadRequest(ModelState);
+
+		try
+		{
+			var result = await _commandHandler.Handle(command, cancellationToken);
+			return Ok(result);
+		}
+		catch (KeyNotFoundException ex)
+		{
+			return NotFound(new { message = ex.Message });
+		}
+		catch (ArgumentException ex)
+		{
+			return BadRequest(new { message = ex.Message });
 		}
 		catch (InvalidOperationException ex)
 		{

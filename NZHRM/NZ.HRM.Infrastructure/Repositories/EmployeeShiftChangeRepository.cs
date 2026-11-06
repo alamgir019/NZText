@@ -31,7 +31,7 @@ public class EmployeeShiftChangeRepository : IEmployeeShiftChangeRepository
 			query = query.Where(x => x.EffectiveFrom >= fromDate.Value);
 
 		if (toDate.HasValue)
-			query = query.Where(x => x.EffectiveFrom <= toDate.Value);
+			query = query.Where(x => x.EffectiveTo <= toDate.Value);
 
 		return await query
 			.OrderByDescending(x => x.EffectiveFrom)
@@ -141,6 +141,64 @@ public class EmployeeShiftChangeRepository : IEmployeeShiftChangeRepository
 				&& x.EmployeeId == employeeId
 				&& x.EffectiveFrom == effectiveFrom
 				&& (excludeId == null || x.Id != excludeId), cancellationToken);
+	}
+
+	public async Task<bool> ExistsActiveForEmployeeAndEffectivePeriodAsync(
+		string employeeId,
+		DateOnly effectiveFrom,
+		DateOnly effectiveTo,
+		string? excludeId = null,
+		CancellationToken cancellationToken = default)
+	{
+		return await _context.HrmEmployeeShiftChanges
+			.AnyAsync(x => x.IsActive
+				&& x.EmployeeId == employeeId
+				&& x.EffectiveFrom == effectiveFrom
+				&& x.EffectiveTo == effectiveTo
+				&& (excludeId == null || x.Id != excludeId), cancellationToken);
+	}
+
+	public async Task<bool> ExistsActiveOverlappingPeriodAsync(
+		string employeeId,
+		DateOnly effectiveFrom,
+		DateOnly effectiveTo,
+		string? excludeId = null,
+		CancellationToken cancellationToken = default)
+	{
+		return await _context.HrmEmployeeShiftChanges
+			.AnyAsync(x => x.IsActive
+				&& x.EmployeeId == employeeId
+				&& x.EffectiveFrom <= effectiveTo
+				&& x.EffectiveTo >= effectiveFrom
+				&& (excludeId == null || x.Id != excludeId), cancellationToken);
+	}
+
+	public async Task AddRangeAsync(List<HrmEmployeeShiftChange> shiftChanges, CancellationToken cancellationToken = default)
+	{
+		if (shiftChanges.Count == 0)
+			return;
+
+		_context.HrmEmployeeShiftChanges.AddRange(shiftChanges);
+		await _context.SaveChangesAsync(cancellationToken);
+	}
+
+	public async Task DeleteByEmployeeAndDateRangeAsync(
+		string employeeId,
+		DateOnly from,
+		DateOnly to,
+		CancellationToken cancellationToken = default)
+	{
+		var existingRecords = await _context.HrmEmployeeShiftChanges
+			.Where(x => x.EmployeeId == employeeId
+				&& x.EffectiveFrom <= to
+				&& x.EffectiveTo >= from)
+			.ToListAsync(cancellationToken);
+
+		if (existingRecords.Count == 0)
+			return;
+
+		_context.HrmEmployeeShiftChanges.RemoveRange(existingRecords);
+		await _context.SaveChangesAsync(cancellationToken);
 	}
 
 	private IQueryable<HrmEmployeeShiftChange> BuildQuery(bool includeInactive)

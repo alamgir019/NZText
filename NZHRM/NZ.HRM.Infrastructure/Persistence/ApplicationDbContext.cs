@@ -224,6 +224,9 @@ namespace NZ.HRM.Infrastructure.Persistence
             modelBuilder.Entity<HrmEmployeeShiftChange>()
                 .HasIndex(c => new { c.EmployeeId, c.EffectiveFrom, c.IsActive });
 
+            modelBuilder.Entity<HrmEmployeeShiftChange>()
+                .HasIndex(c => new { c.EmployeeId, c.EffectiveFrom, c.EffectiveTo, c.IsActive });
+
             // Employee transfer relationships
             modelBuilder.Entity<HrmEmployeeTransfer>()
                 .HasOne(t => t.Employee)

@@ -2229,6 +2229,9 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.Property<DateOnly>("EffectiveFrom")
                         .HasColumnType("date");
 
+                    b.Property<DateOnly>("EffectiveTo")
+                        .HasColumnType("date");
+
                     b.Property<string>("EmployeeId")
                         .IsRequired()
                         .HasColumnType("CHAR(26)");
@@ -2241,7 +2244,6 @@ namespace NZ.HRM.Infrastructure.Migrations
                         .HasColumnType("CHAR(26)");
 
                     b.Property<string>("PreviousShiftId")
-                        .IsRequired()
                         .HasColumnType("CHAR(26)");
 
                     b.Property<string>("Remarks")
@@ -2264,6 +2266,8 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.HasIndex("PreviousShiftId");
 
                     b.HasIndex("EmployeeId", "EffectiveFrom", "IsActive");
+
+                    b.HasIndex("EmployeeId", "EffectiveFrom", "EffectiveTo", "IsActive");
 
                     b.ToTable("employee_shift_change", "hrm");
                 });
@@ -7978,8 +7982,7 @@ namespace NZ.HRM.Infrastructure.Migrations
                     b.HasOne("NZ.HRM.Domain.Entities.MstShift", "PreviousShift")
                         .WithMany()
                         .HasForeignKey("PreviousShiftId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Employee");
 
